@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forge UI Components Demo</title>
+  <link rel="stylesheet" href="../src/tokens/base.css">
+  <script type="module" src="../src/index.ts"></script>
+  <style>
+    body {
+      font-family: var(--forge-font-family);
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .demo-section {
+      margin-bottom: 3rem;
+    }
+    .demo-section h2 {
+      margin-bottom: 1rem;
+      color: var(--forge-color-primary-700);
+    }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Forge UI Components</h1>
+
+  <div class="demo-section">
+    <h2>Button Component</h2>
+    
+    <h3>Variants</h3>
+    <div class="demo-grid">
+      <forge-button variant="primary">Primary Button</forge-button>
+      <forge-button variant="secondary">Secondary Button</forge-button>
+      <forge-button variant="danger">Danger Button</forge-button>
+    </div>
+
+    <h3>Sizes</h3>
+    <div class="demo-grid">
+      <forge-button size="sm">Small</forge-button>
+      <forge-button size="md">Medium</forge-button>
+      <forge-button size="lg">Large</forge-button>
+    </div>
+
+    <h3>States</h3>
+    <div class="demo-grid">
+      <forge-button>Normal</forge-button>
+      <forge-button disabled>Disabled</forge-button>
+      <forge-button loading>Loading</forge-button>
+    </div>
+  </div>
+
+  <script>
+    // Example event handling - using standard click event
+    document.addEventListener('click', (e) => {
+      if (e.target.tagName === 'FORGE-BUTTON') {
+        console.log('Button clicked:', e.detail);
+      }
+    });
+  </script>
+</body>
+</html>
