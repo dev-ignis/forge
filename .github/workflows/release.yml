@@ -1,0 +1,103 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type (patch, minor, major, prerelease)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+          - prerelease
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    name: Release & Publish
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+      
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run tests
+        run: npm test
+        continue-on-error: true  # Remove this once tests are set up
+      
+      - name: Build library
+        run: npm run build
+      
+      - name: Bump version
+        id: version
+        run: |
+          npm version ${{ github.event.inputs.release_type }} --no-git-tag-version
+          VERSION=$(node -p "require('./package.json').version")
+          echo "new_version=$VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Commit version bump
+        run: |
+          git add package.json package-lock.json
+          git commit -m "chore(release): v${{ steps.version.outputs.new_version }}"
+          git tag -a v${{ steps.version.outputs.new_version }} -m "Release v${{ steps.version.outputs.new_version }}"
+      
+      - name: Push changes
+        run: |
+          git push origin main
+          git push origin v${{ steps.version.outputs.new_version }}
+      
+      - name: Publish to NPM (dry run)
+        run: npm publish --dry-run --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      
+      # Uncomment when ready to publish
+      # - name: Publish to NPM
+      #   run: npm publish --access public
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.version.outputs.new_version }}
+          name: Release v${{ steps.version.outputs.new_version }}
+          body: |
+            ## Release v${{ steps.version.outputs.new_version }}
+            
+            ### What's Changed
+            - See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details
+            
+            ### Installation
+            ```bash
+            npm install @ignis/forge@${{ steps.version.outputs.new_version }}
+            ```
+          draft: false
+          prerelease: ${{ github.event.inputs.release_type == 'prerelease' }}
+          files: |
+            dist/**/*.js
+            dist/**/*.d.ts
