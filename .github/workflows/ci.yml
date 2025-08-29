@@ -43,14 +43,12 @@ jobs:
       
       - name: Run linter
         run: npm run lint
-        continue-on-error: true  # Don't fail initially while setting up
       
       - name: Type check
         run: npm run type-check
       
       - name: Run tests
         run: npm test
-        continue-on-error: true  # Don't fail initially while setting up
       
       - name: Build library
         run: npm run build
@@ -94,7 +92,6 @@ jobs:
       
       - name: Build Storybook
         run: npm run build-storybook
-        continue-on-error: true  # Don't fail initially if Storybook not set up
       
       - name: Upload Storybook artifacts
         if: success()
