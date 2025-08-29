@@ -1,38 +1,100 @@
 {
-  "name": "forge",
-  "version": "1.0.0",
+  "name": "@ignis/forge",
+  "version": "0.0.1",
   "description": "A production-ready, framework-agnostic UI component library built with Web Components and Lit, designed to work seamlessly across React, Vue, Angular, and vanilla JavaScript applications.",
-  "main": "index.js",
+  "main": "./dist/forge-ui.es.js",
+  "module": "./dist/forge-ui.es.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "custom-elements.json",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/forge-ui.es.js",
+      "require": "./dist/forge-ui.umd.js"
+    },
+    "./dist/*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*",
+      "require": "./dist/*"
+    },
+    "./custom-elements.json": "./custom-elements.json"
+  },
+  "typesVersions": {
+    "*": {
+      "*": ["dist/*", "dist/*/index.d.ts"]
+    }
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "directories": {
     "doc": "docs"
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && npm run build:types",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:manifest": "custom-elements-manifest analyze",
     "preview": "vite preview",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "test": "web-test-runner --config web-test-runner.config.mjs",
+    "test:watch": "web-test-runner --watch",
+    "test:e2e": "playwright test",
+    "test:coverage": "web-test-runner --coverage",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.{ts,css,html}",
+    "analyze": "custom-elements-manifest analyze",
+    "bundle-analyze": "rollup-plugin-visualizer",
+    "generate:component": "node scripts/generate-component.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dev-ignis/forge.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "web-components",
+    "ui-library",
+    "design-system",
+    "custom-elements",
+    "shadow-dom",
+    "lit",
+    "theming",
+    "css-custom-properties"
+  ],
+  "author": "Ignis Team",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/dev-ignis/forge/issues"
   },
   "homepage": "https://github.com/dev-ignis/forge#readme",
   "dependencies": {
-    "lit": "^3.3.1",
-    "typescript": "^5.9.2"
+    "lit": "^3.3.1"
+  },
+  "peerDependencies": {
+    "lit": "^3.0.0"
   },
   "devDependencies": {
+    "typescript": "^5.9.2",
     "@open-wc/testing": "^4.0.0",
+    "@types/sinon": "^17.0.4",
     "@typescript-eslint/eslint-plugin": "^8.41.0",
+    "@web/dev-server-esbuild": "^1.0.4",
     "@web/test-runner": "^0.20.2",
+    "@web/test-runner-playwright": "^0.11.1",
+    "@web/test-runner-puppeteer": "^0.18.0",
     "eslint": "^9.34.0",
     "prettier": "^3.6.2",
+    "sinon": "^21.0.0",
     "vite": "^5.4.19"
   }
 }

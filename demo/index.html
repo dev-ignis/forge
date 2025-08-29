@@ -57,11 +57,9 @@
   </div>
 
   <script>
-    // Example event handling - using standard click event
-    document.addEventListener('click', (e) => {
-      if (e.target.tagName === 'FORGE-BUTTON') {
-        console.log('Button clicked:', e.detail);
-      }
+    // Example event handling
+    document.addEventListener('forge-click', (e) => {
+      console.log('Button clicked:', e.detail);
     });
   </script>
 </body>

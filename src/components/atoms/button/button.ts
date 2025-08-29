@@ -2,6 +2,7 @@ import { html, css, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { BaseElement } from '../../../core/BaseElement';
+import type { ButtonVariant, ButtonSize, ButtonType, ForgeButtonProps, ForgeButtonEventDetail } from '../../../types';
 
 @customElement('forge-button')
 export class ForgeButton extends BaseElement {
@@ -125,11 +126,14 @@ export class ForgeButton extends BaseElement {
     }
   `;
 
-  @property({ type: String }) variant: 'primary' | 'secondary' | 'danger' = 'primary';
-  @property({ type: String }) size: 'sm' | 'md' | 'lg' = 'md';
+  @property({ type: String }) variant: ButtonVariant = 'primary';
+  @property({ type: String }) size: ButtonSize = 'md';
   @property({ type: Boolean }) disabled = false;
   @property({ type: Boolean }) loading = false;
-  @property({ type: String }) type: 'button' | 'submit' | 'reset' = 'button';
+  @property({ type: String }) type: ButtonType = 'button';
+  @property({ type: Boolean }) fullWidth = false;
+  @property({ type: String }) iconStart?: string;
+  @property({ type: String }) iconEnd?: string;
 
   @state() private ripples: Array<{ x: number; y: number; id: number }> = [];
 
@@ -175,11 +179,12 @@ export class ForgeButton extends BaseElement {
       };
       this.ripples = [...this.ripples, ripple];
 
-      // Emit standard click event with detail
-      this.emit('click', { 
+      // Emit custom click event with detail
+      const detail: ForgeButtonEventDetail = {
         variant: this.variant,
-        size: this.size 
-      });
+        size: this.size
+      };
+      this.emit('click', detail);
     }
   }
 

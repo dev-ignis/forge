@@ -591,11 +591,13 @@ export { ForgeButton } from './button';
 
 ## Next Steps After Day 1
 
-### Day 2-3: Testing & Documentation
-1. Set up Web Test Runner configuration
-2. Run first tests: `npm test`
-3. Initialize Storybook: `npx storybook@latest init`
-4. Create first story for Button component
+### Day 2: Critical Infrastructure & Token API
+1. Document Token API as stable contract
+2. Set up Web Test Runner configuration  
+3. Create component generator with token-first templates
+4. Initialize Storybook: `npx storybook@latest init`
+5. Verify Button uses tokens exclusively (no hardcoded values)
+6. Plan Alert component (Phase 1 priority)
 
 ### Day 4-5: Build Pipeline
 1. Configure multiple entry points in Vite

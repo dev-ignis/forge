@@ -54,6 +54,11 @@ Architecture Decision Records capture important architectural decisions along wi
 - **[ADR-012: Accessibility Standards and Implementation](./ADR-012-accessibility-standards.md)**  
   WCAG 2.1 Level AA compliance as minimum standard with comprehensive accessibility implementation.
 
+### Type System and Developer Experience
+
+- **[ADR-013: TypeScript Interfaces and Type Definitions](./ADR-013-typescript-interfaces.md)**  
+  Comprehensive type system with proper interfaces for all components to ensure type safety and excellent developer experience.
+
 ## ADR Status Definitions
 
 - **Proposed**: The decision is still under discussion
