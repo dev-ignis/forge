@@ -1,6 +1,6 @@
 {
   "name": "forge-ui",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "description": "A production-ready, framework-agnostic UI component library built with Web Components and Lit, designed to work seamlessly across React, Vue, Angular, and vanilla JavaScript applications.",
   "main": "./dist/forge-ui.es.js",

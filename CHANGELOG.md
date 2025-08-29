@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.2 - 2025-08-29
+
+### Changes
+- fix: - package name for npm;
 ## v0.0.1 - 2025-08-29
 
 ### Changes
