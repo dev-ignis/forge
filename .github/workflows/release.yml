@@ -143,9 +143,15 @@ jobs:
         id: bump
         if: steps.version.outputs.skip != 'true'
         run: |
-          # For first publish, ensure we start at 0.0.1
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          
+          # For first publish, use current version if it's already set
           if [ "${{ steps.check.outputs.first_publish }}" == "true" ]; then
-            npm version 0.0.1 --no-git-tag-version --allow-same-version
+            if [ "$CURRENT_VERSION" == "0.0.0" ]; then
+              npm version 0.0.1 --no-git-tag-version --allow-same-version
+            else
+              echo "Using existing version $CURRENT_VERSION for first publish"
+            fi
           else
             npm version ${{ steps.version.outputs.bump_type }} --no-git-tag-version
           fi
@@ -192,7 +198,11 @@ jobs:
       - name: Create git tag
         if: steps.version.outputs.skip != 'true'
         run: |
-          git tag -a v${{ steps.bump.outputs.new_version }} -m "Release v${{ steps.bump.outputs.new_version }}"
+          if ! git rev-parse v${{ steps.bump.outputs.new_version }} >/dev/null 2>&1; then
+            git tag -a v${{ steps.bump.outputs.new_version }} -m "Release v${{ steps.bump.outputs.new_version }}"
+          else
+            echo "Tag v${{ steps.bump.outputs.new_version }} already exists, skipping tag creation"
+          fi
       
       - name: Push changes
         if: steps.version.outputs.skip != 'true'
