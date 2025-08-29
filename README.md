@@ -146,7 +146,7 @@ MIT © [Your Organization]
 ## 🔗 Links
 
 - **[Storybook](https://forge.ignis.dev)** - Live component playground (Coming Soon)
-- **[NPM Package](https://www.npmjs.com/package/@ignis/forge)** - Published package
+- **[NPM Package](https://www.npmjs.com/package/forge-ui)** - Published package
 - **[GitHub](https://github.com/yourusername/ignis)** - Source code
 - **[Documentation](./plans/)** - Complete planning documentation
 
