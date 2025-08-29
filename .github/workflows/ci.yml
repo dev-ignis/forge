@@ -3,6 +3,9 @@ name: CI
 on:
   push:
     branches: [main, develop]
+    # Skip CI if release workflow will handle it
+    tags-ignore:
+      - 'v*'
   pull_request:
     branches: [main]
 
@@ -10,6 +13,10 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    # Don't run CI twice when release workflow triggers
+    if: |
+      github.event_name == 'pull_request' || 
+      !contains(github.event.head_commit.message, 'chore(release)')
     
     strategy:
       matrix:

@@ -1,12 +1,12 @@
 name: Release & Publish
 
 on:
-  push:
+  # Only run on main branch after CI passes
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
     branches: [main]
-    paths-ignore:
-      - '**.md'
-      - 'docs/**'
-      - '.github/workflows/!(release.yml)'
+  # Manual trigger for emergency releases
   workflow_dispatch:
     inputs:
       release_type:
@@ -24,80 +24,39 @@ permissions:
   contents: write
   packages: write
   id-token: write
+  actions: read
 
 jobs:
-  quality-check:
-    name: Quality Gates
+  check-ci:
+    name: Check CI Status
     runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' || 
+      github.event.workflow_run.conclusion == 'success'
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
     
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-      
-      - name: Cache node_modules
-        uses: actions/cache@v4
-        id: npm-cache
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-20.x-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-20.x-
-      
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        id: playwright-cache
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
-      
-      - name: Install dependencies
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: npm ci
-      
-      - name: Install Playwright browsers
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install chromium
-      
-      - name: Run linter
-        run: npm run lint
-      
-      - name: Type check
-        run: npm run type-check
-      
-      - name: Run tests with coverage
-        run: npm test
-      
-      - name: Check coverage thresholds
+      - name: Check CI passed
+        id: check
         run: |
-          coverage=$(cat coverage/lcov-report/index.html | grep -oP 'class="strong">\K[0-9.]+(?=%)' | head -1)
-          echo "Coverage: $coverage%"
-          if (( $(echo "$coverage < 75" | bc -l) )); then
-            echo "Coverage is below 75% threshold"
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "Manual release triggered"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event.workflow_run.conclusion }}" == "success" ]; then
+            echo "CI passed, checking for release commits"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "CI failed, skipping release"
+            echo "should_release=false" >> $GITHUB_OUTPUT
             exit 1
           fi
-      
-      - name: Build library
-        run: npm run build
-      
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/
-          retention-days: 1
 
   release:
     name: Release & Publish
-    needs: quality-check
+    needs: check-ci
+    if: needs.check-ci.outputs.should_release == 'true'
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     
     steps:
       - name: Checkout code
@@ -121,20 +80,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-20.x-
       
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-      
       - name: Install dependencies
         if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm ci
       
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
       
       - name: Determine version bump
         id: version
@@ -145,16 +98,26 @@ jobs:
             # Check commit messages for conventional commits
             COMMITS=$(git log $(git describe --tags --abbrev=0 2>/dev/null || echo '')..HEAD --pretty=format:"%s" 2>/dev/null || git log --pretty=format:"%s")
             
-            if echo "$COMMITS" | grep -qE "^(feat|fix)!:|BREAKING CHANGE:"; then
+            # Check if this is the first release (no tags exist)
+            if ! git describe --tags --abbrev=0 2>/dev/null; then
+              echo "First release detected"
+              echo "bump_type=patch" >> $GITHUB_OUTPUT
+            elif echo "$COMMITS" | grep -qE "^(feat|fix)!:|BREAKING CHANGE:"; then
               echo "bump_type=major" >> $GITHUB_OUTPUT
             elif echo "$COMMITS" | grep -qE "^feat(\(.+\))?:"; then
               echo "bump_type=minor" >> $GITHUB_OUTPUT
             elif echo "$COMMITS" | grep -qE "^fix(\(.+\))?:"; then
               echo "bump_type=patch" >> $GITHUB_OUTPUT
             else
-              echo "No version bump needed"
-              echo "skip=true" >> $GITHUB_OUTPUT
-              exit 0
+              # For workflow_run events, default to patch if no conventional commits
+              if [ "${{ github.event_name }}" == "workflow_run" ]; then
+                echo "No conventional commits found, defaulting to patch"
+                echo "bump_type=patch" >> $GITHUB_OUTPUT
+              else
+                echo "No version bump needed"
+                echo "skip=true" >> $GITHUB_OUTPUT
+                exit 0
+              fi
             fi
           fi
       
@@ -171,6 +134,10 @@ jobs:
             echo "Package does not exist on NPM yet"
             echo "first_publish=true" >> $GITHUB_OUTPUT
           fi
+      
+      - name: Build library
+        if: steps.version.outputs.skip != 'true'
+        run: npm run build
       
       - name: Bump version
         id: bump
@@ -220,7 +187,7 @@ jobs:
         if: steps.version.outputs.skip != 'true'
         run: |
           git add package.json package-lock.json CHANGELOG.md
-          git commit -m "chore(release): v${{ steps.bump.outputs.new_version }}" || echo "No changes to commit"
+          git commit -m "chore(release): v${{ steps.bump.outputs.new_version }} [skip ci]" || echo "No changes to commit"
       
       - name: Create git tag
         if: steps.version.outputs.skip != 'true'
@@ -256,28 +223,17 @@ jobs:
             dist/**/*.js
             dist/**/*.d.ts
             dist/**/*.map
-      
-      - name: Comment on PR (if applicable)
-        if: steps.version.outputs.skip != 'true' && github.event.pull_request
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `🎉 Released in v${{ steps.bump.outputs.new_version }}\n\nInstall with:\n\`\`\`bash\nnpm install @ignis/forge@${{ steps.bump.outputs.new_version }}\n\`\`\``
-            })
 
   publish-docs:
     name: Publish Documentation
     needs: release
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: main  # Get the latest including version bump
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
