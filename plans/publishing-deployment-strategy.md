@@ -66,8 +66,21 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+      
       - name: Install dependencies
         run: npm ci
+      
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install chromium
       
       - name: Run linter
         run: npm run lint
@@ -450,6 +463,65 @@ Following semantic versioning with conventional commits:
 3. **Preview Environments**: https://preview-pr-{number}.forge-ui.com
    - Automatic PR previews
    - Visual regression testing
+
+## Caching Strategy
+
+### Browser Caching for Tests
+
+To optimize CI performance and reduce installation time, we cache Playwright browsers:
+
+```yaml
+- name: Cache Playwright browsers
+  uses: actions/cache@v4
+  id: playwright-cache
+  with:
+    path: ~/.cache/ms-playwright
+    key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+    restore-keys: |
+      ${{ runner.os }}-playwright-
+```
+
+**Benefits:**
+- Saves ~2-3 minutes per CI run
+- Reduces bandwidth usage
+- Prevents rate limiting from browser downloads
+- Cache automatically invalidates when dependencies change
+
+**Cache Locations:**
+- **Playwright browsers**: `~/.cache/ms-playwright`
+- **NPM packages**: Handled by `actions/setup-node` with `cache: 'npm'`
+- **Build artifacts**: Stored as GitHub Actions artifacts
+
+### Cache Invalidation
+
+Caches are automatically invalidated when:
+- `package-lock.json` changes (new dependencies)
+- Cache expires after 7 days of no use
+- Manual cache clear via GitHub UI
+
+### Additional Caching
+
+```yaml
+# For heavy dependencies
+- name: Cache node_modules
+  uses: actions/cache@v4
+  with:
+    path: node_modules
+    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    restore-keys: |
+      ${{ runner.os }}-node-
+
+# For build outputs
+- name: Cache build
+  uses: actions/cache@v4
+  with:
+    path: |
+      dist
+      .vite
+    key: ${{ runner.os }}-build-${{ github.sha }}
+    restore-keys: |
+      ${{ runner.os }}-build-
+```
 
 ## Environment Variables & Secrets
 
