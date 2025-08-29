@@ -126,9 +126,9 @@ jobs:
         if: steps.version.outputs.skip != 'true'
         run: |
           # Check if package exists on NPM
-          if npm view forge-ui version 2>/dev/null; then
+          if npm view @nexcraft/forge version 2>/dev/null; then
             echo "Package exists on NPM"
-            CURRENT_VERSION=$(npm view forge-ui version)
+            CURRENT_VERSION=$(npm view @nexcraft/forge version)
             echo "current_npm_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
           else
             echo "Package does not exist on NPM yet"

@@ -5,9 +5,9 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'ForgeUI',
+      name: 'NexcraftForge',
       formats: ['es', 'umd'],
-      fileName: (format) => `forge-ui.${format}.js`
+      fileName: (format) => `nexcraft-forge.${format}.js`
     },
     rollupOptions: {
       external: [],
