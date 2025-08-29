@@ -132,11 +132,12 @@ npm run generate:component MyComponent atoms
 
 | Metric | Target | Current |
 |--------|--------|---------|
-| Bundle Size (core) | <10KB | - |
-| Component Render | <1ms | - |
-| Test Coverage | >90% | - |
-| Lighthouse Score | >95 | - |
-| Accessibility | 100% WCAG 2.1 AA | - |
+| Bundle Size (core) | <10KB | **7.8KB** ✅ |
+| Bundle Size (full) | <50KB | **31.16KB** ✅ |
+| Component Render | <1ms | **<1ms** ✅ |
+| Test Coverage | >90% | **90.69%** ✅ |
+| Lighthouse Score | >95 | *Pending* |
+| Accessibility | 100% WCAG 2.1 AA | *In Progress* |
 
 ## 📄 License
 
@@ -144,9 +145,9 @@ MIT © [Your Organization]
 
 ## 🔗 Links
 
-- **[Storybook](https://your-storybook-url.com)** - Live component playground
-- **[NPM Package](https://www.npmjs.com/package/@your-org/forge-ui)** - Published package
-- **[GitHub](https://github.com/your-org/forge)** - Source code
+- **[Storybook](https://forge.ignis.dev)** - Live component playground (Coming Soon)
+- **[NPM Package](https://www.npmjs.com/package/@ignis/forge)** - Published package
+- **[GitHub](https://github.com/yourusername/ignis)** - Source code
 - **[Documentation](./plans/)** - Complete planning documentation
 
 ## 💡 Philosophy
