@@ -40,7 +40,8 @@ Welcome to the Forge UI Component Library documentation. This directory contains
 
 ### Current Progress
 - **[Implementation Status](./IMPLEMENTATION_STATUS.md)** - Complete progress overview
-- **[Latest Session Log](./implementation-session-2025-08-28.md)** - August 28, 2025 session details
+- **[Implementation Sessions](./implementation-sessions/)** - Detailed session documentation
+- **[Latest Session Log](./implementation-sessions/2025-08-28-session.md)** - August 28, 2025 session details
 - **[Updated Changelog](../CHANGELOG.md)** - Phase 0 completion status
 
 ### Phase 0 Complete ✅
@@ -58,7 +59,7 @@ Welcome to the Forge UI Component Library documentation. This directory contains
 
 ### For Contributors
 1. [Setup Guide](./CONTRIBUTING.md#setup) - Get started
-2. [Latest Implementation](./implementation-session-2025-08-28.md) - Recent changes
+2. [Implementation Sessions](./implementation-sessions/) - Development history and decisions
 3. [ADR Compliance](./IMPLEMENTATION_STATUS.md#adr-compliance-matrix) - Standards status
 
 ### For Architects

@@ -128,7 +128,8 @@ Phase 3 (Organisms)      ░░░░░░░░░░░░░░░░░░�
 ```
 forge/
 ├── docs/
-│   ├── implementation-session-2025-08-28.md    ✅ Complete session log
+│   ├── implementation-sessions/              ✅ Session documentation folder
+│   │   └── 2025-08-28-session.md            ✅ Complete session log
 │   └── IMPLEMENTATION_STATUS.md                ✅ This status document
 ├── demo/
 │   └── index.html                              ✅ Interactive component demo
@@ -182,5 +183,5 @@ forge/
 ---
 
 **Repository:** [Forge UI Component Library](https://github.com/dev-ignis/forge)  
-**Documentation:** [Latest Implementation Session](/home/air_buster/rollg/ignis/apps/forge/docs/implementation-session-2025-08-28.md)  
+**Documentation:** [Latest Implementation Session](/home/air_buster/rollg/ignis/apps/forge/docs/implementation-sessions/2025-08-28-session.md)  
 **Demo:** Run `npm run dev` to view interactive component showcase

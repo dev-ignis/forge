@@ -20,26 +20,33 @@ Phased approach to building a production-ready, framework-agnostic UI component 
 - [ ] **Day 4**: Set up Web Test Runner for unit testing
 - [ ] **Day 5**: Establish Git repository and CI/CD pipeline
 
-### Week 1: Design System Foundation
-- [ ] **Day 1**: Create CSS Custom Properties token system (see quick-start-guide.md)
-- [ ] **Day 1**: Define color palette and semantic colors
-- [ ] **Day 2**: Establish spacing scale (4px base unit)
-- [ ] **Day 2**: Define typography scale and font families  
-- [ ] **Day 3**: Create shadow and border radius tokens
-- [ ] **Day 5**: Document design principles and guidelines
+### Week 1: Design System Foundation & Theming API
+- [ ] **Day 1**: Create CSS Custom Properties token system as stable API (see theming-integration-plan.md)
+- [ ] **Day 1**: Define color palette with `--forge-color-*` tokens
+- [ ] **Day 1**: Implement token inheritance strategy with fallbacks
+- [ ] **Day 2**: Establish spacing scale with `--forge-spacing-*` tokens (4px base unit)
+- [ ] **Day 2**: Define typography scale with `--forge-font-*` tokens
+- [ ] **Day 2**: Document token naming conventions and API contract
+- [ ] **Day 3**: Create shadow and border radius tokens (`--forge-shadow-*`, `--forge-border-*`)
+- [ ] **Day 3**: Set up token documentation generator
+- [ ] **Day 5**: Document design principles and theming guidelines
 
-### Week 2: Core Infrastructure
-- [ ] **Day 6**: Implement BaseElement class (complete implementation in component-architecture.md)
-- [ ] **Day 6**: Create event emission helpers (included in BaseElement)
+### Week 2: Core Infrastructure & Token API
+- [ ] **Day 6**: Implement BaseElement class with theming support (see theming-integration-plan.md)
+- [ ] **Day 6**: Add theme observation and CSS variable injection helpers to BaseElement
+- [ ] **Day 6**: Create TypeScript interfaces for token categories
 - [ ] **Day 7**: Set up accessibility utilities (included in BaseElement)
-- [ ] **Day 7**: Establish component file structure template
-- [ ] **Day 8**: Create component generator script (complete script in development-workflow.md)
-- [ ] **Day 9-10**: Build and test Button component as reference implementation
+- [ ] **Day 7**: Create token validation utilities and testing helpers
+- [ ] **Day 7**: Establish component file structure template with token usage
+- [ ] **Day 8**: Create component generator script with token integration (complete script in development-workflow.md)
+- [ ] **Day 9-10**: Build and test Button component using token API exclusively
 
 ### Deliverables
 - Working development environment
-- Published design tokens
-- Component development guidelines
+- Published design tokens as stable API
+- Token API documentation and TypeScript definitions
+- Component development guidelines with theming
+- BaseElement with full theming support
 
 ## Phase 1: Atomic Components (Week 3-6)
 
@@ -65,20 +72,38 @@ Phased approach to building a production-ready, framework-agnostic UI component 
   - Lazy loading for icon sets
 
 ### Additional Atoms (Week 5-6)
-- [ ] **Badge Component**
-  - Status variants
-  - Dot and count modes
-  - Positioning options
+- [ ] **Alert Component**
+  - Success, error, warning, info variants
+  - Dismissible option with close button
+  - Icon integration for visual context
+  - Auto-dismiss timer configuration
+  - Screen reader announcements (role="alert")
+  - Smooth entry/exit animations
 
 - [ ] **Checkbox Component**
   - Indeterminate state
   - Custom styling hooks
   - Label integration
 
-- [ ] **Radio Component**
-  - Radio group management
-  - Keyboard navigation
+- [ ] **Radio Group Component**
+  - Radio group management with single selection
+  - Keyboard navigation (arrow keys)
   - Custom styling
+  - Form integration support
+  - Required field validation
+
+- [ ] **Select Component**
+  - Custom dropdown styling
+  - Search/filter capability
+  - Single selection mode
+  - Keyboard navigation
+  - Placeholder support
+  - Validation states
+
+- [ ] **Badge Component**
+  - Status variants
+  - Dot and count modes
+  - Positioning options
 
 - [ ] **Switch/Toggle Component**
   - On/off states
@@ -92,23 +117,33 @@ Phased approach to building a production-ready, framework-agnostic UI component 
 - [ ] Performance benchmarks established
 
 ### Deliverables
-- 7 production-ready atomic components
+- 9 production-ready atomic components (complete foundational set)
 - Complete test coverage
 - Interactive Storybook documentation
+- All top 10 foundational components implemented
 
-## Phase 2: Molecule Components (Week 7-10)
+## Phase 2: Molecule Components & Tailwind Plugin (Week 7-10)
 
-### Form Molecules (Week 7-8)
+### Tailwind Plugin Development (Week 7)
+- [ ] Create `@forge/tailwind-plugin` package
+- [ ] Implement config parsing and theme mapping
+- [ ] Build CSS generation engine
+- [ ] Create plugin test suite
+- [ ] Write plugin documentation
+- [ ] Test with various Tailwind configurations
+
+### Form Molecules (Week 8)
 - [ ] **FormField Component**
   - Label, input, error composition
   - Required/optional indicators
   - Floating label variant
   - Field validation integration
 
-- [ ] **Select Component**
-  - Custom dropdown styling
+- [ ] **Multi-Select Component**
+  - Advanced dropdown with multi-selection
   - Search/filter capability
-  - Multi-select support
+  - Tag/chip display for selections
+  - Bulk selection options
   - Keyboard navigation
 
 - [ ] **DatePicker Component**
@@ -116,6 +151,13 @@ Phased approach to building a production-ready, framework-agnostic UI component 
   - Date range selection
   - Internationalization
   - Keyboard accessible
+
+### Theme Testing Infrastructure (Week 9)
+- [ ] Visual regression testing for themes
+- [ ] Theme switching test scenarios
+- [ ] Performance benchmarks for CSS variables
+- [ ] Cross-browser theme testing
+- [ ] Accessibility validation for all themes
 
 ### Interactive Molecules (Week 9-10)
 - [ ] **Card Component**
@@ -146,6 +188,9 @@ Phased approach to building a production-ready, framework-agnostic UI component 
 - 7 molecule components
 - Form validation patterns
 - Complex interaction patterns documented
+- Tailwind CSS plugin v1.0
+- Theme testing infrastructure
+- Multiple example themes
 
 ## Phase 3: Organism Components (Week 11-14)
 
