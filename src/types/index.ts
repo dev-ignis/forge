@@ -186,7 +186,7 @@ export interface ForgeInputEvents {
 /**
  * Option for select components
  */
-export interface SelectOption<T = any> {
+export interface SelectOption<T = unknown> {
   label: string;
   value: T;
   disabled?: boolean;
@@ -196,7 +196,7 @@ export interface SelectOption<T = any> {
 /**
  * Select component properties
  */
-export interface ForgeSelectProps<T = any> extends ForgeInteractive {
+export interface ForgeSelectProps<T = unknown> extends ForgeInteractive {
   /** Options to display */
   options?: SelectOption<T>[];
   /** Selected value */
@@ -345,9 +345,9 @@ export interface ValidationRule {
   /** Error message if validation fails */
   message: string;
   /** Value for the rule (e.g., min length number) */
-  value?: any;
+  value?: unknown;
   /** Custom validation function */
-  validator?: (value: any) => boolean;
+  validator?: (value: unknown) => boolean;
 }
 
 /**

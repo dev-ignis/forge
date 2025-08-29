@@ -11,7 +11,7 @@ export interface ForgeElement extends LitElement {
   /** Component ready state */
   readonly ready: boolean;
   /** Emit custom event helper */
-  emit<T = any>(eventName: string, detail?: T, options?: EventInit): boolean;
+  emit<T = unknown>(eventName: string, detail?: T, options?: EventInit): boolean;
   /** Announce to screen readers */
   announceToScreenReader(message: string): void;
 }
@@ -19,7 +19,7 @@ export interface ForgeElement extends LitElement {
 /**
  * Type guard to check if an element is a Forge component
  */
-export function isForgeElement(element: any): element is ForgeElement {
+export function isForgeElement(element: unknown): element is ForgeElement {
   return element instanceof HTMLElement && 
          'emit' in element && 
          'announceToScreenReader' in element;
@@ -95,13 +95,13 @@ export class ClassBuilder {
 /**
  * Debounce utility for input events
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout;
   
-  return function(this: any, ...args: Parameters<T>) {
+  return function(this: unknown, ...args: Parameters<T>) {
     clearTimeout(timeout);
     timeout = setTimeout(() => func.apply(this, args), wait);
   };
@@ -110,13 +110,13 @@ export function debounce<T extends (...args: any[]) => any>(
 /**
  * Throttle utility for scroll/resize events
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
   
-  return function(this: any, ...args: Parameters<T>) {
+  return function(this: unknown, ...args: Parameters<T>) {
     if (!inThrottle) {
       func.apply(this, args);
       inThrottle = true;
@@ -136,7 +136,7 @@ export function generateId(prefix: string = 'forge'): string {
 /**
  * Deep merge utility for theme tokens
  */
-export function deepMerge<T extends Record<string, any>>(
+export function deepMerge<T extends Record<string, unknown>>(
   target: T,
   ...sources: Partial<T>[]
 ): T {
@@ -151,12 +151,15 @@ export function deepMerge<T extends Record<string, any>>(
 
     if (sourceValue && typeof sourceValue === 'object' && !Array.isArray(sourceValue)) {
       if (targetValue && typeof targetValue === 'object' && !Array.isArray(targetValue)) {
-        target[key] = deepMerge(targetValue, sourceValue) as any;
+        target[key] = deepMerge(
+          targetValue as Record<string, unknown>,
+          sourceValue as Record<string, unknown>
+        ) as T[typeof key];
       } else {
-        target[key] = sourceValue as any;
+        target[key] = sourceValue as T[typeof key];
       }
     } else {
-      target[key] = sourceValue as any;
+      target[key] = sourceValue as T[typeof key];
     }
   }
 

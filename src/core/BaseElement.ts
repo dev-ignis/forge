@@ -2,7 +2,7 @@ import { LitElement, PropertyValues } from 'lit';
 
 export abstract class BaseElement extends LitElement {
   // Event emission helper
-  protected emit<T = any>(eventName: string, detail?: T, options?: EventInit): boolean {
+  protected emit<T = unknown>(eventName: string, detail?: T, options?: EventInit): boolean {
     const event = new CustomEvent(eventName, {
       detail,
       bubbles: true,
