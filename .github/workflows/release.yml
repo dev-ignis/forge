@@ -230,9 +230,9 @@ jobs:
           draft: false
           prerelease: ${{ steps.version.outputs.bump_type == 'prerelease' }}
           files: |
-            dist/**/*.js
-            dist/**/*.d.ts
-            dist/**/*.map
+            dist/nexcraft-forge.es.js
+            dist/nexcraft-forge.umd.js
+            dist/index.d.ts
 
   publish-docs:
     name: Publish Documentation
