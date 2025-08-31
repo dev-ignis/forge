@@ -500,7 +500,7 @@ export class ForgeRadioGroup extends BaseElement {
             <input
               type="radio"
               class="radio-input"
-              name="${ifDefined(this.name || `radio-group-${this.id}`)}"
+              name="${ifDefined(this.name || `radio-group-${this.groupId}`)}"
               value="${option.value}"
               .checked="${this.value === option.value}"
               ?disabled="${option.disabled || this.disabled}"
@@ -555,7 +555,7 @@ export class ForgeRadioGroup extends BaseElement {
     `;
   }
 
-  private id = Math.random().toString(36).substr(2, 9);
+  private groupId = Math.random().toString(36).substr(2, 9);
 }
 
 declare global {

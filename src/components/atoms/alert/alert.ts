@@ -231,8 +231,8 @@ export class ForgeAlert extends BaseElement {
   @property({ type: Boolean, attribute: 'show-metrics' }) showMetrics = false;
 
   @state() private closing = false;
-  @state() private renderTime = 0;
-  @state() private renderCount = 0;
+  @state() protected renderTime = 0;
+  @state() protected renderCount = 0;
 
   private dismissTimer?: number;
 
@@ -380,7 +380,7 @@ export class ForgeAlert extends BaseElement {
     }
   }
 
-  private applyPerformanceDegradation(): void {
+  protected applyPerformanceDegradation(): void {
     this.animateIn = false;
   }
 

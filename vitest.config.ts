@@ -17,13 +17,18 @@ export default defineConfig({
         '*.config.*',
         '**/*.d.ts',
         '**/*.stories.ts',
-        '**/index.ts'
+        '**/index.ts',
+        'dist/**',
+        'storybook-static/**',
+        '.storybook/**',
+        'scripts/**',
+        'src/types/**'
       ],
       thresholds: {
-        branches: 75,
-        functions: 75,
-        lines: 75,
-        statements: 75
+        branches: 80,
+        functions: 80,
+        lines: 80,
+        statements: 80
       }
     },
     // Important for Web Components

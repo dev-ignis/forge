@@ -8,9 +8,10 @@ export {
 
 // Component exports
 export { ForgeButton } from './components/atoms/button/button';
-export { ForgeInput } from './components/atoms/input/input';
+export { type ButtonVariant, type ButtonSize, type ButtonType } from './components/atoms/button/button.types';
+export { ForgeInput, type InputType, type InputSize, type InputVariant } from './components/atoms/input/input';
 export { ForgeIcon, commonIcons, type IconSize } from './components/atoms/icon/icon';
-export { ForgeAlert, type AlertSeverity as ForgeAlertSeverity, type AlertVariant as ForgeAlertVariant } from './components/atoms/alert/alert';
+export { ForgeAlert, type AlertSeverity, type AlertVariant } from './components/atoms/alert/alert';
 export { ForgeCheckbox, type CheckboxSize, type CheckboxVariant, type CheckboxLabelPosition } from './components/atoms/checkbox/checkbox';
 export { ForgeBadge, type BadgeVariant, type BadgeSize, type BadgePosition } from './components/atoms/badge/badge';
 export { ForgeSwitch, type SwitchSize, type SwitchLabelPosition } from './components/atoms/switch/switch';
@@ -31,27 +32,14 @@ export type {
   ForgeInteractive,
   ForgeElement,
   
-  // Button types
-  ButtonVariant,
-  ButtonSize,
-  ButtonType,
+  // Component props and events
   ForgeButtonProps,
   ForgeButtonEventDetail,
   ForgeButtonEvents,
-  
-  // Input types
-  InputType,
   ForgeInputProps,
   ForgeInputEventDetail,
   ForgeInputEvents,
-  
-  
-  // Select types
-  SelectOption,
   ForgeSelectProps,
-  
-  // Alert types
-  AlertSeverity,
   ForgeAlertProps,
   ForgeAlertEvents,
   

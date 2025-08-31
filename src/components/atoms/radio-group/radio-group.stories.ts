@@ -256,27 +256,27 @@ export const Interactive: Story = {
       
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
         <button @click="${() => {
-          const radio = document.getElementById('interactive-radio') as ForgeRadioGroup;
+          const radio = document.getElementById('interactive-radio') as unknown as ForgeRadioGroup;
           radio.selectOption('basic');
         }}">Select Basic</button>
         
         <button @click="${() => {
-          const radio = document.getElementById('interactive-radio') as ForgeRadioGroup;
+          const radio = document.getElementById('interactive-radio') as unknown as ForgeRadioGroup;
           radio.selectOption('pro');
         }}">Select Pro</button>
         
         <button @click="${() => {
-          const radio = document.getElementById('interactive-radio') as ForgeRadioGroup;
+          const radio = document.getElementById('interactive-radio') as unknown as ForgeRadioGroup;
           radio.validate();
         }}">Validate</button>
         
         <button @click="${() => {
-          const radio = document.getElementById('interactive-radio') as ForgeRadioGroup;
+          const radio = document.getElementById('interactive-radio') as unknown as ForgeRadioGroup;
           radio.reset();
         }}">Reset</button>
         
         <button @click="${() => {
-          const radio = document.getElementById('interactive-radio') as ForgeRadioGroup;
+          const radio = document.getElementById('interactive-radio') as unknown as ForgeRadioGroup;
           radio.disabled = !radio.disabled;
         }}">Toggle Disabled</button>
       </div>

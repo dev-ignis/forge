@@ -233,10 +233,10 @@ export class ForgeInput extends BaseElement {
   @property({ type: String }) placeholder = '';
   @property({ type: String }) name = '';
   @property({ type: String }) label = '';
-  @property({ type: String }) helperText = '';
+  @property({ type: String, attribute: 'helper-text' }) helperText = '';
   @property({ type: String }) variant: InputVariant = 'default';
   @property({ type: String }) size: InputSize = 'md';
-  @property({ type: String }) validationState: ValidationState = 'default';
+  @property({ type: String, attribute: 'validation-state' }) validationState: ValidationState = 'default';
   @property({ type: Boolean }) disabled = false;
   @property({ type: Boolean }) readonly = false;
   @property({ type: Boolean }) required = false;
@@ -250,19 +250,7 @@ export class ForgeInput extends BaseElement {
   @property({ type: String }) autocomplete?: string;
   @property({ type: String }) inputmode?: string;
 
-  // AI-Ready attributes (UVP)
-  @property({ type: String, attribute: 'semantic-role' }) semanticRole?: string;
-  @property({ type: String, attribute: 'ai-context' }) aiContext?: string;
-  @property({ type: String, attribute: 'aria-description' }) ariaDescription: string | null = null;
-
-  // Performance monitoring (UVP)
-  @property({ type: Number, attribute: 'max-render-ms' }) maxRenderMs = 16;
-  @property({ type: Boolean, attribute: 'warn-on-violation' }) warnOnViolation = false;
-  @property({ type: String, attribute: 'performance-mode' }) performanceMode: 'auto' | 'fast' | 'normal' = 'auto';
-
-  // Developer experience (UVP)
-  @property({ type: Boolean, attribute: 'dev-mode' }) devMode = false;
-  @property({ type: Boolean, attribute: 'show-metrics' }) showMetrics = false;
+  // Note: AI-Ready, Performance, and Developer properties are inherited from BaseElement
 
   // State
   @state() private hasFocus = false;
@@ -474,7 +462,7 @@ export class ForgeInput extends BaseElement {
     return parts.join(', ') || 'Text input field';
   }
 
-  private checkPerformance(renderTime: number): void {
+  protected checkPerformance(renderTime: number): void {
     this.renderMetrics.time = renderTime;
     
     if (renderTime > this.maxRenderMs) {

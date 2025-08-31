@@ -5,18 +5,25 @@ import { expect as vitestExpect } from 'vitest';
 export function createSpy() {
   const spy = vi.fn();
   // Add properties that Chai might check
-  (spy as any).called = false;
-  (spy as any).calledOnce = false;
-  (spy as any).callCount = 0;
+  interface SpyWithChaiProps {
+    called: boolean;
+    calledOnce: boolean;
+    callCount: number;
+  }
+  
+  const spyWithProps = spy as typeof spy & SpyWithChaiProps;
+  spyWithProps.called = false;
+  spyWithProps.calledOnce = false;
+  spyWithProps.callCount = 0;
   
   // Intercept calls to update properties
   const originalFn = spy;
   const wrappedSpy = new Proxy(originalFn, {
     apply(target, thisArg, args) {
       const result = Reflect.apply(target, thisArg, args);
-      (wrappedSpy as any).called = true;
-      (wrappedSpy as any).callCount = target.mock.calls.length;
-      (wrappedSpy as any).calledOnce = target.mock.calls.length === 1;
+      (wrappedSpy as typeof spy & SpyWithChaiProps).called = true;
+      (wrappedSpy as typeof spy & SpyWithChaiProps).callCount = target.mock.calls.length;
+      (wrappedSpy as typeof spy & SpyWithChaiProps).calledOnce = target.mock.calls.length === 1;
       return result;
     }
   });
@@ -25,8 +32,9 @@ export function createSpy() {
 }
 
 // Helper to wrap vi.spyOn with Chai-compatible properties
-export function spyOn(object: any, method: string) {
-  const spy = vi.spyOn(object, method);
+export function spyOn<T extends object>(object: T, method: keyof T) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const spy = vi.spyOn(object as any, method as any);
   
   // Create a wrapper that updates Chai properties
   const wrapper = {
@@ -74,7 +82,7 @@ export function createKeyboardEvent(key: string, type = 'keydown'): KeyboardEven
 
 // Helper to dispatch keyboard event  
 export async function sendKeys(options: { press: string; target?: Element } | { type: string; target?: Element }) {
-  let target = (options as any).target || document.activeElement;
+  let target = ('target' in options ? options.target : undefined) || document.activeElement;
   
   // If the active element is a shadow host, find the actual input within
   if (target && target.shadowRoot) {

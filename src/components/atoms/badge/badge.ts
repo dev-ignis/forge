@@ -254,8 +254,8 @@ export class ForgeBadge extends BaseElement {
   @property({ type: Boolean, attribute: 'dev-mode' }) devMode = false;
   @property({ type: Boolean, attribute: 'show-metrics' }) showMetrics = false;
 
-  @state() private renderTime = 0;
-  @state() private renderCount = 0;
+  @state() protected renderTime = 0;
+  @state() protected renderCount = 0;
   @state() private previousCount = 0;
 
   override connectedCallback(): void {

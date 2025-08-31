@@ -161,7 +161,7 @@ describe('ForgeRadioGroup', () => {
       await element.updateComplete;
 
       expect(element.value).to.equal('option1');
-      expect(changeHandler).toHaveBeenCalledTimes(1);
+      expect(changeHandler.callCount).to.equal(1);
     });
 
     it('should not select disabled option', async () => {
@@ -183,7 +183,7 @@ describe('ForgeRadioGroup', () => {
       element.selectOption('option2');
       await element.updateComplete;
 
-      expect(changeHandler).toHaveBeenCalledTimes(1);
+      expect(changeHandler.callCount).to.equal(1);
       const event = changeHandler.mock.calls[0][0];
       expect(event.detail.value).to.equal('option2');
       expect(event.detail.previousValue).to.equal('');

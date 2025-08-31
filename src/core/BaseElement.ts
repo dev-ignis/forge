@@ -61,12 +61,12 @@ export abstract class BaseElement extends LitElement {
 
   constructor() {
     super();
-    this.performanceStartTime = performance.now();
+    this.performanceStartTime = globalThis.performance.now();
   }
 
   // Performance monitoring per ADR-014
   protected checkPerformance(startTime: number): void {
-    const endTime = performance.now();
+    const endTime = globalThis.performance.now();
     this.renderTime = endTime - startTime;
     this.renderCount++;
 
@@ -89,6 +89,7 @@ export abstract class BaseElement extends LitElement {
     }
 
     if (this.devMode) {
+      // eslint-disable-next-line no-console
       console.log(`${this.tagName} render metrics:`, {
         component: this.tagName.toLowerCase(),
         renderTime: this.renderTime,

@@ -228,8 +228,8 @@ export class ForgeCheckbox extends BaseElement {
 
   @query('.checkbox-input') private input!: HTMLInputElement;
   
-  @state() private renderTime = 0;
-  @state() private renderCount = 0;
+  @state() protected renderTime = 0;
+  @state() protected renderCount = 0;
 
   override connectedCallback(): void {
     super.connectedCallback();

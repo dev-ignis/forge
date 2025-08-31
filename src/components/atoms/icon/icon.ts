@@ -140,8 +140,8 @@ export class ForgeIcon extends BaseElement {
   @state() private iconData?: IconData;
   @state() private loading = false;
   @state() private error = false;
-  @state() private renderTime = 0;
-  @state() private renderCount = 0;
+  @state() protected renderTime = 0;
+  @state() protected renderCount = 0;
 
   static registerIcon(name: string, svg: string, viewBox?: string): void {
     this.iconRegistry.set(name, { svg, viewBox });
@@ -170,15 +170,48 @@ export class ForgeIcon extends BaseElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.loadIcon();
     this.updateAria();
+  }
+  
+  protected override firstUpdated(): void {
+    const startTime = performance.now();
+    
+    // Load icon on first update when properties are ready
+    if (this.name && ForgeIcon.iconRegistry.has(this.name)) {
+      this.iconData = ForgeIcon.iconRegistry.get(this.name)!;
+      this.error = false;
+      this.trackRenderPerformance(startTime);
+      return; // Don't call loadIcon if we found it in registry
+    } 
+    
+    if (this.name || this.src) {
+      this.loadIcon();
+    } else {
+      // No icon to load, but still track performance
+      this.trackRenderPerformance(startTime);
+    }
   }
 
   override updated(changedProperties: Map<string, unknown>): void {
     super.updated(changedProperties);
     
-    if (changedProperties.has('name') || changedProperties.has('src')) {
-      this.loadIcon();
+    // Reload icon if name/src changed (but skip if this is the first update from undefined)
+    const nameChanged = changedProperties.has('name');
+    const srcChanged = changedProperties.has('src');
+    const isFirstUpdate = (changedProperties.has('name') && changedProperties.get('name') === undefined) ||
+                         (changedProperties.has('src') && changedProperties.get('src') === undefined);
+    
+    // Skip if this is handled by firstUpdated
+    if (!isFirstUpdate && (nameChanged || srcChanged)) {
+      // Check registry synchronously first to avoid unnecessary async operations
+      if (this.name && ForgeIcon.iconRegistry.has(this.name)) {
+        const startTime = performance.now();
+        this.iconData = ForgeIcon.iconRegistry.get(this.name)!;
+        this.error = false;
+        this.trackRenderPerformance(startTime);
+      } else if (this.name || this.src) {
+        this.loadIcon();
+      }
     }
 
     if (changedProperties.has('label') || 
@@ -200,9 +233,11 @@ export class ForgeIcon extends BaseElement {
         return;
       }
 
+      // Icon not in registry, try loading from src if provided
       if (this.src) {
         await this.loadFromUrl(this.src);
       } else {
+        // Only set error if icon is not found in registry AND no src provided
         this.error = true;
         console.warn(`Icon "${this.name}" not found in registry`);
       }
@@ -324,7 +359,7 @@ export class ForgeIcon extends BaseElement {
     }
   }
 
-  private applyPerformanceDegradation(): void {
+  protected applyPerformanceDegradation(): void {
     this.spin = false;
     this.pulse = false;
   }

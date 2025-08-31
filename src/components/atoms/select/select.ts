@@ -364,7 +364,7 @@ export class ForgeSelect extends BaseElement {
       this.setAttribute('aria-required', 'true');
     }
     this.updateAria();
-    this.filteredOptions = this.options;
+    this.filteredOptions = this.options || [];
     document.addEventListener('click', this.handleDocumentClick);
   }
 
@@ -556,6 +556,11 @@ export class ForgeSelect extends BaseElement {
     if (this.disabled || this.loading) return;
     
     this.open = true;
+    // Ensure filteredOptions is synchronized with options
+    if (!this.filteredOptions || this.filteredOptions.length === 0) {
+      this.filteredOptions = this.options || [];
+    }
+    
     if (this.options && this.options.length > 0) {
       this.focusedIndex = this.options.findIndex(opt => opt.value === this.value);
       if (this.focusedIndex === -1) this.focusedIndex = 0;
@@ -569,7 +574,7 @@ export class ForgeSelect extends BaseElement {
   public close(): void {
     this.open = false;
     this.searchQuery = '';
-    this.filteredOptions = this.options;
+    this.filteredOptions = this.options || [];
     this.focusedIndex = -1;
     
     this.emit('forge-close');
@@ -598,7 +603,7 @@ export class ForgeSelect extends BaseElement {
     this.error = false;
     this.errorMessage = '';
     this.searchQuery = '';
-    this.filteredOptions = this.options;
+    this.filteredOptions = this.options || [];
   }
 
   public validate(): boolean {
@@ -755,10 +760,10 @@ export class ForgeSelect extends BaseElement {
                   ${group ? html`
                     <div class="select-group-label" part="group-label">${group}</div>
                   ` : ''}
-                  ${this.renderOptions(this.filteredOptions.filter(opt => opt.group === group))}
+                  ${this.renderSelectOptions(this.filteredOptions.filter(opt => opt.group === group))}
                 </div>
               `) : 
-              this.renderOptions(this.filteredOptions)
+              this.renderSelectOptions(this.filteredOptions)
             }
           </div>
         </div>
@@ -779,7 +784,7 @@ export class ForgeSelect extends BaseElement {
     `;
   }
 
-  private renderOptions = (options: SelectOption[]) => {
+  private renderSelectOptions = (options: SelectOption[]) => {
     return options.map((option, index) => {
       const globalIndex = this.filteredOptions.indexOf(option);
       const isSelected = option.value === this.value;

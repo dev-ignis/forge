@@ -124,7 +124,7 @@ describe('ForgeSwitch', () => {
       
       await el.updateComplete;
       
-      expect(changeSpy).toHaveBeenCalledTimes(1);
+      expect(changeSpy.callCount).to.equal(1);
     });
 
     it('should emit forge-change event with detail', async () => {

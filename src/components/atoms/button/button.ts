@@ -135,19 +135,7 @@ export class ForgeButton extends BaseElement {
   @property({ type: String }) iconStart?: string;
   @property({ type: String }) iconEnd?: string;
   
-  // AI-Ready attributes (UVP)
-  @property({ type: String, attribute: 'semantic-role' }) semanticRole?: string;
-  @property({ type: String, attribute: 'ai-context' }) aiContext?: string;
-  @property({ type: String, attribute: 'aria-description' }) ariaDescription: string | null = null;
-  
-  // Performance monitoring (UVP)
-  @property({ type: Number, attribute: 'max-render-ms' }) maxRenderMs = 16;
-  @property({ type: Boolean, attribute: 'warn-on-violation' }) warnOnViolation = false;
-  @property({ type: String, attribute: 'performance-mode' }) performanceMode: 'auto' | 'fast' | 'normal' = 'auto';
-  
-  // Developer experience (UVP)
-  @property({ type: Boolean, attribute: 'dev-mode' }) devMode = false;
-  @property({ type: Boolean, attribute: 'show-metrics' }) showMetrics = false;
+  // Note: AI-Ready, Performance, and Developer properties are inherited from BaseElement
 
   @state() private ripples: Array<{ x: number; y: number; id: number }> = [];
   @state() private renderMetrics = { time: 0, violations: 0 };
@@ -279,7 +267,7 @@ export class ForgeButton extends BaseElement {
     return parts.join(', ') || 'Interactive button';
   }
   
-  private checkPerformance(renderTime: number): void {
+  protected checkPerformance(renderTime: number): void {
     this.renderMetrics.time = renderTime;
     
     if (renderTime > this.maxRenderMs) {

@@ -8,7 +8,7 @@ import './vitest-chai-fix';
 const registeredElements = new Set<string>();
 const originalDefine = customElements.define.bind(customElements);
 
-customElements.define = function(name: string, constructor: any, options?: any) {
+customElements.define = function(name: string, constructor: CustomElementConstructor, options?: ElementDefinitionOptions) {
   if (!registeredElements.has(name)) {
     registeredElements.add(name);
     originalDefine(name, constructor, options);
@@ -43,7 +43,7 @@ expect.extend({
 
 // Extend vitest matchers type
 declare module 'vitest' {
-  interface Assertion<T = any> {
+  interface Assertion {
     toHaveShadowRoot(): void;
     toContainShadowElement(selector: string): void;
   }
