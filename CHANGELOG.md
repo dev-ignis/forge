@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.0 - 2025-08-31
+
+### Changes
+- Merge pull request #1 from dev-ignis/develop
+- test: - updates;
+- fix: - ci;
+- test: - atoms;
+- feat: - sesign system atoms;
+- docs: - plan phases;
+- chore(release): v0.0.2 [skip ci]
+- fix: - tag veersion;
+- feat: - renamed package to @nexcraft/forge;
 ## v0.0.2 - 2025-08-29
 
 ### Changes
