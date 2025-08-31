@@ -1,12 +1,19 @@
+import { vi } from 'vitest';
 import { fixture, expect, html } from '@open-wc/testing';
-import sinon from 'sinon';
+import { spyOn } from '../../../test/test-helpers';
 import '../button/button'; // Import button for integration test
 import './icon';
 import { ForgeIcon } from './icon';
 
 describe('ForgeIcon', () => {
+  beforeEach(() => {
+    // Clear icon registry before each test
+    (ForgeIcon as any).iconRegistry.clear();
+    (ForgeIcon as any).loadingIcons.clear();
+  });
+  
   afterEach(() => {
-    sinon.restore();
+    vi.restoreAllMocks();
   });
 
   describe('Basic Rendering', () => {
@@ -39,15 +46,15 @@ describe('ForgeIcon', () => {
   });
 
   describe('Icon Loading', () => {
-    let fetchStub: sinon.SinonStub;
+    let fetchStub: any;
 
     beforeEach(() => {
-      fetchStub = sinon.stub(window, 'fetch');
+      fetchStub = spyOn(window, 'fetch');
     });
 
     it('should load icon from URL', async () => {
       const svgContent = '<svg viewBox="0 0 24 24"><path d="M0 0 L24 24"/></svg>';
-      fetchStub.resolves(new Response(svgContent, { status: 200 }));
+      fetchStub.mockImplementation(() => Promise.resolve(new Response(svgContent, { status: 200 })));
       
       const el = await fixture<ForgeIcon>(html`<forge-icon src="/test.svg"></forge-icon>`);
       await el.updateComplete;
@@ -59,19 +66,19 @@ describe('ForgeIcon', () => {
     });
 
     it('should handle loading error', async () => {
-      fetchStub.rejects(new Error('Network error'));
-      const consoleError = sinon.stub(console, 'error');
+      fetchStub.mockImplementation(() => Promise.reject(new Error('Network error'));
+      const consoleError = spyOn(console, 'error');
       
       const el = await fixture<ForgeIcon>(html`<forge-icon src="/error.svg"></forge-icon>`);
       await el.updateComplete;
       await new Promise(resolve => setTimeout(resolve, 10));
       
-      expect(consoleError).to.have.been.called;
+      expect(consoleError).to.have.property('called', true);
     });
 
     it('should cache loaded icons', async () => {
       const svgContent = '<svg viewBox="0 0 24 24"><path d="M0 0 L24 24"/></svg>';
-      fetchStub.resolves(new Response(svgContent, { status: 200 }));
+      fetchStub.mockImplementation(() => Promise.resolve(new Response(svgContent, { status: 200 }));
       
       const el1 = await fixture<ForgeIcon>(html`<forge-icon name="cached" src="/cached.svg"></forge-icon>`);
       await el1.updateComplete;
@@ -80,7 +87,7 @@ describe('ForgeIcon', () => {
       const el2 = await fixture<ForgeIcon>(html`<forge-icon name="cached"></forge-icon>`);
       await el2.updateComplete;
       
-      expect(fetchStub).to.have.been.calledOnce;
+      expect(fetchStub).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -101,8 +108,8 @@ describe('ForgeIcon', () => {
     });
 
     it('should load icon set from URL', async () => {
-      const fetchStub = sinon.stub(window, 'fetch');
-      fetchStub.resolves(new Response(JSON.stringify({
+      const fetchStub = spyOn(window, 'fetch');
+      fetchStub.mockImplementation(() => Promise.resolve(new Response(JSON.stringify({
         icon1: '<path d="M0 0"/>',
         icon2: '<path d="M1 1"/>'
       }), { status: 200 }));
@@ -184,7 +191,7 @@ describe('ForgeIcon', () => {
     });
 
     it('should warn on performance violation', async () => {
-      const consoleWarn = sinon.stub(console, 'warn');
+      const consoleWarn = spyOn(console, 'warn');
       
       const el = await fixture<ForgeIcon>(html`
         <forge-icon max-render-ms="0.001" warn-on-violation></forge-icon>
@@ -192,7 +199,7 @@ describe('ForgeIcon', () => {
       
       await el.updateComplete;
       
-      expect(consoleWarn).to.have.been.called;
+      expect(consoleWarn).to.have.property('called', true);
     });
 
     it('should apply performance degradation in auto mode', async () => {
@@ -214,7 +221,7 @@ describe('ForgeIcon', () => {
 
   describe('Developer Mode', () => {
     it('should log metrics in dev mode', async () => {
-      const consoleLog = sinon.stub(console, 'log');
+      const consoleLog = spyOn(console, 'log');
       
       const el = await fixture<ForgeIcon>(html`
         <forge-icon dev-mode></forge-icon>
@@ -222,7 +229,7 @@ describe('ForgeIcon', () => {
       
       await el.updateComplete;
       
-      expect(consoleLog).to.have.been.called;
+      expect(consoleLog).to.have.property('called', true);
     });
 
     it('should show metrics overlay', async () => {
@@ -263,7 +270,7 @@ describe('ForgeIcon', () => {
 
   describe('Error Handling', () => {
     it('should show error icon for missing icon', async () => {
-      const consoleWarn = sinon.stub(console, 'warn');
+      const consoleWarn = spyOn(console, 'warn');
       
       const el = await fixture<ForgeIcon>(html`<forge-icon name="non-existent"></forge-icon>`);
       await el.updateComplete;
@@ -271,12 +278,12 @@ describe('ForgeIcon', () => {
       const svg = el.shadowRoot?.querySelector('svg');
       expect(svg).to.exist;
       expect(svg?.innerHTML).to.include('line');
-      expect(consoleWarn).to.have.been.called;
+      expect(consoleWarn).to.have.property('called', true);
     });
 
     it('should show loading state', async () => {
-      const fetchStub = sinon.stub(window, 'fetch');
-      fetchStub.returns(new Promise(() => {}));
+      const fetchStub = spyOn(window, 'fetch');
+      fetchStub.mockImplementation(() => (new Promise(() => {}));
       
       const el = await fixture<ForgeIcon>(html`<forge-icon src="/loading.svg"></forge-icon>`);
       await el.updateComplete;

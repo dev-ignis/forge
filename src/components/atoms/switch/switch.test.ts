@@ -1,11 +1,12 @@
+import { vi } from 'vitest';
 import { fixture, expect, html, waitUntil } from '@open-wc/testing';
-import sinon from 'sinon';
+import { createSpy, spyOn } from '../../../test/test-helpers';
 import './switch';
 import { ForgeSwitch } from './switch';
 
 describe('ForgeSwitch', () => {
   afterEach(() => {
-    sinon.restore();
+    vi.restoreAllMocks();
   });
 
   describe('Basic Rendering', () => {
@@ -114,7 +115,7 @@ describe('ForgeSwitch', () => {
         <forge-switch></forge-switch>
       `);
       
-      const changeSpy = sinon.spy();
+      const changeSpy = createSpy();
       el.addEventListener('change', changeSpy);
       
       const input = el.shadowRoot?.querySelector('.switch-input') as HTMLInputElement;
@@ -123,7 +124,7 @@ describe('ForgeSwitch', () => {
       
       await el.updateComplete;
       
-      expect(changeSpy).to.have.been.calledOnce;
+      expect(changeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should emit forge-change event with detail', async () => {
@@ -417,7 +418,7 @@ describe('ForgeSwitch', () => {
     });
 
     it('should warn on performance violation', async () => {
-      const consoleWarn = sinon.stub(console, 'warn');
+      const consoleWarn = spyOn(console, 'warn');
       
       const el = await fixture<ForgeSwitch>(html`
         <forge-switch max-render-ms="0.001" warn-on-violation></forge-switch>
@@ -426,7 +427,7 @@ describe('ForgeSwitch', () => {
       el.toggle();
       await el.updateComplete;
       
-      expect(consoleWarn).to.have.been.called;
+      expect(consoleWarn).to.have.property('called', true);
     });
 
     it('should apply performance degradation in auto mode', async () => {
@@ -449,7 +450,7 @@ describe('ForgeSwitch', () => {
 
   describe('Developer Mode', () => {
     it('should log metrics in dev mode', async () => {
-      const consoleLog = sinon.stub(console, 'log');
+      const consoleLog = spyOn(console, 'log');
       
       const el = await fixture<ForgeSwitch>(html`
         <forge-switch dev-mode></forge-switch>
@@ -458,7 +459,7 @@ describe('ForgeSwitch', () => {
       el.toggle();
       await el.updateComplete;
       
-      expect(consoleLog).to.have.been.called;
+      expect(consoleLog).to.have.property('called', true);
     });
 
     it('should show metrics overlay', async () => {

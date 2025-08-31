@@ -1,11 +1,12 @@
+import { vi } from 'vitest';
 import { fixture, expect, html } from '@open-wc/testing';
-import sinon from 'sinon';
+import { spyOn } from '../../../test/test-helpers';
 import './badge';
 import { ForgeBadge } from './badge';
 
 describe('ForgeBadge', () => {
   afterEach(() => {
-    sinon.restore();
+    vi.restoreAllMocks();
   });
 
   describe('Basic Rendering', () => {
@@ -326,7 +327,7 @@ describe('ForgeBadge', () => {
     });
 
     it('should warn on performance violation', async () => {
-      const consoleWarn = sinon.stub(console, 'warn');
+      const consoleWarn = spyOn(console, 'warn');
       
       const el = await fixture<ForgeBadge>(html`
         <forge-badge max-render-ms="0.001" warn-on-violation></forge-badge>
@@ -335,7 +336,7 @@ describe('ForgeBadge', () => {
       el.increment();
       await el.updateComplete;
       
-      expect(consoleWarn).to.have.been.called;
+      expect(consoleWarn).to.have.property('called', true);
     });
 
     it('should disable pulse in auto mode when performance is poor', async () => {
@@ -356,7 +357,7 @@ describe('ForgeBadge', () => {
 
   describe('Developer Mode', () => {
     it('should log metrics in dev mode', async () => {
-      const consoleLog = sinon.stub(console, 'log');
+      const consoleLog = spyOn(console, 'log');
       
       const el = await fixture<ForgeBadge>(html`
         <forge-badge dev-mode></forge-badge>
@@ -365,7 +366,7 @@ describe('ForgeBadge', () => {
       el.increment();
       await el.updateComplete;
       
-      expect(consoleLog).to.have.been.called;
+      expect(consoleLog).to.have.property('called', true);
     });
 
     it('should show metrics overlay', async () => {

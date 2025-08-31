@@ -278,7 +278,7 @@ export class ForgeInput extends BaseElement {
       'input-container': true,
       [`input-container--${this.variant}`]: true,
       [`input-container--${this.size}`]: true,
-      [`input-container--${this.validationState}`]: this.validationState !== 'default',
+      [`input-container--${this.validationState}`]: true,
       'input-container--disabled': this.disabled,
       'input-container--focused': this.hasFocus
     };

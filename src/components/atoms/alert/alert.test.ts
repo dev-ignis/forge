@@ -1,11 +1,12 @@
+import { vi } from 'vitest';
 import { fixture, expect, html, waitUntil } from '@open-wc/testing';
-import sinon from 'sinon';
+import { createSpy, spyOn } from '../../../test/test-helpers';
 import './alert';
 import { ForgeAlert } from './alert';
 
 describe('ForgeAlert', () => {
   afterEach(() => {
-    sinon.restore();
+    vi.restoreAllMocks();
   });
 
   describe('Basic Rendering', () => {
@@ -89,7 +90,7 @@ describe('ForgeAlert', () => {
         <forge-alert closable></forge-alert>
       `);
       
-      const closeSpy = sinon.spy();
+      const closeSpy = createSpy();
       el.addEventListener('forge-close', closeSpy);
       
       const closeButton = el.shadowRoot?.querySelector('.close-button') as HTMLElement;
@@ -97,7 +98,7 @@ describe('ForgeAlert', () => {
       
       await el.updateComplete;
       
-      expect(closeSpy).to.have.been.calledOnce;
+      expect(closeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should remove element after close animation', async () => {
@@ -134,6 +135,14 @@ describe('ForgeAlert', () => {
   });
 
   describe('Auto Dismiss', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+    
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+    
     it('should auto dismiss after specified time', async () => {
       const container = await fixture<HTMLDivElement>(html`
         <div>
@@ -144,7 +153,8 @@ describe('ForgeAlert', () => {
       const el = container.querySelector('forge-alert');
       expect(el).to.exist;
       
-      await new Promise(resolve => setTimeout(resolve, 150));
+      vi.advanceTimersByTime(150);
+      await vi.runAllTimersAsync();
       
       expect(container.querySelector('forge-alert')).to.be.null;
     });
@@ -154,11 +164,11 @@ describe('ForgeAlert', () => {
         <forge-alert auto-dismiss="1000"></forge-alert>
       `);
       
-      const clearTimeoutSpy = sinon.spy(window, 'clearTimeout');
+      const clearTimeoutSpy = spyOn(window, 'clearTimeout');
       
       el.remove();
       
-      expect(clearTimeoutSpy).to.have.been.called;
+      expect(clearTimeoutSpy).to.have.property('called', true);
     });
   });
 
@@ -252,7 +262,7 @@ describe('ForgeAlert', () => {
     });
 
     it('should warn on performance violation', async () => {
-      const consoleWarn = sinon.stub(console, 'warn');
+      const consoleWarn = spyOn(console, 'warn');
       
       const el = await fixture<ForgeAlert>(html`
         <forge-alert max-render-ms="0.001" warn-on-violation></forge-alert>
@@ -260,7 +270,7 @@ describe('ForgeAlert', () => {
       
       await el.updateComplete;
       
-      expect(consoleWarn).to.have.been.called;
+      expect(consoleWarn).to.have.property('called', true);
     });
 
     it('should apply performance degradation in auto mode', async () => {
@@ -280,7 +290,7 @@ describe('ForgeAlert', () => {
 
   describe('Developer Mode', () => {
     it('should log metrics in dev mode', async () => {
-      const consoleLog = sinon.stub(console, 'log');
+      const consoleLog = spyOn(console, 'log');
       
       const el = await fixture<ForgeAlert>(html`
         <forge-alert dev-mode></forge-alert>
@@ -288,7 +298,7 @@ describe('ForgeAlert', () => {
       
       await el.updateComplete;
       
-      expect(consoleLog).to.have.been.called;
+      expect(consoleLog).to.have.property('called', true);
     });
 
     it('should show metrics overlay', async () => {

@@ -343,8 +343,12 @@ export class ForgeSelect extends BaseElement {
       dataType: 'string',
       criticality: 'medium',
       semanticRole: 'combobox'
-    };
+    }
     
+    // Initialize filteredOptions with empty array
+    this.filteredOptions = [];
+    
+    // Bind event handler for document click
     this.handleDocumentClick = this.handleDocumentClick.bind(this);
   }
 
@@ -433,7 +437,7 @@ export class ForgeSelect extends BaseElement {
     }
   }
 
-  private handleTriggerClick(): void {
+  private handleTriggerClick = (): void => {
     if (this.disabled || this.loading) return;
     
     if (this.open) {
@@ -443,8 +447,13 @@ export class ForgeSelect extends BaseElement {
     }
   }
 
-  private handleKeyDown(e: KeyboardEvent): void {
+  private handleKeyDown = (e: KeyboardEvent): void => {
     if (this.disabled || this.loading) return;
+
+    // Ensure filteredOptions is initialized
+    if (!this.filteredOptions || this.filteredOptions.length === 0) {
+      this.filteredOptions = this.options || [];
+    }
 
     const enabledOptions = this.filteredOptions.filter(opt => !opt.disabled);
     if (enabledOptions.length === 0) return;
@@ -515,17 +524,17 @@ export class ForgeSelect extends BaseElement {
     }
   }
 
-  private handleSearch(e: Event): void {
+  private handleSearch = (e: Event): void => {
     const input = e.target as HTMLInputElement;
     this.searchQuery = input.value.toLowerCase();
     
-    if (this.searchQuery) {
+    if (this.searchQuery && this.options) {
       this.filteredOptions = this.options.filter(option =>
         option.label.toLowerCase().includes(this.searchQuery) ||
         option.value.toLowerCase().includes(this.searchQuery)
       );
     } else {
-      this.filteredOptions = this.options;
+      this.filteredOptions = this.options || [];
     }
     
     this.focusedIndex = -1;
@@ -547,8 +556,12 @@ export class ForgeSelect extends BaseElement {
     if (this.disabled || this.loading) return;
     
     this.open = true;
-    this.focusedIndex = this.options.findIndex(opt => opt.value === this.value);
-    if (this.focusedIndex === -1) this.focusedIndex = 0;
+    if (this.options && this.options.length > 0) {
+      this.focusedIndex = this.options.findIndex(opt => opt.value === this.value);
+      if (this.focusedIndex === -1) this.focusedIndex = 0;
+    } else {
+      this.focusedIndex = -1;
+    }
     
     this.emit('forge-open');
   }
@@ -574,7 +587,7 @@ export class ForgeSelect extends BaseElement {
       value: this.value,
       previousValue,
       option
-    };
+    }
     
     this.emit('change', detail);
     this.emit('forge-change', detail);
@@ -646,7 +659,7 @@ export class ForgeSelect extends BaseElement {
                         this.open ? 'Dropdown is open' :
                         this.error ? `Select has error: ${this.errorMessage}` :
                         selectedOption ? `Selected: ${selectedOption.label}` : 'No option selected'
-    };
+    }
   }
 
   override getAIDescription(): string {

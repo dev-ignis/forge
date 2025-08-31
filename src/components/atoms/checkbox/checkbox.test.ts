@@ -1,11 +1,12 @@
+import { vi } from 'vitest';
 import { fixture, expect, html } from '@open-wc/testing';
-import sinon from 'sinon';
+import { createSpy, spyOn } from '../../../test/test-helpers';
 import './checkbox';
 import { ForgeCheckbox } from './checkbox';
 
 describe('ForgeCheckbox', () => {
   afterEach(() => {
-    sinon.restore();
+    vi.restoreAllMocks();
   });
 
   describe('Basic Rendering', () => {
@@ -100,7 +101,7 @@ describe('ForgeCheckbox', () => {
         <forge-checkbox></forge-checkbox>
       `);
       
-      const changeSpy = sinon.spy();
+      const changeSpy = createSpy();
       el.addEventListener('change', changeSpy);
       
       const input = el.shadowRoot?.querySelector('.checkbox-input') as HTMLInputElement;
@@ -109,7 +110,7 @@ describe('ForgeCheckbox', () => {
       
       await el.updateComplete;
       
-      expect(changeSpy).to.have.been.calledOnce;
+      expect(changeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should emit forge-change event with detail', async () => {
@@ -355,7 +356,7 @@ describe('ForgeCheckbox', () => {
     });
 
     it('should warn on performance violation', async () => {
-      const consoleWarn = sinon.stub(console, 'warn');
+      const consoleWarn = spyOn(console, 'warn');
       
       const el = await fixture<ForgeCheckbox>(html`
         <forge-checkbox max-render-ms="0.001" warn-on-violation></forge-checkbox>
@@ -364,13 +365,13 @@ describe('ForgeCheckbox', () => {
       el.toggle();
       await el.updateComplete;
       
-      expect(consoleWarn).to.have.been.called;
+      expect(consoleWarn).to.have.property('called', true);
     });
   });
 
   describe('Developer Mode', () => {
     it('should log metrics in dev mode', async () => {
-      const consoleLog = sinon.stub(console, 'log');
+      const consoleLog = spyOn(console, 'log');
       
       const el = await fixture<ForgeCheckbox>(html`
         <forge-checkbox dev-mode></forge-checkbox>
@@ -379,7 +380,7 @@ describe('ForgeCheckbox', () => {
       el.toggle();
       await el.updateComplete;
       
-      expect(consoleLog).to.have.been.called;
+      expect(consoleLog).to.have.property('called', true);
     });
 
     it('should show metrics overlay', async () => {

@@ -1,523 +1,479 @@
-# Testing Documentation
+# Testing Framework Documentation
 
 ## Overview
 
-The Forge UI Component Library maintains comprehensive test coverage (93.77%) across all components using modern testing frameworks and best practices.
+The Forge UI Component Library uses **Vitest** with **Happy DOM** for comprehensive testing of Web Components. This testing setup provides full Shadow DOM support, fast execution, and excellent developer experience with hot reload and interactive debugging capabilities.
 
-## Test Coverage Summary
-
-| Component | Coverage | Test Files | Assertions |
-|-----------|----------|------------|------------|
-| Alert | 98.20% | alert.test.ts | 340+ |
-| Badge | 96.37% | badge.test.ts | 381+ |
-| Button | 94.17% | button.test.ts | 261+ |
-| Checkbox | 97.87% | checkbox.test.ts | 393+ |
-| Icon | 94.09% | icon.test.ts | 288+ |
-| Input | 88.29% | input.test.ts | 322+ |
-| Switch | 96.93% | switch.test.ts | 498+ |
-| RadioGroup | Tests ✅ | radio-group.test.ts | Comprehensive |
-| Select | Tests ✅ | select.test.ts | Comprehensive |
-| **Overall** | **93.77%** | **All Tests** | **3,192+** |
+**Current Test Status:** 286 tests passing (90.5% pass rate) with execution time of ~3 seconds.
 
 ## Testing Stack
 
-### Frameworks and Tools
+### Current Configuration
 
-- **Vitest** (v3.2.4) - Unit testing framework with browser support
-- **Web Test Runner** - Component integration testing
-- **Playwright** (v1.55.0) - End-to-end testing capability
-- **@open-wc/testing** - Web Components testing utilities
-- **@vitest/coverage-v8** - Code coverage reporting
-
-### Configuration Files
-
-```bash
-web-test-runner.config.mjs  # Browser testing configuration
-vite.config.ts              # Vitest configuration
-playwright.config.ts        # E2E test configuration
+**vitest.config.ts** - Main configuration:
+```typescript
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'happy-dom',
+    setupFiles: ['./src/test/setup.ts'],
+    include: ['src/**/*.{test,spec}.{js,ts}'],
+    isolate: true,
+    pool: 'forks',
+    poolOptions: {
+      forks: { singleFork: true } // Important for Web Components
+    },
+    coverage: {
+      provider: 'v8',
+      thresholds: { branches: 75, functions: 75, lines: 75, statements: 75 }
+    }
+  }
+});
 ```
 
-## Running Tests
+### Test Commands
 
-### All Tests
 ```bash
-npm test                    # Run all tests with coverage
-npm run test:watch         # Run tests in watch mode
-npm run test:coverage      # Generate coverage report
+# Core Testing Commands
+npm test                    # Run all tests once
+npm run test:watch          # Watch mode with auto-rerun  
+npm run test:ui             # Interactive UI for debugging
+npm run test:coverage       # Run with coverage report
+
+# Development Commands
+npm test button             # Test specific component
+npm test -- --grep "AI"    # Run tests matching pattern
+npm test -- --bail         # Stop on first failure
 ```
 
-### Specific Test Suites
-```bash
-npm test button            # Test specific component
-npm test -- --grep "AI"   # Run tests matching pattern
-npm test -- --bail        # Stop on first failure
-```
+## Shadow DOM Testing Capabilities
 
-### Coverage Reports
-```bash
-npm run test:coverage      # Generate coverage report
-open coverage/index.html   # View HTML coverage report
-```
+### Custom Matchers
 
-## Test Structure
-
-### Component Test Organization
-
-Each component test file follows this structure:
+We've implemented custom Vitest matchers specifically for Shadow DOM testing:
 
 ```typescript
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { fixture, html, expect as litExpect } from '@open-wc/testing';
+// Available in all tests via setup.ts
+expect(element).toHaveShadowRoot()
+expect(element).toContainShadowElement('.button')
+```
+
+### Test Utilities
+
+**Location:** `/src/test/utils.ts`
+
+Key utilities for Shadow DOM testing:
+
+```typescript
+// Component creation and lifecycle
+fixture<T>(html: string): Promise<T>           // Create test components
+cleanup()                                      // Clean up test fixtures
+
+// Shadow DOM interaction  
+waitForShadowElement(host, selector, timeout)  // Wait for shadow elements
+shadowClick(element)                           // Click through Shadow DOM
+getShadowText(host, selector?)                 // Get text from shadow
+queryShadowDeep(host, ...selectors)           // Query nested shadow roots
+```
+
+### Vitest-Chai Compatibility
+
+**Location:** `/src/test/test-helpers.ts` and `/src/test/vitest-chai-fix.ts`
+
+To maintain compatibility with existing `@open-wc/testing` code, we provide:
+
+```typescript
+// Mock function helpers with Chai compatibility
+createSpy()                    // Creates vi.fn() with Chai properties
+spyOn(object, method)         // Wraps vi.spyOn with Chai compatibility
+
+// Keyboard event helpers
+createKeyboardEvent(key, type)   // Create composed keyboard events
+sendKeys({ press: 'Enter' })     // Send keys through Shadow DOM
+```
+
+### Test Setup
+
+**Location:** `/src/test/setup.ts`
+
+Automatic setup includes:
+- Happy DOM environment activation
+- Custom element registration deduplication
+- Shadow DOM custom matchers
+- Vitest-Chai compatibility layer
+
+## Test Structure and Organization
+
+### Standard Component Test Structure
+
+```typescript
+import { fixture, expect, html } from '@open-wc/testing';
+import { vi } from 'vitest';
+import { createSpy, spyOn } from '../../../test/test-helpers';
 import './component-name';
 import type { ComponentName } from './component-name';
 
 describe('ComponentName', () => {
-  let element: ComponentName;
-
-  beforeEach(async () => {
-    element = await fixture<ComponentName>(html`
-      <forge-component></forge-component>
-    `);
+  afterEach(() => {
+    vi.restoreAllMocks(); // Clean up mocks between tests
   });
 
-  describe('Initialization', () => {
-    // Default state tests
+  describe('Basic Rendering', () => {
+    it('should render with default properties', async () => {
+      const el = await fixture<ComponentName>(html`
+        <forge-component></forge-component>
+      `);
+      
+      expect(el).to.exist;
+      expect(el.someProperty).to.equal('default-value');
+    });
   });
 
-  describe('Properties', () => {
-    // Property behavior tests
+  describe('Shadow DOM Interaction', () => {
+    it('should interact with shadow elements', async () => {
+      const el = await fixture<ComponentName>(html`
+        <forge-component></forge-component>
+      `);
+      
+      await el.updateComplete;
+      
+      // Using custom matcher
+      expect(el).toHaveShadowRoot();
+      expect(el).toContainShadowElement('.internal-button');
+      
+      // Using utility functions
+      const button = el.shadowRoot?.querySelector('.internal-button');
+      shadowClick(button);
+      
+      const text = getShadowText(el, '.status');
+      expect(text).to.equal('clicked');
+    });
   });
 
-  describe('Methods', () => {
-    // Public API tests
-  });
-
-  describe('Events', () => {
-    // Event emission tests
-  });
-
-  describe('Accessibility', () => {
-    // ARIA and keyboard tests
-  });
-
-  describe('AI Features', () => {
-    // AI metadata and helper tests
-  });
-
-  describe('Performance', () => {
-    // Performance monitoring tests
+  describe('Events and Interaction', () => {
+    it('should handle keyboard events', async () => {
+      const el = await fixture<ComponentName>(html`
+        <forge-component></forge-component>
+      `);
+      
+      const handler = createSpy();
+      el.addEventListener('forge-change', handler);
+      
+      await sendKeys({ press: 'Enter' });
+      expect(handler).to.have.been.calledOnce;
+    });
   });
 });
 ```
 
 ## Test Categories
 
-### 1. Unit Tests
+### 1. Component Registration and Basic Rendering
+- Custom element registration
+- Default property values
+- Shadow DOM creation
+- Template rendering
 
-Test individual component functionality:
+### 2. Property and Attribute Testing  
+- Property getters/setters
+- Attribute reflection
+- Type validation
+- Default values
+
+### 3. Shadow DOM Interaction
+- Internal element queries
+- Event handling through shadow boundaries
+- Slot content distribution
+- Style encapsulation
+
+### 4. Event Testing
+- Custom event emission
+- Event bubbling through Shadow DOM
+- Keyboard event handling
+- Form integration
+
+### 5. Accessibility Testing
+- ARIA attributes
+- Keyboard navigation
+- Focus management  
+- Screen reader support
+
+### 6. AI Features Testing
+- Semantic role attributes
+- AI context metadata
+- Auto-generated descriptions
+- Action discovery
+
+### 7. Performance Testing  
+- Render timing
+- Performance budgets
+- Degradation handling
+- Resource monitoring
+
+## Writing Tests
+
+### Using Mock Functions
+```typescript
+import { createSpy } from '../../../test/test-helpers';
+const mockFn = createSpy();
+```
+
+### Spying on Methods
+```typescript
+import { spyOn } from '../../../test/test-helpers';
+const consoleSpy = spyOn(console, 'warn');
+```
+
+### Keyboard Events
+```typescript
+await sendKeys({ press: 'Enter', target: element });
+```
+
+## Coverage and Quality Metrics
+
+### Current Coverage
+- **Overall:** 90.5% pass rate (286/316 tests)
+- **Execution time:** ~3 seconds
+- **Components covered:** 9 atomic components
+
+### Coverage Thresholds
+```typescript
+coverage: {
+  thresholds: {
+    branches: 75,
+    functions: 75, 
+    lines: 75,
+    statements: 75
+  }
+}
+```
+
+### Test Exclusions
+Coverage excludes:
+- `node_modules/`
+- `src/test/` (test utilities)
+- `*.config.*` (configuration files)
+- `**/*.d.ts` (type definitions)
+- `**/*.stories.ts` (Storybook stories)
+- `**/index.ts` (barrel exports)
+
+## Known Issues and Solutions
+
+### Common Test Issues
+
+#### 1. Console Method Spying
+- **Issue:** Console method spying doesn't work with Chai expectations
+- **Solution:** Use the enhanced `spyOn` helper from test utilities
+
+#### 2. Event Timing  
+- **Issue:** Auto-dismiss timer tests and event dispatch timing
+- **Solution:** Use `vi.useFakeTimers()` and `vi.advanceTimersByTime()`
+
+#### 3. Icon Registry
+- **Issue:** Icon loading from registry and error handling
+- **Solution:** Mock icon registry in test setup
+
+#### 4. Shadow DOM Interaction
+- **Issue:** Keyboard event handling and click propagation in Shadow DOM
+- **Solution:** Use Shadow DOM event simulation utilities
+
+### Performance Optimizations
+
+The single fork configuration in Vitest ensures:
+- Consistent custom element registration
+- Proper Shadow DOM cleanup between tests
+- No cross-test contamination
+- Reliable event handling
 
 ```typescript
-describe('Button Component', () => {
-  it('should render with default properties', () => {
-    expect(element.variant).to.equal('primary');
-    expect(element.size).to.equal('md');
-    expect(element.disabled).to.be.false;
-  });
+poolOptions: {
+  forks: {
+    singleFork: true // Critical for Web Components
+  }
+}
+```
 
-  it('should handle click events', async () => {
-    const clickHandler = vi.fn();
-    element.addEventListener('click', clickHandler);
-    
-    element.click();
-    expect(clickHandler).to.have.been.calledOnce;
+## Advanced Testing Patterns
+
+### Testing Custom Elements Registration
+```typescript
+describe('Component Registration', () => {
+  it('should prevent duplicate registration', () => {
+    // Our setup.ts handles this automatically
+    expect(() => {
+      customElements.define('forge-button', ForgeButton);
+      customElements.define('forge-button', ForgeButton); // Should not throw
+    }).not.to.throw();
   });
 });
 ```
 
-### 2. Integration Tests
-
-Test component interactions:
-
+### Testing Slot Distribution
 ```typescript
-describe('Form Integration', () => {
-  it('should work with form submission', async () => {
-    const form = await fixture<HTMLFormElement>(html`
-      <form>
-        <forge-input name="email" required></forge-input>
-        <forge-button type="submit">Submit</forge-button>
-      </form>
-    `);
-
-    const submitHandler = vi.fn(e => e.preventDefault());
-    form.addEventListener('submit', submitHandler);
-
-    const button = form.querySelector('forge-button');
-    button?.click();
-
-    expect(submitHandler).to.have.been.called;
-  });
-});
-```
-
-### 3. Accessibility Tests
-
-Ensure WCAG 2.1 AA compliance:
-
-```typescript
-describe('Accessibility', () => {
-  it('should have proper ARIA attributes', () => {
-    element.disabled = true;
-    expect(element.getAttribute('aria-disabled')).to.equal('true');
-  });
-
-  it('should be keyboard navigable', async () => {
-    const focusHandler = vi.fn();
-    element.addEventListener('focus', focusHandler);
-
-    element.focus();
-    expect(document.activeElement).to.equal(element);
-    expect(focusHandler).to.have.been.called;
-  });
-
-  it('should handle keyboard events', async () => {
-    const event = new KeyboardEvent('keydown', { key: 'Enter' });
-    element.dispatchEvent(event);
-    
-    // Verify expected behavior
-  });
-});
-```
-
-### 4. AI Feature Tests
-
-Test AI-ready architecture:
-
-```typescript
-describe('AI Features', () => {
-  it('should provide AI metadata', () => {
-    expect(element.aiMetadata).to.deep.equal({
-      purpose: 'Interactive button for user actions',
-      dataType: 'action',
-      criticality: 'medium',
-      semanticRole: 'button'
-    });
-  });
-
-  it('should describe itself to AI', () => {
-    element.variant = 'danger';
-    element.label = 'Delete';
-    
-    const description = element.getAIDescription();
-    expect(description).to.include('danger');
-    expect(description).to.include('Delete');
-  });
-
-  it('should list possible actions', () => {
-    const actions = element.getPossibleActions();
-    
-    expect(actions).to.be.an('array');
-    expect(actions[0]).to.have.property('name');
-    expect(actions[0]).to.have.property('available');
-  });
-});
-```
-
-### 5. Performance Tests
-
-Verify performance characteristics:
-
-```typescript
-describe('Performance', () => {
-  it('should render within budget', async () => {
-    element.maxRenderMs = 16;
-    element.value = 'new value';
-    await element.updateComplete;
-    
-    expect(element.renderTime).to.be.lessThan(16);
-  });
-
-  it('should track render count', async () => {
-    const initialCount = element.renderCount;
-    
-    element.value = 'test';
-    await element.updateComplete;
-    
-    expect(element.renderCount).to.equal(initialCount + 1);
-  });
-
-  it('should apply degradation when slow', () => {
-    element.renderTime = 100;
-    element.maxRenderMs = 16;
-    element.warnOnViolation = true;
-    
-    const consoleSpy = vi.spyOn(console, 'warn');
-    element['checkPerformance'](0);
-    
-    expect(consoleSpy).to.have.been.called;
-    expect(element.performanceMode).to.equal('fast');
-  });
-});
-```
-
-### 6. Visual Regression Tests
-
-Test visual appearance (planned with Chromatic):
-
-```typescript
-describe('Visual Tests', () => {
-  it('should match visual snapshot', async () => {
-    const element = await fixture(html`
-      <forge-button variant="primary" size="lg">
-        Large Button
+describe('Slot Content', () => {
+  it('should distribute slotted content correctly', async () => {
+    const el = await fixture(html`
+      <forge-button>
+        <span slot="icon">🚀</span>
+        Launch
       </forge-button>
     `);
 
-    await expect(element).to.matchSnapshot();
+    const iconSlot = el.shadowRoot?.querySelector('slot[name="icon"]');
+    const assignedNodes = iconSlot?.assignedNodes();
+    
+    expect(assignedNodes).to.have.length(1);
+    expect(assignedNodes[0].textContent).to.equal('🚀');
   });
 });
 ```
 
-## Test Utilities
-
-### Custom Test Helpers
-
+### Testing Deep Shadow DOM
 ```typescript
-// test-utils.ts
-export async function createComponent<T>(
-  tag: string,
-  props: Record<string, any> = {}
-): Promise<T> {
-  const element = document.createElement(tag) as T;
-  Object.assign(element, props);
-  document.body.appendChild(element);
-  await (element as any).updateComplete;
-  return element;
-}
-
-export function triggerEvent(
-  element: Element,
-  eventName: string,
-  detail = {}
-): void {
-  const event = new CustomEvent(eventName, {
-    detail,
-    bubbles: true,
-    composed: true
+describe('Nested Shadow DOM', () => {
+  it('should query through multiple shadow levels', async () => {
+    const el = await fixture(html`<forge-complex-component></forge-complex-component>`);
+    
+    // Query through nested shadow roots
+    const deepElement = queryShadowDeep(
+      el, 
+      '.first-level', 
+      'forge-nested-component',
+      '.deep-element'
+    );
+    
+    expect(deepElement).to.exist;
   });
-  element.dispatchEvent(event);
-}
-
-export async function wait(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+});
 ```
 
-### Mock Data
-
+### Testing Performance Degradation
 ```typescript
-// test-data.ts
-export const mockOptions = [
-  { value: 'option1', label: 'Option 1' },
-  { value: 'option2', label: 'Option 2' },
-  { value: 'option3', label: 'Option 3', disabled: true }
-];
-
-export const mockFormData = {
-  name: 'John Doe',
-  email: 'john@example.com',
-  password: 'secure123'
-};
+describe('Performance', () => {
+  it('should apply degradation when slow', async () => {
+    const el = await fixture(html`<forge-component></forge-component>`);
+    
+    // Mock slow rendering
+    const consoleSpy = spyOn(console, 'warn');
+    el.maxRenderMs = 16;
+    
+    // Simulate slow render
+    Object.defineProperty(el, 'renderTime', { value: 100 });
+    el['checkPerformance']();
+    
+    expect(consoleSpy).to.have.been.called;
+    expect(el.performanceMode).to.equal('fast');
+  });
+});
 ```
 
-## Coverage Requirements
+## Developer Experience Features
 
-### Minimum Coverage Targets
+### Interactive Testing UI
+```bash
+npm run test:ui
+```
+- Visual test runner interface
+- Real-time test execution
+- Interactive debugging
+- File watching with instant feedback
 
-- **Statements**: 90%
-- **Branches**: 85%
-- **Functions**: 90%
-- **Lines**: 90%
+### Hot Reload Testing
+```bash
+npm run test:watch
+```
+- Automatic test re-execution on file changes
+- Smart test selection based on changed files
+- Fast feedback loop for development
 
-### Excluding from Coverage
+### Coverage Analysis
+```bash
+npm run test:coverage
+```
+- Generates HTML coverage reports
+- Line-by-line coverage visualization
+- Identifies untested code paths
+- Tracks coverage trends
 
+## Debugging Tests
+
+### Using Vitest UI for Debugging
+```bash
+npm run test:ui
+```
+1. Open the interactive interface
+2. Click on failing tests to see details
+3. Use the console panel for debugging
+4. View test execution timeline
+
+### Console Debugging
 ```typescript
-/* c8 ignore start */
-// Code excluded from coverage
-private debugMethod() {
-  console.log('Debug info');
-}
-/* c8 ignore stop */
+it('should debug component state', async () => {
+  const el = await fixture(html`<forge-component></forge-component>`);
+  
+  // Debug current state
+  console.log('Element state:', {
+    properties: { ...el },
+    shadowHTML: el.shadowRoot?.innerHTML,
+    attributes: [...el.attributes]
+  });
+  
+  // Proceed with test assertions
+});
 ```
 
-## Continuous Integration
-
-### GitHub Actions Workflow
-
-```yaml
-name: Tests
-on: [push, pull_request]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - run: npm ci
-      - run: npm test
-      - uses: codecov/codecov-action@v3
-        with:
-          files: ./coverage/lcov.info
+### Memory Leak Detection
+```typescript
+afterEach(() => {
+  // Clean up DOM
+  document.body.innerHTML = '';
+  
+  // Restore all mocks
+  vi.restoreAllMocks();
+  
+  // Clear timers
+  vi.clearAllTimers();
+});
 ```
 
 ## Best Practices
 
 ### 1. Test Isolation
-- Each test should be independent
-- Clean up after tests (event listeners, timers)
-- Use `beforeEach` for consistent setup
+- Use `afterEach` for cleanup
+- Avoid shared state between tests
+- Mock external dependencies
 
-### 2. Async Testing
-```typescript
-it('should handle async operations', async () => {
-  const promise = element.loadData();
-  await expect(promise).resolves.toBeDefined();
-});
-```
+### 2. Shadow DOM Testing
+- Always wait for `updateComplete` on Lit elements
+- Use custom matchers for Shadow DOM queries
+- Test both light and shadow DOM content
 
 ### 3. Event Testing
-```typescript
-it('should emit custom events', async () => {
-  const eventPromise = new Promise(resolve => {
-    element.addEventListener('forge-change', resolve, { once: true });
-  });
+- Create composed events for Shadow DOM
+- Test both synthetic and real user events
+- Verify event payload and timing
 
-  element.value = 'new';
-  const event = await eventPromise;
-  
-  expect(event.detail).to.deep.equal({ value: 'new' });
-});
-```
+### 4. Async Testing
+- Always await async operations
+- Use proper timeout handling
+- Test loading and error states
 
-### 4. Error Handling
-```typescript
-it('should handle errors gracefully', () => {
-  expect(() => element.setValue(null)).not.to.throw();
-  expect(element.error).to.be.true;
-  expect(element.errorMessage).to.include('Invalid');
-});
-```
-
-### 5. Snapshot Testing
-```typescript
-it('should match DOM snapshot', async () => {
-  element.variant = 'primary';
-  element.size = 'lg';
-  await element.updateComplete;
-  
-  expect(element.shadowRoot).to.matchSnapshot();
-});
-```
-
-## Debugging Tests
-
-### Debug Mode
-```bash
-npm test -- --inspect-brk     # Debug with Chrome DevTools
-npm test -- --reporter=verbose # Verbose output
-```
-
-### Browser Testing
-```bash
-npm run test:browser           # Run tests in real browser
-npm run test:browser:debug     # Open browser for debugging
-```
-
-### Coverage Gaps
-```bash
-npm run test:coverage -- --reporter=text
-# Shows uncovered lines in terminal
-```
-
-## Common Test Patterns
-
-### Testing Slots
-```typescript
-it('should render slotted content', async () => {
-  const element = await fixture(html`
-    <forge-button>
-      <span slot="icon">👍</span>
-      Click Me
-    </forge-button>
-  `);
-
-  const slot = element.shadowRoot?.querySelector('slot[name="icon"]');
-  const nodes = slot?.assignedNodes();
-  
-  expect(nodes).to.have.length(1);
-  expect(nodes[0].textContent).to.equal('👍');
-});
-```
-
-### Testing Computed Properties
-```typescript
-it('should compute derived state', () => {
-  element.value = 150;
-  element.maxValue = 100;
-  
-  expect(element.displayValue).to.equal('100+');
-  expect(element.isOverMax).to.be.true;
-});
-```
-
-### Testing Lifecycle
-```typescript
-it('should cleanup on disconnect', () => {
-  const cleanupSpy = vi.spyOn(element, 'cleanup');
-  
-  element.remove();
-  
-  expect(cleanupSpy).to.have.been.called;
-  expect(element.listeners.size).to.equal(0);
-});
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Async timing issues**
-   ```typescript
-   // Wait for update complete
-   await element.updateComplete;
-   ```
-
-2. **Shadow DOM queries**
-   ```typescript
-   // Use shadowRoot for internal elements
-   const button = element.shadowRoot?.querySelector('button');
-   ```
-
-3. **Event bubbling**
-   ```typescript
-   // Ensure composed events for Shadow DOM
-   new CustomEvent('event', { composed: true, bubbles: true });
-   ```
-
-4. **Memory leaks**
-   ```typescript
-   afterEach(() => {
-     // Clean up elements
-     document.body.innerHTML = '';
-   });
-   ```
+### 5. Performance Testing
+- Set realistic performance budgets
+- Test degradation scenarios
+- Monitor render timing
 
 ## Resources
 
+### Documentation
 - [Vitest Documentation](https://vitest.dev/)
-- [Web Test Runner Guide](https://modern-web.dev/docs/test-runner/overview/)
+- [Happy DOM Documentation](https://github.com/capricorn86/happy-dom)
 - [Open WC Testing](https://open-wc.org/docs/testing/testing-package/)
-- [Playwright Documentation](https://playwright.dev/)
-- [Coverage Reports](./coverage/lcov-report/index.html)
+- [Web Components Testing Guide](https://web.dev/testing-web-components/)
+
+### Internal Resources
+- Test utilities: `/src/test/`
+- Component tests: `/src/components/atoms/*/**.test.ts`
+- Configuration: `vitest.config.ts`
+- Coverage reports: `/coverage/index.html`
+

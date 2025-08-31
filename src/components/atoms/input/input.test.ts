@@ -1,5 +1,6 @@
 import { fixture, expect, html } from '@open-wc/testing';
-import { sendKeys } from '@web/test-runner-commands';
+import { vi } from 'vitest';
+import { sendKeys } from '../../../test/test-helpers';
 import './input';
 import type { ForgeInput } from './input';
 
@@ -204,7 +205,7 @@ describe('ForgeInput', () => {
       
       const input = el.shadowRoot?.querySelector('input') as HTMLInputElement;
       input.focus();
-      await sendKeys({ press: 'Enter' });
+      await sendKeys({ press: 'Enter', target: input });
       
       expect(eventDetail?.value).to.equal('test');
     });

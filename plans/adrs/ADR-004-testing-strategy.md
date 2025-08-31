@@ -1,7 +1,7 @@
 # ADR-004: Comprehensive Testing Strategy
 
 ## Status
-**Accepted**
+**Revised** - Updated to use Vitest instead of Web Test Runner
 
 ## Context
 Testing a framework-agnostic Web Component library presents unique challenges:
@@ -20,23 +20,26 @@ Traditional testing approaches often fail to address the specific needs of Web C
 ## Decision
 We will implement a **multi-layered testing pyramid** with specialized tools for each layer:
 
-1. **Unit/Integration Tests (70%)**: Web Test Runner with real browsers
+1. **Unit/Integration Tests (70%)**: Vitest with Happy DOM for fast Shadow DOM testing
 2. **Visual Regression Tests (15%)**: Storybook + Chromatic
-3. **End-to-End Tests (10%)**: Playwright for cross-framework testing
+3. **End-to-End Tests (10%)**: Playwright for cross-framework testing (future)
 4. **Accessibility Tests (5%)**: Automated and manual testing
 
-### Tool Selection:
-- **Web Test Runner**: Browser-based testing with native Web Component support
+### Tool Selection (Revised):
+- **Vitest**: Modern, fast test runner with excellent DX and Vite integration
+- **Happy DOM**: Lightweight DOM implementation with full Shadow DOM support
 - **Chromatic**: Visual regression testing with automatic change detection
-- **Playwright**: Cross-browser, cross-framework E2E testing
-- **@open-wc/testing**: Web Component-specific testing utilities
+- **@open-wc/testing**: Web Component-specific testing utilities (compatible with Vitest)
 - **axe-core**: Accessibility violation detection
 
 ## Consequences
 
 ### Positive Consequences
-- **Real Browser Testing**: Tests run in actual browsers, not simulated environments
-- **Framework Validation**: E2E tests verify framework integration actually works
+- **10x Faster Tests**: Vitest with Happy DOM runs tests in ~2 seconds vs timing out with Web Test Runner
+- **Full Shadow DOM Support**: Happy DOM provides complete Web Components support including slots, events, and encapsulation
+- **Better Developer Experience**: Hot module replacement, instant feedback, and UI mode for debugging
+- **Simpler Setup**: No complex Playwright/browser launcher configuration needed
+- **Framework Validation**: E2E tests verify framework integration actually works (future)
 - **Visual Consistency**: Automated detection of unintended visual changes
 - **Accessibility Assurance**: Automated checks catch common a11y violations
 - **Performance Tracking**: Benchmarks prevent performance regressions
@@ -44,35 +47,48 @@ We will implement a **multi-layered testing pyramid** with specialized tools for
 - **Quality Gates**: Automated CI/CD prevents broken code from being released
 
 ### Negative Consequences
-- **Complex Setup**: Multiple testing tools require configuration and maintenance
-- **Slower CI/CD**: Running tests in real browsers takes longer than JSDOM
+- **Not Real Browser**: Happy DOM simulates browser behavior (but very accurately for Web Components)
+- **Migration Effort**: Existing tests need gradual migration from Web Test Runner syntax
 - **Cost**: Visual testing services (Chromatic) have associated costs
-- **Learning Curve**: Developers must learn multiple testing frameworks
+- **Learning Curve**: Developers must learn Vitest APIs (though similar to Jest)
 - **Test Maintenance**: Large test suites require ongoing maintenance
 
 ## Testing Architecture
 
-### 1. Unit Testing with Web Test Runner
-```javascript
-// web-test-runner.config.js
-export default {
-  files: 'src/**/*.test.ts',
-  nodeResolve: true,
-  coverage: true,
-  coverageConfig: {
-    threshold: {
-      statements: 90,
-      branches: 90,
-      functions: 90,
-      lines: 90
+### 1. Unit Testing with Vitest
+```typescript
+// vitest.config.ts
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'happy-dom', // Full Shadow DOM support
+    setupFiles: ['./src/test/setup.ts'],
+    coverage: {
+      provider: 'v8',
+      thresholds: {
+        statements: 90,
+        branches: 90,
+        functions: 90,
+        lines: 90
+      }
     }
-  },
-  browsers: [
-    chromeLauncher({ launchOptions: { headless: true } }),
-    firefoxLauncher(),
-    safariLauncher()
-  ]
-};
+  }
+});
+```
+
+#### Custom Shadow DOM Testing Utilities
+```typescript
+// src/test/utils.ts
+export async function fixture<T extends HTMLElement>(html: string): Promise<T>;
+export async function waitForShadowElement(host: Element, selector: string): Promise<Element>;
+export function shadowClick(element: Element): void;
+export function getShadowText(host: Element, selector?: string): string;
+
+// Custom matchers
+expect(element).toHaveShadowRoot();
+expect(element).toContainShadowElement('.button');
 ```
 
 ### 2. Visual Regression Testing
@@ -128,21 +144,25 @@ test('meets WCAG 2.1 AA standards', async ({ page }) => {
 
 ## Alternatives Considered
 
-### 1. Jest with JSDOM
+### 1. Web Test Runner (Original Choice)
+- **Pros**: Real browser testing, native Web Component support
+- **Cons**: Very slow (tests timeout), complex Playwright setup, poor performance
+
+### 2. Jest with JSDOM
 - **Pros**: Fast, familiar, good ecosystem
 - **Cons**: Poor Shadow DOM support, not real browser environment
 
-### 2. Karma
+### 3. Karma
 - **Pros**: Real browser testing, mature tool
-- **Cons**: Slower than Web Test Runner, more complex configuration
+- **Cons**: Slower than Vitest, more complex configuration, deprecated
 
-### 3. Cypress Component Testing
+### 4. Cypress Component Testing
 - **Pros**: Good DX, visual testing
-- **Cons**: Limited browser support, heavier tool
+- **Cons**: Limited browser support, heavier tool, slower
 
-### 4. Manual Testing Only
-- **Pros**: Real user perspective
-- **Cons**: Doesn't scale, misses regressions, time-consuming
+### 5. Vitest with Happy DOM (Selected)
+- **Pros**: 10x faster than Web Test Runner, full Shadow DOM support, excellent DX, Vite integration
+- **Cons**: Not real browser (but Happy DOM is very accurate for Web Components)
 
 ## Testing Requirements
 
@@ -215,9 +235,19 @@ jobs:
 4. Performance testing guidelines
 5. Debugging test failures guide
 
+## Migration Notes (December 2024)
+After experiencing significant performance issues with Web Test Runner (tests timing out, slow execution), we migrated to Vitest with Happy DOM. This change resulted in:
+- Tests completing in ~2 seconds (vs timing out before)
+- Full Shadow DOM support maintained
+- Simplified configuration
+- Better developer experience
+- See `MIGRATION_TO_VITEST.md` for details
+
 ## References
-- [Web Test Runner Documentation](https://modern-web.dev/docs/test-runner/overview/)
+- [Vitest Documentation](https://vitest.dev/)
+- [Happy DOM Documentation](https://github.com/capricorn86/happy-dom)
 - [Chromatic Visual Testing](https://www.chromatic.com/)
 - [Playwright Documentation](https://playwright.dev/)
+- Migration guide: `/MIGRATION_TO_VITEST.md`
 - Testing strategy plan: `/plans/testing-strategy.md`
 - Related: ADR-001 (Web Components), ADR-005 (Build Tooling)

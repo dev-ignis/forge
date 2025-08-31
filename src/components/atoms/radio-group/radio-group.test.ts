@@ -1,5 +1,5 @@
 import { fixture, html, expect } from '@open-wc/testing';
-import sinon from 'sinon';
+import { createSpy, spyOn } from '../../../test/test-helpers';
 import './radio-group';
 import type { ForgeRadioGroup, RadioOption } from './radio-group';
 
@@ -153,7 +153,7 @@ describe('ForgeRadioGroup', () => {
     });
 
     it('should select option on click', async () => {
-      const changeHandler = sinon.spy();
+      const changeHandler = createSpy();
       element.addEventListener('forge-change', changeHandler);
 
       const radioInputs = element.shadowRoot!.querySelectorAll('.radio-input') as NodeListOf<HTMLInputElement>;
@@ -161,11 +161,11 @@ describe('ForgeRadioGroup', () => {
       await element.updateComplete;
 
       expect(element.value).to.equal('option1');
-      expect(changeHandler.calledOnce).to.be.true;
+      expect(changeHandler).toHaveBeenCalledTimes(1);
     });
 
     it('should not select disabled option', async () => {
-      const changeHandler = sinon.spy();
+      const changeHandler = createSpy();
       element.addEventListener('forge-change', changeHandler);
 
       const radioInputs = element.shadowRoot!.querySelectorAll('.radio-input') as NodeListOf<HTMLInputElement>;
@@ -173,18 +173,18 @@ describe('ForgeRadioGroup', () => {
       await element.updateComplete;
 
       expect(element.value).to.equal('');
-      expect(changeHandler.called).to.be.false;
+      expect(changeHandler).not.to.have.property('called', true);
     });
 
     it('should emit change event with details', async () => {
-      const changeHandler = sinon.spy();
+      const changeHandler = createSpy();
       element.addEventListener('forge-change', changeHandler);
 
       element.selectOption('option2');
       await element.updateComplete;
 
-      expect(changeHandler.calledOnce).to.be.true;
-      const event = changeHandler.firstCall.args[0];
+      expect(changeHandler).toHaveBeenCalledTimes(1);
+      const event = changeHandler.mock.calls[0][0];
       expect(event.detail.value).to.equal('option2');
       expect(event.detail.previousValue).to.equal('');
       expect(event.detail.option).to.deep.equal(defaultOptions[1]);
@@ -265,12 +265,12 @@ describe('ForgeRadioGroup', () => {
       element.disabled = true;
       await element.updateComplete;
 
-      const changeHandler = sinon.spy();
+      const changeHandler = createSpy();
       element.addEventListener('forge-change', changeHandler);
 
       element.selectOption('option1');
       expect(element.value).to.equal('');
-      expect(changeHandler.called).to.be.false;
+      expect(changeHandler).not.to.have.property('called', true);
     });
   });
 
@@ -398,14 +398,14 @@ describe('ForgeRadioGroup', () => {
     });
 
     it('should apply performance degradation', () => {
-      const applyDegradation = sinon.spy(element as any, 'applyPerformanceDegradation');
+      const applyDegradation = spyOn(element as any, 'applyPerformanceDegradation');
       element.renderTime = 100;
       element.maxRenderMs = 16;
       element.warnOnViolation = true;
       
       (element as any).checkPerformance(0);
       
-      expect(applyDegradation.called).to.be.true;
+      expect(applyDegradation).to.have.property('called', true);
     });
   });
 

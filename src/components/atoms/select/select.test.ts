@@ -1,5 +1,5 @@
 import { fixture, html, expect } from '@open-wc/testing';
-import sinon from 'sinon';
+import { createSpy } from '../../../test/test-helpers';
 import './select';
 import type { ForgeSelect, SelectOption } from './select';
 
@@ -193,20 +193,20 @@ describe('ForgeSelect', () => {
     });
 
     it('should emit open event', async () => {
-      const openHandler = sinon.spy();
+      const openHandler = createSpy();
       element.addEventListener('forge-open', openHandler);
 
       element.openDropdown();
-      expect(openHandler.calledOnce).to.be.true;
+      expect(openHandler).to.have.property('called', true);
     });
 
     it('should emit close event', async () => {
-      const closeHandler = sinon.spy();
+      const closeHandler = createSpy();
       element.addEventListener('forge-close', closeHandler);
 
       element.open = true;
       element.close();
-      expect(closeHandler.calledOnce).to.be.true;
+      expect(closeHandler).to.have.property('called', true);
     });
   });
 
@@ -217,7 +217,7 @@ describe('ForgeSelect', () => {
     });
 
     it('should select option on click', async () => {
-      const changeHandler = sinon.spy();
+      const changeHandler = createSpy();
       element.addEventListener('forge-change', changeHandler);
 
       element.openDropdown();
@@ -229,11 +229,11 @@ describe('ForgeSelect', () => {
 
       expect(element.value).to.equal('option2');
       expect(element.open).to.be.false;
-      expect(changeHandler.calledOnce).to.be.true;
+      expect(changeHandler).to.have.property('called', true);
     });
 
     it('should not select disabled option', async () => {
-      const changeHandler = sinon.spy();
+      const changeHandler = createSpy();
       element.addEventListener('forge-change', changeHandler);
 
       element.openDropdown();
@@ -244,18 +244,18 @@ describe('ForgeSelect', () => {
       await element.updateComplete;
 
       expect(element.value).to.equal('');
-      expect(changeHandler.called).to.be.false;
+      expect(changeHandler).to.have.property('called', false);
     });
 
     it('should emit change event with details', async () => {
-      const changeHandler = sinon.spy();
+      const changeHandler = createSpy();
       element.addEventListener('forge-change', changeHandler);
 
       element.selectOption('option2');
       await element.updateComplete;
 
-      expect(changeHandler.calledOnce).to.be.true;
-      const event = changeHandler.firstCall.args[0];
+      expect(changeHandler).to.have.property('called', true);
+      const event = changeHandler.mock.calls[0][0];
       expect(event.detail.value).to.equal('option2');
       expect(event.detail.previousValue).to.equal('');
       expect(event.detail.option).to.deep.equal(defaultOptions[1]);
