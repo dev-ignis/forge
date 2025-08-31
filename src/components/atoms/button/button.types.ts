@@ -20,6 +20,11 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 export type ButtonType = 'button' | 'submit' | 'reset';
 
 /**
+ * Performance mode options
+ */
+export type PerformanceMode = 'auto' | 'fast' | 'normal';
+
+/**
  * Button component properties interface
  */
 export interface ForgeButtonProps extends ForgeInteractive {
@@ -37,6 +42,28 @@ export interface ForgeButtonProps extends ForgeInteractive {
   iconStart?: string;
   /** Icon to display after the text */
   iconEnd?: string;
+  
+  // AI-Ready attributes (UVP)
+  /** Semantic role for AI understanding */
+  semanticRole?: string;
+  /** Context for AI assistants */
+  aiContext?: string;
+  /** Enhanced description for screen readers and AI */
+  ariaDescription?: string;
+  
+  // Performance monitoring (UVP)
+  /** Maximum render time in milliseconds */
+  maxRenderMs?: number;
+  /** Whether to warn on performance violations */
+  warnOnViolation?: boolean;
+  /** Performance mode setting */
+  performanceMode?: PerformanceMode;
+  
+  // Developer experience (UVP)
+  /** Enable development mode */
+  devMode?: boolean;
+  /** Show performance metrics overlay */
+  showMetrics?: boolean;
 }
 
 /**

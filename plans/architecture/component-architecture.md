@@ -61,10 +61,40 @@ class MyComponent extends LitElement {
 import { LitElement, PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 
+// AI Metadata interface for AI-ready components (ADR-014)
+interface AIMetadata {
+  purpose: string;
+  context?: string;
+  dataType?: string;
+  criticality?: 'low' | 'medium' | 'high' | 'critical';
+  semanticRole?: string;
+}
+
 export abstract class BaseElement extends LitElement {
   // Common properties
   @property({ type: String, reflect: true }) id?: string;
   @property({ type: String, attribute: 'data-testid' }) testId?: string;
+  
+  // AI-ready metadata (ADR-014)
+  @property({ type: Object })
+  aiMetadata: AIMetadata = {
+    purpose: 'ui-component'
+  };
+  
+  // Theming support (ADR-003)
+  protected getToken(tokenName: string, fallback?: string): string {
+    const value = getComputedStyle(this).getPropertyValue(`--forge-${tokenName}`).trim();
+    return value || fallback || '';
+  }
+  
+  protected observeTheme(callback: () => void): void {
+    // Watch for theme changes via CSS custom properties
+    const observer = new MutationObserver(() => callback());
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class', 'data-theme']
+    });
+  }
   
   // Event emission helper with typed events
   protected emit<T = any>(eventName: string, detail?: T, options?: EventInit): boolean {
@@ -156,6 +186,30 @@ export abstract class BaseElement extends LitElement {
       this._previousFocus.focus();
       this._previousFocus = null;
     }
+  }
+  
+  // AI-ready helper methods (ADR-014)
+  get aiState(): Record<string, any> {
+    return {
+      isVisible: this.offsetParent !== null,
+      isEnabled: !this.hasAttribute('disabled'),
+      hasFocus: this === document.activeElement,
+      metadata: this.aiMetadata
+    };
+  }
+  
+  getAIDescription(): string {
+    const purpose = this.aiMetadata.purpose || 'ui-component';
+    const context = this.aiMetadata.context ? ` in ${this.aiMetadata.context}` : '';
+    return `${purpose}${context}`;
+  }
+  
+  explainState(): string {
+    const states = [];
+    if (!this.offsetParent) states.push('hidden');
+    if (this.hasAttribute('disabled')) states.push('disabled');
+    if (this === document.activeElement) states.push('focused');
+    return states.length ? `Component is ${states.join(', ')}` : 'Component is ready';
   }
   
   // Animation helpers
