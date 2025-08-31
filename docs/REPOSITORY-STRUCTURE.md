@@ -8,33 +8,47 @@ This document describes the organization of the Forge UI Component Library repos
 forge/
 ├── README.md                    # Main project documentation
 ├── CHANGELOG.md                 # Version history and changes
+├── LICENSE                      # MIT License
 ├── package.json                 # Project configuration
+├── package-lock.json           # NPM lock file
+├── yarn.lock                    # Yarn lock file
 ├── tsconfig.json               # TypeScript configuration
 ├── vite.config.ts              # Vite build configuration
+├── vitest.config.ts            # Vitest test configuration
+├── eslint.config.js            # ESLint configuration
 │
 ├── src/                        # Source code
 │   ├── index.ts               # Main library entry point
+│   ├── simple.test.ts         # Simple test file
 │   ├── core/                  # Core utilities
 │   │   └── BaseElement.ts    # Base class for all components
 │   ├── components/            # Component library
-│   │   ├── atoms/            # Basic building blocks
-│   │   ├── molecules/        # Composite components
-│   │   ├── organisms/        # Complex components
-│   │   └── templates/        # Page templates
+│   │   └── atoms/            # Basic building blocks (9 components)
+│   │       ├── alert/        # Alert component
+│   │       ├── badge/        # Badge component
+│   │       ├── button/       # Button component
+│   │       ├── checkbox/     # Checkbox component
+│   │       ├── icon/         # Icon component
+│   │       ├── input/        # Input component
+│   │       ├── radio-group/  # Radio group component
+│   │       ├── select/       # Select component
+│   │       └── switch/       # Switch component
+│   ├── test/                 # Test utilities
+│   │   ├── setup.ts         # Test setup
+│   │   ├── test-helpers.ts  # Test helper functions
+│   │   └── vitest-chai-fix.ts # Vitest-Chai compatibility
 │   ├── tokens/               # Design tokens
 │   │   ├── base.css         # CSS Custom Properties
 │   │   └── index.css        # Token exports
 │   └── types/               # TypeScript type definitions
-│
-├── tests/                     # Test suites
-│   ├── unit/                 # Unit tests
-│   ├── e2e/                  # End-to-end tests
-│   └── integration/          # Integration tests
+│       ├── component-types.ts # Component type definitions
+│       └── index.ts          # Type exports
 │
 ├── docs/                      # User documentation
 │   ├── README.md             # Documentation overview
 │   ├── CONTRIBUTING.md       # Contribution guidelines
 │   ├── REPOSITORY-STRUCTURE.md # This file
+│   ├── TESTING.md            # Testing documentation
 │   ├── api/                  # API documentation
 │   └── guides/               # User guides
 │
@@ -55,14 +69,12 @@ forge/
 │   └── research/             # Background research
 │       └── original-analysis.md
 │
-├── examples/                  # Example applications
-│   ├── react-app/            # React integration example
-│   ├── vue-app/              # Vue integration example
-│   ├── angular-app/          # Angular integration example
-│   └── vanilla/              # Vanilla JS example
-│
+├── demo/                      # Demo files
 ├── scripts/                   # Build and utility scripts
 │   └── generate-component.js # Component generator
+│
+├── coverage/                  # Test coverage reports (git-ignored)
+├── storybook-static/         # Built Storybook (git-ignored)
 │
 ├── .storybook/               # Storybook configuration
 │   ├── main.ts              # Main configuration
@@ -73,9 +85,11 @@ forge/
 │   │   └── ci.yml          # CI/CD pipeline
 │   └── ISSUE_TEMPLATE/      # Issue templates
 │
+├── .claude/                  # Claude AI configuration
+│
 └── dist/                     # Build output (git-ignored)
-    ├── forge-ui.es.js       # ES module build
-    ├── forge-ui.umd.js      # UMD build
+    ├── nexcraft-forge.es.js  # ES module build
+    ├── nexcraft-forge.umd.js # UMD build
     └── types/               # TypeScript declarations
 ```
 
@@ -111,14 +125,12 @@ forge/
 
 ### Build Tools
 - **vite.config.ts** - Development and production builds
-- **rollup.config.js** - Advanced build configuration (if needed)
-- **web-test-runner.config.js** - Test runner configuration
+- **vitest.config.ts** - Test runner configuration
 
 ### Code Quality
-- **.eslintrc.js** - Linting rules
-- **.prettierrc** - Code formatting
-- **.editorconfig** - Editor configuration
-- **commitlint.config.js** - Commit message linting
+- **eslint.config.js** - ESLint linting rules
+- **.gitignore** - Git ignore patterns
+- **.npmignore** - NPM publish ignore patterns
 
 ### CI/CD
 - **.github/workflows/ci.yml** - GitHub Actions pipeline
@@ -168,8 +180,11 @@ forge/
 ## 📊 Repository Statistics
 
 - **Total ADRs**: 12
-- **Component categories**: 4 (atoms, molecules, organisms, templates)
-- **Supported frameworks**: 4 (React, Vue, Angular, Vanilla)
+- **Implemented Components**: 9 (all atoms)
+- **Total Tests**: 314 (100% passing)
+- **Test Coverage Target**: 90%
+- **Component categories**: 1 implemented (atoms), 3 planned (molecules, organisms, templates)
+- **Supported frameworks**: 4 planned (React, Vue, Angular, Vanilla)
 - **Documentation sections**: 5 (guides, API, plans, ADRs, research)
 
 ---

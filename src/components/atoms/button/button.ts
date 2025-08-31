@@ -134,8 +134,11 @@ export class ForgeButton extends BaseElement {
   @property({ type: Boolean }) fullWidth = false;
   @property({ type: String }) iconStart?: string;
   @property({ type: String }) iconEnd?: string;
+  
+  // Note: AI-Ready, Performance, and Developer properties are inherited from BaseElement
 
   @state() private ripples: Array<{ x: number; y: number; id: number }> = [];
+  @state() private renderMetrics = { time: 0, violations: 0 };
 
   render() {
     const classes = {
@@ -145,7 +148,10 @@ export class ForgeButton extends BaseElement {
       'button--loading': this.loading
     };
 
-    return html`
+    // Performance monitoring start
+    const renderStart = performance.now();
+    
+    const button = html`
       <button
         class=${classMap(classes)}
         ?disabled=${this.disabled || this.loading}
@@ -154,6 +160,9 @@ export class ForgeButton extends BaseElement {
         part="button"
         aria-busy=${this.loading ? 'true' : undefined}
         aria-disabled=${this.disabled ? 'true' : undefined}
+        aria-description=${this.ariaDescription || this.getDefaultAriaDescription()}
+        data-semantic-role=${this.semanticRole || this.getDefaultSemanticRole()}
+        data-ai-context=${this.aiContext || this.getDefaultAiContext()}
       >
         ${this.loading ? html`<span class="spinner" aria-label="Loading"></span>` : ''}
         <slot></slot>
@@ -166,6 +175,25 @@ export class ForgeButton extends BaseElement {
         `)}
       </button>
     `;
+    
+    // Performance monitoring end
+    const renderEnd = performance.now();
+    this.checkPerformance(renderEnd - renderStart);
+    
+    // Developer mode metrics display
+    if (this.devMode && this.showMetrics) {
+      return html`
+        <div style="position: relative; display: inline-block;">
+          ${button}
+          <div style="position: absolute; top: -20px; right: 0; font-size: 10px; background: rgba(0,0,0,0.8); color: white; padding: 2px 4px; border-radius: 2px; z-index: 1000;">
+            ${this.renderMetrics.time.toFixed(2)}ms
+            ${this.renderMetrics.violations > 0 ? html`<span style="color: red;"> ⚠️ ${this.renderMetrics.violations}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }
+    
+    return button;
   }
 
   private handleClick(e: MouseEvent) {
@@ -198,6 +226,65 @@ export class ForgeButton extends BaseElement {
     if (changedProperties.has('loading')) {
       if (this.loading) {
         this.announceToScreenReader('Loading, please wait');
+      }
+    }
+    
+    // Log component state for AI debugging if in dev mode
+    if (this.devMode) {
+      console.debug('ForgeButton state:', {
+        variant: this.variant,
+        size: this.size,
+        disabled: this.disabled,
+        loading: this.loading,
+        semanticRole: this.semanticRole,
+        aiContext: this.aiContext,
+        renderTime: this.renderMetrics.time
+      });
+    }
+  }
+  
+  private getDefaultSemanticRole(): string {
+    switch(this.variant) {
+      case 'primary': return 'primary-action';
+      case 'secondary': return 'secondary-action';
+      case 'danger': return 'destructive-action';
+      default: return 'action';
+    }
+  }
+  
+  private getDefaultAiContext(): string {
+    if (this.type === 'submit') return 'form-submission';
+    if (this.variant === 'danger') return 'confirmation-required';
+    return 'user-interaction';
+  }
+  
+  private getDefaultAriaDescription(): string {
+    const parts = [];
+    if (this.variant) parts.push(`${this.variant} button`);
+    if (this.size !== 'md') parts.push(`${this.size} size`);
+    if (this.loading) parts.push('currently loading');
+    if (this.disabled) parts.push('disabled');
+    return parts.join(', ') || 'Interactive button';
+  }
+  
+  protected checkPerformance(renderTime: number): void {
+    this.renderMetrics.time = renderTime;
+    
+    if (renderTime > this.maxRenderMs) {
+      this.renderMetrics.violations++;
+      
+      if (this.warnOnViolation) {
+        console.warn(`ForgeButton render exceeded budget: ${renderTime.toFixed(2)}ms > ${this.maxRenderMs}ms`, {
+          variant: this.variant,
+          size: this.size,
+          performanceMode: this.performanceMode
+        });
+      }
+      
+      // Auto-degrade performance if in auto mode
+      if (this.performanceMode === 'auto' && this.renderMetrics.violations > 3) {
+        this.performanceMode = 'fast';
+        console.info('ForgeButton: Switching to fast performance mode due to violations');
       }
     }
   }

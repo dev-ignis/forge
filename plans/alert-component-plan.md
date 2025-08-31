@@ -74,6 +74,16 @@ The Alert component is a foundational UI element for displaying important messag
 export type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 export type AlertRole = 'alert' | 'status';
 
+// AI Metadata interface (ADR-014)
+export interface AlertAIMetadata {
+  purpose: 'user-notification';
+  context?: string;
+  criticality: 'low' | 'medium' | 'high' | 'critical';
+  semanticRole: 'alert' | 'status' | 'notification';
+  dismissible: boolean;
+  autoClose: boolean;
+}
+
 export interface ForgeAlertProps extends ForgeComponentBase {
   /** Visual variant of the alert */
   variant?: AlertVariant;
@@ -89,6 +99,8 @@ export interface ForgeAlertProps extends ForgeComponentBase {
   role?: AlertRole;
   /** Whether to show the icon */
   showIcon?: boolean;
+  /** AI metadata for enhanced understanding (ADR-014) */
+  aiMetadata?: Partial<AlertAIMetadata>;
 }
 
 export interface ForgeAlertEventDetail {
