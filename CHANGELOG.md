@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.1 - 2025-08-31
+
+### Changes
+- Merge pull request #2 from dev-ignis/develop
+- fix: - bundle TypeScript declarations and update testing documentation;
 ## v0.1.0 - 2025-08-31
 
 ### Changes
