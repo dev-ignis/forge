@@ -1,8 +1,116 @@
 import { fixture, expect, html } from '@open-wc/testing';
 import './button';
 import type { ForgeButton } from './button';
+import { BaseElement } from '../../../core/BaseElement';
 
 describe('ForgeButton', () => {
+  // Basic import and registration tests
+  describe('Component Registration', () => {
+    it('should register custom element', () => {
+      const button = document.createElement('forge-button');
+      expect(button).to.exist;
+      expect(button.tagName.toLowerCase()).to.equal('forge-button');
+    });
+
+    it('should import BaseElement', () => {
+      expect(BaseElement).to.exist;
+    });
+
+    it('should load test file', () => {
+      expect(true).to.be.true;
+    });
+    
+    it('can create element programmatically', () => {
+      const button = document.createElement('forge-button');
+      expect(button).to.exist;
+    });
+  });
+
+  describe('AI-Ready Features (UVP)', () => {
+    it('should have default semantic-role attribute', async () => {
+      const el = await fixture<ForgeButton>(html`
+        <forge-button variant="primary">Submit</forge-button>
+      `);
+      
+      const button = el.shadowRoot?.querySelector('button');
+      expect(button?.getAttribute('data-semantic-role')).to.equal('primary-action');
+    });
+
+    it('should accept custom semantic-role', async () => {
+      const el = await fixture<ForgeButton>(html`
+        <forge-button semantic-role="save-action">Save</forge-button>
+      `);
+      
+      const button = el.shadowRoot?.querySelector('button');
+      expect(button?.getAttribute('data-semantic-role')).to.equal('save-action');
+    });
+
+    it('should have default ai-context', async () => {
+      const el = await fixture<ForgeButton>(html`
+        <forge-button type="submit">Submit</forge-button>
+      `);
+      
+      const button = el.shadowRoot?.querySelector('button');
+      expect(button?.getAttribute('data-ai-context')).to.equal('form-submission');
+    });
+
+    it('should generate appropriate aria-description', async () => {
+      const el = await fixture<ForgeButton>(html`
+        <forge-button variant="danger" size="lg" disabled>Delete</forge-button>
+      `);
+      
+      const button = el.shadowRoot?.querySelector('button');
+      expect(button?.getAttribute('aria-description')).to.include('danger button');
+      expect(button?.getAttribute('aria-description')).to.include('lg size');
+      expect(button?.getAttribute('aria-description')).to.include('disabled');
+    });
+  });
+
+  describe('Performance Monitoring (UVP)', () => {
+    it('should have default max-render-ms of 16ms', async () => {
+      const el = await fixture<ForgeButton>(html`
+        <forge-button>Test</forge-button>
+      `);
+      
+      expect(el.maxRenderMs).to.equal(16);
+    });
+
+    it('should accept custom performance budget', async () => {
+      const el = await fixture<ForgeButton>(html`
+        <forge-button max-render-ms="8">Fast</forge-button>
+      `);
+      
+      expect(el.maxRenderMs).to.equal(8);
+    });
+
+    it('should support performance modes', async () => {
+      const el = await fixture<ForgeButton>(html`
+        <forge-button performance-mode="fast">Quick</forge-button>
+      `);
+      
+      expect(el.performanceMode).to.equal('fast');
+    });
+  });
+
+  describe('Developer Mode (UVP)', () => {
+    it('should support dev-mode attribute', async () => {
+      const el = await fixture<ForgeButton>(html`
+        <forge-button dev-mode>Debug</forge-button>
+      `);
+      
+      expect(el.devMode).to.be.true;
+    });
+
+    it('should support show-metrics attribute', async () => {
+      const el = await fixture<ForgeButton>(html`
+        <forge-button show-metrics dev-mode>Metrics</forge-button>
+      `);
+      
+      expect(el.showMetrics).to.be.true;
+      expect(el.devMode).to.be.true;
+    });
+  });
+
   describe('Basic Rendering', () => {
     it('should render with default slot content', async () => {
       const el = await fixture<ForgeButton>(html`

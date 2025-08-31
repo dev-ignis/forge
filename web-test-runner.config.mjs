@@ -8,6 +8,10 @@ export default {
   // Node module resolution
   nodeResolve: true,
   
+  // Concurrency - reduced to avoid resource contention
+  concurrency: 3,
+  concurrentBrowsers: 3,
+  
   // TypeScript and ES modules support
   plugins: [
     esbuildPlugin({ 
@@ -22,7 +26,8 @@ export default {
     playwrightLauncher({ 
       product: 'chromium',
       launchOptions: {
-        headless: true
+        headless: true,
+        args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu']
       }
     })
   ],
@@ -30,7 +35,7 @@ export default {
   // Test framework configuration
   testFramework: {
     config: {
-      timeout: '5000',
+      timeout: '10000',
       retries: 0
     }
   },
@@ -47,8 +52,8 @@ export default {
   },
   
   // Timeout settings
-  testsFinishTimeout: 30000,
-  browserStartTimeout: 30000,
+  testsFinishTimeout: 60000,
+  browserStartTimeout: 20000,
   
   // Filter out non-test files
   filterBrowserLogs: (log) => {

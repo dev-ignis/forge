@@ -7,10 +7,11 @@ This guide provides comprehensive information for developers who want to contrib
 1. [Development Environment Setup](#development-environment-setup)
 2. [Project Architecture](#project-architecture)
 3. [Component Development](#component-development)
-4. [Testing Guidelines](#testing-guidelines)
-5. [Documentation Standards](#documentation-standards)
-6. [Performance Optimization](#performance-optimization)
-7. [Accessibility Requirements](#accessibility-requirements)
+4. [AI-Ready Architecture](#ai-ready-architecture)
+5. [Performance Monitoring](#performance-monitoring)
+6. [Testing Guidelines](#testing-guidelines)
+7. [Documentation Standards](#documentation-standards)
+8. [Accessibility Requirements](#accessibility-requirements)
 
 ## Development Environment Setup
 
@@ -344,6 +345,227 @@ render() {
     </button>
   `;
 }
+```
+
+## AI-Ready Architecture
+
+All Forge components implement ADR-014 for AI-ready architecture, providing semantic metadata and helper methods for AI tools and assistants.
+
+### AI Metadata Interface
+
+Every component extends BaseElement which includes AI metadata:
+
+```typescript
+export interface AIMetadata {
+  purpose: string;              // Component's primary purpose
+  context?: string;             // Usage context
+  dataType?: string;            // Type of data handled
+  criticality?: 'low' | 'medium' | 'high' | 'critical';
+  semanticRole?: string;        // ARIA-like semantic role
+}
+```
+
+### Implementing AI Features
+
+Components must override AI helper methods:
+
+```typescript
+@customElement('forge-my-component')
+export class ForgeMyComponent extends BaseElement {
+  constructor() {
+    super();
+    // Set AI metadata in constructor
+    this.aiMetadata = {
+      purpose: 'Interactive control for user input',
+      dataType: 'string',
+      criticality: 'medium',
+      semanticRole: 'input'
+    };
+  }
+
+  // Override AI helper methods
+  override getAIDescription(): string {
+    return `${this.label} input field, currently ${this.value ? 'filled' : 'empty'}`;
+  }
+
+  override getPossibleActions(): Action[] {
+    return [
+      {
+        name: 'setValue',
+        description: 'Set the input value',
+        available: !this.disabled
+      },
+      {
+        name: 'clear',
+        description: 'Clear the input',
+        available: !this.disabled && !!this.value
+      },
+      {
+        name: 'focus',
+        description: 'Focus the input',
+        available: true
+      }
+    ];
+  }
+
+  override explainState(): StateExplanation {
+    return {
+      currentState: this.disabled ? 'disabled' : this.value ? 'filled' : 'empty',
+      possibleStates: ['empty', 'filled', 'disabled', 'error'],
+      stateDescription: this.getStateDescription()
+    };
+  }
+}
+```
+
+### AI Attributes
+
+Components expose AI metadata through data attributes:
+
+```html
+<forge-button
+  data-semantic-role="action-trigger"
+  data-ai-context="form-submission"
+  aria-description="Submit button for user registration form"
+>
+  Register
+</forge-button>
+```
+
+### Testing AI Features
+
+Include tests for AI functionality:
+
+```typescript
+describe('AI Features', () => {
+  it('should provide accurate AI description', () => {
+    element.label = 'Email';
+    element.value = 'user@example.com';
+    expect(element.getAIDescription()).to.include('Email');
+    expect(element.getAIDescription()).to.include('filled');
+  });
+
+  it('should list available actions', () => {
+    const actions = element.getPossibleActions();
+    expect(actions).to.have.length.greaterThan(0);
+    expect(actions[0]).to.have.property('name');
+    expect(actions[0]).to.have.property('available');
+  });
+
+  it('should explain current state', () => {
+    const explanation = element.explainState();
+    expect(explanation.currentState).to.be.oneOf(['empty', 'filled', 'disabled']);
+    expect(explanation.possibleStates).to.be.an('array');
+  });
+});
+```
+
+## Performance Monitoring
+
+All components include built-in performance monitoring to ensure optimal user experience.
+
+### Performance Budget System
+
+Components track their render time and warn when exceeding budgets:
+
+```typescript
+export class ForgeMyComponent extends BaseElement {
+  protected render() {
+    const startTime = performance.now();
+    
+    const content = html`
+      <!-- Component template -->
+    `;
+    
+    // Check performance after render
+    this.checkPerformance(startTime);
+    
+    return content;
+  }
+}
+```
+
+### Performance Attributes
+
+Users can configure performance monitoring:
+
+```html
+<forge-button
+  dev-mode                    <!-- Enable development features -->
+  show-metrics                <!-- Display performance overlay -->
+  max-render-ms="16"          <!-- Set performance budget (default 16ms) -->
+  warn-on-violation           <!-- Console warnings for violations -->
+  performance-mode="auto"     <!-- auto | fast | normal -->
+>
+  Performance Monitored Button
+</forge-button>
+```
+
+### Performance Degradation
+
+Components automatically degrade under poor performance:
+
+```typescript
+protected applyPerformanceDegradation(): void {
+  // Disable animations
+  this.style.setProperty('--transition-duration', '0ms');
+  
+  // Reduce visual effects
+  this.shadowRoot?.querySelectorAll('.animated').forEach(el => {
+    el.classList.add('no-animation');
+  });
+  
+  // Simplify rendering
+  this.performanceMode = 'fast';
+}
+```
+
+### Performance Metrics Display
+
+When `show-metrics` is enabled:
+
+```typescript
+private renderMetrics() {
+  return html`
+    <div class="performance-overlay">
+      Component: ${this.tagName.toLowerCase()}<br>
+      Render: ${this.renderTime.toFixed(2)}ms<br>
+      Budget: ${this.maxRenderMs}ms<br>
+      Count: ${this.renderCount}<br>
+      Status: ${this.renderTime > this.maxRenderMs ? '⚠️ SLOW' : '✅ OK'}
+    </div>
+  `;
+}
+```
+
+### Performance Testing
+
+Test performance characteristics:
+
+```typescript
+describe('Performance', () => {
+  it('should render within budget', async () => {
+    element.maxRenderMs = 16;
+    await element.updateComplete;
+    expect(element.renderTime).to.be.lessThan(16);
+  });
+
+  it('should apply degradation when slow', () => {
+    element.renderTime = 100;
+    element.maxRenderMs = 16;
+    element['checkPerformance'](0);
+    
+    expect(element.performanceMode).to.equal('fast');
+  });
+
+  it('should track render count', async () => {
+    const initialCount = element.renderCount;
+    element.value = 'new value';
+    await element.updateComplete;
+    
+    expect(element.renderCount).to.equal(initialCount + 1);
+  });
+});
 ```
 
 ## Testing Guidelines
