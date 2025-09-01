@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.0 - 2025-09-01
+
+### Changes
+- Merge pull request #3 from dev-ignis/develop
+- feat: - AI-ready infrastructure and FormField component;
 ## v0.1.1 - 2025-08-31
 
 ### Changes
