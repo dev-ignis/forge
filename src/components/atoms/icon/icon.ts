@@ -132,7 +132,7 @@ export class ForgeIcon extends BaseElement {
   
   @property({ type: Number, attribute: 'max-render-ms' }) maxRenderMs = 16;
   @property({ type: Boolean, attribute: 'warn-on-violation' }) warnOnViolation = false;
-  @property({ type: String, attribute: 'performance-mode' }) performanceMode: 'auto' | 'fast' | 'normal' = 'auto';
+  @property({ type: String, attribute: 'performance-mode' }) performanceMode: 'auto' | 'fast' | 'balanced' | 'quality' = 'auto';
   
   @property({ type: Boolean, attribute: 'dev-mode' }) devMode = false;
   @property({ type: Boolean, attribute: 'show-metrics' }) showMetrics = false;
