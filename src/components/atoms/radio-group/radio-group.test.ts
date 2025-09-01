@@ -43,7 +43,7 @@ describe('ForgeRadioGroup', () => {
     it('should set AI metadata', () => {
       expect(element.aiMetadata).to.deep.equal({
         purpose: 'Select single option from multiple choices',
-        dataType: 'string',
+        dataType: 'text',
         criticality: 'medium',
         semanticRole: 'radiogroup'
       });

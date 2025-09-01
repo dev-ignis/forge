@@ -92,6 +92,232 @@ describe('ForgeButton', () => {
     });
   });
 
+  describe('AI Methods', () => {
+    let el: ForgeButton;
+
+    beforeEach(async () => {
+      el = await fixture<ForgeButton>(html`
+        <forge-button variant="primary" size="md">Click Me</forge-button>
+      `);
+    });
+
+    describe('getPossibleActions', () => {
+      it('should return available actions when enabled', () => {
+        const actions = el.getPossibleActions();
+        
+        expect(actions).to.be.an('array');
+        expect(actions.length).to.be.greaterThan(0);
+        
+        const clickAction = actions.find(a => a.name === 'click');
+        expect(clickAction).to.exist;
+        expect(clickAction?.available).to.be.true;
+        expect(clickAction?.description).to.equal('Trigger button action');
+        
+        const focusAction = actions.find(a => a.name === 'focus');
+        expect(focusAction?.available).to.be.true;
+        
+        const disableAction = actions.find(a => a.name === 'disable');
+        expect(disableAction?.available).to.be.true;
+      });
+
+      it('should update actions when disabled', async () => {
+        el.disabled = true;
+        await el.updateComplete;
+        
+        const actions = el.getPossibleActions();
+        
+        const clickAction = actions.find(a => a.name === 'click');
+        expect(clickAction?.available).to.be.false;
+        
+        const focusAction = actions.find(a => a.name === 'focus');
+        expect(focusAction?.available).to.be.false;
+        
+        const enableAction = actions.find(a => a.name === 'enable');
+        expect(enableAction?.available).to.be.true;
+      });
+
+      it('should update actions when loading', async () => {
+        el.loading = true;
+        await el.updateComplete;
+        
+        const actions = el.getPossibleActions();
+        const clickAction = actions.find(a => a.name === 'click');
+        expect(clickAction?.available).to.be.false;
+      });
+    });
+
+    describe('explainState', () => {
+      it('should explain ready state', () => {
+        const state = el.explainState();
+        
+        expect(state.currentState).to.equal('ready');
+        expect(state.possibleStates).to.include('ready');
+        expect(state.possibleStates).to.include('loading');
+        expect(state.possibleStates).to.include('disabled');
+        expect(state.stateDescription).to.include('primary button ready');
+      });
+
+      it('should explain loading state', async () => {
+        el.loading = true;
+        await el.updateComplete;
+        
+        const state = el.explainState();
+        
+        expect(state.currentState).to.equal('loading');
+        expect(state.stateDescription).to.include('processing');
+      });
+
+      it('should explain disabled state', async () => {
+        el.disabled = true;
+        await el.updateComplete;
+        
+        const state = el.explainState();
+        
+        expect(state.currentState).to.equal('disabled');
+        expect(state.stateDescription).to.include('disabled');
+      });
+
+      it('should explain disabled-loading state', async () => {
+        el.disabled = true;
+        el.loading = true;
+        await el.updateComplete;
+        
+        const state = el.explainState();
+        
+        expect(state.currentState).to.equal('disabled-loading');
+        expect(state.stateDescription).to.include('disabled while processing');
+      });
+    });
+
+    describe('getDefaultSemanticRole', () => {
+      it('should return correct semantic role for primary variant', () => {
+        const role = el['getDefaultSemanticRole']();
+        expect(role).to.equal('primary-action');
+      });
+
+      it('should return correct semantic role for secondary variant', async () => {
+        el.variant = 'secondary';
+        await el.updateComplete;
+        
+        const role = el['getDefaultSemanticRole']();
+        expect(role).to.equal('secondary-action');
+      });
+
+      it('should return correct semantic role for danger variant', async () => {
+        el.variant = 'danger';
+        await el.updateComplete;
+        
+        const role = el['getDefaultSemanticRole']();
+        expect(role).to.equal('destructive-action');
+      });
+
+      it('should return correct semantic role for ghost variant', async () => {
+        el.variant = 'ghost';
+        await el.updateComplete;
+        
+        const role = el['getDefaultSemanticRole']();
+        expect(role).to.equal('action');
+      });
+
+      it('should return correct semantic role for link variant', async () => {
+        el.variant = 'link';
+        await el.updateComplete;
+        
+        const role = el['getDefaultSemanticRole']();
+        expect(role).to.equal('action');
+      });
+    });
+
+    describe('AI State Updates in Lifecycle', () => {
+      it('should update component state on variant change', async () => {
+        const initialRole = el['aiMetadata'].semanticRole;
+        
+        el.variant = 'danger';
+        await el.updateComplete;
+        
+        expect(el['componentState'].get('variant')).to.equal('danger');
+        expect(el['aiMetadata'].semanticRole).to.equal('destructive-action');
+      });
+
+      it('should update component state on size change', async () => {
+        el.size = 'lg';
+        await el.updateComplete;
+        
+        expect(el['componentState'].get('size')).to.equal('lg');
+      });
+
+      it('should update criticality when disabled', async () => {
+        el.disabled = true;
+        await el.updateComplete;
+        
+        expect(el['componentState'].get('disabled')).to.be.true;
+        expect(el['aiMetadata'].criticality).to.equal('medium'); // Criticality is const
+      });
+
+      it('should update criticality when enabled', async () => {
+        el.disabled = true;
+        await el.updateComplete;
+        
+        el.disabled = false;
+        await el.updateComplete;
+        
+        expect(el['aiMetadata'].criticality).to.equal('medium');
+      });
+
+      it('should initialize component state in connectedCallback', async () => {
+        const newButton = document.createElement('forge-button') as ForgeButton;
+        newButton.variant = 'secondary';
+        newButton.size = 'sm';
+        newButton.disabled = false;
+        newButton.loading = false;
+        
+        document.body.appendChild(newButton);
+        await newButton.updateComplete;
+        
+        expect(newButton['componentState'].get('variant')).to.equal('secondary');
+        expect(newButton['componentState'].get('size')).to.equal('sm');
+        expect(newButton['componentState'].get('disabled')).to.be.false;
+        expect(newButton['componentState'].get('loading')).to.be.false;
+        
+        document.body.removeChild(newButton);
+      });
+
+      it('should track loading state changes', async () => {
+        el.loading = true;
+        await el.updateComplete;
+        
+        expect(el['componentState'].get('loading')).to.be.true;
+        
+        el.loading = false;
+        await el.updateComplete;
+        
+        expect(el['componentState'].get('loading')).to.be.false;
+      });
+    });
+
+    describe('getStateDescription', () => {
+      it('should return correct description for ready state', () => {
+        const description = el['getStateDescription']('ready');
+        expect(description).to.equal('primary button ready for interaction');
+      });
+
+      it('should return correct description for loading state', () => {
+        const description = el['getStateDescription']('loading');
+        expect(description).to.equal('Button is processing, please wait');
+      });
+
+      it('should return correct description for disabled state', () => {
+        const description = el['getStateDescription']('disabled');
+        expect(description).to.equal('Button is disabled and cannot be clicked');
+      });
+
+      it('should return fallback for unknown state', () => {
+        const description = el['getStateDescription']('unknown');
+        expect(description).to.equal('Button state');
+      });
+    });
+  });
+
   describe('Developer Mode (UVP)', () => {
     it('should support dev-mode attribute', async () => {
       const el = await fixture<ForgeButton>(html`

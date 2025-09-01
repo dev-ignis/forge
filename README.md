@@ -64,10 +64,10 @@ npm run test       # Run tests
 ## 🎯 Key Differentiators
 
 ### What Makes @nexcraft/forge Unique
-- **🤖 AI-Ready Components**: Built-in semantic metadata for AI tools and assistants
-- **⚡ Performance Budget System**: Self-monitoring components with render-time enforcement
-- **🎨 Design Token Bridge**: Convert between Figma, Tailwind, Material, and more
-- **🔄 Framework Migration Tools**: Automated migration between React, Vue, Angular
+- **🤖 AI-Ready Components**: Complete AIMetadata system with state tracking, action definitions, and AI event system
+- **⚡ Performance Budget System**: Real-time render monitoring with auto-degradation and developer tools
+- **🎨 Design Token Bridge**: Convert between Figma, Tailwind, Material, and more (coming soon)
+- **🔄 Framework Migration Tools**: Automated migration between React, Vue, Angular (coming soon)
 - **🏗️ Micro-Frontend Support**: Multiple versions can coexist without conflicts
 - **🚀 Zero-Config Usage**: Works instantly via CDN, no build required
 
@@ -75,8 +75,16 @@ npm run test       # Run tests
 - **True Framework Agnostic**: Not wrappers - actual Web Components
 - **Shadow DOM Isolation**: Zero CSS conflicts, guaranteed
 - **WCAG 2.1 AA Compliant**: Accessibility built-in, not bolted-on
-- **<1ms Render Time**: Self-monitored performance budgets
+- **<1ms Render Time**: Self-monitored performance budgets with violation detection
 - **Write Once, Use Forever**: Components that survive framework migrations
+
+### AI Integration Features (New in v1.2)
+- **AIMetadata System**: Every component exposes structured metadata for AI tools
+- **State Tracking**: Real-time component state with `aiState` getter
+- **Action Definitions**: `getPossibleActions()` returns available actions with parameters
+- **State Explanation**: `explainState()` provides human-readable state descriptions
+- **Performance Integration**: AI metadata includes performance metrics
+- **Event System**: `ai-state-change` events for AI monitoring tools
 
 ## 🏗️ Architecture
 
@@ -94,10 +102,11 @@ npm run test       # Run tests
 
 ## 📦 Components
 
-### Phase 1 Complete (9 Components Available)
+### Available Components (10 Components)
 
 All components feature AI-ready architecture, performance monitoring, and WCAG 2.1 AA compliance.
 
+#### Atomic Components (Phase 1 Complete)
 | Component | Coverage | Features |
 |-----------|----------|----------|
 | **Button** | 94.17% | 5 variants, 3 sizes, ripple effect, loading state |
@@ -110,7 +119,12 @@ All components feature AI-ready architecture, performance monitoring, and WCAG 2
 | **RadioGroup** | Tests ✅ | Group management, keyboard navigation |
 | **Select** | Tests ✅ | Search/filter, groups, loading state |
 
-**Overall Test Coverage:** 93.77% across 3,192+ test assertions
+#### Molecule Components (Phase 2 In Progress)
+| Component | Coverage | Features |
+|-----------|----------|----------|
+| **FormField** | Tests ✅ | Label management, floating/inline variants, validation states, AI integration |
+
+**Overall Test Coverage:** 93.77% across 449 tests
 
 ### Roadmap
 See our **[Implementation Roadmap](./plans/implementation-roadmap.md)** for the complete component timeline.
@@ -167,8 +181,10 @@ npm run test:all
 | Test Coverage | >90% | **93.77%** ✅ |
 | Lighthouse Score | >95 | **98** ✅ |
 | Accessibility | WCAG 2.1 AA | **100% Compliant** ✅ |
-| Components Completed | 9 | **9/9** ✅ |
-| AI-Ready Architecture | Yes | **Implemented** ✅ |
+| Atomic Components | 9 | **9/9** ✅ |
+| Molecule Components | 7 planned | **1/7** 🚧 |
+| AI-Ready Architecture | Yes | **Fully Implemented** ✅ |
+| Performance Monitoring | Yes | **Implemented** ✅ |
 
 ## 📄 License
 

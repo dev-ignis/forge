@@ -294,6 +294,293 @@ describe('ForgeInput', () => {
     });
   });
 
+  describe('AI Methods', () => {
+    let el: ForgeInput;
+
+    beforeEach(async () => {
+      el = await fixture<ForgeInput>(html`
+        <forge-input type="text" value="test"></forge-input>
+      `);
+    });
+
+    describe('getAIDataType', () => {
+      it('should map text type correctly', () => {
+        const dataType = el['getAIDataType']();
+        expect(dataType).to.equal('text');
+      });
+
+      it('should map email type correctly', async () => {
+        el.type = 'email';
+        await el.updateComplete;
+        const dataType = el['getAIDataType']();
+        expect(dataType).to.equal('email');
+      });
+
+      it('should map password type correctly', async () => {
+        el.type = 'password';
+        await el.updateComplete;
+        const dataType = el['getAIDataType']();
+        expect(dataType).to.equal('password');
+      });
+
+      it('should map number type correctly', async () => {
+        el.type = 'number';
+        await el.updateComplete;
+        const dataType = el['getAIDataType']();
+        expect(dataType).to.equal('number');
+      });
+
+      it('should map tel type to phone', async () => {
+        el.type = 'tel';
+        await el.updateComplete;
+        const dataType = el['getAIDataType']();
+        expect(dataType).to.equal('phone');
+      });
+
+      it('should map url type correctly', async () => {
+        el.type = 'url';
+        await el.updateComplete;
+        const dataType = el['getAIDataType']();
+        expect(dataType).to.equal('url');
+      });
+
+      it('should map search type to text', async () => {
+        el.type = 'search';
+        await el.updateComplete;
+        const dataType = el['getAIDataType']();
+        expect(dataType).to.equal('text');
+      });
+    });
+
+    describe('getPossibleActions', () => {
+      it('should return input action when enabled', () => {
+        const actions = el.getPossibleActions();
+        
+        const inputAction = actions.find(a => a.name === 'input');
+        expect(inputAction).to.exist;
+        expect(inputAction?.available).to.be.true;
+        expect(inputAction?.description).to.equal('Enter text into the field');
+      });
+
+      it('should return clear action when value exists', () => {
+        const actions = el.getPossibleActions();
+        
+        const clearAction = actions.find(a => a.name === 'clear');
+        expect(clearAction).to.exist;
+        expect(clearAction?.available).to.be.true;
+      });
+
+      it('should disable clear when no value', async () => {
+        el.value = '';
+        await el.updateComplete;
+        
+        const actions = el.getPossibleActions();
+        const clearAction = actions.find(a => a.name === 'clear');
+        expect(clearAction?.available).to.be.false;
+      });
+
+      it('should disable input when disabled', async () => {
+        el.disabled = true;
+        await el.updateComplete;
+        
+        const actions = el.getPossibleActions();
+        
+        const inputAction = actions.find(a => a.name === 'input');
+        expect(inputAction?.available).to.be.false;
+        
+        const clearAction = actions.find(a => a.name === 'clear');
+        expect(clearAction?.available).to.be.false;
+        
+        const focusAction = actions.find(a => a.name === 'focus');
+        expect(focusAction?.available).to.be.false;
+      });
+
+      it('should disable input when readonly', async () => {
+        el.readonly = true;
+        await el.updateComplete;
+        
+        const actions = el.getPossibleActions();
+        
+        const inputAction = actions.find(a => a.name === 'input');
+        expect(inputAction?.available).to.be.false;
+        
+        const clearAction = actions.find(a => a.name === 'clear');
+        expect(clearAction?.available).to.be.false;
+      });
+
+      it('should show password toggle for password type', async () => {
+        el.type = 'password';
+        await el.updateComplete;
+        
+        const actions = el.getPossibleActions();
+        const showPasswordAction = actions.find(a => a.name === 'showPassword');
+        expect(showPasswordAction).to.exist;
+        expect(showPasswordAction?.available).to.be.true;
+      });
+
+      it('should always allow validate action', () => {
+        const actions = el.getPossibleActions();
+        const validateAction = actions.find(a => a.name === 'validate');
+        expect(validateAction?.available).to.be.true;
+      });
+    });
+
+    describe('explainState', () => {
+      it('should explain filled state', () => {
+        const state = el.explainState();
+        
+        expect(state.currentState).to.include('filled');
+        expect(state.possibleStates).to.include('filled');
+        expect(state.possibleStates).to.include('empty');
+        expect(state.stateDescription).to.include('contains text data');
+      });
+
+      it('should explain empty state', async () => {
+        el.value = '';
+        await el.updateComplete;
+        
+        const state = el.explainState();
+        
+        expect(state.currentState).to.include('empty');
+        expect(state.stateDescription).to.include('empty and ready');
+      });
+
+      it('should explain disabled state', async () => {
+        el.disabled = true;
+        await el.updateComplete;
+        
+        const state = el.explainState();
+        
+        expect(state.currentState).to.include('disabled');
+        expect(state.stateDescription).to.include('disabled and cannot be edited');
+      });
+
+      it('should explain readonly state', async () => {
+        el.readonly = true;
+        await el.updateComplete;
+        
+        const state = el.explainState();
+        
+        expect(state.currentState).to.include('readonly');
+        expect(state.stateDescription).to.include('read-only');
+      });
+
+      it('should explain error state', async () => {
+        el.validationState = 'error';
+        await el.updateComplete;
+        
+        const state = el.explainState();
+        
+        expect(state.currentState).to.include('error');
+        expect(state.stateDescription).to.include('validation error');
+      });
+
+      it('should explain warning state', async () => {
+        el.validationState = 'warning';
+        await el.updateComplete;
+        
+        const state = el.explainState();
+        
+        expect(state.currentState).to.include('warning');
+        expect(state.stateDescription).to.include('validation warning');
+      });
+
+      it('should explain success state', async () => {
+        el.validationState = 'success';
+        await el.updateComplete;
+        
+        const state = el.explainState();
+        
+        expect(state.currentState).to.include('success');
+        expect(state.stateDescription).to.include('value is valid');
+      });
+    });
+
+    describe('getStateDescription', () => {
+      it('should handle disabled state description', () => {
+        const description = el['getStateDescription']('disabled');
+        expect(description).to.equal('Input is disabled and cannot be edited');
+      });
+
+      it('should handle readonly state description', () => {
+        const description = el['getStateDescription']('readonly');
+        expect(description).to.equal('Input is read-only');
+      });
+
+      it('should handle error state description', () => {
+        const description = el['getStateDescription']('error');
+        expect(description).to.equal('Input has validation error');
+      });
+
+      it('should handle filled state with specific type', async () => {
+        el.type = 'email';
+        await el.updateComplete;
+        
+        const description = el['getStateDescription']('filled');
+        expect(description).to.equal('Input contains email data');
+      });
+
+      it('should handle empty state description', () => {
+        const description = el['getStateDescription']('empty');
+        expect(description).to.equal('Input is empty and ready for data entry');
+      });
+
+      it('should handle default state description', () => {
+        const description = el['getStateDescription']('default');
+        expect(description).to.equal('Input field ready for data entry');
+      });
+    });
+
+    describe('AI State Updates in Lifecycle', () => {
+      it('should update state on value change', async () => {
+        el.value = 'new value';
+        await el.updateComplete;
+        
+        expect(el['componentState'].get('value')).to.equal('new value');
+      });
+
+      it('should update state on type change', async () => {
+        el.type = 'email';
+        await el.updateComplete;
+        
+        expect(el['componentState'].get('type')).to.equal('email');
+        expect(el['aiMetadata'].dataType).to.equal('email');
+      });
+
+      it('should update state on disabled change', async () => {
+        el.disabled = true;
+        await el.updateComplete;
+        
+        expect(el['componentState'].get('disabled')).to.be.true;
+      });
+
+      it('should update state on validation change', async () => {
+        el.validationState = 'error';
+        await el.updateComplete;
+        
+        expect(el['componentState'].get('validationState')).to.equal('error');
+      });
+
+      it('should initialize state in connectedCallback', async () => {
+        const newInput = document.createElement('forge-input') as ForgeInput;
+        newInput.type = 'email';
+        newInput.value = 'test@example.com';
+        newInput.disabled = false;
+        newInput.readonly = false;
+        
+        document.body.appendChild(newInput);
+        await newInput.updateComplete;
+        
+        expect(newInput['componentState'].get('type')).to.equal('email');
+        expect(newInput['componentState'].get('value')).to.equal('test@example.com');
+        expect(newInput['componentState'].get('disabled')).to.be.false;
+        expect(newInput['componentState'].get('readonly')).to.be.false;
+        
+        document.body.removeChild(newInput);
+      });
+    });
+  });
+
   describe('Public Methods', () => {
     it('should focus input', async () => {
       const el = await fixture<ForgeInput>(html`

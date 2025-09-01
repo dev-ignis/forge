@@ -56,7 +56,7 @@ describe('ForgeSelect', () => {
     it('should set AI metadata', () => {
       expect(element.aiMetadata).to.deep.equal({
         purpose: 'Select single option from dropdown list',
-        dataType: 'string',
+        dataType: 'text',
         criticality: 'medium',
         semanticRole: 'combobox'
       });

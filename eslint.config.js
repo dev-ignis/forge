@@ -60,8 +60,18 @@ export default [
   },
   {
     files: ['**/*.test.ts', '**/*.test.tsx'],
+    languageOptions: {
+      parser: typescriptParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        // Don't use project for test files since they're excluded from tsconfig
+        project: null
+      }
+    },
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off',
       'no-console': 'off'
     }
   },

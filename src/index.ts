@@ -1,10 +1,18 @@
 // Core exports
-export { 
-  BaseElement,
-  type AIMetadata,
-  type Action,
-  type StateExplanation 
-} from './core/BaseElement';
+export { BaseElement } from './core/BaseElement';
+export type { 
+  AIMetadata,
+  AIAction,
+  AIStateExplanation,
+  AIComponentState,
+  AIDataType,
+  AICriticality,
+  AIInteractionPattern,
+  AIValidationRule,
+  AIRelation,
+  AIPerformanceMetrics
+} from './core/ai-metadata.types';
+export { AIMetadataBuilder, AIMetadataUtils } from './core/ai-metadata.types';
 
 // Component exports
 export { ForgeButton } from './components/atoms/button/button';
@@ -17,6 +25,9 @@ export { ForgeBadge, type BadgeVariant, type BadgeSize, type BadgePosition } fro
 export { ForgeSwitch, type SwitchSize, type SwitchLabelPosition } from './components/atoms/switch/switch';
 export { ForgeRadioGroup, type RadioOption, type RadioOrientation, type RadioLabelPosition, type RadioSize } from './components/atoms/radio-group/radio-group';
 export { ForgeSelect, type SelectOption, type SelectSize, type SelectVariant } from './components/atoms/select/select';
+
+// Molecule exports
+export { ForgeFormField, type FormFieldVariant, type FormFieldValidationState } from './components/molecules/form-field/form-field';
 
 // Type exports
 export type {
