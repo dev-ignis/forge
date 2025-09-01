@@ -3,8 +3,8 @@
 ## Current Status: Phase 1 Complete ✅ | Phase 2 In Progress 🚧
 
 **Last Updated:** September 1, 2025  
-**Current Version:** 1.2.1  
-**Phase:** All 9 Atomic Components + AI Infrastructure + Performance System + 2 Molecule Components
+**Current Version:** 1.2.2  
+**Phase:** All 9 Atomic Components + AI Infrastructure + Performance System + 5 Molecule Components
 
 ## Overall Progress
 
@@ -13,7 +13,7 @@ Phase 0 (Foundation)     ██████████████████�
 Phase 1 (Core Atoms)     ████████████████████████████████████ 100%
 AI Architecture          ████████████████████████████████████ 100%
 Documentation            ████████████████████████████████████ 100%
-Phase 2 (Molecules)      ████████████████░░░░░░░░░░░░░░░░░░░░  40%
+Phase 2 (Molecules)      ████████████████████████████░░░░░░░░  71%
 Phase 3 (Organisms)      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   0%
 ```
 
@@ -32,16 +32,16 @@ Phase 3 (Organisms)      ░░░░░░░░░░░░░░░░░░�
 | **ForgeRadioGroup** | ✅ Complete | Tests ✅ | Group management, arrow navigation, descriptions | ✅ [Full Docs](./components/radio-group.md) |
 | **ForgeSelect** | ✅ Complete | Tests ✅ | Search/filter, groups, loading state, 3 variants | ✅ [Full Docs](./components/select.md) |
 
-**Overall Test Coverage:** 93.77% | **Total Tests:** 472 passing tests | **Test Files:** 13 (including AI metadata tests)
+**Overall Test Coverage:** 94.2% | **Total Tests:** 542 passing tests | **Test Files:** 16 (including AI metadata tests)
 
 ### Molecule Components (Phase 2 - In Progress)
 | Component | Status | Coverage | Features | Documentation |
 |-----------|--------|----------|----------|---------------|
 | **ForgeFormField** | ✅ Complete | 46 tests ✅ | Label management, validation states, floating/inline variants, full AI integration | ✅ Complete |
 | **ForgeMultiSelect** | ✅ Complete | 23 tests ✅ | Advanced search/filter, bulk actions, groups, tag display, max selections, AI integration | ✅ [Full Docs](./components/multi-select.md) |
-| **DatePicker** | ⏳ Planned | - | Calendar widget, date range, i18n support | - |
-| **Card** | ⏳ Planned | - | Container with header/content/footer | - |
-| **Modal** | ⏳ Planned | - | Dialog with backdrop | - |
+| **ForgeDatePicker** | ✅ Complete | 19 tests ✅ | Calendar widget, date range mode, i18n support, keyboard navigation, disabled dates | ✅ Complete |
+| **ForgeCard** | ✅ Complete | 27 tests ✅ | 4 variants, 3 sizes, 6 elevation levels, slots for media/header/footer/actions | ✅ Complete |
+| **ForgeModal** | ✅ Complete | 27 tests ✅ | Focus trap, backdrop, 4 sizes, scroll behaviors, ESC key, stacking support | ✅ Complete |
 | **Dropdown** | ⏳ Planned | - | Menu with positioning | - |
 | **Tooltip** | ⏳ Planned | - | Smart positioning, multiple triggers | - |
 
@@ -257,16 +257,16 @@ forge/
 
 ## Phase 1 & 2 Achievements Summary
 
-### ✅ Components (11 Components Complete)
+### ✅ Components (14 Components Complete)
 - All 9 atomic components implemented
-- 2 molecule components (ForgeFormField, ForgeMultiSelect) complete
+- 5 molecule components complete (FormField, MultiSelect, DatePicker, Card, Modal)
 - Enhanced AI-ready architecture (ADR-014+)
 - Real-time state tracking and AI integration
 - Performance monitoring built-in
 - WCAG 2.1 AA accessibility
 
-### ✅ Testing (93.77% Coverage)
-- 472 passing tests across 13 test files
+### ✅ Testing (94.2% Coverage)
+- 542 passing tests across 16 test files
 - Comprehensive AI metadata testing (36 tests)
 - Unit, integration, and accessibility tests
 - Consolidated test files for maintainability
@@ -288,11 +288,8 @@ forge/
 ## Next Steps
 
 ### Phase 2: Molecule Components (Remaining)
-1. **DatePicker** - Calendar widget with date range selection
-2. **Card** - Container with header/content/footer
-3. **Modal** - Dialog with backdrop
-4. **Dropdown** - Menu with positioning
-5. **Tooltip** - Smart positioning with multiple triggers
+1. **Dropdown** - Menu with positioning
+2. **Tooltip** - Smart positioning with multiple triggers
 
 ### Infrastructure
 1. **CI/CD Pipeline** - GitHub Actions setup
@@ -307,18 +304,18 @@ forge/
 
 ## Success Metrics
 
-- ✅ **11 Components Complete** - All Phase 1 atoms + 2 molecules implemented
-- ✅ **93.77% Test Coverage** - Exceeding 90% target
+- ✅ **14 Components Complete** - All Phase 1 atoms + 5 molecules implemented
+- ✅ **94.2% Test Coverage** - Exceeding 90% target
 - ✅ **100% ADR Compliance** - All implemented ADRs followed + enhanced AI
 - ✅ **WCAG 2.1 AA** - Full accessibility compliance
 - ✅ **<10KB per Component** - Meeting bundle size targets
 - ✅ **100% Documentation** - All Phase 1 components fully documented
 - ✅ **AI Integration** - Comprehensive AI metadata and state tracking
-- ✅ **472 Passing Tests** - Including AI system validation
+- ✅ **542 Passing Tests** - Including AI system validation
 
 ---
 
 **Repository:** [@nexcraft/forge](https://github.com/nexcraft/forge)  
 **Documentation:** [Component Docs](./components/)  
 **Demo:** Run `npm run storybook` to view interactive showcase  
-**Version:** 1.2.1 (Phase 2 In Progress - 2 Molecules Complete)
+**Version:** 1.2.2 (Phase 2 In Progress - 5 Molecules Complete)

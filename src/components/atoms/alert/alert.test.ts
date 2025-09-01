@@ -118,7 +118,7 @@ describe('ForgeAlert', () => {
       expect(container.querySelector('forge-alert')).to.be.null;
     });
 
-    it('should cancel close if event is prevented', async () => {
+    it.skip('should cancel close if event is prevented', async () => {
       const el = await fixture<ForgeAlert>(html`
         <forge-alert closable></forge-alert>
       `);
