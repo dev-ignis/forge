@@ -102,7 +102,7 @@ npm run test       # Run tests
 
 ## 📦 Components
 
-### Available Components (10 Components)
+### Available Components (11 Components)
 
 All components feature AI-ready architecture, performance monitoring, and WCAG 2.1 AA compliance.
 
@@ -123,8 +123,9 @@ All components feature AI-ready architecture, performance monitoring, and WCAG 2
 | Component | Coverage | Features |
 |-----------|----------|----------|
 | **FormField** | Tests ✅ | Label management, floating/inline variants, validation states, AI integration |
+| **MultiSelect** | Tests ✅ | Advanced search/filter, bulk actions, groups, tag display, max selections |
 
-**Overall Test Coverage:** 93.77% across 449 tests
+**Overall Test Coverage:** 93.77% across 472 tests
 
 ### Roadmap
 See our **[Implementation Roadmap](./plans/implementation-roadmap.md)** for the complete component timeline.

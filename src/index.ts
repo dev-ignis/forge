@@ -28,6 +28,7 @@ export { ForgeSelect, type SelectOption, type SelectSize, type SelectVariant } f
 
 // Molecule exports
 export { ForgeFormField, type FormFieldVariant, type FormFieldValidationState } from './components/molecules/form-field/form-field';
+export { ForgeMultiSelect, type MultiSelectOption } from './components/molecules/multi-select/multi-select';
 
 // Type exports
 export type {
