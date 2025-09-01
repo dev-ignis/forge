@@ -118,14 +118,14 @@ This phase focuses on implementing the key features that set @nexcraft/forge apa
 - [x] Group selections
 - [x] Max selection limit
 
-### DatePicker Component
-- [ ] Calendar widget with month/year navigation
-- [ ] Date range selection mode
-- [ ] Internationalization (i18n)
-- [ ] Keyboard accessible (arrows, tab)
-- [ ] Min/max date constraints
-- [ ] Disabled dates
-- [ ] Custom date formats
+### DatePicker Component ✅
+- [x] Calendar widget with month/year navigation
+- [x] Date range selection mode
+- [x] Internationalization (i18n) support via locale prop
+- [x] Keyboard accessible (arrows, tab)
+- [x] Min/max date constraints
+- [x] Disabled dates
+- [x] Custom date formats
 - [ ] Time picker integration
 
 ## Week 9: Performance Budget System

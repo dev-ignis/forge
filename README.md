@@ -102,7 +102,7 @@ npm run test       # Run tests
 
 ## 📦 Components
 
-### Available Components (11 Components)
+### Available Components (12 Components)
 
 All components feature AI-ready architecture, performance monitoring, and WCAG 2.1 AA compliance.
 
@@ -124,6 +124,7 @@ All components feature AI-ready architecture, performance monitoring, and WCAG 2
 |-----------|----------|----------|
 | **FormField** | Tests ✅ | Label management, floating/inline variants, validation states, AI integration |
 | **MultiSelect** | Tests ✅ | Advanced search/filter, bulk actions, groups, tag display, max selections |
+| **DatePicker** | Implementation ✅ | Calendar widget, date range mode, min/max constraints, disabled dates, i18n |
 
 **Overall Test Coverage:** 93.77% across 472 tests
 
