@@ -340,7 +340,7 @@ export class ForgeSelect extends BaseElement {
     // Set AI metadata for ADR-014 compliance
     this.aiMetadata = {
       purpose: 'Select single option from dropdown list',
-      dataType: 'string',
+      dataType: 'text',
       criticality: 'medium',
       semanticRole: 'combobox'
     }

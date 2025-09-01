@@ -250,7 +250,7 @@ export class ForgeRadioGroup extends BaseElement {
     // Set AI metadata for ADR-014 compliance
     this.aiMetadata = {
       purpose: 'Select single option from multiple choices',
-      dataType: 'string',
+      dataType: 'text',
       criticality: 'medium',
       semanticRole: 'radiogroup'
     };

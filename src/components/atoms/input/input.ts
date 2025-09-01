@@ -4,6 +4,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { live } from 'lit/directives/live.js';
 import { BaseElement } from '../../../core/BaseElement';
+import type { AIDataType } from '../../../core/ai-metadata.types';
 
 export type InputType = 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search';
 export type InputSize = 'sm' | 'md' | 'lg';
@@ -12,6 +13,14 @@ export type ValidationState = 'default' | 'error' | 'warning' | 'success';
 
 @customElement('forge-input')
 export class ForgeInput extends BaseElement {
+  // Initialize AI metadata
+  protected aiMetadata = {
+    purpose: 'Text data entry',
+    context: 'form',
+    dataType: 'text' as AIDataType,
+    criticality: 'medium' as const,
+    semanticRole: 'textbox'
+  };
   static styles = css`
     :host {
       display: block;
@@ -487,6 +496,21 @@ export class ForgeInput extends BaseElement {
   protected updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
     
+    // Update AI state tracking
+    if (changedProperties.has('value')) {
+      this.updateComponentState('value', this.value);
+    }
+    if (changedProperties.has('type')) {
+      this.updateComponentState('type', this.type);
+      this.aiMetadata.dataType = this.getAIDataType();
+    }
+    if (changedProperties.has('disabled')) {
+      this.updateComponentState('disabled', this.disabled);
+    }
+    if (changedProperties.has('validationState')) {
+      this.updateComponentState('validationState', this.validationState);
+    }
+    
     // Log component state for AI debugging if in dev mode
     if (this.devMode) {
       console.debug('ForgeInput state:', {
@@ -500,6 +524,89 @@ export class ForgeInput extends BaseElement {
         renderTime: this.renderMetrics.time
       });
     }
+  }
+
+  // AI metadata methods
+  private getAIDataType(): AIDataType {
+    const typeMap: Record<InputType, AIDataType> = {
+      'text': 'text',
+      'password': 'password',
+      'email': 'email',
+      'number': 'number',
+      'tel': 'phone',
+      'url': 'url',
+      'search': 'text'
+    };
+    return typeMap[this.type] || 'text';
+  }
+
+  getPossibleActions() {
+    return [
+      {
+        name: 'input',
+        description: 'Enter text into the field',
+        available: !this.disabled && !this.readonly
+      },
+      {
+        name: 'clear',
+        description: 'Clear the input value',
+        available: !this.disabled && !this.readonly && !!this.value
+      },
+      {
+        name: 'focus',
+        description: 'Focus the input field',
+        available: !this.disabled
+      },
+      {
+        name: 'validate',
+        description: 'Validate the input value',
+        available: true
+      },
+      {
+        name: 'showPassword',
+        description: 'Toggle password visibility',
+        available: this.type === 'password'
+      }
+    ];
+  }
+
+  explainState() {
+    const states = [];
+    if (this.disabled) states.push('disabled');
+    if (this.readonly) states.push('readonly');
+    if (this.value) states.push('filled');
+    if (!this.value) states.push('empty');
+    if (this.validationState !== 'default') states.push(this.validationState);
+    
+    const currentState = states.join('-') || 'default';
+    
+    return {
+      currentState,
+      possibleStates: ['default', 'filled', 'empty', 'disabled', 'readonly', 'error', 'warning', 'success'],
+      stateDescription: this.getStateDescription(currentState)
+    };
+  }
+
+  private getStateDescription(state: string): string {
+    if (state.includes('disabled')) return 'Input is disabled and cannot be edited';
+    if (state.includes('readonly')) return 'Input is read-only';
+    if (state.includes('error')) return 'Input has validation error';
+    if (state.includes('warning')) return 'Input has validation warning';
+    if (state.includes('success')) return 'Input value is valid';
+    if (state.includes('filled')) return `Input contains ${this.type} data`;
+    if (state.includes('empty')) return 'Input is empty and ready for data entry';
+    return 'Input field ready for data entry';
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    
+    // Initialize component state for AI tracking
+    this.updateComponentState('type', this.type);
+    this.updateComponentState('value', this.value);
+    this.updateComponentState('disabled', this.disabled);
+    this.updateComponentState('readonly', this.readonly);
+    this.updateComponentState('validationState', this.validationState);
   }
 
   // Public methods

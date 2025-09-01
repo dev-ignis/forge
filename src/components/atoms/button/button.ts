@@ -6,6 +6,15 @@ import type { ButtonVariant, ButtonSize, ButtonType, ForgeButtonProps, ForgeButt
 
 @customElement('forge-button')
 export class ForgeButton extends BaseElement {
+  // Initialize AI metadata
+  protected aiMetadata = {
+    purpose: 'User interaction trigger',
+    context: 'action',
+    dataType: undefined,  // Button doesn't have data type
+    criticality: 'medium' as const,
+    semanticRole: 'button'
+  };
+
   static styles = css`
     :host {
       display: inline-block;
@@ -140,6 +149,16 @@ export class ForgeButton extends BaseElement {
   @state() private ripples: Array<{ x: number; y: number; id: number }> = [];
   @state() private renderMetrics = { time: 0, violations: 0 };
 
+  connectedCallback() {
+    super.connectedCallback();
+    
+    // Initialize component state for AI tracking
+    this.updateComponentState('variant', this.variant);
+    this.updateComponentState('size', this.size);
+    this.updateComponentState('disabled', this.disabled);
+    this.updateComponentState('loading', this.loading);
+  }
+
   render() {
     const classes = {
       'button': true,
@@ -223,7 +242,23 @@ export class ForgeButton extends BaseElement {
   protected updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
     
+    // Update AI state tracking
+    if (changedProperties.has('variant')) {
+      this.updateComponentState('variant', this.variant);
+      this.aiMetadata.semanticRole = this.getDefaultSemanticRole();
+    }
+    
+    if (changedProperties.has('size')) {
+      this.updateComponentState('size', this.size);
+    }
+    
+    if (changedProperties.has('disabled')) {
+      this.updateComponentState('disabled', this.disabled);
+      // Keep criticality as medium since it's const
+    }
+    
     if (changedProperties.has('loading')) {
+      this.updateComponentState('loading', this.loading);
       if (this.loading) {
         this.announceToScreenReader('Loading, please wait');
       }
@@ -265,6 +300,57 @@ export class ForgeButton extends BaseElement {
     if (this.loading) parts.push('currently loading');
     if (this.disabled) parts.push('disabled');
     return parts.join(', ') || 'Interactive button';
+  }
+
+  // Override AI methods from BaseElement
+  getPossibleActions() {
+    return [
+      {
+        name: 'click',
+        description: 'Trigger button action',
+        available: !this.disabled && !this.loading
+      },
+      {
+        name: 'focus',
+        description: 'Focus the button',
+        available: !this.disabled
+      },
+      {
+        name: 'disable',
+        description: 'Disable the button',
+        available: !this.disabled
+      },
+      {
+        name: 'enable',
+        description: 'Enable the button',
+        available: this.disabled
+      }
+    ];
+  }
+
+  explainState() {
+    const states = [];
+    if (this.disabled) states.push('disabled');
+    if (this.loading) states.push('loading');
+    if (!this.disabled && !this.loading) states.push('ready');
+    
+    const currentState = states.join('-') || 'ready';
+    
+    return {
+      currentState,
+      possibleStates: ['ready', 'loading', 'disabled', 'disabled-loading'],
+      stateDescription: this.getStateDescription(currentState)
+    };
+  }
+
+  private getStateDescription(state: string): string {
+    const descriptions: Record<string, string> = {
+      'ready': `${this.variant} button ready for interaction`,
+      'loading': 'Button is processing, please wait',
+      'disabled': 'Button is disabled and cannot be clicked',
+      'disabled-loading': 'Button is disabled while processing'
+    };
+    return descriptions[state] || 'Button state';
   }
   
   protected checkPerformance(renderTime: number): void {
