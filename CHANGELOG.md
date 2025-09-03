@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.3.0 - 2025-09-03
+
+### Changes
+- feat: - multi select molecule
+- test: - date-picker;
+- feat: - Molecule Components & Core Differentiators;
+- feat: - date picker;
+- feat: - implement ForgeMultiSelect molecule component;
 ## v0.2.0 - 2025-09-01
 
 ### Changes
