@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.2 - 2025-09-03
+
+### Changes
+- Merge pull request #7 from dev-ignis/develop
+- docs: - complete AI metadata documentation;
 ## v0.3.1 - 2025-09-03
 
 ### Changes
