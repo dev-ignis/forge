@@ -1,10 +1,13 @@
-import { html, css, PropertyValues } from 'lit';
+import { html, css, PropertyValues, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { BaseElement } from '../../../core/BaseElement';
 import type { AIMetadata, AIAction, AIStateExplanation } from '../../../core/ai-metadata.types';
 import '../../atoms/button/button';
+import '../../atoms/icon/icon';
 import { ForgeIcon } from '../../atoms/icon/icon';
 import '../../atoms/input/input';
+import '../../atoms/select/select';
+import type { SelectOption } from '../../atoms/select/select';
 
 // Register required icons
 ForgeIcon.registerIcon('calendar', '<path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>');
@@ -138,25 +141,8 @@ export class ForgeDatePicker extends BaseElement {
 
     .calendar__month-select,
     .calendar__year-select {
-      padding: 4px 8px;
-      border: 1px solid var(--forge-border-color, #d1d5db);
-      border-radius: 4px;
-      background: var(--forge-bg-color, #ffffff);
-      cursor: pointer;
+      max-width: 120px;
       font-size: 14px;
-      transition: all 0.2s ease;
-    }
-
-    .calendar__month-select:hover,
-    .calendar__year-select:hover {
-      border-color: var(--forge-primary-color, #3b82f6);
-    }
-
-    .calendar__month-select:focus,
-    .calendar__year-select:focus {
-      outline: none;
-      border-color: var(--forge-primary-color, #3b82f6);
-      box-shadow: 0 0 0 3px var(--forge-primary-alpha, rgba(59, 130, 246, 0.1));
     }
 
     .calendar__weekdays {
@@ -284,12 +270,48 @@ export class ForgeDatePicker extends BaseElement {
     }
   `;
 
-  @property({ type: Object, attribute: false }) value: Date | null = null;
-  @property({ type: Object, attribute: false }) range: DateRange | null = null;
+  private _value: Date | null = null;
+  
+  @property({ type: Object, attribute: false })
+  get value(): Date | null {
+    return this._value;
+  }
+  
+  set value(newValue: Date | null) {
+    const oldValue = this._value;
+    // Check if the date is valid
+    if (newValue instanceof Date && isNaN(newValue.getTime())) {
+      this._value = null;
+    } else {
+      this._value = newValue;
+    }
+    this.requestUpdate('value', oldValue);
+  }
+  private _range: DateRange | null = null;
+  
+  @property({ type: Object, attribute: false })
+  get range(): DateRange | null {
+    return this._range;
+  }
+  
+  set range(newRange: DateRange | null) {
+    const oldRange = this._range;
+    this._range = newRange;
+    if (newRange) {
+      this.rangeStart = newRange.start;
+      this.rangeEnd = newRange.end;
+    } else {
+      this.rangeStart = null;
+      this.rangeEnd = null;
+    }
+    this.requestUpdate('range', oldRange);
+  }
   @property({ type: String }) placeholder = 'Select date';
   @property({ type: String }) format = 'MM/DD/YYYY';
   @property({ type: String }) locale = 'en-US';
   @property({ type: Boolean }) disabled = false;
+  @property({ type: Boolean }) required = false;
+  @property({ type: Boolean }) readonly = false;
   @property({ type: Boolean, attribute: 'range-mode' }) rangeMode = false;
   @property({ type: Boolean, attribute: 'clear-button' }) clearButton = true;
   @property({ type: Object, attribute: false }) min: Date | null = null;
@@ -380,6 +402,22 @@ export class ForgeDatePicker extends BaseElement {
     this.updateComponentState('isOpen', false);
   }
 
+  // Public methods for external control
+  open(): void {
+    if (!this.disabled) {
+      this.isOpen = true;
+      this.updateComponentState('isOpen', true);
+    }
+  }
+
+  close(): void {
+    this.closeCalendar();
+  }
+
+  toggle(): void {
+    this.toggleCalendar();
+  }
+
   private handleDocumentClick = (e: MouseEvent): void => {
     if (!this.contains(e.target as Node)) {
       this.closeCalendar();
@@ -403,7 +441,17 @@ export class ForgeDatePicker extends BaseElement {
     }
   };
 
-  private formatDate(date: Date | null): string {
+  private handleInputChange = (e: CustomEvent): void => {
+    const value = e.detail?.value || '';
+    const parsedDate = this.parseDate(value);
+    if (parsedDate) {
+      this.value = parsedDate;
+    } else {
+      this.value = null;
+    }
+  };
+
+  formatDate(date: Date | null): string {
     if (!date) return '';
     
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -416,7 +464,7 @@ export class ForgeDatePicker extends BaseElement {
       .replace('YYYY', String(year));
   }
 
-  private selectDate(date: Date): void {
+  selectDate(date: Date): void {
     if (this.isDateDisabled(date)) return;
 
     if (this.rangeMode) {
@@ -440,7 +488,7 @@ export class ForgeDatePicker extends BaseElement {
     }
   }
 
-  private clearValue(): void {
+  clearValue(): void {
     if (this.rangeMode) {
       this.range = null;
       this.rangeStart = null;
@@ -450,10 +498,100 @@ export class ForgeDatePicker extends BaseElement {
     }
   }
 
-  private goToToday(): void {
+  // Alias for clearValue to match test expectations
+  clear(): void {
+    this.clearValue();
+  }
+
+  selectToday(): void {
     const today = new Date();
     this.currentMonth = today.getMonth();
     this.currentYear = today.getFullYear();
+    if (!this.rangeMode) {
+      this.selectDate(today);
+    }
+  }
+
+  parseDate(dateString: string): Date | null {
+    try {
+      const parts = dateString.split(/[\/\-]/);
+      if (parts.length !== 3) return null;
+      
+      let month, day, year;
+      if (this.format === 'DD/MM/YYYY') {
+        day = parseInt(parts[0]);
+        month = parseInt(parts[1]) - 1;
+        year = parseInt(parts[2]);
+      } else if (this.format === 'YYYY-MM-DD') {
+        year = parseInt(parts[0]);
+        month = parseInt(parts[1]) - 1;
+        day = parseInt(parts[2]);
+      } else { // Default MM/DD/YYYY
+        month = parseInt(parts[0]) - 1;
+        day = parseInt(parts[1]);
+        year = parseInt(parts[2]);
+      }
+      
+      const date = new Date(year, month, day);
+      if (isNaN(date.getTime())) return null;
+      return date;
+    } catch {
+      return null;
+    }
+  }
+
+  getMonthName(monthIndex: number): string {
+    const date = new Date(2024, monthIndex, 1);
+    return date.toLocaleDateString(this.locale, { month: 'long' });
+  }
+
+  getWeekdayNames(): string[] {
+    const names = [];
+    const startDate = new Date(2024, 0, 7); // A Sunday
+    
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(startDate);
+      date.setDate(startDate.getDate() + i);
+      names.push(date.toLocaleDateString(this.locale, { weekday: 'short' }));
+    }
+    
+    if (this.weekStartMonday) {
+      names.push(names.shift()!);
+    }
+    
+    return names;
+  }
+
+  getDaysInMonth(month: number, year: number): number {
+    return new Date(year, month + 1, 0).getDate();
+  }
+
+  getFirstDayOfMonth(month: number, year: number): number {
+    const firstDay = new Date(year, month, 1).getDay();
+    if (this.weekStartMonday) {
+      return firstDay === 0 ? 6 : firstDay - 1;
+    }
+    return firstDay;
+  }
+
+  setRange(start: Date, end: Date): void {
+    this.rangeStart = start;
+    this.rangeEnd = end;
+    this.range = { start, end };
+  }
+
+  clearRange(): void {
+    this.rangeStart = null;
+    this.rangeEnd = null;
+    this.range = null;
+  }
+
+  isDateBeforeMin(date: Date): boolean {
+    return this.min ? date < this.min : false;
+  }
+
+  isDateAfterMax(date: Date): boolean {
+    return this.max ? date > this.max : false;
   }
 
   private previousMonth(): void {
@@ -474,7 +612,7 @@ export class ForgeDatePicker extends BaseElement {
     }
   }
 
-  private isDateDisabled(date: Date): boolean {
+  isDateDisabled(date: Date): boolean {
     if (this.min && date < this.min) return true;
     if (this.max && date > this.max) return true;
     
@@ -485,14 +623,14 @@ export class ForgeDatePicker extends BaseElement {
     );
   }
 
-  private isToday(date: Date): boolean {
+  isToday(date: Date): boolean {
     const today = new Date();
     return date.getDate() === today.getDate() &&
            date.getMonth() === today.getMonth() &&
            date.getFullYear() === today.getFullYear();
   }
 
-  private isSelected(date: Date): boolean {
+  isSelected(date: Date): boolean {
     if (this.rangeMode) {
       return (this.rangeStart?.getTime() === date.getTime()) ||
              (this.rangeEnd?.getTime() === date.getTime());
@@ -500,7 +638,7 @@ export class ForgeDatePicker extends BaseElement {
     return this.value?.getTime() === date.getTime();
   }
 
-  private isInRange(date: Date): boolean {
+  isDateInRange(date: Date): boolean {
     if (!this.rangeMode || !this.rangeStart) return false;
     
     if (this.rangeEnd) {
@@ -516,7 +654,7 @@ export class ForgeDatePicker extends BaseElement {
     return false;
   }
 
-  private getDaysInMonth(): Date[] {
+  getCalendarDays(): Date[] {
     const firstDay = new Date(this.currentYear, this.currentMonth, 1);
     const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
     const days: Date[] = [];
@@ -552,7 +690,7 @@ export class ForgeDatePicker extends BaseElement {
     const isDisabled = this.isDateDisabled(date);
     const isToday = this.isToday(date);
     const isSelected = this.isSelected(date);
-    const isInRange = this.isInRange(date);
+    const isInRange = this.isDateInRange(date);
     const isRangeStart = this.rangeStart?.getTime() === date.getTime();
     const isRangeEnd = this.rangeEnd?.getTime() === date.getTime();
     
@@ -585,36 +723,43 @@ export class ForgeDatePicker extends BaseElement {
       ? `${this.formatDate(this.range.start)} - ${this.formatDate(this.range.end)}`
       : this.formatDate(this.value);
 
+    const clearButton = this.clearButton && (this.value || this.range) ? html`
+      <button
+        class="date-picker__clear"
+        @click=${(e: Event) => {
+          e.stopPropagation();
+          this.clearValue();
+        }}
+        aria-label="Clear date"
+      >
+        ×
+      </button>
+    ` : nothing;
+
     const content = html`
       <div class="date-picker">
         <div class="date-picker__input-wrapper">
           <forge-input
-            .type=${'text'}
-            .value=${inputValue}
-            .placeholder=${this.placeholder}
-            .disabled=${this.disabled}
-            .readonly=${true}
+            type="text"
+            .value=${inputValue || ''}
+            placeholder=${this.placeholder}
+            ?disabled=${this.disabled}
+            ?required=${this.required}
+            ?readonly=${this.readonly}
             @click=${this.toggleCalendar}
+            @forge-change=${this.handleInputChange}
           ></forge-input>
-          ${this.clearButton && (this.value || this.range) ? html`
-            <button
-              class="date-picker__clear"
-              @click=${(e: Event) => { e.stopPropagation(); this.clearValue(); }}
-              aria-label="Clear date"
-            >
-              ×
-            </button>
-          ` : ''}
+          ${clearButton}
           <forge-icon
             class="date-picker__icon"
-            .name=${'calendar'}
-            .size=${'small'}
+            name="calendar"
+            size="sm"
           ></forge-icon>
         </div>
 
         <div
           class="date-picker__calendar"
-          data-open=${this.isOpen}
+          data-open=${this.isOpen ? 'true' : 'false'}
           role="dialog"
           aria-label="Calendar"
         >
@@ -625,34 +770,34 @@ export class ForgeDatePicker extends BaseElement {
                 @click=${this.previousMonth}
                 aria-label="Previous month"
               >
-                <forge-icon .name=${'chevron-left'} .size=${'small'}></forge-icon>
+                <forge-icon name="chevron-left" size="sm"></forge-icon>
               </button>
             </div>
             
             <div class="calendar__month-year">
-              <select
+              <forge-select
                 class="calendar__month-select"
                 .value=${String(this.currentMonth)}
-                @change=${(e: Event) => {
-                  this.currentMonth = parseInt((e.target as HTMLSelectElement).value);
+                .options=${this.monthNames.map((month, index): SelectOption => ({
+                  value: String(index),
+                  label: month
+                }))}
+                @forge-change=${(e: CustomEvent) => {
+                  this.currentMonth = parseInt(e.detail.value);
                 }}
-              >
-                ${this.monthNames.map((month, index) => html`
-                  <option value=${index}>${month}</option>
-                `)}
-              </select>
+              ></forge-select>
               
-              <select
+              <forge-select
                 class="calendar__year-select"
                 .value=${String(this.currentYear)}
-                @change=${(e: Event) => {
-                  this.currentYear = parseInt((e.target as HTMLSelectElement).value);
+                .options=${Array.from({ length: 20 }, (_, i) => this.currentYear - 10 + i).map(year => ({
+                  value: String(year),
+                  label: String(year)
+                }))}
+                @forge-change=${(e: CustomEvent) => {
+                  this.currentYear = parseInt(e.detail.value);
                 }}
-              >
-                ${Array.from({ length: 20 }, (_, i) => this.currentYear - 10 + i).map(year => html`
-                  <option value=${year}>${year}</option>
-                `)}
-              </select>
+              ></forge-select>
             </div>
             
             <div class="calendar__nav">
@@ -661,7 +806,7 @@ export class ForgeDatePicker extends BaseElement {
                 @click=${this.nextMonth}
                 aria-label="Next month"
               >
-                <forge-icon .name=${'chevron-right'} .size=${'small'}></forge-icon>
+                <forge-icon name="chevron-right" size="sm"></forge-icon>
               </button>
             </div>
           </div>
@@ -673,13 +818,13 @@ export class ForgeDatePicker extends BaseElement {
           </div>
 
           <div class="calendar__days">
-            ${this.getDaysInMonth().map(date => this.renderCalendarDay(date))}
+            ${this.getCalendarDays().map(date => this.renderCalendarDay(date))}
           </div>
 
           <div class="calendar__footer">
             <button
               class="calendar__today-button"
-              @click=${this.goToToday}
+              @click=${this.selectToday}
             >
               Today
             </button>
@@ -687,7 +832,7 @@ export class ForgeDatePicker extends BaseElement {
               <span class="calendar__range-info">
                 ${this.rangeStart && !this.rangeEnd ? 'Select end date' : ''}
               </span>
-            ` : ''}
+            ` : nothing}
           </div>
         </div>
       </div>
@@ -726,19 +871,21 @@ export class ForgeDatePicker extends BaseElement {
         result: 'Date selection cleared'
       },
       {
-        name: 'goToToday',
-        description: 'Navigate to current month',
-        available: !this.disabled && this.isOpen,
-        result: 'Calendar shows current month'
+        name: 'selectToday',
+        description: 'Select today\'s date',
+        available: !this.disabled,
+        result: 'Today\'s date is selected'
       }
     ];
   }
 
   explainState(): AIStateExplanation {
-    const states = ['closed', 'open', 'selecting', 'selected'];
-    let currentState = 'closed';
+    const states = ['empty', 'open', 'selecting', 'selected', 'disabled'];
+    let currentState = 'empty';
     
-    if (this.isOpen) {
+    if (this.disabled) {
+      currentState = 'disabled';
+    } else if (this.isOpen) {
       currentState = this.rangeMode && this.selectingRangeEnd ? 'selecting' : 'open';
     } else if (this.value || this.range) {
       currentState = 'selected';
@@ -754,7 +901,7 @@ export class ForgeDatePicker extends BaseElement {
       stateDescription: description,
       transitions: [
         {
-          from: 'closed',
+          from: 'empty',
           to: 'open',
           trigger: 'Click input or press Enter'
         },
@@ -765,8 +912,13 @@ export class ForgeDatePicker extends BaseElement {
         },
         {
           from: 'open',
-          to: 'closed',
+          to: 'empty',
           trigger: 'Click outside or press Escape'
+        },
+        {
+          from: 'selected',
+          to: 'open',
+          trigger: 'Click input to change date'
         }
       ],
       visualIndicators: [

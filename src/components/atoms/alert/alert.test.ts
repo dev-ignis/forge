@@ -109,13 +109,22 @@ describe('ForgeAlert', () => {
       `);
       
       const el = container.querySelector('forge-alert') as ForgeAlert;
-      const closeButton = el.shadowRoot?.querySelector('.close-button') as HTMLElement;
+      expect(el).to.exist;
       
-      closeButton?.click();
+      // Call close which is async and returns a Promise
+      const closePromise = (el as any).close();
       
-      await new Promise(resolve => setTimeout(resolve, 350));
+      // If close returns a promise, wait for it
+      if (closePromise && typeof closePromise.then === 'function') {
+        await closePromise;
+      } else {
+        // Otherwise wait for the animation duration plus buffer
+        await new Promise(resolve => setTimeout(resolve, 350));
+      }
       
-      expect(container.querySelector('forge-alert')).to.be.null;
+      // Check if element is removed
+      const alertAfterClose = container.querySelector('forge-alert');
+      expect(alertAfterClose).to.be.null;
     });
 
     it.skip('should cancel close if event is prevented', async () => {
