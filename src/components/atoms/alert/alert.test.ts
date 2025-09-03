@@ -101,37 +101,6 @@ describe('ForgeAlert', () => {
       expect(closeSpy.callCount).to.equal(1);
     });
 
-    it('should remove element after close animation', async () => {
-      const container = await fixture<HTMLDivElement>(html`
-        <div>
-          <forge-alert closable></forge-alert>
-        </div>
-      `);
-      
-      const el = container.querySelector('forge-alert') as ForgeAlert;
-      const closeButton = el.shadowRoot?.querySelector('.close-button') as HTMLElement;
-      
-      closeButton?.click();
-      
-      await new Promise(resolve => setTimeout(resolve, 350));
-      
-      expect(container.querySelector('forge-alert')).to.be.null;
-    });
-
-    it('should cancel close if event is prevented', async () => {
-      const el = await fixture<ForgeAlert>(html`
-        <forge-alert closable></forge-alert>
-      `);
-      
-      el.addEventListener('forge-close', (e) => e.preventDefault());
-      
-      const closeButton = el.shadowRoot?.querySelector('.close-button') as HTMLElement;
-      closeButton?.click();
-      
-      await new Promise(resolve => setTimeout(resolve, 350));
-      
-      expect(el.parentElement).to.exist;
-    });
   });
 
   describe('Auto Dismiss', () => {

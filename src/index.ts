@@ -28,6 +28,10 @@ export { ForgeSelect, type SelectOption, type SelectSize, type SelectVariant } f
 
 // Molecule exports
 export { ForgeFormField, type FormFieldVariant, type FormFieldValidationState } from './components/molecules/form-field/form-field';
+export { ForgeMultiSelect, type MultiSelectOption } from './components/molecules/multi-select/multi-select';
+export { ForgeDatePicker, type DateRange } from './components/molecules/date-picker/date-picker';
+export { ForgeCard, type CardVariant, type CardSize } from './components/molecules/card/card';
+export { ForgeModal, type ModalSize, type ModalScrollBehavior } from './components/molecules/modal/modal';
 
 // Type exports
 export type {

@@ -59,6 +59,14 @@ Architecture Decision Records capture important architectural decisions along wi
 - **[ADR-013: TypeScript Interfaces and Type Definitions](./ADR-013-typescript-interfaces.md)**  
   Comprehensive type system with proper interfaces for all components to ensure type safety and excellent developer experience.
 
+### AI and Component Architecture
+
+- **[ADR-014: AI-Ready Component Architecture](./ADR-014-ai-ready-components.md)**  
+  Components designed with semantic metadata and machine-readable interfaces to support AI/ML integration workflows.
+
+- **[ADR-015: Atomic Design Composition Pattern](./ADR-015-atomic-composition-pattern.md)**  
+  Molecules must use atoms as building blocks for consistency, maintainability, and proper atomic design hierarchy.
+
 ## ADR Status Definitions
 
 - **Proposed**: The decision is still under discussion
@@ -70,7 +78,7 @@ Architecture Decision Records capture important architectural decisions along wi
 
 When creating a new ADR:
 
-1. Use the next sequential number (e.g., ADR-013)
+1. Use the next sequential number (e.g., ADR-016)
 2. Follow the standard format:
    - Title
    - Status
