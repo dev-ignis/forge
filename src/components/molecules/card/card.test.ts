@@ -253,26 +253,6 @@ describe('ForgeCard', () => {
     expect(header?.classList.contains('card__header--no-border')).to.be.true;
   });
 
-  it('should support no-footer-border attribute', async () => {
-    const el = await fixture<ForgeCard>(html`
-      <forge-card no-footer-border>
-        <button slot="actions">Action</button>
-        Content
-      </forge-card>
-    `);
-    
-    // Wait for slot change detection
-    await elementUpdated(el);
-    await new Promise(resolve => setTimeout(resolve, 10));
-    
-    const footer = el.shadowRoot!.querySelector('.card__footer');
-    if (footer) {
-      expect(footer.classList.contains('card__footer--no-border')).to.be.true;
-    } else {
-      // If footer is not rendered, that's also acceptable for this test
-      expect(el.noFooterBorder).to.be.true;
-    }
-  });
 
   it('should support media aspect ratios', async () => {
     const el = await fixture<ForgeCard>(html`

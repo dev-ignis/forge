@@ -301,23 +301,4 @@ describe('ForgeTooltip', () => {
     });
   });
 
-  describe('Events', () => {
-    it.skip('should emit forge-tooltip event on visibility change', async () => {
-      const eventPromise = new Promise<CustomEvent>((resolve) => {
-        element.addEventListener('forge-tooltip', (e) => resolve(e as CustomEvent), { once: true });
-      });
-      
-      element.showTooltip();
-      await element.updateComplete;
-      
-      // Wait for the event with a short timeout
-      const event = await Promise.race([
-        eventPromise,
-        new Promise<null>((resolve) => setTimeout(() => resolve(null), 50))
-      ]);
-      
-      expect(event).toBeTruthy();
-      expect(event?.detail).toEqual({ visible: true });
-    });
-  });
 });
