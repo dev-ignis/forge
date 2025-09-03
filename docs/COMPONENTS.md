@@ -13,7 +13,7 @@ import '@nexcraft/forge/input';
 
 ## Component Library
 
-The Forge UI Component Library provides 9 production-ready atomic components, all built with Web Components and featuring AI-ready architecture, performance monitoring, and WCAG 2.1 AA accessibility compliance.
+The Forge UI Component Library provides a comprehensive suite of production-ready components, all built with Web Components and featuring AI-ready architecture, performance monitoring, and WCAG 2.1 AA accessibility compliance. Our library includes atomic components, molecule combinations, and complex organism components.
 
 > 📚 **Detailed Documentation:** Each component has comprehensive documentation in the [components](./components/) directory with API references, examples, and integration guides.
 
@@ -31,25 +31,46 @@ The Forge UI Component Library provides 9 production-ready atomic components, al
 | [ForgeRadioGroup](./components/radio-group.md) | 1.0.0 | Tests ✅ | ~8KB | [Full Docs →](./components/radio-group.md) |
 | [ForgeSelect](./components/select.md) | 1.0.0 | Tests ✅ | ~10KB | [Full Docs →](./components/select.md) |
 
-**Overall Coverage:** 93.77% | **Total Components:** 9 | **Average Bundle Size:** ~7.5KB
+**Overall Coverage:** 93.77% | **Total Components:** 9 Atoms + 7 Molecules + 6 Organisms | **Average Bundle Size:** ~7.5KB
 
 ## Component Categories
 
-### Form Controls
+### Organism Components
+Complex, feature-rich components that combine multiple molecules and atoms:
+- **[Tabs](./components/organisms/tabs.md)** - Advanced tabbed interface with keyboard navigation and drag-to-reorder
+- **[Pagination](./components/organisms/pagination.md)** - Comprehensive pagination with multiple modes (standard, infinite scroll, load more)
+- **[Navigation Bar](./components/organisms/navigation-bar.md)** - Responsive navigation with mobile drawer and dropdowns
+- **[Data Table](./components/organisms/data-table.md)** - Advanced table with sorting, selection, and responsive modes
+- **[Accordion](./components/organisms/accordion.md)** - Expandable panels with single/multiple expansion modes
+- **[Tree View](./components/organisms/tree-view.md)** - Hierarchical tree with expand/collapse and selection
+
+### Molecule Components
+Combined atoms forming cohesive interface elements:
+- **[Card](./components/molecules/card.md)** - Content container with header, body, and actions
+- **[Modal](./components/molecules/modal.md)** - Dialog overlay with backdrop and focus management
+- **[Tooltip](./components/molecules/tooltip.md)** - Contextual information overlay
+- **[Dropdown](./components/molecules/dropdown.md)** - Menu overlay with positioning
+- **[Form Field](./components/molecules/form-field.md)** - Input wrapper with label and validation
+- **[Multi Select](./components/molecules/multi-select.md)** - Multiple option selection with chips
+- **[Date Picker](./components/molecules/date-picker.md)** - Calendar-based date selection
+
+### Atomic Components
+
+#### Form Controls
 - **[Input](./components/input.md)** - Text input with validation (7 types)
 - **[Select](./components/select.md)** - Dropdown with search and grouping
 - **[Checkbox](./components/checkbox.md)** - Multi-select with indeterminate state
 - **[RadioGroup](./components/radio-group.md)** - Single selection with keyboard nav
 - **[Switch](./components/switch.md)** - Toggle with loading state
 
-### Actions
+#### Actions
 - **[Button](./components/button.md)** - 5 variants, 3 sizes, loading states
 
-### Feedback
+#### Feedback
 - **[Alert](./components/alert.md)** - 4 severities with auto-dismiss
 - **[Badge](./components/badge.md)** - Count/dot indicators with positioning
 
-### Media
+#### Media
 - **[Icon](./components/icon.md)** - 25+ icons with lazy loading
 
 ## Common Features
