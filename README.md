@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/@nexcraft/forge.svg)](https://www.npmjs.com/package/@nexcraft/forge)
 [![Bundle Size](https://img.shields.io/badge/bundle%20size-<10KB-brightgreen.svg)](https://bundlephobia.com/package/@nexcraft/forge)
-[![Test Coverage](https://img.shields.io/badge/coverage-94.2%25-brightgreen.svg)](./coverage)
+[![Test Coverage](https://img.shields.io/badge/coverage-90.48%25-brightgreen.svg)](./coverage)
 [![WCAG 2.1 AA](https://img.shields.io/badge/WCAG%202.1-AA-blue.svg)](https://www.w3.org/WAI/WCAG21/quickref/)
 [![AI-Ready](https://img.shields.io/badge/AI-Ready-purple.svg)](./docs/ai-metadata-system.md)
 [![Performance Monitored](https://img.shields.io/badge/Performance-Monitored-orange.svg)](./docs/performance-monitoring.md)
@@ -196,24 +196,24 @@ Our advanced molecules showcase the full power of AI-ready architecture:
 | **🃏 Card** | Content analysis | Elevation shadows | 6 levels, media support, skeleton states |
 
 ### ⚙️ **Atomic Components** (Phase 1 - Production Ready)
-Foundation components with 94%+ test coverage:
+Foundation components with comprehensive test coverage:
 
 | Component | Test Coverage | Key Features |
 |-----------|--------------|--------------|
-| **Button** | 94.17% | 5 variants, ripple effect, loading states |
-| **Input** | 88.29% | 7 types, validation, clearable |
-| **Icon** | 94.09% | Registry system, lazy loading |
-| **Alert** | 98.20% | Auto-dismiss, animations |
-| **Checkbox** | 97.87% | Indeterminate state |
-| **Badge** | 96.37% | Count/dot modes, positions |
-| **Switch** | 96.93% | Loading state, custom labels |
-| **RadioGroup** | ✅ | Group management, keyboard nav |
-| **Select** | ✅ | Search/filter, groups |
+| **Button** | 92.38% | 5 variants, ripple effect, loading states |
+| **Input** | 84.56% | 7 types, validation, clearable |
+| **Icon** | 78.38% | Registry system, lazy loading |
+| **Alert** | 97.02% | Auto-dismiss, animations |
+| **Checkbox** | 98.50% | Indeterminate state |
+| **Badge** | 100% | Count/dot modes, positions |
+| **Switch** | 98.50% | Loading state, custom labels |
+| **RadioGroup** | 93.79% | Group management, keyboard nav |
+| **Select** | 84.69% | Search/filter, groups |
 
 ### 📊 **Component Stats**
 - **Total Components**: 16 production-ready
-- **Overall Test Coverage**: 94.2% 
-- **Total Tests**: 565 passing
+- **Overall Test Coverage**: 90.48% 
+- **Total Tests**: 658 passing
 - **Performance**: All components <2ms render
 - **Accessibility**: 100% WCAG 2.1 AA compliant
 - **AI Coverage**: 100% metadata implementation
@@ -271,17 +271,17 @@ npm run test:all
 | **AI Metadata Coverage** | 100% | **100%** | ✅ ACHIEVED |
 | **Performance Monitoring** | Built-in | **Fully Implemented** | ✅ ACHIEVED |
 | **Molecule Components** | 7 planned | **7/7** | ✅ COMPLETED |
-| **Test Coverage** | >90% | **94.2%** | ✅ EXCEEDED |
+| **Test Coverage** | >90% | **90.48%** | ✅ ACHIEVED |
 | **Bundle Size (per component)** | <10KB | **<10KB** | ✅ ACHIEVED |
 | **Component Render** | <2ms | **<1ms** | ✅ EXCEEDED |
 | **Accessibility** | WCAG 2.1 AA | **100% Compliant** | ✅ ACHIEVED |
-| **Total Tests** | 500+ | **565 passing** | ✅ EXCEEDED |
+| **Total Tests** | 500+ | **658 passing** | ✅ EXCEEDED |
 
 ### 🚀 **Why This Matters**
-- **94.2% Test Coverage**: Your components won't break in production
+- **90.48% Test Coverage**: Your components won't break in production
 - **<1ms Render Time**: Faster than the human eye can perceive
 - **100% AI Coverage**: Every component can talk to ChatGPT, Claude, Copilot
-- **565 Tests**: More tests than most production apps
+- **658 Tests**: More tests than most production apps
 - **7 Advanced Molecules**: Production-ready complex components
 
 ## 📄 License
