@@ -22,7 +22,8 @@ export default defineConfig({
         'storybook-static/**',
         '.storybook/**',
         'scripts/**',
-        'src/types/**'
+        'src/types/**',
+        'test-performance.js'
       ],
       thresholds: {
         branches: 80,
