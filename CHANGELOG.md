@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.1 - 2025-09-03
+
+### Changes
+- Merge pull request #6 from dev-ignis/develop
+- docs: readme.md;
 ## v0.3.0 - 2025-09-03
 
 ### Changes
