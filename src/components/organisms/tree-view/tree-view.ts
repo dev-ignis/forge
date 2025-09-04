@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { BaseElement } from '../../../core/BaseElement';
-import type { AIState, AIAction } from '../../../core/ai-metadata.types';
+import type { AIComponentState, AIAction } from '../../../core/ai-metadata.types';
 import '../../atoms/icon/icon';
 import '../../atoms/checkbox/checkbox';
 import '../../atoms/input/input';
@@ -26,9 +26,7 @@ export interface TreeNode {
  */
 @customElement('forge-tree-view')
 export class ForgeTreeView extends BaseElement {
-  static override styles = [
-    BaseElement.styles,
-    css`
+  static override styles = css`
       :host {
         display: block;
         width: 100%;
@@ -120,8 +118,7 @@ export class ForgeTreeView extends BaseElement {
         outline: 2px solid var(--forge-primary-color, #1976d2);
         outline-offset: 2px;
       }
-    `
-  ];
+  `;
 
   @property({ type: Array }) nodes: TreeNode[] = [];
   @property({ type: Boolean }) selectable = true;
@@ -132,6 +129,7 @@ export class ForgeTreeView extends BaseElement {
 
   @state() private expandedNodes = new Set<string>();
   @state() private selectedNodes = new Set<string>();
+  @state() private focusedNodeId: string | null = null;
 
   constructor() {
     super();
@@ -183,29 +181,151 @@ export class ForgeTreeView extends BaseElement {
       case ' ':
       case 'Enter':
         e.preventDefault();
-        this.selectFocusedNode();
+        this.handleEnterOrSpace();
         break;
     }
   }
 
   private focusNextNode() {
-    // Implementation for keyboard navigation
+    const visibleNodes = this.getVisibleNodeElements();
+    const currentIndex = this.getCurrentFocusIndex(visibleNodes);
+    const nextIndex = currentIndex < visibleNodes.length - 1 ? currentIndex + 1 : 0;
+    this.focusNodeAtIndex(visibleNodes, nextIndex);
   }
 
   private focusPreviousNode() {
-    // Implementation for keyboard navigation
+    const visibleNodes = this.getVisibleNodeElements();
+    const currentIndex = this.getCurrentFocusIndex(visibleNodes);
+    const prevIndex = currentIndex > 0 ? currentIndex - 1 : visibleNodes.length - 1;
+    this.focusNodeAtIndex(visibleNodes, prevIndex);
   }
 
   private expandFocusedNode() {
-    // Implementation for keyboard navigation
+    if (!this.focusedNodeId) return;
+    const node = this.findNodeById(this.focusedNodeId);
+    if (node && node.children && node.children.length > 0) {
+      this.expandedNodes.add(node.id);
+      this.requestUpdate();
+      this.dispatchEvent(new CustomEvent('nodeexpand', {
+        detail: { nodeId: node.id, expanded: true },
+        bubbles: true,
+        composed: true
+      }));
+    }
   }
 
   private collapseFocusedNode() {
-    // Implementation for keyboard navigation
+    if (!this.focusedNodeId) return;
+    const node = this.findNodeById(this.focusedNodeId);
+    if (node && this.expandedNodes.has(node.id)) {
+      this.expandedNodes.delete(node.id);
+      this.requestUpdate();
+      this.dispatchEvent(new CustomEvent('nodeexpand', {
+        detail: { nodeId: node.id, expanded: false },
+        bubbles: true,
+        composed: true
+      }));
+    }
+  }
+
+  private handleEnterOrSpace() {
+    if (!this.focusedNodeId) return;
+    const node = this.findNodeById(this.focusedNodeId);
+    if (node) {
+      // For folder nodes, toggle expansion first, then select
+      if (node.children && node.children.length > 0) {
+        this.toggleExpanded(node);
+      }
+      // Always select the node as well
+      this.selectNodeInternal(node);
+    }
   }
 
   private selectFocusedNode() {
-    // Implementation for keyboard navigation
+    if (!this.focusedNodeId) return;
+    const node = this.findNodeById(this.focusedNodeId);
+    if (node) {
+      this.selectNodeInternal(node);
+    }
+  }
+
+  private getVisibleNodeElements(): HTMLElement[] {
+    return Array.from(this.shadowRoot?.querySelectorAll('.tree-node-content') || []) as HTMLElement[];
+  }
+
+  private getCurrentFocusIndex(visibleNodes: HTMLElement[]): number {
+    const activeElement = this.shadowRoot?.activeElement;
+    return activeElement ? visibleNodes.indexOf(activeElement as HTMLElement) : 0;
+  }
+
+  private focusNodeAtIndex(visibleNodes: HTMLElement[], index: number) {
+    if (index >= 0 && index < visibleNodes.length) {
+      const nodeElement = visibleNodes[index];
+      nodeElement.focus();
+      // Extract node ID from the DOM structure to track focused node
+      const nodeContainer = nodeElement.closest('.tree-node');
+      const nodeId = this.getNodeIdFromElement(nodeContainer as HTMLElement);
+      this.focusedNodeId = nodeId;
+    }
+  }
+
+  private getNodeIdFromElement(nodeElement: HTMLElement): string | null {
+    // Get the node ID by finding its position in the tree structure
+    const allNodes = this.shadowRoot?.querySelectorAll('.tree-node');
+    if (!allNodes) return null;
+    
+    const nodeIndex = Array.from(allNodes).indexOf(nodeElement);
+    const flatNodes = this.getFlatNodeList();
+    return nodeIndex >= 0 && nodeIndex < flatNodes.length ? flatNodes[nodeIndex].id : null;
+  }
+
+  private getFlatNodeList(): TreeNode[] {
+    const flatList: TreeNode[] = [];
+    const addNodes = (nodes: TreeNode[]) => {
+      nodes.forEach(node => {
+        flatList.push(node);
+        if (node.children && this.expandedNodes.has(node.id)) {
+          addNodes(node.children);
+        }
+      });
+    };
+    addNodes(this.filterNodes(this.nodes, this.searchTerm));
+    return flatList;
+  }
+
+  private isFirstVisibleNode(node: TreeNode): boolean {
+    // Helper to check if this is the first visible node in the tree
+    const firstVisibleNode = this.getFirstVisibleNode(this.nodes);
+    return firstVisibleNode?.id === node.id;
+  }
+
+  private getFirstVisibleNode(nodes: TreeNode[]): TreeNode | null {
+    for (const node of nodes) {
+      // Return the first node
+      if (!node.hidden) {
+        return node;
+      }
+      // Check children if node is expanded
+      if (node.children && this.expandedNodes.has(node.id)) {
+        const childResult = this.getFirstVisibleNode(node.children);
+        if (childResult) return childResult;
+      }
+    }
+    return null;
+  }
+
+  private findNodeById(id: string): TreeNode | null {
+    const findInNodes = (nodes: TreeNode[]): TreeNode | null => {
+      for (const node of nodes) {
+        if (node.id === id) return node;
+        if (node.children) {
+          const found = findInNodes(node.children);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+    return findInNodes(this.nodes);
   }
 
   private toggleExpanded(node: TreeNode) {
@@ -220,13 +340,13 @@ export class ForgeTreeView extends BaseElement {
     this.requestUpdate();
     
     this.dispatchEvent(new CustomEvent('nodeexpand', {
-      detail: { node: node.id, expanded: this.expandedNodes.has(node.id) },
+      detail: { nodeId: node.id, expanded: this.expandedNodes.has(node.id) },
       bubbles: true,
       composed: true
     }));
   }
 
-  private selectNode(node: TreeNode) {
+  private selectNodeInternal(node: TreeNode) {
     if (!this.selectable || node.disabled) return;
     
     if (this.selectionMode === 'single') {
@@ -243,7 +363,7 @@ export class ForgeTreeView extends BaseElement {
     this.requestUpdate();
     
     this.dispatchEvent(new CustomEvent('nodeselect', {
-      detail: { node: node.id, selected: Array.from(this.selectedNodes) },
+      detail: { nodeId: node.id, selected: this.selectedNodes.has(node.id) },
       bubbles: true,
       composed: true
     }));
@@ -266,6 +386,49 @@ export class ForgeTreeView extends BaseElement {
     this.requestUpdate();
   }
 
+  // Public API methods for programmatic control
+  public expandNode(nodeId: string) {
+    const node = this.findNodeById(nodeId);
+    if (node && node.children && node.children.length > 0) {
+      this.expandedNodes.add(nodeId);
+      this.requestUpdate();
+      this.dispatchEvent(new CustomEvent('nodeexpand', {
+        detail: { nodeId: nodeId, expanded: true },
+        bubbles: true,
+        composed: true
+      }));
+    }
+  }
+
+  public collapseNode(nodeId: string) {
+    if (this.expandedNodes.has(nodeId)) {
+      this.expandedNodes.delete(nodeId);
+      this.requestUpdate();
+      this.dispatchEvent(new CustomEvent('nodeexpand', {
+        detail: { nodeId: nodeId, expanded: false },
+        bubbles: true,
+        composed: true
+      }));
+    }
+  }
+
+  public selectNodeById(nodeId: string) {
+    const node = this.findNodeById(nodeId);
+    if (node && this.selectable) {
+      this.selectNodeInternal(node);
+    }
+  }
+
+  // Alias for selectNodeById for convenience - public API
+  public selectNode(nodeId: string) {
+    this.selectNodeById(nodeId);
+  }
+
+  public clearSelection() {
+    this.selectedNodes.clear();
+    this.requestUpdate();
+  }
+
   private filterNodes(nodes: TreeNode[], searchTerm: string): TreeNode[] {
     if (!searchTerm) return nodes;
     
@@ -283,12 +446,13 @@ export class ForgeTreeView extends BaseElement {
   }
 
   // AI Metadata
-  override get aiState(): AIState {
+  override get aiState(): AIComponentState {
     return {
       ...super.aiState,
       nodeCount: this.countNodes(this.nodes),
       expandedCount: this.expandedNodes.size,
       selectedCount: this.selectedNodes.size,
+      selectable: this.selectable,
       selectionMode: this.selectionMode,
       searchTerm: this.searchTerm
     };
@@ -320,6 +484,31 @@ export class ForgeTreeView extends BaseElement {
 
   override getPossibleActions(): AIAction[] {
     const actions: AIAction[] = [];
+    
+    // Add selectNode action for selectable trees
+    if (this.selectable) {
+      actions.push({
+        name: 'selectNode',
+        description: 'Select a tree node',
+        available: true,
+        params: ['nodeId']
+      });
+    }
+    
+    // Add expand/collapse actions for nodes
+    actions.push({
+      name: 'expandNode',
+      description: 'Expand a tree node',
+      available: true,
+      params: ['nodeId']
+    });
+    
+    actions.push({
+      name: 'collapseNode',
+      description: 'Collapse a tree node',
+      available: this.expandedNodes.size > 0,
+      params: ['nodeId']
+    });
     
     actions.push({
       name: 'expandAll',
@@ -394,11 +583,17 @@ export class ForgeTreeView extends BaseElement {
     };
 
     return html`
-      <div class=${classMap(nodeClasses)} role="treeitem" aria-level=${level + 1}>
+      <div class=${classMap(nodeClasses)}>
         <div 
           class=${classMap(contentClasses)}
-          tabindex="0"
-          @click=${() => this.selectNode(node)}
+          tabindex=${this.focusedNodeId === node.id || (this.focusedNodeId === null && this.isFirstVisibleNode(node)) ? "0" : "-1"}
+          role="treeitem"
+          aria-level=${level + 1}
+          aria-selected=${isSelected}
+          aria-expanded=${hasChildren ? isExpanded : 'false'}
+          data-node-id=${node.id}
+          @click=${() => this.selectNodeInternal(node)}
+          @focus=${() => { this.focusedNodeId = node.id; }}
         >
           <span 
             class="tree-node-toggle ${hasChildren ? 'expandable' : ''}"
@@ -416,8 +611,10 @@ export class ForgeTreeView extends BaseElement {
             <forge-checkbox
               .checked=${isSelected}
               ?disabled=${node.disabled}
-              @change=${() => this.selectNode(node)}
-              @click=${(e: Event) => e.stopPropagation()}
+              @change=${(e: CustomEvent) => {
+                e.stopPropagation();
+                this.selectNodeInternal(node);
+              }}
             ></forge-checkbox>
           ` : ''}
           

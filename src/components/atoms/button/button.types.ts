@@ -43,6 +43,22 @@ export interface ForgeButtonProps extends ForgeInteractive {
   /** Icon to display after the text */
   iconEnd?: string;
   
+  // ARIA and accessibility attributes
+  /** Accessible label for the button */
+  ariaLabel?: string;
+  /** ID of element controlled by this button */
+  ariaControls?: string;
+  /** Whether controlled element is expanded */
+  ariaExpanded?: string;
+  /** Current state in a set of items */
+  ariaCurrent?: string;
+  /** Selected state for buttons in selectable lists */
+  ariaSelected?: string;
+  /** Semantic role override */
+  role?: string;
+  /** Tab index for focus management */
+  tabIndex?: number;
+  
   // AI-Ready attributes (UVP)
   /** Semantic role for AI understanding */
   semanticRole?: string;

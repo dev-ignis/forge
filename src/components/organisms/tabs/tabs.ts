@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { BaseElement } from '../../../core/BaseElement';
-import type { AIState, AIAction } from '../../../core/ai-metadata.types';
+import type { AIComponentState, AIAction, AIStateExplanation } from '../../../core/ai-metadata.types';
 import '../../atoms/button/button';
 import '../../atoms/badge/badge';
 import '../../atoms/icon/icon';
@@ -27,9 +27,8 @@ export interface TabItem {
  */
 @customElement('forge-tabs')
 export class ForgeTabs extends BaseElement {
-  static override styles = [
-    BaseElement.styles,
-    css`
+  static override styles = css`
+    
       :host {
         display: block;
         width: 100%;
@@ -208,8 +207,7 @@ export class ForgeTabs extends BaseElement {
         pointer-events: none;
         transition: left 0.2s ease;
       }
-    `
-  ];
+    `;
 
   @property({ type: Array }) tabs: TabItem[] = [];
   @property({ type: String, attribute: 'active-tab' }) activeTab?: string;
@@ -355,6 +353,19 @@ export class ForgeTabs extends BaseElement {
     }));
   }
 
+  private handleTabClick(e: Event, tab: TabItem) {
+    const target = e.target as HTMLElement;
+    
+    // Check if click was on close icon or its parent
+    if (target.classList.contains('tab-close') || 
+        target.closest('.tab-close') || 
+        target.hasAttribute('data-action') && target.getAttribute('data-action') === 'close') {
+      this.closeTab(e, tab);
+    } else {
+      this.selectTab(tab);
+    }
+  }
+
   private closeTab(e: Event, tab: TabItem) {
     e.stopPropagation();
     
@@ -423,7 +434,7 @@ export class ForgeTabs extends BaseElement {
   }
 
   // AI Metadata
-  override get aiState(): AIState {
+  override get aiState(): AIComponentState {
     return {
       ...super.aiState,
       activeTab: this.activeTab,
@@ -435,20 +446,24 @@ export class ForgeTabs extends BaseElement {
     };
   }
 
-  override explainState(): string {
+  override explainState(): AIStateExplanation {
     const parts = ['Tabs component'];
     
     if (this.activeTab) {
       const activeTabData = this.tabs.find(t => t.id === this.activeTab);
-      parts.push(`showing "${activeTabData?.label}" tab`);
+      parts.push('showing "' + (activeTabData?.label || 'unknown') + '" tab');
     }
     
-    parts.push(`${this.tabs.length} total tabs`);
+    parts.push(this.tabs.length + ' total tabs');
     parts.push(this.orientation);
     
     if (this.reorderable) parts.push('drag to reorder enabled');
     
-    return parts.join(', ');
+    return {
+      currentState: this.activeTab ? 'active' : 'empty',
+      possibleStates: ['empty', 'active'],
+      stateDescription: parts.join(', ')
+    };
   }
 
   override getPossibleActions(): AIAction[] {
@@ -458,7 +473,7 @@ export class ForgeTabs extends BaseElement {
       if (!tab.disabled && tab.id !== this.activeTab) {
         actions.push({
           name: 'selectTab',
-          description: `Switch to ${tab.label} tab`,
+          description: 'Switch to ' + tab.label + ' tab',
           available: true,
           params: [tab.id]
         });
@@ -467,7 +482,7 @@ export class ForgeTabs extends BaseElement {
       if (tab.closeable) {
         actions.push({
           name: 'closeTab',
-          description: `Close ${tab.label} tab`,
+          description: 'Close ' + tab.label + ' tab',
           available: true,
           params: [tab.id]
         });
@@ -486,15 +501,12 @@ export class ForgeTabs extends BaseElement {
   }
 
   override render() {
-    const containerClasses = {
-      'tabs-container': true,
-      'vertical': this.orientation === 'vertical'
-    };
+    const containerClass = this.orientation === 'vertical' ? 'tabs-container vertical' : 'tabs-container';
 
     return html`
-      <div class=${classMap(containerClasses)}>
-        <div class="tabs-header" role="tablist" aria-orientation=${this.orientation}>
-          <div class="tabs-list">
+      <div class="${containerClass}">
+        <div class="tabs-header">
+          <div class="tabs-list" role="tablist" aria-orientation=${this.orientation}>
             ${repeat(
               this.tabs,
               tab => tab.id,
@@ -520,12 +532,15 @@ export class ForgeTabs extends BaseElement {
 
     return html`
       <button
+        id="${tab.id}"
         class=${classMap(classes)}
         role="tab"
         aria-selected=${tab.id === this.activeTab}
+        aria-controls="panel-${tab.id}"
         aria-disabled=${tab.disabled || false}
         tabindex=${tab.id === this.activeTab ? '0' : '-1'}
-        @click=${() => this.selectTab(tab)}
+        ?disabled=${tab.disabled}
+        @click=${(e: Event) => this.handleTabClick(e, tab)}
         draggable=${this.reorderable && !tab.disabled}
         @dragstart=${(e: DragEvent) => this.handleDragStart(e, tab)}
         @dragover=${(e: DragEvent) => this.handleDragOver(e, index)}
@@ -556,8 +571,8 @@ export class ForgeTabs extends BaseElement {
             class="tab-close"
             name="close"
             size="xs"
-            @click=${(e: Event) => this.closeTab(e, tab)}
             aria-label="Close tab"
+            data-action="close"
           ></forge-icon>
         ` : ''}
       </button>
@@ -576,6 +591,7 @@ export class ForgeTabs extends BaseElement {
     return html`
       <div
         class=${classMap(classes)}
+        id="panel-${tab.id}"
         role="tabpanel"
         aria-labelledby=${tab.id}
         hidden=${!isActive}

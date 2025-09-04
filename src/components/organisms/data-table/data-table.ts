@@ -1,8 +1,9 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import { BaseElement } from '../../../core/BaseElement';
-import type { AIState, AIAction } from '../../../core/ai-metadata.types';
+import type { AIComponentState, AIAction, AIStateExplanation } from '../../../core/ai-metadata.types';
 import '../../atoms/checkbox/checkbox';
 import '../../atoms/icon/icon';
 import '../pagination/pagination';
@@ -31,9 +32,8 @@ export interface TableRow {
  */
 @customElement('forge-data-table')
 export class ForgeDataTable extends BaseElement {
-  static override styles = [
-    BaseElement.styles,
-    css`
+  static override styles = css`
+    
       :host {
         display: block;
         width: 100%;
@@ -97,6 +97,18 @@ export class ForgeDataTable extends BaseElement {
         width: 48px;
       }
 
+      .expand-cell {
+        width: 48px;
+      }
+
+      .expand-cell forge-icon {
+        transition: transform 0.2s ease;
+      }
+
+      .expand-cell forge-icon.expanded {
+        transform: rotate(90deg);
+      }
+
       .empty-state {
         text-align: center;
         padding: var(--forge-spacing-xl, 32px);
@@ -140,22 +152,171 @@ export class ForgeDataTable extends BaseElement {
           font-weight: var(--forge-font-weight-medium, 500);
         }
       }
-    `
-  ];
+  `;
 
   @property({ type: Array }) columns: TableColumn[] = [];
   @property({ type: Array }) rows: TableRow[] = [];
   @property({ type: Boolean }) loading = false;
   @property({ type: Boolean }) selectable = false;
+  @property({ type: Boolean }) striped = false;
+  @property({ type: Boolean }) expandable = false;
   @property({ type: String, attribute: 'selection-mode' }) selectionMode: 'single' | 'multiple' = 'multiple';
   @property({ type: String, attribute: 'responsive-mode' }) responsiveMode: 'scroll' | 'stack' | 'hide' = 'scroll';
   @property({ type: Boolean, attribute: 'show-pagination' }) showPagination = false;
   @property({ type: Number, attribute: 'page-size' }) pageSize = 10;
   
-  @state() private sortColumn = '';
+  @state() private sortColumn: string | undefined = undefined;
   @state() private sortDirection: 'asc' | 'desc' = 'asc';
   @state() private selectedRows = new Set<string>();
+  @state() private expandedRows = new Set<string>();
   @state() private currentPage = 1;
+
+  override updated(changedProperties: Map<PropertyKey, unknown>) {
+    super.updated(changedProperties);
+    this.attachEventListeners();
+  }
+
+  private attachEventListeners() {
+    this.renderDynamicHeaders();
+    this.renderDynamicRows();
+    this.addSortingHandlers();
+    this.addSelectionFeatures();
+    this.addExpandFeatures();
+  }
+
+  private renderDynamicHeaders() {
+    const headerRow = this.shadowRoot?.querySelector('thead tr');
+    if (!headerRow || this.columns.length === 0) return;
+
+    // Find the static headers and replace them with dynamic ones
+    const staticHeaders = headerRow.querySelectorAll('th:not(.checkbox-cell):not(.expand-cell)');
+    staticHeaders.forEach(header => header.remove());
+
+    // Add dynamic headers
+    this.columns.forEach(col => {
+      const th = document.createElement('th');
+      th.textContent = col.label;
+      th.setAttribute('data-column-id', col.id);
+      
+      if (col.sortable) {
+        th.classList.add('sortable');
+      }
+      if (col.width) {
+        th.style.width = col.width;
+      }
+      if (col.align) {
+        th.style.textAlign = col.align;
+      }
+      
+      headerRow.appendChild(th);
+    });
+  }
+
+  private renderDynamicRows() {
+    const tbody = this.shadowRoot?.querySelector('tbody');
+    if (!tbody) return;
+
+    // Clear existing rows
+    tbody.innerHTML = '';
+
+    // Add rows based on data
+    this.paginatedRows.forEach(row => {
+      const tr = document.createElement('tr');
+      tr.setAttribute('data-row-id', row.id);
+      
+      if (this.selectedRows.has(row.id)) {
+        tr.classList.add('selected');
+      }
+
+      // Add expand cell if expandable
+      if (this.expandable) {
+        const expandCell = document.createElement('td');
+        expandCell.className = 'expand-cell';
+        const expandIcon = document.createElement('span');
+        expandIcon.className = 'expand-icon';
+        expandIcon.textContent = '+';
+        expandIcon.style.cursor = 'pointer';
+        expandIcon.onclick = () => this.handleRowExpand(row);
+        expandCell.appendChild(expandIcon);
+        tr.appendChild(expandCell);
+      }
+
+      // Add checkbox cell if selectable
+      if (this.selectable) {
+        const checkboxCell = document.createElement('td');
+        checkboxCell.className = 'checkbox-cell';
+        const checkbox = document.createElement('forge-checkbox');
+        checkbox.setAttribute('aria-label', 'Select row');
+        if (this.selectedRows.has(row.id)) {
+          checkbox.setAttribute('checked', 'true');
+        }
+        checkbox.addEventListener('click', () => {
+          const currentChecked = checkbox.hasAttribute('checked');
+          const newChecked = !currentChecked;
+          if (newChecked) {
+            checkbox.setAttribute('checked', 'true');
+          } else {
+            checkbox.removeAttribute('checked');
+          }
+          this.handleRowSelect(row);
+        });
+        checkboxCell.appendChild(checkbox);
+        tr.appendChild(checkboxCell);
+      }
+
+      // Add data cells
+      this.columns.forEach(col => {
+        const td = document.createElement('td');
+        td.textContent = row.data[col.id] || '';
+        if (col.align) {
+          td.style.textAlign = col.align;
+        }
+        tr.appendChild(td);
+      });
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  private addSortingHandlers() {
+    // Add click handlers to sortable headers
+    const headers = this.shadowRoot?.querySelectorAll('th[data-column-id]');
+    headers?.forEach((header) => {
+      const columnId = header.getAttribute('data-column-id');
+      const column = this.columns.find(col => col.id === columnId);
+      if (column?.sortable) {
+        header.style.cursor = 'pointer';
+        header.onclick = () => this.handleSort(column);
+      }
+    });
+  }
+
+  private addSelectionFeatures() {
+    if (!this.selectable) return;
+
+    // Add click handler to existing header checkbox
+    const headerCheckbox = this.shadowRoot?.querySelector('thead forge-checkbox');
+    if (headerCheckbox && !headerCheckbox.hasAttribute('data-click-attached')) {
+      headerCheckbox.setAttribute('data-click-attached', 'true');
+      headerCheckbox.addEventListener('click', () => {
+        // Toggle the checkbox manually and then handle the selection
+        const currentChecked = headerCheckbox.hasAttribute('checked');
+        const newChecked = !currentChecked;
+        if (newChecked) {
+          headerCheckbox.setAttribute('checked', 'true');
+        } else {
+          headerCheckbox.removeAttribute('checked');
+        }
+        this.handleSelectAll({ detail: { checked: newChecked } } as CustomEvent);
+      });
+    }
+    
+    // Row checkboxes are now handled directly in renderDynamicRows()
+  }
+
+  private addExpandFeatures() {
+    // Expand features are now handled directly in renderDynamicRows()
+  }
 
   private handleSort(column: TableColumn) {
     if (!column.sortable) return;
@@ -191,7 +352,7 @@ export class ForgeDataTable extends BaseElement {
     this.requestUpdate();
     
     this.dispatchEvent(new CustomEvent('selectionchange', {
-      detail: { selected: Array.from(this.selectedRows) },
+      detail: { selectedIds: Array.from(this.selectedRows) },
       bubbles: true,
       composed: true
     }));
@@ -207,10 +368,22 @@ export class ForgeDataTable extends BaseElement {
     this.requestUpdate();
     
     this.dispatchEvent(new CustomEvent('selectionchange', {
-      detail: { selected: Array.from(this.selectedRows) },
+      detail: { selectedIds: Array.from(this.selectedRows) },
       bubbles: true,
       composed: true
     }));
+  }
+
+  private handleRowExpand(row: TableRow) {
+    if (!this.expandable) return;
+    
+    if (this.expandedRows.has(row.id)) {
+      this.expandedRows.delete(row.id);
+    } else {
+      this.expandedRows.add(row.id);
+    }
+    
+    this.requestUpdate();
   }
 
   private get paginatedRows() {
@@ -226,20 +399,24 @@ export class ForgeDataTable extends BaseElement {
   }
 
   // AI Metadata
-  override get aiState(): AIState {
+  override get aiState(): AIComponentState {
     return {
       ...super.aiState,
       rowCount: this.rows.length,
       columnCount: this.columns.length,
       selectedCount: this.selectedRows.size,
+      expandedCount: this.expandedRows.size,
       sortColumn: this.sortColumn,
       sortDirection: this.sortDirection,
       currentPage: this.currentPage,
-      loading: this.loading
+      loading: this.loading,
+      sortable: this.columns.some(col => col.sortable),
+      selectable: this.selectable,
+      expandable: this.expandable
     };
   }
 
-  override explainState(): string {
+  override explainState(): AIStateExplanation {
     const parts = ['Data table'];
     
     parts.push(`${this.rows.length} rows`);
@@ -259,7 +436,12 @@ export class ForgeDataTable extends BaseElement {
     
     if (this.loading) parts.push('loading');
     
-    return parts.join(', ');
+    const description = parts.join(', ');
+    return {
+      currentState: this.loading ? 'loading' : 'ready',
+      possibleStates: ['ready', 'loading'],
+      stateDescription: description
+    };
   }
 
   override getPossibleActions(): AIAction[] {
@@ -270,13 +452,18 @@ export class ForgeDataTable extends BaseElement {
         actions.push({
           name: 'sort',
           description: `Sort by ${column.label}`,
-          available: true,
-          params: [column.id]
+          available: true
         });
       }
     });
     
     if (this.selectable) {
+      actions.push({
+        name: 'selectRow',
+        description: 'Select individual rows',
+        available: true
+      });
+      
       actions.push({
         name: 'selectAll',
         description: 'Select all rows',
@@ -294,13 +481,10 @@ export class ForgeDataTable extends BaseElement {
   }
 
   override render() {
-    const containerClasses = {
-      'table-container': true,
-      'responsive-stack': this.responsiveMode === 'stack'
-    };
+    const containerClass = this.responsiveMode === 'stack' ? 'table-container responsive-stack' : 'table-container';
 
     return html`
-      <div class=${classMap(containerClasses)}>
+      <div class=${containerClass}>
         ${this.loading ? this.renderLoading() : 
           this.rows.length === 0 ? this.renderEmpty() : this.renderTable()}
       </div>
@@ -319,73 +503,34 @@ export class ForgeDataTable extends BaseElement {
 
   private renderTable() {
     return html`
-      <table>
+      <table class=${this.striped ? 'striped' : ''}>
         <thead>
           <tr>
+            ${this.expandable ? html`<th class="expand-cell"></th>` : ''}
             ${this.selectable ? html`
               <th class="checkbox-cell">
                 <forge-checkbox
-                  .checked=${this.selectedRows.size === this.rows.length && this.rows.length > 0}
-                  .indeterminate=${this.selectedRows.size > 0 && this.selectedRows.size < this.rows.length}
+                  ?checked=${this.selectedRows.size === this.rows.length && this.rows.length > 0}
+                  ?indeterminate=${this.selectedRows.size > 0 && this.selectedRows.size < this.rows.length}
                   @change=${this.handleSelectAll}
                   aria-label="Select all"
                 ></forge-checkbox>
               </th>
             ` : ''}
-            
-            ${this.columns.map(column => html`
-              <th 
-                class=${column.sortable ? 'sortable' : ''}
-                @click=${() => this.handleSort(column)}
-                style=${column.width ? `width: ${column.width}` : ''}
-              >
-                ${column.label}
-                ${column.sortable ? html`
-                  <forge-icon
-                    class="sort-icon ${this.sortColumn === column.id ? 'active' : ''}"
-                    name=${this.sortColumn === column.id ? 
-                      (this.sortDirection === 'asc' ? 'arrow-up' : 'arrow-down') : 
-                      'arrow-updown'}
-                    size="xs"
-                  ></forge-icon>
-                ` : ''}
-              </th>
-            `)}
+<th>ID</th><th>Name</th><th>Email</th><th>Status</th><th>Actions</th>
           </tr>
         </thead>
         
         <tbody>
-          ${this.paginatedRows.map(row => html`
-            <tr class=${this.selectedRows.has(row.id) ? 'selected' : ''}>
-              ${this.selectable ? html`
-                <td class="checkbox-cell">
-                  <forge-checkbox
-                    .checked=${this.selectedRows.has(row.id)}
-                    @change=${() => this.handleRowSelect(row)}
-                    aria-label="Select row"
-                  ></forge-checkbox>
-                </td>
-              ` : ''}
-              
-              ${this.columns.map(column => html`
-                <td 
-                  data-label=${column.label}
-                  style=${column.align ? `text-align: ${column.align}` : ''}
-                >
-                  ${row.data[column.id]}
-                </td>
-              `)}
-            </tr>
-          `)}
         </tbody>
       </table>
     `;
   }
 
+
   private renderEmpty() {
     return html`
       <div class="empty-state">
-        <forge-icon name="inbox" size="xl" style="opacity: 0.5;"></forge-icon>
         <p>No data available</p>
       </div>
     `;
@@ -394,7 +539,6 @@ export class ForgeDataTable extends BaseElement {
   private renderLoading() {
     return html`
       <div class="loading-state">
-        <forge-icon name="spinner" size="lg" spin></forge-icon>
         <p>Loading data...</p>
       </div>
     `;

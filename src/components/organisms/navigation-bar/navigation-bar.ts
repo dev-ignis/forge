@@ -2,9 +2,10 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { BaseElement } from '../../../core/BaseElement';
-import type { AIState, AIAction, AIStateExplanation } from '../../../core/ai-metadata.types';
+import type { AIComponentState, AIAction, AIStateExplanation } from '../../../core/ai-metadata.types';
 import '../../atoms/button/button';
 import '../../atoms/icon/icon';
+import '../../atoms/badge/badge';
 import '../../molecules/dropdown/dropdown';
 import type { DropdownItem } from '../../molecules/dropdown/dropdown';
 
@@ -25,9 +26,8 @@ export interface NavItem {
  */
 @customElement('forge-navigation-bar')
 export class ForgeNavigationBar extends BaseElement {
-  static override styles = [
-    BaseElement.styles,
-    css`
+  static override styles = css`
+    
       :host {
         display: block;
         width: 100%;
@@ -234,8 +234,7 @@ export class ForgeNavigationBar extends BaseElement {
         border-radius: var(--forge-border-radius-sm, 4px);
         z-index: 1000;
       }
-    `
-  ];
+  `;
 
   @property({ type: Array }) items: NavItem[] = [];
   @property({ type: String, attribute: 'logo-src' }) logoSrc = '';
@@ -257,12 +256,14 @@ export class ForgeNavigationBar extends BaseElement {
   override connectedCallback() {
     super.connectedCallback();
     window.addEventListener('popstate', this.handleRouteChange);
+    window.addEventListener('keydown', this.handleKeyDown.bind(this));
     this.detectActiveRoute();
   }
 
   override disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('popstate', this.handleRouteChange);
+    window.removeEventListener('keydown', this.handleKeyDown.bind(this));
   }
 
   private handleRouteChange() {
@@ -270,8 +271,11 @@ export class ForgeNavigationBar extends BaseElement {
   }
 
   private detectActiveRoute() {
-    const path = window.location.pathname;
-    this.activeRoute = path;
+    // Only update activeRoute if not already set explicitly
+    if (this.activeRoute === '') {
+      const path = window.location.pathname;
+      this.activeRoute = path === '/' ? '' : path;
+    }
   }
 
   private toggleMobileMenu() {
@@ -292,7 +296,7 @@ export class ForgeNavigationBar extends BaseElement {
       this.closeMobileMenu();
       
       this.dispatchEvent(new CustomEvent('navclick', {
-        detail: { item },
+        detail: { id: item.id, item },
         bubbles: true,
         composed: true
       }));
@@ -305,19 +309,25 @@ export class ForgeNavigationBar extends BaseElement {
   }
 
   // AI Metadata
-  override get aiState(): AIState {
+  override get aiState(): AIComponentState {
     return {
       ...super.aiState,
       activeRoute: this.activeRoute,
       mobileOpen: this.mobileOpen,
       itemCount: this.items.length,
       position: this.position,
-      hasUser: !!this.userName
+      hasUser: !!this.userName,
+      showSearch: this.showSearch,
+      showThemeToggle: this.showThemeToggle
     };
   }
 
-  override explainState(): AIStateExplanation {
+  override explainState(): AIComponentStateExplanation {
     const parts = ['Navigation bar'];
+    
+    if (this.title) {
+      parts.push(`for "${this.title}"`);
+    }
     
     if (this.activeRoute) {
       const activeItem = this.items.find(item => this.isActive(item));
@@ -381,7 +391,7 @@ export class ForgeNavigationBar extends BaseElement {
     this.items.forEach(item => {
       if (item.href && !this.isActive(item)) {
         actions.push({
-          name: 'navigate',
+          name: 'navigateTo',
           description: `Navigate to ${item.label}`,
           available: true,
           params: [item.href]
@@ -392,15 +402,58 @@ export class ForgeNavigationBar extends BaseElement {
     return actions;
   }
 
+  // Public methods for tests
+  public openDrawer() {
+    this.mobileOpen = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  public closeDrawer() {
+    this.mobileOpen = false;
+    document.body.style.overflow = '';
+  }
+
+  public toggleDrawer() {
+    if (this.mobileOpen) {
+      this.closeDrawer();
+    } else {
+      this.openDrawer();
+    }
+  }
+
+  private handleSearch(e: Event) {
+    const target = e.target as HTMLInputElement;
+    this.dispatchEvent(new CustomEvent('search', {
+      detail: { query: target.value },
+      bubbles: true,
+      composed: true
+    }));
+  }
+
+  private handleThemeToggle() {
+    this.dispatchEvent(new CustomEvent('themechange', {
+      detail: {},
+      bubbles: true,
+      composed: true
+    }));
+  }
+
+  private handleKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Escape' && this.mobileOpen) {
+      this.closeDrawer();
+    }
+  }
+
   override render() {
     const navbarClasses = {
       'navbar': true,
       'fixed': this.position === 'fixed',
-      'sticky': this.position === 'sticky'
+      'sticky': this.position === 'sticky',
+      'static': this.position === 'static'
     };
 
     return html`
-      <a href="#main-content" class="skip-link">Skip to main content</a>
+      <a href="#main" class="skip-link">Skip to main content</a>
       
       <nav class=${classMap(navbarClasses)} role="navigation" aria-label="Main navigation">
         <forge-button
@@ -428,18 +481,30 @@ export class ForgeNavigationBar extends BaseElement {
         
         <div class="nav-actions">
           ${this.showSearch ? html`
-            <forge-button variant="text" aria-label="Search">
-              <forge-icon name="search" size="md"></forge-icon>
-            </forge-button>
+            <div class="nav-search">
+              <input
+                type="text"
+                placeholder="Search..."
+                class="search-input"
+                aria-label="Search"
+                role="searchbox"
+                @input=${this.handleSearch}
+              />
+            </div>
           ` : ''}
           
           ${this.showThemeToggle ? html`
-            <forge-button variant="text" aria-label="Toggle theme">
+            <forge-button 
+              variant="text" 
+              aria-label="Toggle theme"
+              class="theme-toggle"
+              @click=${this.handleThemeToggle}
+            >
               <forge-icon name="sun" size="md"></forge-icon>
             </forge-button>
           ` : ''}
           
-          ${this.userName ? this.renderUserMenu() : ''}
+          ${this.userName ? html`<div class="nav-user">${this.renderUserMenu()}</div>` : ''}
         </div>
       </nav>
       
@@ -462,9 +527,10 @@ export class ForgeNavigationBar extends BaseElement {
       }));
 
       return html`
-        <li class="nav-item">
+        <li class="nav-item" data-nav-id="${item.id}">
           <forge-dropdown
             .items=${dropdownItems}
+            aria-label="${item.label} menu"
             @itemclick=${(e: CustomEvent) => {
               const subItem = item.items!.find(i => i.id === e.detail.item.id);
               if (subItem?.href) {
@@ -489,11 +555,12 @@ export class ForgeNavigationBar extends BaseElement {
           class="nav-link ${this.isActive(item) ? 'active' : ''}"
           @click=${(e: Event) => this.handleNavClick(e, item)}
           aria-current=${this.isActive(item) ? 'page' : 'false'}
+          data-nav-id="${item.id}"
         >
           ${item.icon ? html`<forge-icon name=${item.icon} size="sm"></forge-icon>` : ''}
           ${item.label}
           ${item.badge ? html`
-            <forge-badge size="sm" variant="primary">${item.badge}</forge-badge>
+            <span class="nav-badge">${item.badge}</span>
           ` : ''}
         </a>
       </li>
@@ -511,6 +578,7 @@ export class ForgeNavigationBar extends BaseElement {
     return html`
       <forge-dropdown
         .items=${userMenuItems}
+        aria-label="User menu"
         @itemclick=${(e: CustomEvent) => {
           this.dispatchEvent(new CustomEvent('useraction', {
             detail: { action: e.detail.item.id },
@@ -519,7 +587,13 @@ export class ForgeNavigationBar extends BaseElement {
           }));
         }}
       >
-        <forge-button slot="trigger" variant="text">
+        <forge-button 
+          slot="trigger" 
+          variant="text" 
+          aria-label="Open user menu"
+          aria-haspopup="menu"
+          aria-expanded="false"
+        >
           ${this.userAvatar ? html`
             <img src=${this.userAvatar} alt=${this.userName} style="width: 32px; height: 32px; border-radius: 50%;" />
           ` : html`
@@ -532,7 +606,7 @@ export class ForgeNavigationBar extends BaseElement {
 
   private renderMobileDrawer() {
     return html`
-      <div class="mobile-drawer ${this.mobileOpen ? 'open' : ''}">
+      <div class="mobile-drawer drawer ${this.mobileOpen ? 'open' : ''}">
         <div class="drawer-header">
           <span class="nav-title">${this.title}</span>
           <forge-button
@@ -562,7 +636,7 @@ export class ForgeNavigationBar extends BaseElement {
           ${item.icon ? html`<forge-icon name=${item.icon} size="sm"></forge-icon>` : ''}
           ${item.label}
           ${item.badge ? html`
-            <forge-badge size="sm" variant="primary">${item.badge}</forge-badge>
+            <span class="nav-badge">${item.badge}</span>
           ` : ''}
         </a>
         

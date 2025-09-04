@@ -2,8 +2,9 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { BaseElement } from '../../../core/BaseElement';
-import type { AIState, AIAction } from '../../../core/ai-metadata.types';
+import type { AIComponentState, AIAction, AIStateExplanation } from '../../../core/ai-metadata.types';
 import '../../atoms/icon/icon';
+import '../../atoms/button/button';
 
 export interface AccordionPanel {
   id: string;
@@ -20,9 +21,8 @@ export interface AccordionPanel {
  */
 @customElement('forge-accordion')
 export class ForgeAccordion extends BaseElement {
-  static override styles = [
-    BaseElement.styles,
-    css`
+  static override styles = css`
+    
       :host {
         display: block;
         width: 100%;
@@ -96,8 +96,7 @@ export class ForgeAccordion extends BaseElement {
         padding: var(--forge-spacing-md, 16px);
         padding-top: 0;
       }
-    `
-  ];
+  `;
 
   @property({ type: Array }) panels: AccordionPanel[] = [];
   @property({ type: Boolean }) multiple = false;
@@ -122,6 +121,9 @@ export class ForgeAccordion extends BaseElement {
       }
     }
 
+    // Trigger re-render
+    this.requestUpdate();
+
     this.dispatchEvent(new CustomEvent('paneltoggle', {
       detail: { panel: panel.id, expanded: !isExpanded },
       bubbles: true,
@@ -138,7 +140,7 @@ export class ForgeAccordion extends BaseElement {
   }
 
   // AI Metadata
-  override get aiState(): AIState {
+  override get aiState(): AIComponentState {
     return {
       ...super.aiState,
       panelCount: this.panels.length,
@@ -147,12 +149,17 @@ export class ForgeAccordion extends BaseElement {
     };
   }
 
-  override explainState(): string {
+  override explainState(): AIStateExplanation {
     const parts = ['Accordion'];
     parts.push(`${this.panels.length} panels`);
     parts.push(`${this.expandedPanels.length} expanded`);
     if (this.multiple) parts.push('multiple expansion allowed');
-    return parts.join(', ');
+    
+    return {
+      currentState: this.expandedPanels.length > 0 ? 'expanded' : 'collapsed',
+      possibleStates: ['collapsed', 'expanded'],
+      stateDescription: parts.join(', ')
+    };
   }
 
   override getPossibleActions(): AIAction[] {
@@ -205,12 +212,14 @@ export class ForgeAccordion extends BaseElement {
 
     return html`
       <div class=${classMap(panelClasses)}>
-        <button
+        <forge-button
           class="panel-header ${panel.disabled ? 'disabled' : ''}"
-          @click=${() => this.togglePanel(panel)}
+          variant="ghost"
+          size="md"
+          ?disabled=${panel.disabled}
           aria-expanded=${isExpanded}
           aria-controls="panel-${panel.id}"
-          ?disabled=${panel.disabled}
+          @click=${() => this.togglePanel(panel)}
         >
           <div class="panel-header-content">
             <forge-icon 
@@ -223,7 +232,7 @@ export class ForgeAccordion extends BaseElement {
             ` : ''}
             <span>${panel.header}</span>
           </div>
-        </button>
+        </forge-button>
         
         <div 
           class="panel-content"

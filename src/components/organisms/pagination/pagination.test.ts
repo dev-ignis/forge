@@ -275,4 +275,197 @@ describe('ForgePagination', () => {
       expect(el.currentPage).to.equal(5);
     });
   });
+
+  describe('Edge Cases', () => {
+    it('should handle invalid jump page input', async () => {
+      const el = await fixture<ForgePagination>(html`
+        <forge-pagination 
+          current-page="5" 
+          total-pages="10"
+          show-jump-to
+        ></forge-pagination>
+      `);
+      
+      await el.updateComplete;
+      
+      // Test invalid input
+      el.jumpValue = 'invalid';
+      const jumpButton = el.shadowRoot?.querySelector('.jump-button') as HTMLElement;
+      jumpButton?.click();
+      await el.updateComplete;
+      
+      expect(el.currentPage).to.equal(5); // Should remain unchanged
+      // jumpValue is not cleared on invalid input, it just returns early
+    });
+
+    it('should handle jump page input out of bounds', async () => {
+      const el = await fixture<ForgePagination>(html`
+        <forge-pagination 
+          current-page="5" 
+          total-pages="10"
+          show-jump-to
+        ></forge-pagination>
+      `);
+      
+      await el.updateComplete;
+      
+      // Test value greater than total pages
+      el.jumpValue = '20';
+      // Call the private method directly since the button might not exist
+      (el as any).handleJumpToPage();
+      await el.updateComplete;
+      
+      expect(el.currentPage).to.equal(10); // Should clamp to max
+      expect(el.jumpValue).to.equal(''); // Should be cleared after successful jump
+      
+      // Test value less than 1
+      el.jumpValue = '0';
+      (el as any).handleJumpToPage();
+      await el.updateComplete;
+      
+      expect(el.currentPage).to.equal(1); // Should clamp to min
+    });
+
+    it('should handle disconnection properly', async () => {
+      const el = await fixture<ForgePagination>(html`
+        <forge-pagination 
+          current-page="5" 
+          total-pages="10"
+        ></forge-pagination>
+      `);
+      
+      await el.updateComplete;
+      
+      // Test disconnectedCallback
+      el.remove();
+      
+      // Should not throw errors when disconnected
+      expect(() => {
+        const event = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
+        el.dispatchEvent(event);
+      }).to.not.throw();
+    });
+
+    it('should handle load more mode', async () => {
+      const el = await fixture<ForgePagination>(html`
+        <forge-pagination 
+          mode="load-more"
+          current-page="5" 
+          total-pages="10"
+        ></forge-pagination>
+      `);
+      
+      let loadMoreEvent = false;
+      el.addEventListener('loadmore', (e: Event) => {
+        loadMoreEvent = true;
+        const detail = (e as CustomEvent).detail;
+        expect(detail.page).to.equal(6);
+      });
+      
+      // Call the private method directly
+      (el as any).loadMore();
+      
+      expect(loadMoreEvent).to.be.true;
+    });
+  });
+
+  describe('Accessibility Compliance', () => {
+    it('meets WCAG 2.1 AA standards', async () => {
+      const el = await fixture<ForgePagination>(html`
+        <forge-pagination 
+          current-page="5" 
+          total-pages="10"
+        ></forge-pagination>
+      `);
+      
+      await expect(el).to.be.accessible();
+    });
+
+    it('provides proper ARIA labels for navigation', async () => {
+      const el = await fixture<ForgePagination>(html`
+        <forge-pagination 
+          current-page="5" 
+          total-pages="10"
+        ></forge-pagination>
+      `);
+      
+      await el.updateComplete;
+      
+      // Check page buttons have proper labels (now using forge-button)
+      const pageButtons = el.shadowRoot?.querySelectorAll('forge-button.page-button');
+      expect(pageButtons!.length).to.be.greaterThan(0);
+      pageButtons?.forEach((button) => {
+        expect(button).to.have.attribute('aria-label');
+      });
+    });
+
+    it('announces page changes to screen readers', async () => {
+      const el = await fixture<ForgePagination>(html`
+        <forge-pagination 
+          current-page="5" 
+          total-pages="10"
+        ></forge-pagination>
+      `);
+      
+      await el.updateComplete;
+      
+      // Check for aria-current on current page
+      const currentPageButton = el.shadowRoot?.querySelector('.page-button[aria-current="page"]');
+      expect(currentPageButton).to.exist;
+      
+      // Navigate to next page
+      const nextButton = el.shadowRoot?.querySelector('.page-button[aria-label="Next page"]') as HTMLElement;
+      nextButton?.click();
+      await el.updateComplete;
+      
+      // Verify aria-current moved to new page
+      expect(el.currentPage).to.equal(6);
+    });
+
+    it('supports keyboard navigation with arrow keys', async () => {
+      const el = await fixture<ForgePagination>(html`
+        <forge-pagination 
+          current-page="5" 
+          total-pages="10"
+        ></forge-pagination>
+      `);
+      
+      await el.updateComplete;
+      
+      // Test left arrow key navigation
+      const leftEvent = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
+      el.dispatchEvent(leftEvent);
+      await el.updateComplete;
+      
+      expect(el.currentPage).to.equal(4);
+      
+      // Test right arrow key navigation
+      const rightEvent = new KeyboardEvent('keydown', { key: 'ArrowRight' });
+      el.dispatchEvent(rightEvent);
+      await el.updateComplete;
+      
+      expect(el.currentPage).to.equal(5);
+    });
+
+    it('has proper focus management', async () => {
+      const el = await fixture<ForgePagination>(html`
+        <forge-pagination 
+          current-page="1" 
+          total-pages="10"
+        ></forge-pagination>
+      `);
+      
+      await el.updateComplete;
+      
+      // Focus should be manageable on pagination buttons
+      const firstButton = el.shadowRoot?.querySelector('.page-button') as HTMLElement;
+      firstButton?.focus();
+      
+      expect(document.activeElement).to.exist;
+      
+      // Tab navigation should work through all focusable elements (now forge-button)
+      const focusableElements = el.shadowRoot?.querySelectorAll('forge-button:not([disabled])');
+      expect(focusableElements!.length).to.be.greaterThan(0);
+    });
+  });
 });

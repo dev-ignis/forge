@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { BaseElement } from '../../../core/BaseElement';
-import type { AIState, AIAction } from '../../../core/ai-metadata.types';
+import type { AIComponentState, AIAction } from '../../../core/ai-metadata.types';
 import '../../atoms/button/button';
 import '../../atoms/select/select';
 import '../../atoms/input/input';
@@ -16,9 +16,8 @@ import type { SelectOption } from '../../atoms/select/select';
  */
 @customElement('forge-pagination')
 export class ForgePagination extends BaseElement {
-  static override styles = [
-    BaseElement.styles,
-    css`
+  static override styles = css`
+    
       :host {
         display: block;
       }
@@ -164,8 +163,7 @@ export class ForgePagination extends BaseElement {
         height: 1px;
         overflow: hidden;
       }
-    `
-  ];
+  `;
 
   @property({ type: Number, attribute: 'current-page' }) currentPage = 1;
   @property({ type: Number, attribute: 'total-pages' }) totalPages = 1;
@@ -322,7 +320,7 @@ export class ForgePagination extends BaseElement {
   }
 
   // AI Metadata
-  override get aiState(): AIState {
+  override get aiState(): AIComponentState {
     return {
       ...super.aiState,
       currentPage: this.currentPage,
@@ -463,6 +461,7 @@ export class ForgePagination extends BaseElement {
           .options=${options}
           @forge-change=${this.changePageSize}
           size="sm"
+          aria-label="Select items per page"
         ></forge-select>
       </div>
     `;
@@ -485,24 +484,28 @@ export class ForgePagination extends BaseElement {
     const pages = this.getPageNumbers();
     
     return html`
-      <button
+      <forge-button
         class="page-button"
+        variant="ghost"
+        size="sm"
         ?disabled=${this.currentPage === 1}
         @click=${() => this.goToPage(1)}
         aria-label="First page"
       >
         <forge-icon name="chevron-double-left" size="sm"></forge-icon>
-      </button>
+      </forge-button>
       
-      <button
+      <forge-button
         class="page-button"
+        variant="ghost"
+        size="sm"
         ?disabled=${this.currentPage === 1}
         @click=${() => this.goToPage(this.currentPage - 1)}
         aria-label="Previous page"
       >
         <forge-icon name="chevron-left" size="sm"></forge-icon>
         <span class="nav-text">Previous</span>
-      </button>
+      </forge-button>
       
       ${pages.map(page => {
         if (page === '...') {
@@ -511,42 +514,47 @@ export class ForgePagination extends BaseElement {
         
         const pageNum = page as number;
         return html`
-          <button
+          <forge-button
             class="page-button ${pageNum === this.currentPage ? 'active' : ''}"
+            variant=${pageNum === this.currentPage ? 'primary' : 'ghost'}
+            size="sm"
             @click=${() => this.goToPage(pageNum)}
             aria-label="Page ${pageNum}"
             aria-current=${pageNum === this.currentPage ? 'page' : 'false'}
           >
             ${pageNum}
-          </button>
+          </forge-button>
         `;
       })}
       
-      <button
+      <forge-button
         class="page-button"
+        variant="ghost"
+        size="sm"
         ?disabled=${this.currentPage === this.totalPages}
         @click=${() => this.goToPage(this.currentPage + 1)}
         aria-label="Next page"
       >
         <span class="nav-text">Next</span>
         <forge-icon name="chevron-right" size="sm"></forge-icon>
-      </button>
+      </forge-button>
       
-      <button
+      <forge-button
         class="page-button"
+        variant="ghost"
+        size="sm"
         ?disabled=${this.currentPage === this.totalPages}
         @click=${() => this.goToPage(this.totalPages)}
         aria-label="Last page"
       >
         <forge-icon name="chevron-double-right" size="sm"></forge-icon>
-      </button>
+      </forge-button>
     `;
   }
 
   private renderJumpToPage() {
     return html`
       <div class="jump-to-page">
-        <span class="jump-label">Go to page:</span>
         <forge-input
           class="jump-input"
           type="number"
@@ -556,6 +564,7 @@ export class ForgePagination extends BaseElement {
           @input=${(e: Event) => this.jumpValue = (e.target as HTMLInputElement).value}
           @keypress=${(e: KeyboardEvent) => e.key === 'Enter' && this.handleJumpToPage()}
           size="sm"
+          label="Go to page"
         ></forge-input>
       </div>
     `;
