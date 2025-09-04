@@ -1,8 +1,8 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { BaseElement } from '../../../core/base-element';
-import type { AIState, AIAction } from '../../../core/types';
+import { BaseElement } from '../../../core/BaseElement';
+import type { AIState, AIAction } from '../../../core/ai-metadata.types';
 import '../../atoms/icon/icon';
 import '../../atoms/checkbox/checkbox';
 import '../../atoms/input/input';
@@ -376,7 +376,7 @@ export class ForgeTreeView extends BaseElement {
     `;
   }
 
-  private renderNode(node: TreeNode, level: number) {
+  private renderNode(node: TreeNode, level: number): any {
     const hasChildren = node.children && node.children.length > 0;
     const isExpanded = this.expandedNodes.has(node.id);
     const isSelected = this.selectedNodes.has(node.id);
@@ -384,7 +384,7 @@ export class ForgeTreeView extends BaseElement {
     const nodeClasses = {
       'tree-node': true,
       'expanded': isExpanded,
-      'has-children': hasChildren
+      'has-children': hasChildren || false
     };
     
     const contentClasses = {
@@ -431,7 +431,7 @@ export class ForgeTreeView extends BaseElement {
         
         ${hasChildren ? html`
           <div class="tree-node-children" role="group">
-            ${node.children!.map(child => this.renderNode(child, level + 1))}
+            ${node.children!.map((child: TreeNode) => this.renderNode(child, level + 1))}
           </div>
         ` : ''}
       </div>

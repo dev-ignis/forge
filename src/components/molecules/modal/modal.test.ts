@@ -68,13 +68,13 @@ describe('ForgeModal', () => {
     expect(closeButton).to.not.exist;
   });
 
-  it('should emit forge-modal-toggle event when opened', async () => {
+  it('should emit modaltoggle event when opened', async () => {
     const el = await fixture<ForgeModal>(html`
       <forge-modal>Content</forge-modal>
     `);
 
     let toggleEvent: CustomEvent | null = null;
-    el.addEventListener('forge-modal-toggle', (e: Event) => {
+    el.addEventListener('modaltoggle', (e: Event) => {
       toggleEvent = e as CustomEvent;
     });
 
@@ -85,13 +85,13 @@ describe('ForgeModal', () => {
     expect(toggleEvent!.detail.open).to.be.true;
   });
 
-  it('should emit forge-modal-close event when close is called', async () => {
+  it('should emit modalclose event when close is called', async () => {
     const el = await fixture<ForgeModal>(html`
       <forge-modal open>Content</forge-modal>
     `);
 
     let closeEvent: CustomEvent | null = null;
-    el.addEventListener('forge-modal-close', (e: Event) => {
+    el.addEventListener('modalclose', (e: Event) => {
       closeEvent = e as CustomEvent;
     });
 
@@ -101,13 +101,13 @@ describe('ForgeModal', () => {
     expect(closeEvent).to.exist;
   });
 
-  it('should emit forge-modal-open event when show is called', async () => {
+  it('should emit modalopen event when show is called', async () => {
     const el = await fixture<ForgeModal>(html`
       <forge-modal>Content</forge-modal>
     `);
 
     let openEvent: CustomEvent | null = null;
-    el.addEventListener('forge-modal-open', (e: Event) => {
+    el.addEventListener('modalopen', (e: Event) => {
       openEvent = e as CustomEvent;
     });
 
@@ -164,12 +164,12 @@ describe('ForgeModal', () => {
     expect(el.open).to.be.false;
   });
 
-  it('should prevent event if forge-modal-close is cancelled', async () => {
+  it('should prevent event if modalclose is cancelled', async () => {
     const el = await fixture<ForgeModal>(html`
       <forge-modal open>Content</forge-modal>
     `);
 
-    el.addEventListener('forge-modal-close', (e: Event) => {
+    el.addEventListener('modalclose', (e: Event) => {
       e.preventDefault();
     });
 
@@ -179,12 +179,12 @@ describe('ForgeModal', () => {
     expect(el.open).to.be.true;
   });
 
-  it('should prevent event if forge-modal-open is cancelled', async () => {
+  it('should prevent event if modalopen is cancelled', async () => {
     const el = await fixture<ForgeModal>(html`
       <forge-modal>Content</forge-modal>
     `);
 
-    el.addEventListener('forge-modal-open', (e: Event) => {
+    el.addEventListener('modalopen', (e: Event) => {
       e.preventDefault();
     });
 

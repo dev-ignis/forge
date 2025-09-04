@@ -2,8 +2,8 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { repeat } from 'lit/directives/repeat.js';
-import { BaseElement } from '../../../core/base-element';
-import type { AIState, AIAction } from '../../../core/types';
+import { BaseElement } from '../../../core/BaseElement';
+import type { AIState, AIAction } from '../../../core/ai-metadata.types';
 import '../../atoms/button/button';
 import '../../atoms/badge/badge';
 import '../../atoms/icon/icon';
@@ -212,7 +212,7 @@ export class ForgeTabs extends BaseElement {
   ];
 
   @property({ type: Array }) tabs: TabItem[] = [];
-  @property({ type: String }) activeTab?: string;
+  @property({ type: String, attribute: 'active-tab' }) activeTab?: string;
   @property({ type: String }) orientation: 'horizontal' | 'vertical' = 'horizontal';
   @property({ type: Boolean }) reorderable = false;
   @property({ type: Boolean, attribute: 'remember-active' }) rememberActive = false;

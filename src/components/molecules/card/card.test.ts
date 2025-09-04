@@ -60,13 +60,13 @@ describe('ForgeCard', () => {
     expect(card?.classList.contains('card--clickable')).to.be.true;
   });
 
-  it('should emit forge-click event when clicked', async () => {
+  it('should emit cardclick event when clicked', async () => {
     const el = await fixture<ForgeCard>(html`
       <forge-card clickable>Content</forge-card>
     `);
 
     let clickEvent: CustomEvent | null = null;
-    el.addEventListener('forge-click', (e: Event) => {
+    el.addEventListener('cardclick', (e: Event) => {
       clickEvent = e as CustomEvent;
     });
 
@@ -83,7 +83,7 @@ describe('ForgeCard', () => {
     `);
 
     let clickEvent: CustomEvent | null = null;
-    el.addEventListener('forge-click', (e: Event) => {
+    el.addEventListener('cardclick', (e: Event) => {
       clickEvent = e as CustomEvent;
     });
 
@@ -99,7 +99,7 @@ describe('ForgeCard', () => {
     `);
 
     let clickEvent: CustomEvent | null = null;
-    el.addEventListener('forge-click', (e: Event) => {
+    el.addEventListener('cardclick', (e: Event) => {
       clickEvent = e as CustomEvent;
     });
 
@@ -118,13 +118,13 @@ describe('ForgeCard', () => {
     expect(card?.classList.contains('card--selected')).to.be.true;
   });
 
-  it('should emit forge-select event when selection changes', async () => {
+  it('should emit cardselect event when selection changes', async () => {
     const el = await fixture<ForgeCard>(html`
       <forge-card>Content</forge-card>
     `);
 
     let selectEvent: CustomEvent | null = null;
-    el.addEventListener('forge-select', (e: Event) => {
+    el.addEventListener('cardselect', (e: Event) => {
       selectEvent = e as CustomEvent;
     });
 
@@ -151,7 +151,7 @@ describe('ForgeCard', () => {
     `);
 
     let clickEvent: CustomEvent | null = null;
-    el.addEventListener('forge-click', (e: Event) => {
+    el.addEventListener('cardclick', (e: Event) => {
       clickEvent = e as CustomEvent;
     });
 

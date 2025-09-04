@@ -1,8 +1,8 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { BaseElement } from '../../../core/base-element';
-import type { AIState, AIAction } from '../../../core/types';
+import { BaseElement } from '../../../core/BaseElement';
+import type { AIState, AIAction } from '../../../core/ai-metadata.types';
 import '../../atoms/button/button';
 import '../../atoms/select/select';
 import '../../atoms/input/input';
@@ -11,8 +11,8 @@ import type { SelectOption } from '../../atoms/select/select';
 /**
  * @element forge-pagination
  * @description Advanced pagination component with page size selector, jump to page, and responsive ellipsis
- * @fires forge-page-change - When page changes
- * @fires forge-page-size-change - When page size changes
+ * @fires pagechange - When page changes
+ * @fires pagesizechange - When page size changes
  */
 @customElement('forge-pagination')
 export class ForgePagination extends BaseElement {
@@ -219,7 +219,7 @@ export class ForgePagination extends BaseElement {
     const oldPage = this.currentPage;
     this.currentPage = page;
     
-    this.dispatchEvent(new CustomEvent('forge-page-change', {
+    this.dispatchEvent(new CustomEvent('pagechange', {
       detail: { page, oldPage },
       bubbles: true,
       composed: true
@@ -247,7 +247,7 @@ export class ForgePagination extends BaseElement {
       this.currentPage = newPage;
     }
     
-    this.dispatchEvent(new CustomEvent('forge-page-size-change', {
+    this.dispatchEvent(new CustomEvent('pagesizechange', {
       detail: { pageSize: newSize, oldPageSize: oldSize, page: this.currentPage },
       bubbles: true,
       composed: true
@@ -263,7 +263,7 @@ export class ForgePagination extends BaseElement {
   }
 
   private loadMore() {
-    this.dispatchEvent(new CustomEvent('forge-load-more', {
+    this.dispatchEvent(new CustomEvent('loadmore', {
       detail: { page: this.currentPage + 1 },
       bubbles: true,
       composed: true

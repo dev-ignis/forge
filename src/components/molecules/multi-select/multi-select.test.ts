@@ -180,7 +180,7 @@ describe('ForgeMultiSelect', () => {
 
     // Type in search
     const searchInput = el.shadowRoot!.querySelector('forge-input') as any;
-    searchInput.dispatchEvent(new CustomEvent('forge-input', { 
+    searchInput.dispatchEvent(new CustomEvent('input', { 
       detail: { value: 'app' }
     }));
     await elementUpdated(el);
@@ -201,7 +201,7 @@ describe('ForgeMultiSelect', () => {
 
     // Type in search
     const searchInput = el.shadowRoot!.querySelector('forge-input') as any;
-    searchInput.dispatchEvent(new CustomEvent('forge-input', { 
+    searchInput.dispatchEvent(new CustomEvent('input', { 
       detail: { value: 'app' }
     }));
     await elementUpdated(el);
@@ -331,7 +331,7 @@ describe('ForgeMultiSelect', () => {
 
     // Search for non-existent item
     const searchInput = el.shadowRoot!.querySelector('forge-input') as any;
-    searchInput.dispatchEvent(new CustomEvent('forge-input', { 
+    searchInput.dispatchEvent(new CustomEvent('input', { 
       detail: { value: 'xyz' }
     }));
     await elementUpdated(el);
@@ -341,13 +341,13 @@ describe('ForgeMultiSelect', () => {
     expect(noResults!.textContent!.trim()).to.equal('No results found');
   });
 
-  it('should emit forge-change event', async () => {
+  it('should emit change event', async () => {
     const el = await fixture<ForgeMultiSelect>(html`
       <forge-multi-select .options=${mockOptions}></forge-multi-select>
     `);
 
     let changeEvent: CustomEvent | null = null;
-    el.addEventListener('forge-change', (e: Event) => {
+    el.addEventListener('change', (e: Event) => {
       changeEvent = e as CustomEvent;
     });
 

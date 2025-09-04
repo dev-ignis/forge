@@ -3,6 +3,7 @@ import { customElement, property, state, query } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { BaseElement } from '../../../core/BaseElement';
 import type { AIMetadata, AIAction, AIStateExplanation } from '../../../core/ai-metadata.types';
+import '../../atoms/button/button';
 
 export type ModalSize = 'small' | 'medium' | 'large' | 'full';
 export type ModalScrollBehavior = 'body' | 'entire';
@@ -327,7 +328,7 @@ export class ForgeModal extends BaseElement {
       }
       
       this.updateComponentState('open', this.open);
-      this.emit('forge-modal-toggle', { open: this.open });
+      this.emit('modaltoggle', { open: this.open });
     }
 
     if (changedProperties.has('stackLevel')) {
@@ -459,7 +460,7 @@ export class ForgeModal extends BaseElement {
   }
 
   public close(): void {
-    const event = new CustomEvent('forge-modal-close', { 
+    const event = new CustomEvent('modalclose', { 
       bubbles: true, 
       composed: true, 
       cancelable: true 
@@ -471,7 +472,7 @@ export class ForgeModal extends BaseElement {
   }
 
   public show(): void {
-    const event = new CustomEvent('forge-modal-open', { 
+    const event = new CustomEvent('modalopen', { 
       bubbles: true, 
       composed: true, 
       cancelable: true 
@@ -515,16 +516,17 @@ export class ForgeModal extends BaseElement {
           <div class="modal__header">
             ${this.title ? html`<h2 class="modal__title">${this.title}</h2>` : html`<slot name="header"></slot>`}
             ${this.showClose ? html`
-              <button 
+              <forge-button 
                 class="modal__close"
                 @click=${this.handleCloseClick}
                 aria-label="Close modal"
-                type="button"
+                variant="ghost"
+                size="sm"
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M14.95 5.05L5.05 14.95M5.05 5.05L14.95 14.95" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-              </button>
+              </forge-button>
             ` : ''}
           </div>
           

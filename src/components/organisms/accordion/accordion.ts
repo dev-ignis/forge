@@ -1,8 +1,8 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { BaseElement } from '../../../core/base-element';
-import type { AIState, AIAction } from '../../../core/types';
+import { BaseElement } from '../../../core/BaseElement';
+import type { AIState, AIAction } from '../../../core/ai-metadata.types';
 import '../../atoms/icon/icon';
 
 export interface AccordionPanel {

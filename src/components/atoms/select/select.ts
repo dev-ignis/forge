@@ -568,7 +568,7 @@ export class ForgeSelect extends BaseElement {
       this.focusedIndex = -1;
     }
     
-    this.emit('forge-open');
+    this.emit('open');
   }
 
   public close(): void {
@@ -577,7 +577,7 @@ export class ForgeSelect extends BaseElement {
     this.filteredOptions = this.options || [];
     this.focusedIndex = -1;
     
-    this.emit('forge-close');
+    this.emit('close');
   }
 
   public selectOption(value: string): void {

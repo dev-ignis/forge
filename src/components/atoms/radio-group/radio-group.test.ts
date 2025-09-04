@@ -154,7 +154,7 @@ describe('ForgeRadioGroup', () => {
 
     it('should select option on click', async () => {
       const changeHandler = createSpy();
-      element.addEventListener('forge-change', changeHandler);
+      element.addEventListener('change', changeHandler);
 
       const radioInputs = element.shadowRoot!.querySelectorAll('.radio-input') as NodeListOf<HTMLInputElement>;
       radioInputs[0].click();
@@ -166,7 +166,7 @@ describe('ForgeRadioGroup', () => {
 
     it('should not select disabled option', async () => {
       const changeHandler = createSpy();
-      element.addEventListener('forge-change', changeHandler);
+      element.addEventListener('change', changeHandler);
 
       const radioInputs = element.shadowRoot!.querySelectorAll('.radio-input') as NodeListOf<HTMLInputElement>;
       radioInputs[2].click();
@@ -178,7 +178,7 @@ describe('ForgeRadioGroup', () => {
 
     it('should emit change event with details', async () => {
       const changeHandler = createSpy();
-      element.addEventListener('forge-change', changeHandler);
+      element.addEventListener('change', changeHandler);
 
       element.selectOption('option2');
       await element.updateComplete;
@@ -266,7 +266,7 @@ describe('ForgeRadioGroup', () => {
       await element.updateComplete;
 
       const changeHandler = createSpy();
-      element.addEventListener('forge-change', changeHandler);
+      element.addEventListener('change', changeHandler);
 
       element.selectOption('option1');
       expect(element.value).to.equal('');

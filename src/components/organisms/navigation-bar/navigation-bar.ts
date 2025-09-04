@@ -1,8 +1,8 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { BaseElement } from '../../../core/base-element';
-import type { AIState, AIAction } from '../../../core/types';
+import { BaseElement } from '../../../core/BaseElement';
+import type { AIState, AIAction, AIStateExplanation } from '../../../core/ai-metadata.types';
 import '../../atoms/button/button';
 import '../../atoms/icon/icon';
 import '../../molecules/dropdown/dropdown';
@@ -316,7 +316,7 @@ export class ForgeNavigationBar extends BaseElement {
     };
   }
 
-  override explainState(): string {
+  override explainState(): AIStateExplanation {
     const parts = ['Navigation bar'];
     
     if (this.activeRoute) {
@@ -336,7 +336,29 @@ export class ForgeNavigationBar extends BaseElement {
       parts.push(this.position);
     }
     
-    return parts.join(', ');
+    const currentState = this.mobileOpen ? 'mobile-open' : 'default';
+    
+    return {
+      currentState,
+      possibleStates: ['default', 'mobile-open', 'scrolled'],
+      stateDescription: parts.join(', '),
+      transitions: [
+        {
+          from: 'default',
+          to: 'mobile-open',
+          trigger: 'Mobile menu button click'
+        },
+        {
+          from: 'mobile-open',
+          to: 'default',
+          trigger: 'Close button or outside click'
+        }
+      ],
+      visualIndicators: [
+        this.mobileOpen ? 'Mobile drawer visible' : 'Desktop navigation',
+        this.activeRoute ? 'Active route highlighted' : 'No active route'
+      ]
+    };
   }
 
   override getPossibleActions(): AIAction[] {

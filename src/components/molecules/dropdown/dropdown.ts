@@ -4,6 +4,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { BaseElement } from '../../../core/BaseElement';
 import type { AIMetadata, AIAction, AIStateExplanation } from '../../../core/ai-metadata.types';
+import '../../atoms/button/button';
 
 export interface DropdownItem {
   id: string;
@@ -373,7 +374,7 @@ export class ForgeDropdown extends BaseElement {
     if (changedProperties.has('isOpen')) {
       this.setAttribute('aria-expanded', String(this.isOpen));
       this.updateComponentState('open', this.isOpen);
-      this.emit('forge-dropdown', { open: this.isOpen });
+      this.emit('dropdownvisibilitychange', { open: this.isOpen });
 
       if (this.isOpen) {
         this.updatePosition();
@@ -703,17 +704,18 @@ export class ForgeDropdown extends BaseElement {
 
     const content = html`
       <div class="dropdown">
-        <button
+        <forge-button
           class=${classMap(triggerClasses)}
           @click=${this.handleTriggerClick}
           aria-label=${this.label}
           aria-expanded=${this.isOpen}
           aria-haspopup="menu"
           ?disabled=${this.disabled}
+          variant="default"
         >
           <span>${displayLabel}</span>
           <span class="dropdown__trigger-icon">${this.icon}</span>
-        </button>
+        </forge-button>
         <div 
           class=${classMap(menuClasses)}
           role="menu"
