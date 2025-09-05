@@ -334,7 +334,7 @@ export const InteractiveDemo: Story = {
               const target = e.target as any;
               const info = target.nextElementSibling;
               if (info) {
-                info.textContent = \`Selected: \${e.detail.item.label}\`;
+                info.textContent = `Selected: ${e.detail.item.label}`;
               }
             }}"
           ></forge-dropdown>
@@ -356,7 +356,7 @@ export const InteractiveDemo: Story = {
               const target = e.target as any;
               const info = target.nextElementSibling;
               if (info) {
-                info.textContent = \`Selected: \${e.detail.selected.length} items\`;
+                info.textContent = `Selected: ${e.detail.selected.length} items`;
               }
             }}"
           ></forge-dropdown>
@@ -376,7 +376,7 @@ export const InteractiveDemo: Story = {
               const target = e.target as any;
               const info = target.nextElementSibling;
               if (info) {
-                info.textContent = \`Selected: \${e.detail.item.label}\`;
+                info.textContent = `Selected: ${e.detail.item.label}`;
               }
             }}"
           ></forge-dropdown>

@@ -518,12 +518,12 @@ export const InteractiveDemo: Story = {
               field.helpText = '';
             } else if (remaining <= 10) {
               field.validationState = 'warning';
-              field.warningMessage = \`\${remaining} characters remaining\`;
+              field.warningMessage = `${remaining} characters remaining`;
               field.errorMessage = '';
               field.helpText = '';
             } else {
               field.validationState = 'default';
-              field.helpText = \`\${remaining} characters remaining\`;
+              field.helpText = `${remaining} characters remaining`;
               field.warningMessage = '';
               field.errorMessage = '';
             }

@@ -104,16 +104,16 @@ export const Default: Story = {
 export const Sizes: Story = {
   render: () => html`
     <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-      <forge-button @click="${() => document.getElementById('small-modal')?.show()}">
+      <forge-button @click="${() => ((document.getElementById('small-modal') as any)?.show())}">
         Small Modal
       </forge-button>
-      <forge-button @click="${() => document.getElementById('medium-modal')?.show()}">
+      <forge-button @click="${() => ((document.getElementById('medium-modal') as any)?.show())}">
         Medium Modal
       </forge-button>
-      <forge-button @click="${() => document.getElementById('large-modal')?.show()}">
+      <forge-button @click="${() => ((document.getElementById('large-modal') as any)?.show())}">
         Large Modal
       </forge-button>
-      <forge-button @click="${() => document.getElementById('full-modal')?.show()}">
+      <forge-button @click="${() => ((document.getElementById('full-modal') as any)?.show())}">
         Full Screen Modal
       </forge-button>
     </div>
@@ -121,7 +121,7 @@ export const Sizes: Story = {
     <forge-modal id="small-modal" size="small" title="Small Modal">
       <p>This is a small modal, perfect for simple confirmations or brief messages.</p>
       <div slot="footer">
-        <forge-button @click="${() => document.getElementById('small-modal')?.close()}">
+        <forge-button @click="${() => ((document.getElementById('small-modal') as any)?.close())}">
           Close
         </forge-button>
       </div>
@@ -131,7 +131,7 @@ export const Sizes: Story = {
       <p>This is a medium modal, good for forms and moderate amounts of content.</p>
       <p>It provides a balanced size that works well for most use cases.</p>
       <div slot="footer">
-        <forge-button @click="${() => document.getElementById('medium-modal')?.close()}">
+        <forge-button @click="${() => ((document.getElementById('medium-modal') as any)?.close())}">
           Close
         </forge-button>
       </div>
@@ -147,7 +147,7 @@ export const Sizes: Story = {
         <p>Content for the second section goes here.</p>
       </div>
       <div slot="footer">
-        <forge-button @click="${() => document.getElementById('large-modal')?.close()}">
+        <forge-button @click="${() => ((document.getElementById('large-modal') as any)?.close())}">
           Close
         </forge-button>
       </div>
@@ -167,7 +167,7 @@ export const Sizes: Story = {
         </ul>
       </div>
       <div slot="footer">
-        <forge-button @click="${() => document.getElementById('full-modal')?.close()}">
+        <forge-button @click="${() => ((document.getElementById('full-modal') as any)?.close())}">
           Close
         </forge-button>
       </div>
@@ -177,7 +177,7 @@ export const Sizes: Story = {
 
 export const CustomHeader: Story = {
   render: () => html`
-    <forge-button @click="${() => document.getElementById('custom-header-modal')?.show()}">
+    <forge-button @click="${() => ((document.getElementById('custom-header-modal') as any)?.show())}">
       Open Custom Header Modal
     </forge-button>
 
@@ -196,7 +196,7 @@ export const CustomHeader: Story = {
       <p>The header slot gives you complete control over the header content and layout.</p>
       
       <div slot="footer">
-        <forge-button @click="${() => document.getElementById('custom-header-modal')?.close()}">
+        <forge-button @click="${() => ((document.getElementById('custom-header-modal') as any)?.close())}">
           Close
         </forge-button>
       </div>
@@ -207,10 +207,10 @@ export const CustomHeader: Story = {
 export const ScrollingContent: Story = {
   render: () => html`
     <div style="display: flex; gap: 16px;">
-      <forge-button @click="${() => document.getElementById('scroll-body-modal')?.show()}">
+      <forge-button @click="${() => ((document.getElementById('scroll-body-modal') as any)?.show())}">
         Body Scroll
       </forge-button>
-      <forge-button @click="${() => document.getElementById('scroll-entire-modal')?.show()}">
+      <forge-button @click="${() => ((document.getElementById('scroll-entire-modal') as any)?.show())}">
         Entire Scroll
       </forge-button>
     </div>
@@ -229,7 +229,7 @@ export const ScrollingContent: Story = {
       </div>
       
       <div slot="footer">
-        <forge-button @click="${() => document.getElementById('scroll-body-modal')?.close()}">
+        <forge-button @click="${() => ((document.getElementById('scroll-body-modal') as any)?.close())}">
           Close
         </forge-button>
       </div>
@@ -249,7 +249,7 @@ export const ScrollingContent: Story = {
       </div>
       
       <div slot="footer">
-        <forge-button @click="${() => document.getElementById('scroll-entire-modal')?.close()}">
+        <forge-button @click="${() => ((document.getElementById('scroll-entire-modal') as any)?.close())}">
           Close
         </forge-button>
       </div>
@@ -259,7 +259,7 @@ export const ScrollingContent: Story = {
 
 export const FormModal: Story = {
   render: () => html`
-    <forge-button @click="${() => document.getElementById('form-modal')?.show()}">
+    <forge-button @click="${() => ((document.getElementById('form-modal') as any)?.show())}">
       Open Form Modal
     </forge-button>
 
@@ -268,7 +268,7 @@ export const FormModal: Story = {
         e.preventDefault();
         const formData = new FormData(e.target as HTMLFormElement);
         console.log('Form data:', Object.fromEntries(formData.entries()));
-        document.getElementById('form-modal')?.close();
+        ((document.getElementById('form-modal') as any)?.close());
       }}">
         <div style="display: flex; flex-direction: column; gap: 16px;">
           <forge-form-field
@@ -307,7 +307,7 @@ export const FormModal: Story = {
           <forge-button 
             type="button" 
             variant="secondary" 
-            @click="${() => document.getElementById('form-modal')?.close()}"
+            @click="${() => ((document.getElementById('form-modal') as any)?.close())}"
           >
             Cancel
           </forge-button>
@@ -324,7 +324,7 @@ export const ConfirmationModal: Story = {
   render: () => html`
     <forge-button 
       variant="danger" 
-      @click="${() => document.getElementById('confirm-modal')?.show()}"
+      @click="${() => ((document.getElementById('confirm-modal') as any)?.show())}"
     >
       Delete Item
     </forge-button>
@@ -343,7 +343,7 @@ export const ConfirmationModal: Story = {
       <div slot="footer" style="display: flex; gap: 12px; justify-content: center;">
         <forge-button 
           variant="secondary" 
-          @click="${() => document.getElementById('confirm-modal')?.close()}"
+          @click="${() => ((document.getElementById('confirm-modal') as any)?.close())}"
         >
           Cancel
         </forge-button>
@@ -351,7 +351,7 @@ export const ConfirmationModal: Story = {
           variant="danger" 
           @click="${() => {
             console.log('Item deleted');
-            document.getElementById('confirm-modal')?.close();
+            ((document.getElementById('confirm-modal') as any)?.close());
           }}"
         >
           Delete
@@ -364,13 +364,13 @@ export const ConfirmationModal: Story = {
 export const AnimationVariants: Story = {
   render: () => html`
     <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-      <forge-button @click="${() => document.getElementById('fade-modal')?.show()}">
+      <forge-button @click="${() => ((document.getElementById('fade-modal') as any)?.show())}">
         Fade Animation
       </forge-button>
-      <forge-button @click="${() => document.getElementById('slide-modal')?.show()}">
+      <forge-button @click="${() => ((document.getElementById('slide-modal') as any)?.show())}">
         Slide Animation
       </forge-button>
-      <forge-button @click="${() => document.getElementById('no-animation-modal')?.show()}">
+      <forge-button @click="${() => ((document.getElementById('no-animation-modal') as any)?.show())}">
         No Animation
       </forge-button>
     </div>
@@ -378,7 +378,7 @@ export const AnimationVariants: Story = {
     <forge-modal id="fade-modal" size="medium" title="Fade Animation" animation="fade">
       <p>This modal uses the fade animation for a smooth appearance.</p>
       <div slot="footer">
-        <forge-button @click="${() => document.getElementById('fade-modal')?.close()}">
+        <forge-button @click="${() => ((document.getElementById('fade-modal') as any)?.close())}">
           Close
         </forge-button>
       </div>
@@ -387,7 +387,7 @@ export const AnimationVariants: Story = {
     <forge-modal id="slide-modal" size="medium" title="Slide Animation" animation="slide">
       <p>This modal uses the slide animation, appearing from below.</p>
       <div slot="footer">
-        <forge-button @click="${() => document.getElementById('slide-modal')?.close()}">
+        <forge-button @click="${() => ((document.getElementById('slide-modal') as any)?.close())}">
           Close
         </forge-button>
       </div>
@@ -396,7 +396,7 @@ export const AnimationVariants: Story = {
     <forge-modal id="no-animation-modal" size="medium" title="No Animation" animation="none">
       <p>This modal appears instantly without any animation.</p>
       <div slot="footer">
-        <forge-button @click="${() => document.getElementById('no-animation-modal')?.close()}">
+        <forge-button @click="${() => ((document.getElementById('no-animation-modal') as any)?.close())}">
           Close
         </forge-button>
       </div>
@@ -407,13 +407,13 @@ export const AnimationVariants: Story = {
 export const ModalSettings: Story = {
   render: () => html`
     <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-      <forge-button @click="${() => document.getElementById('no-backdrop-close-modal')?.show()}">
+      <forge-button @click="${() => ((document.getElementById('no-backdrop-close-modal') as any)?.show())}">
         No Backdrop Close
       </forge-button>
-      <forge-button @click="${() => document.getElementById('no-escape-close-modal')?.show()}">
+      <forge-button @click="${() => ((document.getElementById('no-escape-close-modal') as any)?.show())}">
         No Escape Close
       </forge-button>
-      <forge-button @click="${() => document.getElementById('no-close-button-modal')?.show()}">
+      <forge-button @click="${() => ((document.getElementById('no-close-button-modal') as any)?.show())}">
         No Close Button
       </forge-button>
     </div>
@@ -426,7 +426,7 @@ export const ModalSettings: Story = {
     >
       <p>This modal won't close when you click the backdrop. You must use the close button or Escape key.</p>
       <div slot="footer">
-        <forge-button @click="${() => document.getElementById('no-backdrop-close-modal')?.close()}">
+        <forge-button @click="${() => ((document.getElementById('no-backdrop-close-modal') as any)?.close())}">
           Close
         </forge-button>
       </div>
@@ -440,7 +440,7 @@ export const ModalSettings: Story = {
     >
       <p>This modal won't close when you press the Escape key. You must use the close button or click the backdrop.</p>
       <div slot="footer">
-        <forge-button @click="${() => document.getElementById('no-escape-close-modal')?.close()}">
+        <forge-button @click="${() => ((document.getElementById('no-escape-close-modal') as any)?.close())}">
           Close
         </forge-button>
       </div>
@@ -454,7 +454,7 @@ export const ModalSettings: Story = {
     >
       <p>This modal doesn't have a close button in the header. You can still close it by clicking the backdrop or pressing Escape.</p>
       <div slot="footer">
-        <forge-button @click="${() => document.getElementById('no-close-button-modal')?.close()}">
+        <forge-button @click="${() => ((document.getElementById('no-close-button-modal') as any)?.close())}">
           Close
         </forge-button>
       </div>
@@ -469,16 +469,16 @@ export const InteractiveDemo: Story = {
       <p>Explore different modal features and behaviors:</p>
       
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0;">
-        <forge-button @click="${() => document.getElementById('info-modal')?.show()}">
+        <forge-button @click="${() => ((document.getElementById('info-modal') as any)?.show())}">
           📋 Info Modal
         </forge-button>
-        <forge-button @click="${() => document.getElementById('warning-modal')?.show()}">
+        <forge-button @click="${() => ((document.getElementById('warning-modal') as any)?.show())}">
           ⚠️ Warning Modal
         </forge-button>
-        <forge-button @click="${() => document.getElementById('success-modal')?.show()}">
+        <forge-button @click="${() => ((document.getElementById('success-modal') as any)?.show())}">
           ✅ Success Modal
         </forge-button>
-        <forge-button @click="${() => document.getElementById('error-modal')?.show()}">
+        <forge-button @click="${() => ((document.getElementById('error-modal') as any)?.show())}">
           ❌ Error Modal
         </forge-button>
       </div>
@@ -509,7 +509,7 @@ export const InteractiveDemo: Story = {
         </div>
       </div>
       <div slot="footer">
-        <forge-button @click="${() => document.getElementById('info-modal')?.close()}">
+        <forge-button @click="${() => ((document.getElementById('info-modal') as any)?.close())}">
           Got it
         </forge-button>
       </div>
@@ -528,10 +528,10 @@ export const InteractiveDemo: Story = {
         </div>
       </div>
       <div slot="footer">
-        <forge-button variant="secondary" @click="${() => document.getElementById('warning-modal')?.close()}">
+        <forge-button variant="secondary" @click="${() => ((document.getElementById('warning-modal') as any)?.close())}">
           Cancel
         </forge-button>
-        <forge-button variant="warning" @click="${() => document.getElementById('warning-modal')?.close()}">
+        <forge-button variant="warning" @click="${() => ((document.getElementById('warning-modal') as any)?.close())}">
           Proceed
         </forge-button>
       </div>
@@ -550,7 +550,7 @@ export const InteractiveDemo: Story = {
         </div>
       </div>
       <div slot="footer">
-        <forge-button variant="primary" @click="${() => document.getElementById('success-modal')?.close()}">
+        <forge-button variant="primary" @click="${() => ((document.getElementById('success-modal') as any)?.close())}">
           Continue
         </forge-button>
       </div>
@@ -569,10 +569,10 @@ export const InteractiveDemo: Story = {
         </div>
       </div>
       <div slot="footer">
-        <forge-button variant="secondary" @click="${() => document.getElementById('error-modal')?.close()}">
+        <forge-button variant="secondary" @click="${() => ((document.getElementById('error-modal') as any)?.close())}">
           Dismiss
         </forge-button>
-        <forge-button variant="primary" @click="${() => document.getElementById('error-modal')?.close()}">
+        <forge-button variant="primary" @click="${() => ((document.getElementById('error-modal') as any)?.close())}">
           Retry
         </forge-button>
       </div>
@@ -582,7 +582,7 @@ export const InteractiveDemo: Story = {
 
 export const AIIntegration: Story = {
   render: () => html`
-    <forge-button @click="${() => document.getElementById('ai-modal')?.show()}">
+    <forge-button @click="${() => ((document.getElementById('ai-modal') as any)?.show())}">
       Open AI-Ready Modal
     </forge-button>
 
@@ -615,7 +615,7 @@ export const AIIntegration: Story = {
       <p>AI agents can understand this as a focused user interaction context.</p>
       
       <div slot="footer">
-        <forge-button @click="${() => document.getElementById('ai-modal')?.close()}">
+        <forge-button @click="${() => ((document.getElementById('ai-modal') as any)?.close())}">
           Close
         </forge-button>
       </div>

@@ -43,7 +43,7 @@ const basicTabs: TabItem[] = [
   {
     id: 'overview',
     label: 'Overview',
-    panel: html`
+    panel: `
       <div style="padding: 20px;">
         <h3>Project Overview</h3>
         <p>This tab contains general information about the project, including goals, timeline, and key stakeholders.</p>
@@ -59,7 +59,7 @@ const basicTabs: TabItem[] = [
   {
     id: 'details',
     label: 'Details',
-    panel: html`
+    panel: `
       <div style="padding: 20px;">
         <h3>Technical Details</h3>
         <p>Detailed technical specifications and implementation notes.</p>
@@ -76,7 +76,7 @@ import '@nexcraft/forge';
   {
     id: 'settings',
     label: 'Settings', 
-    panel: html`
+    panel: `
       <div style="padding: 20px;">
         <h3>Configuration Settings</h3>
         <p>Manage project settings and preferences.</p>
@@ -114,7 +114,7 @@ export const WithIcons: Story = {
           id: 'home',
           label: 'Home',
           icon: 'home',
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Welcome Home</h3>
               <p>This tab has an icon and demonstrates icon integration.</p>
@@ -126,7 +126,7 @@ export const WithIcons: Story = {
           label: 'Analytics',
           icon: 'analytics',
           badge: '5',
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Analytics Dashboard</h3>
               <p>View your performance metrics and insights here.</p>
@@ -138,7 +138,7 @@ export const WithIcons: Story = {
           id: 'settings',
           label: 'Settings',
           icon: 'settings',
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>System Settings</h3>
               <p>Configure your application preferences.</p>
@@ -159,7 +159,7 @@ export const CloseableTabs: Story = {
           id: 'doc1',
           label: 'Document 1.txt',
           closeable: true,
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Document 1</h3>
               <p>This is the first document. You can close this tab using the × button.</p>
@@ -170,7 +170,7 @@ export const CloseableTabs: Story = {
           id: 'doc2',
           label: 'Document 2.txt',
           closeable: true,
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Document 2</h3>
               <p>Second document content goes here.</p>
@@ -181,7 +181,7 @@ export const CloseableTabs: Story = {
           id: 'doc3',
           label: 'Document 3.txt',
           closeable: true,
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Document 3</h3>
               <p>Third document with closeable functionality.</p>
@@ -192,7 +192,7 @@ export const CloseableTabs: Story = {
           id: 'unsaved',
           label: 'Untitled*',
           closeable: true,
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Unsaved Document</h3>
               <p>This document has unsaved changes (indicated by the * in the title).</p>
@@ -213,7 +213,7 @@ export const ReorderableTabs: Story = {
         {
           id: 'tab-a',
           label: 'Tab A',
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Tab A Content</h3>
               <p>Drag the tab headers to reorder them. This tab is initially first.</p>
@@ -223,7 +223,7 @@ export const ReorderableTabs: Story = {
         {
           id: 'tab-b',
           label: 'Tab B',
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Tab B Content</h3>
               <p>This is the second tab. Try dragging it to different positions.</p>
@@ -233,7 +233,7 @@ export const ReorderableTabs: Story = {
         {
           id: 'tab-c',
           label: 'Tab C',
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Tab C Content</h3>
               <p>Third tab that can be moved around using drag and drop.</p>
@@ -243,7 +243,7 @@ export const ReorderableTabs: Story = {
         {
           id: 'tab-d',
           label: 'Tab D',
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Tab D Content</h3>
               <p>Fourth tab demonstrating the reordering functionality.</p>
@@ -266,7 +266,7 @@ export const VerticalTabs: Story = {
           {
             id: 'navigation',
             label: 'Navigation',
-            panel: html`
+            panel: `
               <div style="padding: 20px;">
                 <h3>Navigation Settings</h3>
                 <p>Configure navigation behavior and menu items.</p>
@@ -282,7 +282,7 @@ export const VerticalTabs: Story = {
           {
             id: 'appearance',
             label: 'Appearance',
-            panel: html`
+            panel: `
               <div style="padding: 20px;">
                 <h3>Visual Appearance</h3>
                 <p>Customize the look and feel of your application.</p>
@@ -301,7 +301,7 @@ export const VerticalTabs: Story = {
           {
             id: 'performance',
             label: 'Performance',
-            panel: html`
+            panel: `
               <div style="padding: 20px;">
                 <h3>Performance Options</h3>
                 <p>Optimize application performance settings.</p>
@@ -329,7 +329,7 @@ export const ManyTabs: Story = {
         .tabs="${Array.from({ length: 12 }, (_, i) => ({
           id: `tab-${i + 1}`,
           label: `Tab ${i + 1}`,
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Content for Tab ${i + 1}</h3>
               <p>This demonstrates many tabs that may require scrolling.</p>
@@ -350,7 +350,7 @@ export const LazyLoading: Story = {
         {
           id: 'loaded',
           label: 'Loaded',
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Already Loaded</h3>
               <p>This tab content is loaded immediately because it's active.</p>
@@ -360,7 +360,7 @@ export const LazyLoading: Story = {
         {
           id: 'lazy',
           label: 'Lazy Content',
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Lazy Loaded Content</h3>
               <p>This content is only loaded when the tab is first activated.</p>
@@ -374,7 +374,7 @@ export const LazyLoading: Story = {
         {
           id: 'heavy',
           label: 'Heavy Content',
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Resource Heavy Tab</h3>
               <p>This tab contains heavy content that benefits from lazy loading:</p>
@@ -404,7 +404,7 @@ export const WithDisabledTab: Story = {
         {
           id: 'active',
           label: 'Active Tab',
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Active Tab</h3>
               <p>This tab is active and clickable.</p>
@@ -415,7 +415,7 @@ export const WithDisabledTab: Story = {
           id: 'disabled',
           label: 'Disabled Tab',
           disabled: true,
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Disabled Content</h3>
               <p>This content shouldn't be accessible.</p>
@@ -425,7 +425,7 @@ export const WithDisabledTab: Story = {
         {
           id: 'another',
           label: 'Another Tab',
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Another Tab</h3>
               <p>This tab is also clickable and active.</p>
@@ -445,7 +445,7 @@ export const AIIntegration: Story = {
         {
           id: 'ai-assistant',
           label: '🤖 AI Assistant',
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>AI-Powered Tab Interface</h3>
               <p>This tab component includes AI metadata:</p>
@@ -461,7 +461,7 @@ export const AIIntegration: Story = {
         {
           id: 'analytics',
           label: '📊 Analytics',
-          panel: html`
+          panel: `
             <div style="padding: 20px;">
               <h3>Usage Analytics</h3>
               <p>Track how users interact with tab interfaces to improve UX.</p>

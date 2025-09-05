@@ -199,7 +199,7 @@ export const CustomColumnTemplate: Story = {
         { 
           key: 'actions', 
           title: 'Actions',
-          template: (_, row) => html`
+          template: (_: any, row: any) => html`
             <forge-button size="small" variant="outline" @click="${() => console.log('Edit:', row)}">
               Edit
             </forge-button>

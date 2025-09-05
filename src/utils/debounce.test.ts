@@ -3,6 +3,8 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+
+/* eslint-env node */
 import { debounce, throttle, raf } from './debounce';
 
 describe('debounce', () => {
@@ -77,7 +79,7 @@ describe('debounce', () => {
   });
 
   it('should clear timeout when called again', () => {
-    const clearTimeoutSpy = vi.spyOn(global, 'clearTimeout');
+    const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout');
     const mockFn = vi.fn();
     const debouncedFn = debounce(mockFn, 100);
 
@@ -164,8 +166,8 @@ describe('throttle', () => {
 describe('raf (requestAnimationFrame)', () => {
   beforeEach(() => {
     // Mock requestAnimationFrame and cancelAnimationFrame
-    global.requestAnimationFrame = vi.fn();
-    global.cancelAnimationFrame = vi.fn();
+    globalThis.requestAnimationFrame = vi.fn();
+    globalThis.cancelAnimationFrame = vi.fn();
   });
 
   afterEach(() => {
@@ -176,14 +178,14 @@ describe('raf (requestAnimationFrame)', () => {
     const mockFn = vi.fn();
     const rafFn = raf(mockFn);
 
-    (global.requestAnimationFrame as any).mockImplementation((callback: Function) => {
+    (globalThis.requestAnimationFrame as any).mockImplementation((callback: () => void) => {
       callback();
       return 1;
     });
 
     rafFn('test');
     expect(mockFn).toHaveBeenCalledWith('test');
-    expect(global.requestAnimationFrame).toHaveBeenCalledTimes(1);
+    expect(globalThis.requestAnimationFrame).toHaveBeenCalledTimes(1);
   });
 
   it('should cancel previous animation frame when called multiple times', () => {
@@ -191,20 +193,20 @@ describe('raf (requestAnimationFrame)', () => {
     const rafFn = raf(mockFn);
 
     let rafId = 1;
-    (global.requestAnimationFrame as any).mockImplementation(() => ++rafId);
+    (globalThis.requestAnimationFrame as any).mockImplementation(() => ++rafId);
 
     rafFn('first');
     rafFn('second');
 
-    expect(global.cancelAnimationFrame).toHaveBeenCalledWith(2);
-    expect(global.requestAnimationFrame).toHaveBeenCalledTimes(2);
+    expect(globalThis.cancelAnimationFrame).toHaveBeenCalledWith(2);
+    expect(globalThis.requestAnimationFrame).toHaveBeenCalledTimes(2);
   });
 
   it('should handle multiple arguments correctly', () => {
     const mockFn = vi.fn();
     const rafFn = raf(mockFn);
 
-    (global.requestAnimationFrame as any).mockImplementation((callback: Function) => {
+    (globalThis.requestAnimationFrame as any).mockImplementation((callback: () => void) => {
       callback();
       return 1;
     });
@@ -217,18 +219,18 @@ describe('raf (requestAnimationFrame)', () => {
     const mockFn = vi.fn();
     const rafFn = raf(mockFn);
 
-    (global.requestAnimationFrame as any).mockImplementation(() => 1);
+    (globalThis.requestAnimationFrame as any).mockImplementation(() => 1);
 
     rafFn('test');
-    expect(global.cancelAnimationFrame).not.toHaveBeenCalled();
+    expect(globalThis.cancelAnimationFrame).not.toHaveBeenCalled();
   });
 
   it('should clear rafId after execution', () => {
     const mockFn = vi.fn();
     const rafFn = raf(mockFn);
 
-    let callbackFn: Function;
-    (global.requestAnimationFrame as any).mockImplementation((callback: Function) => {
+    let callbackFn: () => void;
+    (globalThis.requestAnimationFrame as any).mockImplementation((callback: () => void) => {
       callbackFn = callback;
       return 1;
     });
@@ -241,7 +243,7 @@ describe('raf (requestAnimationFrame)', () => {
 
     // Call again - should not cancel since rafId was cleared
     rafFn('test2');
-    expect(global.cancelAnimationFrame).not.toHaveBeenCalled();
+    expect(globalThis.cancelAnimationFrame).not.toHaveBeenCalled();
   });
 });
 
