@@ -195,7 +195,7 @@ describe('ForgeSelect', () => {
 
     it('should emit open event', async () => {
       const openHandler = createSpy();
-      element.addEventListener('forge-open', openHandler);
+      element.addEventListener('open', openHandler);
 
       element.openDropdown();
       expect(openHandler).to.have.property('called', true);
@@ -203,7 +203,7 @@ describe('ForgeSelect', () => {
 
     it('should emit close event', async () => {
       const closeHandler = createSpy();
-      element.addEventListener('forge-close', closeHandler);
+      element.addEventListener('close', closeHandler);
 
       element.open = true;
       element.close();
@@ -219,7 +219,7 @@ describe('ForgeSelect', () => {
 
     it('should select option on click', async () => {
       const changeHandler = createSpy();
-      element.addEventListener('forge-change', changeHandler);
+      element.addEventListener('change', changeHandler);
 
       element.openDropdown();
       await element.updateComplete;
@@ -235,7 +235,7 @@ describe('ForgeSelect', () => {
 
     it('should not select disabled option', async () => {
       const changeHandler = createSpy();
-      element.addEventListener('forge-change', changeHandler);
+      element.addEventListener('change', changeHandler);
 
       element.openDropdown();
       await element.updateComplete;
@@ -250,7 +250,7 @@ describe('ForgeSelect', () => {
 
     it('should emit change event with details', async () => {
       const changeHandler = createSpy();
-      element.addEventListener('forge-change', changeHandler);
+      element.addEventListener('change', changeHandler);
 
       element.selectOption('option2');
       await element.updateComplete;

@@ -347,7 +347,7 @@ export const LoadingState: Story = {
         <forge-switch 
           label="Async operation (click to toggle)"
           description="Simulates a 2-second server request"
-          @forge-change="${handleToggle}">
+          @change="${handleToggle}">
         </forge-switch>
         
         <forge-switch 
@@ -484,7 +484,7 @@ export const InteractiveDemo: Story = {
             on-label="ON"
             off-label="OFF"
             size="lg"
-            @forge-change="${handleChange}">
+            @change="${handleChange}">
           </forge-switch>
         </div>
         <div style="flex: 1;">

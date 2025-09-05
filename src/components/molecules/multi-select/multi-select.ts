@@ -369,6 +369,7 @@ export class ForgeMultiSelect extends BaseElement {
   private toggleOption(option: MultiSelectOption): void {
     if (option.disabled) return;
 
+    const oldValue = [...this.value];
     const newValue = [...this.value];
     const index = newValue.indexOf(option.value);
 
@@ -379,31 +380,60 @@ export class ForgeMultiSelect extends BaseElement {
     }
 
     this.value = newValue;
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: { value: newValue, previousValue: oldValue },
+      bubbles: true,
+      composed: true
+    }));
   }
 
   private removeTag(optionValue: string, e: Event): void {
     e.stopPropagation();
+    const oldValue = [...this.value];
     const newValue = this.value.filter(v => v !== optionValue);
     this.value = newValue;
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: { value: newValue, previousValue: oldValue },
+      bubbles: true,
+      composed: true
+    }));
   }
 
   private selectAll(): void {
+    const oldValue = [...this.value];
     const enabledOptions = this.filteredOptions.filter(o => !o.disabled);
     const newValues = enabledOptions.slice(0, this.maxSelections).map(o => o.value);
     this.value = newValues;
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: { value: newValues, previousValue: oldValue },
+      bubbles: true,
+      composed: true
+    }));
   }
 
   private selectNone(): void {
+    const oldValue = [...this.value];
     this.value = [];
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: { value: [], previousValue: oldValue },
+      bubbles: true,
+      composed: true
+    }));
   }
 
   private invertSelection(): void {
+    const oldValue = [...this.value];
     const enabledOptions = this.filteredOptions.filter(o => !o.disabled);
     const newValue = enabledOptions
       .filter(o => !this.value.includes(o.value))
       .slice(0, this.maxSelections)
       .map(o => o.value);
     this.value = newValue;
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: { value: newValue, previousValue: oldValue },
+      bubbles: true,
+      composed: true
+    }));
   }
 
   private highlightMatch(text: string): any {
@@ -554,7 +584,7 @@ export class ForgeMultiSelect extends BaseElement {
               <forge-input
                 type="search"
                 placeholder=${this.searchPlaceholder}
-                @forge-input=${this.handleSearch}
+                @input=${this.handleSearch}
                 size="small"
               ></forge-input>
             </div>

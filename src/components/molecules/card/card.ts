@@ -328,7 +328,7 @@ export class ForgeCard extends BaseElement {
 
     if (changedProperties.has('selected')) {
       this.updateComponentState('selected', this.selected);
-      this.emit('forge-select', { selected: this.selected });
+      this.emit('cardselect', { selected: this.selected });
     }
 
     if (changedProperties.has('disabled')) {
@@ -364,7 +364,7 @@ export class ForgeCard extends BaseElement {
   private handleClick(e: Event): void {
     if (this.disabled || !this.clickable) return;
     
-    this.emit('forge-click', { 
+    this.emit('cardclick', { 
       originalEvent: e,
       selected: this.selected 
     });

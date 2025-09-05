@@ -1,4 +1,4 @@
-import { html, css, PropertyValues } from 'lit';
+import { html, css, PropertyValues, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { BaseElement } from '../../../core/BaseElement';
@@ -144,6 +144,15 @@ export class ForgeButton extends BaseElement {
   @property({ type: String }) iconStart?: string;
   @property({ type: String }) iconEnd?: string;
   
+  // ARIA and accessibility attributes
+  @property({ type: String, attribute: 'aria-label' }) ariaLabel: string | null = null;
+  @property({ type: String, attribute: 'aria-controls' }) ariaControls: string | null = null;
+  @property({ type: String, attribute: 'aria-expanded' }) ariaExpanded: string | null = null;
+  @property({ type: String, attribute: 'aria-current' }) ariaCurrent: string | null = null;
+  @property({ type: String, attribute: 'aria-selected' }) ariaSelected: string | null = null;
+  @property({ type: String }) role: string | null = null;
+  @property({ type: Number }) tabIndex: number = 0;
+  
   // Note: AI-Ready, Performance, and Developer properties are inherited from BaseElement
 
   @state() private ripples: Array<{ x: number; y: number; id: number }> = [];
@@ -175,13 +184,20 @@ export class ForgeButton extends BaseElement {
         class=${classMap(classes)}
         ?disabled=${this.disabled || this.loading}
         type=${this.type}
-        @click=${this.handleClick}
-        part="button"
-        aria-busy=${this.loading ? 'true' : undefined}
-        aria-disabled=${this.disabled ? 'true' : undefined}
+        role=${this.role ? this.role : nothing}
+        tabindex=${this.tabIndex !== undefined ? this.tabIndex : nothing}
+        aria-label=${this.ariaLabel ? this.ariaLabel : nothing}
+        aria-controls=${this.ariaControls ? this.ariaControls : nothing}
+        aria-expanded=${this.ariaExpanded ? this.ariaExpanded : nothing}
+        aria-current=${this.ariaCurrent ? this.ariaCurrent : nothing}
+        aria-selected=${this.ariaSelected ? this.ariaSelected : nothing}
+        aria-busy=${this.loading ? 'true' : nothing}
+        aria-disabled=${this.disabled ? 'true' : nothing}
         aria-description=${this.ariaDescription || this.getDefaultAriaDescription()}
         data-semantic-role=${this.semanticRole || this.getDefaultSemanticRole()}
         data-ai-context=${this.aiContext || this.getDefaultAiContext()}
+        @click=${this.handleClick}
+        part="button"
       >
         ${this.loading ? html`<span class="spinner" aria-label="Loading"></span>` : ''}
         <slot></slot>

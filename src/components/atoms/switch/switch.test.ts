@@ -127,13 +127,13 @@ describe('ForgeSwitch', () => {
       expect(changeSpy.callCount).to.equal(1);
     });
 
-    it('should emit forge-change event with detail', async () => {
+    it('should emit change event with detail', async () => {
       const el = await fixture<ForgeSwitch>(html`
         <forge-switch value="notifications"></forge-switch>
       `);
       
       let eventDetail: any = null;
-      el.addEventListener('forge-change', (e: Event) => {
+      el.addEventListener('change', (e: Event) => {
         eventDetail = (e as CustomEvent).detail;
       });
       
