@@ -106,7 +106,7 @@ export function isContentVisible(host: Element, selector: string): boolean {
     const element = shadowRoot.querySelector(selector) as HTMLElement;
     if (!element) return false;
     
-    const style = getComputedStyle(element);
+    const style = window.getComputedStyle(element);
     const rect = element.getBoundingClientRect();
     
     return (
@@ -209,9 +209,9 @@ export const performanceUtils = {
    * Measure component render time
    */
   async measureRenderTime(setupFn: () => Promise<Element>): Promise<number> {
-    const start = performance.now();
+    const start = window.performance.now();
     await setupFn();
-    return performance.now() - start;
+    return window.performance.now() - start;
   },
 
   /**
