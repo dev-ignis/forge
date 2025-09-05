@@ -23,7 +23,7 @@ export default defineConfig({
         '.storybook/**',
         'scripts/**',
         'src/types/**',
-        'src/utils/**',
+        'examples/**',
         'test-performance.js'
       ],
       thresholds: {
