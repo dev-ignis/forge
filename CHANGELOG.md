@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.4.1 - 2025-09-05
+
+### Changes
+- Merge pull request #9 from dev-ignis/develop
+- docs: - stories;
+- docs: - stories;
+- docs: - performance dashboard;
 ## v0.4.0 - 2025-09-05
 
 ### Changes
