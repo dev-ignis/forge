@@ -1,6 +1,6 @@
 # Accordion Component
 
-Expandable accordion component with smooth animations, supporting both single and multiple expansion modes for organizing content in collapsible panels.
+Production-ready expandable accordion component with smooth animations, TypeScript compliance, and AI metadata support. Supports both single and multiple expansion modes for organizing content in collapsible panels.
 
 ## Usage
 

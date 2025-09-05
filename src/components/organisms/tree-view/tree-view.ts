@@ -3,6 +3,8 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { BaseElement } from '../../../core/BaseElement';
 import type { AIComponentState, AIAction, AIStateExplanation } from '../../../core/ai-metadata.types';
+import { VirtualScroller, type VirtualScrollerRange } from '../../../utils/virtual-scroller';
+import { debounce } from '../../../utils/debounce';
 import '../../atoms/icon/icon';
 import '../../atoms/checkbox/checkbox';
 import '../../atoms/input/input';
@@ -16,6 +18,14 @@ export interface TreeNode {
   selected?: boolean;
   disabled?: boolean;
   data?: any;
+}
+
+export interface FlattenedNode {
+  node: TreeNode;
+  level: number;
+  index: number;
+  hasChildren: boolean;
+  isVisible: boolean;
 }
 
 /**
@@ -118,9 +128,38 @@ export class ForgeTreeView extends BaseElement {
         outline: 2px solid var(--forge-primary-color, #1976d2);
         outline-offset: 2px;
       }
+
+      /* Virtual scrolling */
+      .tree-nodes-container {
+        position: relative;
+        height: 400px; /* Default height, can be customized via CSS custom properties */
+        overflow: auto;
+      }
+
+      .virtual-tree-content {
+        position: relative;
+        height: var(--virtual-total-height, auto);
+      }
+
+      .virtual-visible-nodes {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        transform: translateY(var(--virtual-offset, 0));
+      }
   `;
 
-  @property({ type: Array }) nodes: TreeNode[] = [];
+  @property({ type: Array }) 
+  nodes: TreeNode[] = [];
+  
+  override updated(changedProperties: Map<string, any>) {
+    super.updated(changedProperties);
+    
+    if (changedProperties.has('nodes') || changedProperties.has('searchTerm')) {
+      this.debouncedFlattenNodes();
+    }
+  }
   @property({ type: Boolean }) selectable = true;
   @property({ type: String, attribute: 'selection-mode' }) selectionMode: 'single' | 'multiple' = 'single';
   @property({ type: Boolean, attribute: 'show-checkboxes' }) showCheckboxes = false;
@@ -130,6 +169,14 @@ export class ForgeTreeView extends BaseElement {
   @state() private expandedNodes = new Set<string>();
   @state() private selectedNodes = new Set<string>();
   @state() private focusedNodeId: string | null = null;
+  
+  // Virtual scrolling state
+  @state() private visibleRange: VirtualScrollerRange = { start: 0, end: 50 };
+  @state() private flattenedNodes: FlattenedNode[] = [];
+  
+  // Private instances
+  private virtualScroller?: VirtualScroller;
+  private debouncedFlattenNodes = debounce(this.rebuildFlattenedNodes.bind(this), 100);
 
   constructor() {
     super();
@@ -142,11 +189,36 @@ export class ForgeTreeView extends BaseElement {
     
     // Expand nodes that are marked as expanded
     this.nodes.forEach(node => this.collectExpandedNodes(node));
+    
+    // Initial flattening
+    this.rebuildFlattenedNodes();
+  }
+
+  override firstUpdated(changedProperties: Map<string, any>) {
+    super.firstUpdated(changedProperties);
+    this.setupVirtualScrolling();
   }
 
   override disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('keydown', this.handleKeyDown);
+    this.virtualScroller?.destroy();
+  }
+
+  private setupVirtualScrolling() {
+    const container = this.shadowRoot?.querySelector('.tree-nodes-container');
+    if (!container) return;
+    
+    this.virtualScroller = new VirtualScroller({
+      container: container as HTMLElement,
+      itemHeight: 32, // Node height in pixels
+      totalItems: this.flattenedNodes.length,
+      buffer: 5,
+      onVisibleRangeChange: (range) => {
+        this.visibleRange = range;
+        this.requestUpdate();
+      }
+    });
   }
 
   private collectExpandedNodes(node: TreeNode) {
@@ -205,6 +277,7 @@ export class ForgeTreeView extends BaseElement {
     const node = this.findNodeById(this.focusedNodeId);
     if (node && node.children && node.children.length > 0) {
       this.expandedNodes.add(node.id);
+      this.debouncedFlattenNodes();
       this.requestUpdate();
       this.dispatchEvent(new CustomEvent('nodeexpand', {
         detail: { nodeId: node.id, expanded: true },
@@ -219,6 +292,7 @@ export class ForgeTreeView extends BaseElement {
     const node = this.findNodeById(this.focusedNodeId);
     if (node && this.expandedNodes.has(node.id)) {
       this.expandedNodes.delete(node.id);
+      this.debouncedFlattenNodes();
       this.requestUpdate();
       this.dispatchEvent(new CustomEvent('nodeexpand', {
         detail: { nodeId: node.id, expanded: false },
@@ -246,6 +320,37 @@ export class ForgeTreeView extends BaseElement {
     const node = this.findNodeById(this.focusedNodeId);
     if (node) {
       this.selectNodeInternal(node);
+    }
+  }
+
+  private handleNodeClick(e: Event, node: TreeNode) {
+    e.preventDefault();
+    this.focusedNodeId = node.id;
+    
+    if (!node.disabled) {
+      this.selectNodeInternal(node);
+    }
+  }
+
+  private handleNodeKeyDown(e: KeyboardEvent, node: TreeNode) {
+    switch (e.key) {
+      case ' ':
+      case 'Enter':
+        e.preventDefault();
+        this.selectNodeInternal(node);
+        break;
+      case 'ArrowRight':
+        e.preventDefault();
+        if (node.children && node.children.length > 0 && !this.expandedNodes.has(node.id)) {
+          this.toggleExpanded(node);
+        }
+        break;
+      case 'ArrowLeft':
+        e.preventDefault();
+        if (this.expandedNodes.has(node.id)) {
+          this.toggleExpanded(node);
+        }
+        break;
     }
   }
 
@@ -337,6 +442,7 @@ export class ForgeTreeView extends BaseElement {
       this.expandedNodes.add(node.id);
     }
     
+    this.debouncedFlattenNodes();
     this.requestUpdate();
     
     this.dispatchEvent(new CustomEvent('nodeexpand', {
@@ -378,12 +484,58 @@ export class ForgeTreeView extends BaseElement {
     };
     
     this.nodes.forEach(node => addAllNodes(node));
+    this.debouncedFlattenNodes();
     this.requestUpdate();
   }
 
   private collapseAll() {
     this.expandedNodes.clear();
+    this.debouncedFlattenNodes();
     this.requestUpdate();
+  }
+
+  // Virtual scrolling methods
+  private rebuildFlattenedNodes() {
+    const filteredNodes = this.filterNodes(this.nodes, this.searchTerm);
+    this.flattenedNodes = this.flattenTree(filteredNodes);
+    
+    if (this.virtualScroller) {
+      this.virtualScroller.updateTotalItems(this.flattenedNodes.length);
+    }
+  }
+
+  private flattenTree(nodes: TreeNode[], level = 0, parentIndex = 0): FlattenedNode[] {
+    const result: FlattenedNode[] = [];
+    let index = parentIndex;
+
+    for (const node of nodes) {
+      const hasChildren = !!(node.children && node.children.length > 0);
+      const isVisible = true; // In virtual scrolling, we manage visibility differently
+      
+      result.push({
+        node,
+        level,
+        index,
+        hasChildren,
+        isVisible: true
+      });
+      
+      index++;
+
+      // If node is expanded and has children, recursively flatten children
+      if (hasChildren && this.expandedNodes.has(node.id)) {
+        const childNodes = this.flattenTree(node.children!, level + 1, index);
+        result.push(...childNodes);
+        index += childNodes.length;
+      }
+    }
+
+    return result;
+  }
+
+  private getVisibleFlattenedNodes(): FlattenedNode[] {
+    const { start, end } = this.visibleRange;
+    return this.flattenedNodes.slice(start, end);
   }
 
   // Public API methods for programmatic control
@@ -391,6 +543,7 @@ export class ForgeTreeView extends BaseElement {
     const node = this.findNodeById(nodeId);
     if (node && node.children && node.children.length > 0) {
       this.expandedNodes.add(nodeId);
+      this.debouncedFlattenNodes();
       this.requestUpdate();
       this.dispatchEvent(new CustomEvent('nodeexpand', {
         detail: { nodeId: nodeId, expanded: true },
@@ -562,7 +715,9 @@ export class ForgeTreeView extends BaseElement {
   }
 
   override render() {
-    const filteredNodes = this.filterNodes(this.nodes, this.searchTerm);
+    const visibleNodes = this.getVisibleFlattenedNodes();
+    const { start } = this.visibleRange;
+    const offsetY = start * 32; // itemHeight from setupVirtualScrolling
     
     return html`
       <div class="tree-view">
@@ -574,20 +729,101 @@ export class ForgeTreeView extends BaseElement {
             .value=${this.searchTerm}
             @input=${(e: Event) => {
               this.searchTerm = (e.target as HTMLInputElement).value;
+              this.debouncedFlattenNodes();
               this.requestUpdate();
             }}
           ></forge-input>
         ` : ''}
         
-        ${filteredNodes.length > 0 ? html`
-          <div class="tree-nodes" role="tree">
-            ${filteredNodes.map(node => this.renderNode(node, 0))}
+        ${this.flattenedNodes.length > 0 ? html`
+          <div class="tree-nodes-container" role="tree">
+            <div class="virtual-tree-content">
+              <div 
+                class="virtual-visible-nodes" 
+                style="--virtual-offset: ${offsetY}px"
+              >
+                ${visibleNodes.map(flatNode => this.renderFlatNode(flatNode))}
+              </div>
+            </div>
           </div>
         ` : html`
           <div class="no-results">
             ${this.searchTerm ? 'No matching nodes found' : 'No nodes to display'}
           </div>
         `}
+      </div>
+    `;
+  }
+
+  private renderFlatNode(flatNode: FlattenedNode): any {
+    const { node, level } = flatNode;
+    const hasChildren = flatNode.hasChildren;
+    const isExpanded = this.expandedNodes.has(node.id);
+    const isSelected = this.selectedNodes.has(node.id);
+    
+    const nodeClasses = {
+      'tree-node': true,
+      'tree-node--expanded': isExpanded,
+      'tree-node--selected': isSelected,
+      'tree-node--focused': this.focusedNodeId === node.id,
+      'tree-node--disabled': node.disabled || false
+    };
+
+    const contentClasses = {
+      'tree-node-content': true,
+      'tree-node-content--has-children': hasChildren,
+      'tree-node-content--leaf': !hasChildren
+    };
+
+    const indentStyle = `padding-left: ${level * 20 + 8}px`;
+
+    return html`
+      <div 
+        class=${classMap(nodeClasses)}
+        data-node-id=${node.id}
+        style="height: 32px; display: flex; align-items: center;"
+      >
+        <div 
+          class=${classMap(contentClasses)}
+          style=${indentStyle}
+          tabindex="0"
+          role="treeitem"
+          aria-expanded=${hasChildren ? String(isExpanded) : 'false'}
+          aria-selected=${String(isSelected)}
+          aria-level=${level + 1}
+          aria-disabled=${String(node.disabled || false)}
+          @click=${(e: Event) => this.handleNodeClick(e, node)}
+          @keydown=${(e: KeyboardEvent) => this.handleNodeKeyDown(e, node)}
+        >
+          ${hasChildren ? html`
+            <forge-icon 
+              name=${isExpanded ? 'expand_less' : 'expand_more'}
+              size="sm"
+              class="expand-icon"
+              @click=${(e: Event) => {
+                e.stopPropagation();
+                this.toggleExpanded(node);
+              }}
+            ></forge-icon>
+          ` : html`<div class="expand-spacer"></div>`}
+
+          ${this.showCheckboxes ? html`
+            <forge-checkbox
+              ?checked=${isSelected}
+              ?disabled=${node.disabled}
+              @change=${(e: Event) => {
+                e.stopPropagation();
+                this.selectNodeInternal(node);
+              }}
+            ></forge-checkbox>
+          ` : ''}
+
+          ${node.icon ? html`
+            <forge-icon name=${node.icon} size="sm" class="node-icon"></forge-icon>
+          ` : ''}
+
+          <span class="node-label">${node.label}</span>
+        </div>
       </div>
     `;
   }

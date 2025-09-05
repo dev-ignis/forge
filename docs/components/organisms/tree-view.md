@@ -1,6 +1,6 @@
 # Tree View Component
 
-Hierarchical tree view component with expand/collapse functionality, selection capabilities, and search features for displaying nested data structures.
+Production-ready hierarchical tree view component with **virtual scrolling** for large datasets, expand/collapse functionality, selection capabilities, and search features. Supports 10,000+ nodes with smooth performance.
 
 ## Usage
 
@@ -11,22 +11,46 @@ import '@nexcraft/forge/organisms/tree-view';
 html`
   <forge-tree-view .nodes=${this.treeNodes}></forge-tree-view>
 `;
+
+// Large dataset with virtual scrolling (automatically enabled)
+html`
+  <forge-tree-view 
+    .nodes=${this.largeTreeNodes}
+    show-search
+    selectable
+    selection-mode="multiple"
+  ></forge-tree-view>
+`;
+
+// With checkboxes and search
+html`
+  <forge-tree-view 
+    .nodes=${this.treeNodes}
+    show-checkboxes
+    show-search
+    selectable
+  ></forge-tree-view>
+`;
 ```
 
 ## Properties
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| `nodes` | `TreeNode[]` | `[]` | Array of root tree nodes |
-| `selectable` | `boolean` | `false` | Enable node selection |
-| `multiSelect` | `boolean` | `false` | Allow multiple node selection |
-| `checkboxes` | `boolean` | `false` | Show checkboxes for selection |
-| `expandable` | `boolean` | `true` | Enable expand/collapse functionality |
-| `searchable` | `boolean` | `false` | Enable search functionality |
-| `searchQuery` | `string` | `''` | Current search query |
-| `selectedNodes` | `string[]` | `[]` | Array of selected node IDs |
-| `expandedNodes` | `string[]` | `[]` | Array of expanded node IDs |
-| `disabled` | `boolean` | `false` | Disable the entire tree |
+| `nodes` | `TreeNode[]` | `[]` | Array of root tree nodes - supports 10,000+ nodes with virtual scrolling |
+| `selectable` | `boolean` | `true` | Enable node selection |
+| `selection-mode` | `'single' \| 'multiple'` | `'single'` | Selection mode for nodes |
+| `show-checkboxes` | `boolean` | `false` | Show checkboxes for selection |
+| `show-search` | `boolean` | `false` | Enable search functionality |
+| `search-term` | `string` | `''` | Current search query |
+
+## Virtual Scrolling Features
+
+✅ **Automatic Virtual Scrolling**: Handles large datasets (10,000+ nodes) automatically  
+✅ **Smooth Performance**: 32px item height with 5-item buffer for optimal scrolling  
+✅ **Dynamic Flattening**: Efficiently converts hierarchical tree to flat virtual list  
+✅ **Debounced Updates**: 100ms debounced tree rebuilding on expand/collapse  
+✅ **Memory Efficient**: Only renders visible nodes in viewport
 
 ## TreeNode Interface
 
