@@ -320,7 +320,7 @@ export class ForgeAlert extends BaseElement {
     this.closing = true;
     this.setAttribute('closing', '');
     
-    const event = new CustomEvent('forge-close', {
+    const event = new CustomEvent('close', {
       detail: { severity: this.severity },
       bubbles: true,
       composed: true,

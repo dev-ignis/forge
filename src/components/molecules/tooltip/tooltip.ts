@@ -294,7 +294,7 @@ export class ForgeTooltip extends BaseElement {
       this.updateComponentState('visible', this.isVisible);
       // Use setTimeout to ensure the event is dispatched after the update cycle
       setTimeout(() => {
-        this.dispatchEvent(new CustomEvent('forge-tooltip', {
+        this.dispatchEvent(new CustomEvent('tooltipvisibilitychange', {
           detail: { visible: this.isVisible },
           bubbles: true,
           composed: true

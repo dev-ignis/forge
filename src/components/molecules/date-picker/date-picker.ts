@@ -747,7 +747,7 @@ export class ForgeDatePicker extends BaseElement {
             ?required=${this.required}
             ?readonly=${this.readonly}
             @click=${this.toggleCalendar}
-            @forge-change=${this.handleInputChange}
+            @change=${this.handleInputChange}
           ></forge-input>
           ${clearButton}
           <forge-icon
@@ -782,7 +782,7 @@ export class ForgeDatePicker extends BaseElement {
                   value: String(index),
                   label: month
                 }))}
-                @forge-change=${(e: CustomEvent) => {
+                @change=${(e: CustomEvent) => {
                   this.currentMonth = parseInt(e.detail.value);
                 }}
               ></forge-select>
@@ -794,7 +794,7 @@ export class ForgeDatePicker extends BaseElement {
                   value: String(year),
                   label: String(year)
                 }))}
-                @forge-change=${(e: CustomEvent) => {
+                @change=${(e: CustomEvent) => {
                   this.currentYear = parseInt(e.detail.value);
                 }}
               ></forge-select>

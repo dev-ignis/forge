@@ -519,17 +519,17 @@ export const InteractiveDemo: Story = {
             <forge-checkbox 
               label="Option A"
               value="a"
-              @forge-change="${handleChange}">
+              @change="${handleChange}">
             </forge-checkbox>
             <forge-checkbox 
               label="Option B"
               value="b"
-              @forge-change="${handleChange}">
+              @change="${handleChange}">
             </forge-checkbox>
             <forge-checkbox 
               label="Option C"
               value="c"
-              @forge-change="${handleChange}">
+              @change="${handleChange}">
             </forge-checkbox>
           </div>
         </div>

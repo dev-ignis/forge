@@ -91,7 +91,7 @@ describe('ForgeAlert', () => {
       `);
       
       const closeSpy = createSpy();
-      el.addEventListener('forge-close', closeSpy);
+      el.addEventListener('close', closeSpy);
       
       const closeButton = el.shadowRoot?.querySelector('.close-button') as HTMLElement;
       closeButton?.click();

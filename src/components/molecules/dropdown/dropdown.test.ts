@@ -627,9 +627,9 @@ describe('ForgeDropdown', () => {
       expect(element.getAttribute('aria-expanded')).toBe('false');
     });
 
-    it('should emit forge-dropdown event when isOpen changes', async () => {
+    it('should emit dropdownvisibilitychange event when isOpen changes', async () => {
       let eventDetail: any = null;
-      element.addEventListener('forge-dropdown', (e: Event) => {
+      element.addEventListener('dropdownvisibilitychange', (e: Event) => {
         eventDetail = (e as CustomEvent).detail;
       });
       
