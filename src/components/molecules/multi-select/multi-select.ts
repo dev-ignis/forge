@@ -194,6 +194,12 @@ export class ForgeMultiSelect extends BaseElement {
         background: var(--forge-hover-bg, #f3f4f6);
       }
 
+      .multi-select__option.focused {
+        background: var(--forge-primary-bg-light, rgba(59, 130, 246, 0.1));
+        outline: 2px solid var(--forge-primary-color, #3b82f6);
+        outline-offset: -2px;
+      }
+
       .multi-select__option[aria-disabled="true"] {
         opacity: 0.5;
         cursor: not-allowed;
@@ -234,6 +240,9 @@ export class ForgeMultiSelect extends BaseElement {
   @state() isOpen = false;  // Make public for testing
   @state() private searchQuery = '';
   @state() private filteredOptions: MultiSelectOption[] = [];
+  @state() private focusedOptionIndex = -1;
+
+  private liveRegion?: HTMLDivElement;
 
   protected aiMetadata: AIMetadata = {
     purpose: 'Select multiple options from a list',
@@ -291,6 +300,7 @@ export class ForgeMultiSelect extends BaseElement {
   protected firstUpdated(_changedProperties: PropertyValues): void {
     super.firstUpdated(_changedProperties);
     this.filteredOptions = this.options;
+    this.initializeLiveRegion();
   }
 
   protected updated(changedProperties: PropertyValues): void {
@@ -322,12 +332,14 @@ export class ForgeMultiSelect extends BaseElement {
   private toggleDropdown = (): void => {
     if (this.disabled) return;
     this.isOpen = !this.isOpen;
+    this.focusedOptionIndex = this.isOpen ? 0 : -1;
     this.updateComponentState('isOpen', this.isOpen);
   }
 
   private closeDropdown(): void {
     this.isOpen = false;
     this.searchQuery = '';
+    this.focusedOptionIndex = -1;
     this.filterOptions();
     this.updateComponentState('isOpen', false);
   }
@@ -347,16 +359,41 @@ export class ForgeMultiSelect extends BaseElement {
         this.closeDropdown();
         break;
       case 'Enter':
+      case ' ':
         e.preventDefault();
         if (!this.isOpen) {
           this.toggleDropdown();
+        } else if (this.focusedOptionIndex >= 0 && this.focusedOptionIndex < this.filteredOptions.length) {
+          const option = this.filteredOptions[this.focusedOptionIndex];
+          this.toggleOption(option);
         }
         break;
       case 'ArrowDown':
+        e.preventDefault();
+        if (!this.isOpen) {
+          this.toggleDropdown();
+        } else {
+          this.focusNextOption();
+        }
+        break;
       case 'ArrowUp':
         e.preventDefault();
         if (!this.isOpen) {
           this.toggleDropdown();
+        } else {
+          this.focusPreviousOption();
+        }
+        break;
+      case 'Home':
+        if (this.isOpen) {
+          e.preventDefault();
+          this.focusFirstOption();
+        }
+        break;
+      case 'End':
+        if (this.isOpen) {
+          e.preventDefault();
+          this.focusLastOption();
         }
         break;
     }
@@ -366,25 +403,114 @@ export class ForgeMultiSelect extends BaseElement {
     this.searchQuery = e.detail.value;
   }
 
+  // Keyboard Navigation Helper Methods
+  private focusNextOption(): void {
+    const nextIndex = this.focusedOptionIndex + 1;
+    if (nextIndex < this.filteredOptions.length) {
+      this.focusedOptionIndex = nextIndex;
+      this.announceOption(this.filteredOptions[nextIndex]);
+    }
+  }
+
+  private focusPreviousOption(): void {
+    const prevIndex = this.focusedOptionIndex - 1;
+    if (prevIndex >= 0) {
+      this.focusedOptionIndex = prevIndex;
+      this.announceOption(this.filteredOptions[prevIndex]);
+    }
+  }
+
+  private focusFirstOption(): void {
+    if (this.filteredOptions.length > 0) {
+      this.focusedOptionIndex = 0;
+      this.announceOption(this.filteredOptions[0]);
+    }
+  }
+
+  private focusLastOption(): void {
+    if (this.filteredOptions.length > 0) {
+      this.focusedOptionIndex = this.filteredOptions.length - 1;
+      this.announceOption(this.filteredOptions[this.focusedOptionIndex]);
+    }
+  }
+
+  // ARIA Live Region Methods
+  private initializeLiveRegion(): void {
+    if (this.liveRegion) return;
+    
+    this.liveRegion = document.createElement('div');
+    this.liveRegion.setAttribute('role', 'status');
+    this.liveRegion.setAttribute('aria-live', 'polite');
+    this.liveRegion.setAttribute('aria-atomic', 'true');
+    this.liveRegion.className = 'sr-only';
+    this.liveRegion.style.cssText = `
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    `;
+    this.shadowRoot?.appendChild(this.liveRegion);
+  }
+
+  private announce(message: string): void {
+    if (!this.liveRegion) return;
+    
+    this.liveRegion.textContent = '';
+    setTimeout(() => {
+      if (this.liveRegion) {
+        this.liveRegion.textContent = message;
+      }
+    }, 100);
+  }
+
+  private announceOption(option: MultiSelectOption): void {
+    const isSelected = this.value.includes(option.value);
+    const position = this.focusedOptionIndex + 1;
+    const total = this.filteredOptions.length;
+    const message = `${option.label}, ${isSelected ? 'selected' : 'not selected'}, ${position} of ${total}`;
+    this.announce(message);
+  }
+
+  private announceSelectionChange(option: MultiSelectOption, isNowSelected: boolean): void {
+    const action = isNowSelected ? 'selected' : 'deselected';
+    const count = isNowSelected ? this.value.length + 1 : this.value.length - 1;
+    this.announce(`${option.label} ${action}. ${count} item${count !== 1 ? 's' : ''} selected.`);
+  }
+
   private toggleOption(option: MultiSelectOption): void {
     if (option.disabled) return;
 
     const oldValue = [...this.value];
     const newValue = [...this.value];
     const index = newValue.indexOf(option.value);
+    const wasSelected = index > -1;
 
-    if (index > -1) {
+    if (wasSelected) {
       newValue.splice(index, 1);
+      this.value = newValue;
+      this.announceSelectionChange(option, false);
+      
+      this.dispatchEvent(new CustomEvent('change', {
+        detail: { value: newValue, previousValue: oldValue },
+        bubbles: true,
+        composed: true
+      }));
     } else if (newValue.length < this.maxSelections) {
       newValue.push(option.value);
+      this.value = newValue;
+      this.announceSelectionChange(option, true);
+      
+      this.dispatchEvent(new CustomEvent('change', {
+        detail: { value: newValue, previousValue: oldValue },
+        bubbles: true,
+        composed: true
+      }));
     }
-
-    this.value = newValue;
-    this.dispatchEvent(new CustomEvent('change', {
-      detail: { value: newValue, previousValue: oldValue },
-      bubbles: true,
-      composed: true
-    }));
   }
 
   private removeTag(optionValue: string, e: Event): void {
@@ -516,28 +642,38 @@ export class ForgeMultiSelect extends BaseElement {
         }
       });
 
+      let globalIndex = 0;
       return html`
-        ${ungrouped.length > 0 ? ungrouped.map(option => this.renderOption(option)) : ''}
+        ${ungrouped.length > 0 ? ungrouped.map(option => {
+          const currentIndex = globalIndex;
+          globalIndex++;
+          return this.renderOption(option, this.filteredOptions.indexOf(option));
+        }) : ''}
         ${Array.from(groups.entries()).map(([group, options]) => html`
           <div class="multi-select__group">${group}</div>
-          ${options.map(option => this.renderOption(option))}
+          ${options.map(option => {
+            const currentIndex = this.filteredOptions.indexOf(option);
+            return this.renderOption(option, currentIndex);
+          })}
         `)}
       `;
     }
 
-    return this.filteredOptions.map(option => this.renderOption(option));
+    return this.filteredOptions.map((option, index) => this.renderOption(option, index));
   }
 
-  private renderOption(option: MultiSelectOption) {
+  private renderOption(option: MultiSelectOption, index?: number) {
     const isSelected = this.value.includes(option.value);
+    const isFocused = index !== undefined && index === this.focusedOptionIndex;
     
     return html`
       <div
-        class="multi-select__option"
+        class="multi-select__option ${isFocused ? 'focused' : ''}"
         @click=${() => this.toggleOption(option)}
         aria-disabled=${option.disabled}
         role="option"
         aria-selected=${isSelected}
+        data-focused=${isFocused}
       >
         <forge-checkbox
           .checked=${isSelected}

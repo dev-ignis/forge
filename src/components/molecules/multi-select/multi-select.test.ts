@@ -417,4 +417,77 @@ describe('ForgeMultiSelect', () => {
     expect(explanation.currentState).to.equal('selecting');
     expect(explanation.stateDescription).to.include('2 of 6 options selected');
   });
+
+  it('should handle keyboard navigation with arrow keys', async () => {
+    const el = await fixture<ForgeMultiSelect>(html`
+      <forge-multi-select .options=${mockOptions}></forge-multi-select>
+    `);
+
+    // Open dropdown with Enter key
+    const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+    el.dispatchEvent(enterEvent);
+    await elementUpdated(el);
+
+    expect(el.isOpen).to.be.true;
+
+    // Navigate down with arrow key
+    const downEvent = new KeyboardEvent('keydown', { key: 'ArrowDown' });
+    el.dispatchEvent(downEvent);
+    await elementUpdated(el);
+
+    // Navigate up with arrow key
+    const upEvent = new KeyboardEvent('keydown', { key: 'ArrowUp' });
+    el.dispatchEvent(upEvent);
+    await elementUpdated(el);
+
+    // Select with Enter
+    const selectEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+    el.dispatchEvent(selectEvent);
+    await elementUpdated(el);
+
+    expect(el.value).to.include('apple');
+  });
+
+  it('should handle keyboard navigation with Home and End keys', async () => {
+    const el = await fixture<ForgeMultiSelect>(html`
+      <forge-multi-select .options=${mockOptions}></forge-multi-select>
+    `);
+
+    // Open dropdown
+    const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+    el.dispatchEvent(enterEvent);
+    await elementUpdated(el);
+
+    // Go to end
+    const endEvent = new KeyboardEvent('keydown', { key: 'End' });
+    el.dispatchEvent(endEvent);
+    await elementUpdated(el);
+
+    // Go to beginning
+    const homeEvent = new KeyboardEvent('keydown', { key: 'Home' });
+    el.dispatchEvent(homeEvent);
+    await elementUpdated(el);
+
+    expect(el.isOpen).to.be.true;
+  });
+
+  it('should close dropdown on Escape key', async () => {
+    const el = await fixture<ForgeMultiSelect>(html`
+      <forge-multi-select .options=${mockOptions}></forge-multi-select>
+    `);
+
+    // Open dropdown
+    const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+    el.dispatchEvent(enterEvent);
+    await elementUpdated(el);
+
+    expect(el.isOpen).to.be.true;
+
+    // Close with Escape
+    const escapeEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+    el.dispatchEvent(escapeEvent);
+    await elementUpdated(el);
+
+    expect(el.isOpen).to.be.false;
+  });
 });
