@@ -1,4 +1,4 @@
-import{x as t}from"./iframe-ppHbX3S9.js";import"./preload-helper-C1FmrZbK.js";const le={title:"Atoms/Switch",component:"forge-switch",tags:["autodocs"],argTypes:{checked:{control:{type:"boolean"},description:"Switch state",defaultValue:!1},disabled:{control:{type:"boolean"},description:"Disabled state",defaultValue:!1},loading:{control:{type:"boolean"},description:"Loading state",defaultValue:!1},required:{control:{type:"boolean"},description:"Required field",defaultValue:!1},error:{control:{type:"boolean"},description:"Error state",defaultValue:!1},label:{control:{type:"text"},description:"Switch label"},description:{control:{type:"text"},description:"Helper text below label"},onLabel:{control:{type:"text"},description:"Label shown when on"},offLabel:{control:{type:"text"},description:"Label shown when off"},size:{control:{type:"select"},options:["sm","md","lg"],description:"Switch size",defaultValue:"md"},labelPosition:{control:{type:"select"},options:["start","end","top","bottom"],description:"Label position relative to switch",defaultValue:"end"},name:{control:{type:"text"},description:"Form field name"},value:{control:{type:"text"},description:"Form field value when checked",defaultValue:"on"},semanticRole:{control:{type:"text"},description:"Semantic role for AI understanding"},aiContext:{control:{type:"text"},description:"Context for AI assistants"},maxRenderMs:{control:{type:"number"},description:"Maximum render time in milliseconds",defaultValue:16},warnOnViolation:{control:{type:"boolean"},description:"Warn on performance violations",defaultValue:!1},performanceMode:{control:{type:"select"},options:["auto","fast","normal"],description:"Performance mode setting",defaultValue:"auto"},devMode:{control:{type:"boolean"},description:"Enable development mode",defaultValue:!1},showMetrics:{control:{type:"boolean"},description:"Show performance metrics",defaultValue:!1}},parameters:{docs:{description:{component:`
+import{x as t}from"./iframe-DiJym064.js";import"./preload-helper-C1FmrZbK.js";const le={title:"Atoms/Switch",component:"forge-switch",tags:["autodocs"],argTypes:{checked:{control:{type:"boolean"},description:"Switch state",defaultValue:!1},disabled:{control:{type:"boolean"},description:"Disabled state",defaultValue:!1},loading:{control:{type:"boolean"},description:"Loading state",defaultValue:!1},required:{control:{type:"boolean"},description:"Required field",defaultValue:!1},error:{control:{type:"boolean"},description:"Error state",defaultValue:!1},label:{control:{type:"text"},description:"Switch label"},description:{control:{type:"text"},description:"Helper text below label"},onLabel:{control:{type:"text"},description:"Label shown when on"},offLabel:{control:{type:"text"},description:"Label shown when off"},size:{control:{type:"select"},options:["sm","md","lg"],description:"Switch size",defaultValue:"md"},labelPosition:{control:{type:"select"},options:["start","end","top","bottom"],description:"Label position relative to switch",defaultValue:"end"},name:{control:{type:"text"},description:"Form field name"},value:{control:{type:"text"},description:"Form field value when checked",defaultValue:"on"},semanticRole:{control:{type:"text"},description:"Semantic role for AI understanding"},aiContext:{control:{type:"text"},description:"Context for AI assistants"},maxRenderMs:{control:{type:"number"},description:"Maximum render time in milliseconds",defaultValue:16},warnOnViolation:{control:{type:"boolean"},description:"Warn on performance violations",defaultValue:!1},performanceMode:{control:{type:"select"},options:["auto","fast","normal"],description:"Performance mode setting",defaultValue:"auto"},devMode:{control:{type:"boolean"},description:"Enable development mode",defaultValue:!1},showMetrics:{control:{type:"boolean"},description:"Show performance metrics",defaultValue:!1}},parameters:{docs:{description:{component:`
 The ForgeSwitch component is a toggle switch for binary choices with smooth animations and multiple states.
 
 ## Features
@@ -180,7 +180,7 @@ The ForgeSwitch component is a toggle switch for binary choices with smooth anim
         <forge-switch 
           label="Async operation (click to toggle)"
           description="Simulates a 2-second server request"
-          @forge-change="${async i=>{const o=i.target;o.loading=!0,await new Promise(n=>setTimeout(n,2e3)),o.loading=!1,o.checked=!o.checked}}">
+          @change="${async i=>{const o=i.target;o.loading=!0,await new Promise(n=>setTimeout(n,2e3)),o.loading=!1,o.checked=!o.checked}}">
         </forge-switch>
         
         <forge-switch 
@@ -279,7 +279,7 @@ The ForgeSwitch component is a toggle switch for binary choices with smooth anim
             on-label="ON"
             off-label="OFF"
             size="lg"
-            @forge-change="${i=>{const o=i.detail,n=document.querySelector("#switch-output"),w=document.querySelector("#state-info"),x=i.target;if(n&&(n.textContent=JSON.stringify(o,null,2)),w&&x){const y=x.explainState();w.textContent=`State: ${y.currentState}
+            @change="${i=>{const o=i.detail,n=document.querySelector("#switch-output"),w=document.querySelector("#state-info"),x=i.target;if(n&&(n.textContent=JSON.stringify(o,null,2)),w&&x){const y=x.explainState();w.textContent=`State: ${y.currentState}
 Description: ${y.stateDescription}`}}}">
           </forge-switch>
         </div>
@@ -456,7 +456,7 @@ Description: Switch is turned off
         <forge-switch 
           label="Async operation (click to toggle)"
           description="Simulates a 2-second server request"
-          @forge-change="\${handleToggle}">
+          @change="\${handleToggle}">
         </forge-switch>
         
         <forge-switch 
@@ -585,7 +585,7 @@ Description: Switch is turned off
             on-label="ON"
             off-label="OFF"
             size="lg"
-            @forge-change="\${handleChange}">
+            @change="\${handleChange}">
           </forge-switch>
         </div>
         <div style="flex: 1;">

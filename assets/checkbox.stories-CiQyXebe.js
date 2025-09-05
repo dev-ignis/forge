@@ -1,4 +1,4 @@
-import{x as o}from"./iframe-ppHbX3S9.js";import"./preload-helper-C1FmrZbK.js";const le={title:"Atoms/Checkbox",component:"forge-checkbox",tags:["autodocs"],argTypes:{checked:{control:{type:"boolean"},description:"Checked state",defaultValue:!1},indeterminate:{control:{type:"boolean"},description:"Indeterminate state",defaultValue:!1},disabled:{control:{type:"boolean"},description:"Disabled state",defaultValue:!1},required:{control:{type:"boolean"},description:"Required field",defaultValue:!1},error:{control:{type:"boolean"},description:"Error state",defaultValue:!1},label:{control:{type:"text"},description:"Checkbox label"},description:{control:{type:"text"},description:"Helper text below label"},size:{control:{type:"select"},options:["sm","md","lg"],description:"Checkbox size",defaultValue:"md"},variant:{control:{type:"select"},options:["default","filled","outlined"],description:"Visual variant",defaultValue:"default"},labelPosition:{control:{type:"select"},options:["start","end"],description:"Label position relative to checkbox",defaultValue:"end"},name:{control:{type:"text"},description:"Form field name"},value:{control:{type:"text"},description:"Form field value when checked",defaultValue:"on"},semanticRole:{control:{type:"text"},description:"Semantic role for AI understanding"},aiContext:{control:{type:"text"},description:"Context for AI assistants"},maxRenderMs:{control:{type:"number"},description:"Maximum render time in milliseconds",defaultValue:16},warnOnViolation:{control:{type:"boolean"},description:"Warn on performance violations",defaultValue:!1},performanceMode:{control:{type:"select"},options:["auto","fast","normal"],description:"Performance mode setting",defaultValue:"auto"},devMode:{control:{type:"boolean"},description:"Enable development mode",defaultValue:!1},showMetrics:{control:{type:"boolean"},description:"Show performance metrics",defaultValue:!1}},parameters:{docs:{description:{component:`
+import{x as o}from"./iframe-DiJym064.js";import"./preload-helper-C1FmrZbK.js";const le={title:"Atoms/Checkbox",component:"forge-checkbox",tags:["autodocs"],argTypes:{checked:{control:{type:"boolean"},description:"Checked state",defaultValue:!1},indeterminate:{control:{type:"boolean"},description:"Indeterminate state",defaultValue:!1},disabled:{control:{type:"boolean"},description:"Disabled state",defaultValue:!1},required:{control:{type:"boolean"},description:"Required field",defaultValue:!1},error:{control:{type:"boolean"},description:"Error state",defaultValue:!1},label:{control:{type:"text"},description:"Checkbox label"},description:{control:{type:"text"},description:"Helper text below label"},size:{control:{type:"select"},options:["sm","md","lg"],description:"Checkbox size",defaultValue:"md"},variant:{control:{type:"select"},options:["default","filled","outlined"],description:"Visual variant",defaultValue:"default"},labelPosition:{control:{type:"select"},options:["start","end"],description:"Label position relative to checkbox",defaultValue:"end"},name:{control:{type:"text"},description:"Form field name"},value:{control:{type:"text"},description:"Form field value when checked",defaultValue:"on"},semanticRole:{control:{type:"text"},description:"Semantic role for AI understanding"},aiContext:{control:{type:"text"},description:"Context for AI assistants"},maxRenderMs:{control:{type:"number"},description:"Maximum render time in milliseconds",defaultValue:16},warnOnViolation:{control:{type:"boolean"},description:"Warn on performance violations",defaultValue:!1},performanceMode:{control:{type:"select"},options:["auto","fast","normal"],description:"Performance mode setting",defaultValue:"auto"},devMode:{control:{type:"boolean"},description:"Enable development mode",defaultValue:!1},showMetrics:{control:{type:"boolean"},description:"Show performance metrics",defaultValue:!1}},parameters:{docs:{description:{component:`
 The ForgeCheckbox component is a customizable checkbox with support for indeterminate state, validation, and multiple visual variants.
 
 ## Features
@@ -225,7 +225,7 @@ The ForgeCheckbox component is a customizable checkbox with support for indeterm
           </forge-checkbox>
         </div>
       </div>
-    `}},g={name:"Form Integration",render:()=>o`
+    `}},p={name:"Form Integration",render:()=>o`
     <form @submit="${e=>{e.preventDefault(),alert("Form submitted!")}}" 
           style="display: flex; flex-direction: column; gap: 20px; max-width: 400px;">
       <h3 style="margin: 0;">User Preferences</h3>
@@ -264,7 +264,7 @@ The ForgeCheckbox component is a customizable checkbox with support for indeterm
         Save Preferences
       </forge-button>
     </form>
-  `},p={name:"AI-Ready Checkbox",render:()=>o`
+  `},g={name:"AI-Ready Checkbox",render:()=>o`
     <forge-checkbox 
       label="Enable AI assistance"
       description="Allow AI to help with form completion and suggestions"
@@ -304,17 +304,17 @@ The ForgeCheckbox component is a customizable checkbox with support for indeterm
             <forge-checkbox 
               label="Option A"
               value="a"
-              @forge-change="${e}">
+              @change="${e}">
             </forge-checkbox>
             <forge-checkbox 
               label="Option B"
               value="b"
-              @forge-change="${e}">
+              @change="${e}">
             </forge-checkbox>
             <forge-checkbox 
               label="Option C"
               value="c"
-              @forge-change="${e}">
+              @change="${e}">
             </forge-checkbox>
           </div>
         </div>
@@ -540,7 +540,7 @@ The ForgeCheckbox component is a customizable checkbox with support for indeterm
       </div>
     \`;
   }
-}`,...(J=(N=x.parameters)==null?void 0:N.docs)==null?void 0:J.source}}};var Y,_,K;g.parameters={...g.parameters,docs:{...(Y=g.parameters)==null?void 0:Y.docs,source:{originalSource:`{
+}`,...(J=(N=x.parameters)==null?void 0:N.docs)==null?void 0:J.source}}};var Y,_,K;p.parameters={...p.parameters,docs:{...(Y=p.parameters)==null?void 0:Y.docs,source:{originalSource:`{
   name: 'Form Integration',
   render: () => html\`
     <form @submit="\${(e: Event) => {
@@ -585,7 +585,7 @@ The ForgeCheckbox component is a customizable checkbox with support for indeterm
       </forge-button>
     </form>
   \`
-}`,...(K=(_=g.parameters)==null?void 0:_.docs)==null?void 0:K.source}}};var j,Q,X;p.parameters={...p.parameters,docs:{...(j=p.parameters)==null?void 0:j.docs,source:{originalSource:`{
+}`,...(K=(_=p.parameters)==null?void 0:_.docs)==null?void 0:K.source}}};var j,Q,X;g.parameters={...g.parameters,docs:{...(j=g.parameters)==null?void 0:j.docs,source:{originalSource:`{
   name: 'AI-Ready Checkbox',
   render: () => html\`
     <forge-checkbox 
@@ -603,7 +603,7 @@ The ForgeCheckbox component is a customizable checkbox with support for indeterm
       ARIA Description: Checkbox to enable or disable AI-powered features
     </div>
   \`
-}`,...(X=(Q=p.parameters)==null?void 0:Q.docs)==null?void 0:X.source}}};var Z,ee,oe;m.parameters={...m.parameters,docs:{...(Z=m.parameters)==null?void 0:Z.docs,source:{originalSource:`{
+}`,...(X=(Q=g.parameters)==null?void 0:Q.docs)==null?void 0:X.source}}};var Z,ee,oe;m.parameters={...m.parameters,docs:{...(Z=m.parameters)==null?void 0:Z.docs,source:{originalSource:`{
   name: 'Performance Monitoring',
   render: () => html\`
     <forge-checkbox 
@@ -641,17 +641,17 @@ The ForgeCheckbox component is a customizable checkbox with support for indeterm
             <forge-checkbox 
               label="Option A"
               value="a"
-              @forge-change="\${handleChange}">
+              @change="\${handleChange}">
             </forge-checkbox>
             <forge-checkbox 
               label="Option B"
               value="b"
-              @forge-change="\${handleChange}">
+              @change="\${handleChange}">
             </forge-checkbox>
             <forge-checkbox 
               label="Option C"
               value="c"
-              @forge-change="\${handleChange}">
+              @change="\${handleChange}">
             </forge-checkbox>
           </div>
         </div>
@@ -664,4 +664,4 @@ The ForgeCheckbox component is a customizable checkbox with support for indeterm
       </div>
     \`;
   }
-}`,...(ce=(re=u.parameters)==null?void 0:re.docs)==null?void 0:ce.source}}};const ie=["Default","States","Sizes","Variants","WithDescription","LabelPosition","Required","CheckboxGroup","IndeterminateExample","FormExample","AIReadyCheckbox","PerformanceMonitoring","InteractiveDemo"];export{p as AIReadyCheckbox,f as CheckboxGroup,a as Default,g as FormExample,x as IndeterminateExample,u as InteractiveDemo,b as LabelPosition,m as PerformanceMonitoring,h as Required,i as Sizes,l as States,s as Variants,d as WithDescription,ie as __namedExportsOrder,le as default};
+}`,...(ce=(re=u.parameters)==null?void 0:re.docs)==null?void 0:ce.source}}};const ie=["Default","States","Sizes","Variants","WithDescription","LabelPosition","Required","CheckboxGroup","IndeterminateExample","FormExample","AIReadyCheckbox","PerformanceMonitoring","InteractiveDemo"];export{g as AIReadyCheckbox,f as CheckboxGroup,a as Default,p as FormExample,x as IndeterminateExample,u as InteractiveDemo,b as LabelPosition,m as PerformanceMonitoring,h as Required,i as Sizes,l as States,s as Variants,d as WithDescription,ie as __namedExportsOrder,le as default};
