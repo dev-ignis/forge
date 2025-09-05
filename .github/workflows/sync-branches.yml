@@ -1,0 +1,68 @@
+name: Sync Develop with Main
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Sync develop with main
+        run: |
+          git checkout main
+          git pull origin main
+          git checkout develop
+          git pull origin develop
+          
+          # Get the current version from main branch
+          git checkout main
+          MAIN_VERSION=$(node -p "require('./package.json').version")
+          
+          # Switch back to develop and update version
+          git checkout develop
+          
+          # Update package.json version to match main
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = '$MAIN_VERSION';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+          
+          # Commit version sync if there are changes
+          if ! git diff --quiet package.json; then
+            git add package.json
+            git commit -m "sync: update version to match main ($MAIN_VERSION)
+            
+            🤖 Generated with [Claude Code](https://claude.ai/code)
+            
+            Co-Authored-By: Claude <noreply@anthropic.com>"
+            git push origin develop
+          fi
+          
+          # Try to merge main into develop
+          if git merge main --no-ff -m "sync: merge main into develop
+          
+          🤖 Generated with [Claude Code](https://claude.ai/code)
+          
+          Co-Authored-By: Claude <noreply@anthropic.com>"; then
+            git push origin develop
+            echo "✅ Successfully synced develop with main"
+          else
+            echo "❌ Merge conflicts detected. Manual intervention required."
+            git merge --abort
+            exit 1
+          fi
