@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { BaseElement } from '../../../core/BaseElement';
-import type { AIComponentState, AIAction } from '../../../core/ai-metadata.types';
+import type { AIComponentState, AIAction, AIStateExplanation } from '../../../core/ai-metadata.types';
 import '../../atoms/icon/icon';
 import '../../atoms/checkbox/checkbox';
 import '../../atoms/input/input';
@@ -302,7 +302,7 @@ export class ForgeTreeView extends BaseElement {
   private getFirstVisibleNode(nodes: TreeNode[]): TreeNode | null {
     for (const node of nodes) {
       // Return the first node
-      if (!node.hidden) {
+      if (!node.disabled) {
         return node;
       }
       // Check children if node is expanded
@@ -449,12 +449,15 @@ export class ForgeTreeView extends BaseElement {
   override get aiState(): AIComponentState {
     return {
       ...super.aiState,
-      nodeCount: this.countNodes(this.nodes),
-      expandedCount: this.expandedNodes.size,
-      selectedCount: this.selectedNodes.size,
-      selectable: this.selectable,
-      selectionMode: this.selectionMode,
-      searchTerm: this.searchTerm
+      state: {
+        ...super.aiState.state,
+        nodeCount: this.countNodes(this.nodes),
+        expandedCount: this.expandedNodes.size,
+        selectedCount: this.selectedNodes.size,
+        selectable: this.selectable,
+        selectionMode: this.selectionMode,
+        searchTerm: this.searchTerm
+      }
     };
   }
 
@@ -464,7 +467,7 @@ export class ForgeTreeView extends BaseElement {
     }, 0);
   }
 
-  override explainState(): string {
+  override explainState(): AIStateExplanation {
     const parts = ['Tree view'];
     const totalNodes = this.countNodes(this.nodes);
     
@@ -479,7 +482,11 @@ export class ForgeTreeView extends BaseElement {
       parts.push(`searching for "${this.searchTerm}"`);
     }
     
-    return parts.join(', ');
+    return {
+      currentState: this.selectedNodes.size > 0 ? 'has-selection' : 'empty-selection',
+      possibleStates: ['empty-selection', 'has-selection'],
+      stateDescription: parts.join(', ')
+    };
   }
 
   override getPossibleActions(): AIAction[] {
@@ -491,7 +498,12 @@ export class ForgeTreeView extends BaseElement {
         name: 'selectNode',
         description: 'Select a tree node',
         available: true,
-        params: ['nodeId']
+        parameters: [{
+          name: 'nodeId',
+          type: 'text',
+          required: true,
+          description: 'ID of the node to interact with'
+        }]
       });
     }
     
@@ -500,14 +512,24 @@ export class ForgeTreeView extends BaseElement {
       name: 'expandNode',
       description: 'Expand a tree node',
       available: true,
-      params: ['nodeId']
+      parameters: [{
+        name: 'nodeId',
+        type: 'text',
+        required: true,
+        description: 'ID of the node to expand or collapse'
+      }]
     });
     
     actions.push({
       name: 'collapseNode',
       description: 'Collapse a tree node',
       available: this.expandedNodes.size > 0,
-      params: ['nodeId']
+      parameters: [{
+        name: 'nodeId',
+        type: 'text',
+        required: true,
+        description: 'ID of the node to expand or collapse'
+      }]
     });
     
     actions.push({
@@ -527,7 +549,12 @@ export class ForgeTreeView extends BaseElement {
         name: 'search',
         description: 'Search nodes',
         available: true,
-        params: ['searchTerm']
+        parameters: [{
+          name: 'searchTerm',
+          type: 'text',
+          required: true,
+          description: 'Term to search for in the tree'
+        }]
       });
     }
     

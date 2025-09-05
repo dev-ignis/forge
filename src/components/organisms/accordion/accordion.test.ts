@@ -420,10 +420,9 @@ describe('ForgeAccordion', () => {
       
       const aiState = el.aiState;
       
-      expect(aiState.panelCount).to.equal(4);
-      expect(aiState.expandedCount).to.equal(0);
-      expect(aiState.multiple).to.be.false;
-      expect(aiState.multiple).to.be.false;
+      expect(aiState.state.panelCount).to.equal(4);
+      expect(aiState.state.expandedCount).to.equal(0);
+      expect(aiState.state.multiple).to.be.false;
     });
 
     it('should provide possible actions', async () => {

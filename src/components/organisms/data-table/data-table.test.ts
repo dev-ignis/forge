@@ -258,10 +258,10 @@ describe('ForgeDataTable', () => {
       
       const aiState = el.aiState;
       
-      expect(aiState.rowCount).to.equal(4);
-      expect(aiState.columnCount).to.equal(5);
-      expect(aiState.sortable).to.be.true;
-      expect(aiState.selectable).to.be.false;
+      expect(aiState.state.rowCount).to.equal(4);
+      expect(aiState.state.columnCount).to.equal(5);
+      expect(aiState.state.sortable).to.be.true;
+      expect(aiState.state.selectable).to.be.false;
     });
 
     it('should provide possible actions', async () => {

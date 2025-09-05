@@ -526,11 +526,11 @@ describe('ForgeNavigationBar', () => {
       
       const aiState = el.aiState;
       
-      expect(aiState.itemCount).to.be.a('number');
-      expect(aiState.hasUser).to.be.a('boolean');
-      expect(aiState.position).to.equal('static');
-      expect(aiState.showSearch).to.be.false;
-      expect(aiState.showThemeToggle).to.be.false;
+      expect(aiState.state.itemCount).to.be.a('number');
+      expect(aiState.state.hasUser).to.be.a('boolean');
+      expect(aiState.state.position).to.equal('static');
+      expect(aiState.state.showSearch).to.be.false;
+      expect(aiState.state.showThemeToggle).to.be.false;
     });
 
     it('should explain state in natural language', async () => {

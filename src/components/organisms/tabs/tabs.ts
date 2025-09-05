@@ -437,12 +437,15 @@ export class ForgeTabs extends BaseElement {
   override get aiState(): AIComponentState {
     return {
       ...super.aiState,
-      activeTab: this.activeTab,
-      tabCount: this.tabs.length,
-      orientation: this.orientation,
-      reorderable: this.reorderable,
-      hasCloseable: this.tabs.some(t => t.closeable),
-      hasDisabled: this.tabs.some(t => t.disabled)
+      state: {
+        ...super.aiState.state,
+        activeTab: this.activeTab,
+        tabCount: this.tabs.length,
+        orientation: this.orientation,
+        reorderable: this.reorderable,
+        hasCloseable: this.tabs.some(t => t.closeable),
+        hasDisabled: this.tabs.some(t => t.disabled)
+      }
     };
   }
 
@@ -475,7 +478,13 @@ export class ForgeTabs extends BaseElement {
           name: 'selectTab',
           description: 'Switch to ' + tab.label + ' tab',
           available: true,
-          params: [tab.id]
+          parameters: [{
+            name: 'tabId',
+            type: 'text',
+            required: true,
+            defaultValue: tab.id,
+            description: 'ID of the tab to interact with'
+          }]
         });
       }
       
@@ -484,7 +493,13 @@ export class ForgeTabs extends BaseElement {
           name: 'closeTab',
           description: 'Close ' + tab.label + ' tab',
           available: true,
-          params: [tab.id]
+          parameters: [{
+            name: 'tabId',
+            type: 'text',
+            required: true,
+            defaultValue: tab.id,
+            description: 'ID of the tab to interact with'
+          }]
         });
       }
     });

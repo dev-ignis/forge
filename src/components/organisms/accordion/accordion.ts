@@ -143,9 +143,12 @@ export class ForgeAccordion extends BaseElement {
   override get aiState(): AIComponentState {
     return {
       ...super.aiState,
-      panelCount: this.panels.length,
-      expandedCount: this.expandedPanels.length,
-      multiple: this.multiple
+      state: {
+        ...super.aiState.state,
+        panelCount: this.panels.length,
+        expandedCount: this.expandedPanels.length,
+        multiple: this.multiple
+      }
     };
   }
 
@@ -172,7 +175,13 @@ export class ForgeAccordion extends BaseElement {
           name: isExpanded ? 'collapse' : 'expand',
           description: `${isExpanded ? 'Collapse' : 'Expand'} ${panel.header}`,
           available: true,
-          params: [panel.id]
+          parameters: [{
+            name: 'panelId',
+            type: 'text',
+            required: true,
+            defaultValue: panel.id,
+            description: 'ID of the panel to toggle'
+          }]
         });
       }
     });

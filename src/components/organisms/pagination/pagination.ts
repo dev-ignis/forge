@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { BaseElement } from '../../../core/BaseElement';
-import type { AIComponentState, AIAction } from '../../../core/ai-metadata.types';
+import type { AIComponentState, AIAction, AIStateExplanation } from '../../../core/ai-metadata.types';
 import '../../atoms/button/button';
 import '../../atoms/select/select';
 import '../../atoms/input/input';
@@ -323,17 +323,20 @@ export class ForgePagination extends BaseElement {
   override get aiState(): AIComponentState {
     return {
       ...super.aiState,
-      currentPage: this.currentPage,
-      totalPages: this.totalPages,
-      pageSize: this.pageSize,
-      totalItems: this.totalItems,
-      mode: this.mode,
-      loading: this.loading,
-      hasMore: this.hasMore
+      state: {
+        ...super.aiState.state,
+        currentPage: this.currentPage,
+        totalPages: this.totalPages,
+        pageSize: this.pageSize,
+        totalItems: this.totalItems,
+        mode: this.mode,
+        loading: this.loading,
+        hasMore: this.hasMore
+      }
     };
   }
 
-  override explainState(): string {
+  override explainState(): AIStateExplanation {
     const parts = ['Pagination component'];
     
     if (this.mode === 'pagination') {
@@ -355,7 +358,11 @@ export class ForgePagination extends BaseElement {
     
     if (this.loading) parts.push('loading');
     
-    return parts.join(', ');
+    return {
+      currentState: this.loading ? 'loading' : 'ready',
+      possibleStates: ['loading', 'ready'],
+      stateDescription: parts.join(', ')
+    };
   }
 
   override getPossibleActions(): AIAction[] {
@@ -395,7 +402,12 @@ export class ForgePagination extends BaseElement {
           name: 'jumpToPage',
           description: 'Jump to specific page',
           available: true,
-          params: ['pageNumber']
+          parameters: [{
+            name: 'pageNumber',
+            type: 'number',
+            required: true,
+            description: 'Page number to navigate to'
+          }]
         });
       }
       
@@ -404,7 +416,12 @@ export class ForgePagination extends BaseElement {
           name: 'changePageSize',
           description: 'Change items per page',
           available: true,
-          params: ['size']
+          parameters: [{
+            name: 'size',
+            type: 'number',
+            required: true,
+            description: 'Number of items per page'
+          }]
         });
       }
     } else if (this.mode === 'load-more' && this.hasMore && !this.loading) {

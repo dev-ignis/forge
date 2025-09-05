@@ -315,11 +315,11 @@ describe('ForgeTreeView', () => {
       
       const aiState = el.aiState;
       
-      expect(aiState.nodeCount).to.be.a('number');
-      expect(aiState.expandedCount).to.be.a('number');
-      expect(aiState.selectedCount).to.be.a('number');
-      expect(aiState.selectable).to.equal(true);
-      expect(aiState.selectionMode).to.equal('single');
+      expect(aiState.state.nodeCount).to.be.a('number');
+      expect(aiState.state.expandedCount).to.be.a('number');
+      expect(aiState.state.selectedCount).to.be.a('number');
+      expect(aiState.state.selectable).to.equal(true);
+      expect(aiState.state.selectionMode).to.equal('single');
     });
 
     it('should explain state in natural language', async () => {
@@ -329,8 +329,8 @@ describe('ForgeTreeView', () => {
       
       const explanation = el.explainState();
       
-      expect(explanation).to.include('Tree view');
-      expect(explanation).to.include('nodes');
+      expect(explanation.stateDescription).to.include('Tree view');
+      expect(explanation.stateDescription).to.include('nodes');
     });
 
     it('should provide possible actions', async () => {

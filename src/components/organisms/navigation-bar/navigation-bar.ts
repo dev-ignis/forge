@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { BaseElement } from '../../../core/BaseElement';
@@ -312,17 +312,20 @@ export class ForgeNavigationBar extends BaseElement {
   override get aiState(): AIComponentState {
     return {
       ...super.aiState,
-      activeRoute: this.activeRoute,
-      mobileOpen: this.mobileOpen,
-      itemCount: this.items.length,
-      position: this.position,
-      hasUser: !!this.userName,
-      showSearch: this.showSearch,
-      showThemeToggle: this.showThemeToggle
+      state: {
+        ...super.aiState.state,
+        activeRoute: this.activeRoute,
+        mobileOpen: this.mobileOpen,
+        itemCount: this.items.length,
+        position: this.position,
+        hasUser: !!this.userName,
+        showSearch: this.showSearch,
+        showThemeToggle: this.showThemeToggle
+      }
     };
   }
 
-  override explainState(): AIComponentStateExplanation {
+  override explainState(): AIStateExplanation {
     const parts = ['Navigation bar'];
     
     if (this.title) {
@@ -394,7 +397,13 @@ export class ForgeNavigationBar extends BaseElement {
           name: 'navigateTo',
           description: `Navigate to ${item.label}`,
           available: true,
-          params: [item.href]
+          parameters: [{
+            name: 'href',
+            type: 'url',
+            required: true,
+            defaultValue: item.href,
+            description: 'URL to navigate to'
+          }]
         });
       }
     });
@@ -625,7 +634,7 @@ export class ForgeNavigationBar extends BaseElement {
     `;
   }
 
-  private renderDrawerItem(item: NavItem) {
+  private renderDrawerItem(item: NavItem): TemplateResult {
     return html`
       <li class="drawer-item">
         <a
@@ -642,7 +651,7 @@ export class ForgeNavigationBar extends BaseElement {
         
         ${item.items && item.items.length > 0 ? html`
           <ul class="drawer-menu" style="padding-left: var(--forge-spacing-lg, 24px);">
-            ${item.items.map(subItem => this.renderDrawerItem(subItem))}
+            ${item.items.map((subItem: NavItem) => this.renderDrawerItem(subItem))}
           </ul>
         ` : ''}
       </li>

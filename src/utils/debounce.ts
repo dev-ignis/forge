@@ -1,4 +1,4 @@
-export function debounce<T extends (...args: unknown[]) => unknown>(
+export function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number,
   immediate = false
@@ -23,7 +23,7 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
   };
 }
 
-export function throttle<T extends (...args: unknown[]) => unknown>(
+export function throttle<T extends (...args: any[]) => any>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
@@ -38,7 +38,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
   };
 }
 
-export function raf<T extends (...args: unknown[]) => unknown>(
+export function raf<T extends (...args: any[]) => any>(
   func: T
 ): (...args: Parameters<T>) => void {
   let rafId: number | null = null;

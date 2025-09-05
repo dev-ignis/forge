@@ -203,11 +203,11 @@ describe('ForgePagination', () => {
       
       const aiState = el.aiState;
       
-      expect(aiState.currentPage).to.equal(3);
-      expect(aiState.totalPages).to.equal(10);
-      expect(aiState.pageSize).to.equal(25);
-      expect(aiState.totalItems).to.equal(250);
-      expect(aiState.mode).to.equal('pagination');
+      expect(aiState.state.currentPage).to.equal(3);
+      expect(aiState.state.totalPages).to.equal(10);
+      expect(aiState.state.pageSize).to.equal(25);
+      expect(aiState.state.totalItems).to.equal(250);
+      expect(aiState.state.mode).to.equal('pagination');
     });
 
     it('should explain state in natural language', async () => {
@@ -222,10 +222,10 @@ describe('ForgePagination', () => {
       
       const explanation = el.explainState();
       
-      expect(explanation).to.include('Pagination component');
-      expect(explanation).to.include('page 3 of 10');
-      expect(explanation).to.include('25 items per page');
-      expect(explanation).to.include('showing items 51-75 of 250');
+      expect(explanation.stateDescription).to.include('Pagination component');
+      expect(explanation.stateDescription).to.include('page 3 of 10');
+      expect(explanation.stateDescription).to.include('25 items per page');
+      expect(explanation.stateDescription).to.include('showing items 51-75 of 250');
     });
 
     it('should provide possible actions', async () => {

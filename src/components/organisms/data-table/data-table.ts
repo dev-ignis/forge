@@ -342,8 +342,8 @@ export class ForgeDataTable extends BaseElement {
       const columnId = header.getAttribute('data-column-id');
       const column = this.columns.find(col => col.id === columnId);
       if (column?.sortable) {
-        header.style.cursor = 'pointer';
-        header.onclick = () => this.handleSort(column);
+        (header as HTMLElement).style.cursor = 'pointer';
+        (header as HTMLElement).onclick = () => this.handleSort(column);
       }
     });
   }
@@ -773,17 +773,20 @@ export class ForgeDataTable extends BaseElement {
   override get aiState(): AIComponentState {
     return {
       ...super.aiState,
-      rowCount: this.rows.length,
-      columnCount: this.columns.length,
-      selectedCount: this.selectedRows.size,
-      expandedCount: this.expandedRows.size,
-      sortColumn: this.sortColumn,
-      sortDirection: this.sortDirection,
-      currentPage: this.currentPage,
-      loading: this.loading,
-      sortable: this.columns.some(col => col.sortable),
-      selectable: this.selectable,
-      expandable: this.expandable
+      state: {
+        ...super.aiState.state,
+        rowCount: this.rows.length,
+        columnCount: this.columns.length,
+        selectedCount: this.selectedRows.size,
+        expandedCount: this.expandedRows.size,
+        sortColumn: this.sortColumn,
+        sortDirection: this.sortDirection,
+        currentPage: this.currentPage,
+        loading: this.loading,
+        sortable: this.columns.some(col => col.sortable),
+        selectable: this.selectable,
+        expandable: this.expandable
+      }
     };
   }
 

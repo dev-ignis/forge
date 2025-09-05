@@ -165,11 +165,11 @@ describe('ForgeTabs', () => {
       
       const aiState = el.aiState;
       
-      expect(aiState.activeTab).to.equal('tab2');
-      expect(aiState.tabCount).to.equal(4);
-      expect(aiState.orientation).to.equal('horizontal');
-      expect(aiState.hasCloseable).to.be.true;
-      expect(aiState.hasDisabled).to.be.true;
+      expect(aiState.state.activeTab).to.equal('tab2');
+      expect(aiState.state.tabCount).to.equal(4);
+      expect(aiState.state.orientation).to.equal('horizontal');
+      expect(aiState.state.hasCloseable).to.be.true;
+      expect(aiState.state.hasDisabled).to.be.true;
     });
 
     it('should explain state in natural language', async () => {
