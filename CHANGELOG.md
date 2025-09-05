@@ -1,5 +1,6 @@
 # Changelog
 
+<<<<<<< Updated upstream
 ## v0.0.2 - 2025-08-29
 
 ### Changes
@@ -9,31 +10,137 @@
 ### Changes
 
 All notable changes to this project will be documented in this file.
+=======
+All notable changes to @nexcraft/forge will be documented in this file.
+>>>>>>> Stashed changes
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [v0.4.1] - 2025-09-05
 
-### Added
-- Initial release of @ignis/forge UI Component Library
-- Core infrastructure with BaseElement foundation
-- Advanced theming system using CSS Custom Properties
-- Button component with multiple variants
-- TypeScript support with full type definitions
-- Build system using Vite
-- Testing infrastructure with Web Test Runner
-- GitHub Actions CI/CD pipeline
-- NPM publishing configuration
+### 📚 Documentation
+- **Storybook Stories**: Comprehensive Storybook stories for all components with interactive examples
+- **Performance Dashboard**: Added performance monitoring and optimization documentation
+- **AI Integration**: Complete AI metadata documentation for enhanced component discovery
 
-### Documentation
-- Architecture Decision Records (ADRs)
-- Implementation roadmap
-- Publishing and deployment strategy
-- Quick-start guides
+### 🧪 Testing
+- Improved test coverage across all component types
+- Enhanced testing infrastructure and documentation
 
-### Infrastructure
-- Shadow DOM encapsulation
-- Token-based theming system
-- ES modules and UMD builds
-- Cross-browser compatibility
+## [v0.4.0] - 2025-09-05
+
+### 🧩 New Organism Components
+- **DataTable**: Advanced data table with sorting, filtering, pagination, and selection
+- **Tabs**: Tabbed interface with keyboard navigation, closeable tabs, and drag-to-reorder
+- **Accordion**: Collapsible content panels with customizable behavior
+- **TreeView**: Hierarchical data visualization with expand/collapse functionality
+- **NavigationBar**: Responsive navigation component with dropdown menus
+- **Pagination**: Comprehensive pagination with multiple modes (standard, infinite scroll, load-more)
+
+### 📚 Documentation
+- Complete organism component documentation
+- Enhanced Storybook stories with real-world examples
+- Comprehensive testing documentation
+
+### ✅ Testing
+- Full test coverage for organism components
+- Integration tests for complex component interactions
+
+## [v0.3.2] - 2025-09-03
+
+### 🤖 AI Integration
+- **Complete AI Metadata System**: All components now include semantic roles, AI context, and performance modes
+- **Enhanced Component Discovery**: AI agents can better understand component purposes and usage patterns
+- **Smart Component Recommendations**: AI-powered component suggestions based on context
+
+## [v0.3.1] - 2025-09-03
+
+### 📚 Documentation
+- **Updated README**: Comprehensive project documentation with usage examples
+- **Getting Started Guide**: Detailed setup and integration instructions
+- **API Documentation**: Complete component API reference
+
+## [v0.3.0] - 2025-09-03
+
+### 🧱 New Molecule Components
+- **DatePicker**: Full-featured date selection with calendar interface and keyboard navigation
+- **MultiSelect**: Advanced multi-selection dropdown with search, grouping, and custom rendering
+- **Dropdown**: Flexible dropdown component with nested menus and keyboard navigation
+- **FormField**: Comprehensive form field wrapper with validation and accessibility
+- **Card**: Versatile card component for content organization
+- **Modal**: Feature-rich modal dialogs with backdrop control and focus management
+- **Tooltip**: Smart tooltip positioning with multiple trigger modes
+
+### ✨ Core Differentiators
+- **Advanced Theming**: Token-based design system with CSS custom properties
+- **Full Accessibility**: WCAG 2.1 AA compliance across all components
+- **Keyboard Navigation**: Complete keyboard support for all interactive elements
+- **Framework Agnostic**: Works with React, Vue, Angular, and vanilla JavaScript
+
+### 🧪 Testing
+- Comprehensive test suite for date picker component
+- Enhanced testing infrastructure for molecule components
+
+## [v0.2.0] - 2025-09-01
+
+### 🏗️ AI-Ready Infrastructure
+- **AI Metadata System**: Semantic roles and context attributes for AI agent interaction
+- **Performance Monitoring**: Built-in performance tracking and optimization hints
+- **Smart Component Discovery**: AI-powered component recommendation engine
+
+### 🧱 Enhanced Molecule Components
+- **FormField Component**: Production-ready form field with validation and accessibility
+- **Improved Component Architecture**: Better separation of concerns and reusability
+
+## [v0.1.1] - 2025-08-31
+
+### 🔧 Build System Improvements
+- **TypeScript Declarations**: Bundled and optimized TypeScript definitions
+- **Enhanced Testing**: Improved testing documentation and coverage reporting
+- **Build Optimization**: Streamlined build process with better tree-shaking
+
+## [v0.1.0] - 2025-08-31
+
+### 🎯 Atomic Design System Foundation
+- **Complete Atomic Components**: Button, Input, Checkbox, Radio, Select, Switch, Badge, Alert, Icon
+- **Design System Tokens**: Comprehensive token-based theming system
+- **Base Architecture**: Solid foundation with BaseElement and shared utilities
+
+### 🧪 Testing Infrastructure
+- **Comprehensive Test Suite**: Unit tests for all atomic components
+- **Testing Documentation**: Complete testing strategy and guidelines
+- **CI/CD Integration**: Automated testing and deployment pipeline
+
+### 📋 Project Structure
+- **Phase Documentation**: Detailed implementation roadmap and architecture decisions
+- **Development Workflow**: Established development and contribution guidelines
+
+## [v0.0.2] - 2025-08-29
+
+### 🏷️ Package Configuration
+- **NPM Package**: Renamed to @nexcraft/forge for better organization
+- **Version Management**: Fixed version tagging and release process
+- **Publishing Setup**: Configured for NPM registry publication
+
+## [v0.0.1] - 2025-08-29
+
+### 🚀 Initial Release
+- **Project Foundation**: Basic project structure and configuration
+- **Core Infrastructure**: Build system, CI/CD pipeline, and development tools
+- **Package Setup**: Initial NPM package configuration and publishing strategy
+
+---
+
+## Component Inventory
+
+### 🔸 Atoms (9 components)
+- Alert, Badge, Button, Checkbox, Icon, Input, Radio Group, Select, Switch
+
+### 🔹 Molecules (8 components) 
+- Card, DatePicker, Dropdown, FormField, Modal, MultiSelect, Tooltip
+
+### 🔷 Organisms (6 components)
+- Accordion, DataTable, NavigationBar, Pagination, Tabs, TreeView
+
+**Total: 23+ Production-Ready Components**
