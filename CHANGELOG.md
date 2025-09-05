@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.4.0 - 2025-09-05
+
+### Changes
+- Merge pull request #8 from dev-ignis/develop
+- docs: - organisms;
+- test: - coverage;
+- docs: - data-table;
+- test: - components;
+- feat: - organisms;
+- feat: - organisms;
 ## v0.3.2 - 2025-09-03
 
 ### Changes
