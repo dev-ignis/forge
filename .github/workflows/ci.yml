@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [develop]  # Only run on develop, not main
+    branches: [main, develop]  # Run on both main and develop branches
     # Skip CI if release workflow will handle it
     tags-ignore:
       - 'v*'

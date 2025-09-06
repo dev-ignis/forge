@@ -23,7 +23,17 @@ jobs:
         with:
           node-version: '20.x'
 
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: npm-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-20.x-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-20.x-
+
       - name: Install dependencies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Run basic checks
@@ -62,16 +72,12 @@ jobs:
           # Commit version sync if there are changes
           if ! git diff --quiet package.json; then
             git add package.json
-            git commit -m "sync: update version to match main ($MAIN_VERSION)
-            
-            Co-Authored-By: Claude <noreply@anthropic.com>"
+            git commit -m "sync: update version to match main ($MAIN_VERSION)"
             git push origin develop
           fi
           
           # Try to merge main into develop
-          if git merge main --no-ff -m "sync: merge main into develop          
-          
-          Co-Authored-By: Claude <noreply@anthropic.com>"; then
+          if git merge main --no-ff -m "sync: merge main into develop"; then
             git push origin develop
             echo "✅ Successfully synced develop with main"
           else
