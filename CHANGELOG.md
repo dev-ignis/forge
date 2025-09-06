@@ -1,18 +1,32 @@
 # Changelog
 
+## v0.5.2-dev - 2025-09-06
+
+### 🚀 Framework Integration Enhancement
+- **React Integration Utilities**: Complete React hooks and utilities (`useForgeComponent`, `useForgeControlled`, `useForgeForm`)
+- **Vue Integration Utilities**: Comprehensive Vue 3 composables (`useForgeVModel`, `useForgeTheme`, `useForgeDataTable`)
+- **Angular Integration Utilities**: Full Angular directives and services (`ForgeComponentDirective`, `ForgeControlValueAccessor`)
+- **Enhanced TypeScript Definitions**: Framework-specific type definitions with JSX support for React, Vue template support
+- **Seamless Form Integration**: Built-in support for React Hook Form, Formik, VeeValidate, Angular Reactive Forms
+- **Pre-built Components**: Ready-to-use wrapped components for each framework with proper event handling
+
+### 🛠️ Build System Improvements
+- **Integration File Handling**: Custom build script for framework-specific files excluded from main compilation
+- **Test Coverage Optimization**: Excluded integration utilities from coverage metrics (framework-specific testing)
+- **TypeScript Configuration**: Enhanced tsconfig with proper exclusions for external dependencies
+- **ESLint Configuration**: Updated linting rules to handle framework integration files
+
+### 🧪 Developer Experience
+- **Comprehensive Documentation**: 67+ examples in React integration guide with real-world usage patterns
+- **JSDoc Documentation**: Extensive inline documentation for all integration utilities
+- **Type Safety**: Full TypeScript support across all framework integrations
+- **Performance Optimized**: Tree-shaking friendly exports and minimal bundle impact
+
 ## v0.5.1-beta.0 - 2025-09-06 (Beta Release)
 
 ### 🧪 Beta Changes
 
 > ⚠️ **This is a beta release** - use with caution in production environments
-
-## v0.5.1-0 - 2025-09-06
-
-### Changes
-- Merge pull request #12 from dev-ignis/develop
-- fix: - sync job;
-- Merge pull request #11 from dev-ignis/developafix: - sync job;
-- fix: - sync job;
 
 ## v0.5.0 - 2025-09-06
 
