@@ -23,6 +23,7 @@ export default defineConfig({
         '.storybook/**',
         'scripts/**',
         'src/types/**',
+        'src/integrations/**',
         'examples/**',
         'test-performance.js'
       ],

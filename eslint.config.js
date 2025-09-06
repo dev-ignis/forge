@@ -84,7 +84,9 @@ export default [
       '*.config.js',
       '*.config.ts',
       '*.config.mjs',
-      'scripts/**'
+      'scripts/**',
+      'src/integrations/vue.ts',
+      'src/integrations/angular.ts'
     ]
   }
 ];
