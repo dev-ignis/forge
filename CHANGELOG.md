@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.5.1-beta.0 - 2025-09-06 (Beta Release)
+
+### 🧪 Beta Changes
+
+> ⚠️ **This is a beta release** - use with caution in production environments
+
+## v0.5.1-0 - 2025-09-06
+
+### Changes
+- Merge pull request #12 from dev-ignis/develop
+- fix: - sync job;
+- Merge pull request #11 from dev-ignis/developafix: - sync job;
+- fix: - sync job;
+
 ## v0.5.0 - 2025-09-06
 
 ### Changes
