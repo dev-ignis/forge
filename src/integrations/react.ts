@@ -120,7 +120,13 @@ export function useForgeComponent<T extends HTMLElement = HTMLElement>() {
  * 
  * @since 0.5.0
  */
-export function useForgeForm(formInstance: any, fieldName: string) {
+// Type for form library instances (React Hook Form, Formik, etc.)
+interface FormInstance {
+  setValue?: (fieldName: string, value: unknown) => void;
+  setFieldValue?: (fieldName: string, value: unknown) => void;
+}
+
+export function useForgeForm(formInstance: FormInstance, fieldName: string) {
   const { ref } = useForgeComponent();
 
   useEffect(() => {
@@ -130,7 +136,7 @@ export function useForgeForm(formInstance: any, fieldName: string) {
     const handleInput = (event: Event) => {
       // Works with React Hook Form, Formik, etc.
       const customEvent = event as ForgeCustomEvent;
-      const value = customEvent.detail?.value ?? (event.target as any)?.value;
+      const value = customEvent.detail?.value ?? (event.target as HTMLInputElement)?.value;
       formInstance.setValue?.(fieldName, value);
       formInstance.setFieldValue?.(fieldName, value); // Formik
     };
