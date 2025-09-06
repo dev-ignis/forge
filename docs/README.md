@@ -26,6 +26,12 @@ Welcome to the Forge UI Component Library documentation. This directory contains
 - **[Angular Integration](./guides/angular-integration.md)** - Using with Angular
 - **[Vanilla JS](./guides/vanilla-js.md)** - Using without a framework
 
+### Publishing & Release Management
+- **[Release Process](./guides/release-process.md)** - Complete release workflow
+- **[NPM Publishing](./guides/npm-publishing.md)** - Package publishing guide
+- **[Beta Releases](./guides/beta-releases.md)** - Beta/alpha release process
+- **[Git Workflow](./git-workflow.md)** - Branch strategy and synchronization
+
 ### Contributing
 - **[Contributing Guide](./CONTRIBUTING.md)** - How to contribute
 - **[Code of Conduct](./CODE_OF_CONDUCT.md)** - Community guidelines

@@ -1,0 +1,204 @@
+name: Beta Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      beta_type:
+        description: 'Beta release type'
+        required: true
+        default: 'beta'
+        type: choice
+        options:
+          - beta
+          - alpha
+          - rc
+      version_bump:
+        description: 'Version bump for beta'
+        required: true
+        default: 'prerelease'
+        type: choice
+        options:
+          - prerelease
+          - prepatch
+          - preminor
+          - premajor
+      custom_version:
+        description: 'Custom version (optional, e.g., 1.0.0-beta.1)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
+jobs:
+  beta-release:
+    name: Beta Release & Publish
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+      
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: npm-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-20.x-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-20.x-
+      
+      - name: Install dependencies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm ci
+      
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Run quality checks
+        run: |
+          npm run lint
+          npm run type-check
+          npm test
+      
+      - name: Build library
+        run: npm run build
+      
+      - name: Determine beta version
+        id: version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $CURRENT_VERSION"
+          
+          if [ -n "${{ github.event.inputs.custom_version }}" ]; then
+            NEW_VERSION="${{ github.event.inputs.custom_version }}"
+            npm version $NEW_VERSION --no-git-tag-version --allow-same-version
+          else
+            # Use npm version with preid
+            case "${{ github.event.inputs.version_bump }}" in
+              prerelease)
+                npm version prerelease --preid=${{ github.event.inputs.beta_type }} --no-git-tag-version
+                ;;
+              prepatch)
+                npm version prepatch --preid=${{ github.event.inputs.beta_type }} --no-git-tag-version
+                ;;
+              preminor)
+                npm version preminor --preid=${{ github.event.inputs.beta_type }} --no-git-tag-version
+                ;;
+              premajor)
+                npm version premajor --preid=${{ github.event.inputs.beta_type }} --no-git-tag-version
+                ;;
+            esac
+          fi
+          
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "New version: $NEW_VERSION"
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "is_beta=true" >> $GITHUB_OUTPUT
+      
+      - name: Generate beta changelog entry
+        run: |
+          VERSION="${{ steps.version.outputs.new_version }}"
+          DATE=$(date +%Y-%m-%d)
+          
+          # Create changelog entry for beta
+          cat > CHANGELOG_ENTRY.md << EOF
+          ## v$VERSION - $DATE (Beta Release)
+          
+          ### 🧪 Beta Changes
+          EOF
+          
+          # Add recent commits since last tag
+          if git describe --tags --abbrev=0 2>/dev/null; then
+            git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"- %s" >> CHANGELOG_ENTRY.md
+          else
+            git log --pretty=format:"- %s" -10 >> CHANGELOG_ENTRY.md
+          fi
+          
+          echo "" >> CHANGELOG_ENTRY.md
+          echo "> ⚠️ **This is a beta release** - use with caution in production environments" >> CHANGELOG_ENTRY.md
+          
+          # Prepend to CHANGELOG.md
+          if [ -f CHANGELOG.md ]; then
+            head -n 2 CHANGELOG.md > CHANGELOG_NEW.md
+            cat CHANGELOG_ENTRY.md >> CHANGELOG_NEW.md
+            echo "" >> CHANGELOG_NEW.md
+            tail -n +3 CHANGELOG.md >> CHANGELOG_NEW.md
+            mv CHANGELOG_NEW.md CHANGELOG.md
+          else
+            echo "# Changelog" > CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            cat CHANGELOG_ENTRY.md >> CHANGELOG.md
+          fi
+          
+          rm CHANGELOG_ENTRY.md
+      
+      - name: Commit beta version
+        run: |
+          git add package.json CHANGELOG.md
+          git commit -m "chore(release): v${{ steps.version.outputs.new_version }} [beta] [skip ci]" || echo "No changes to commit"
+      
+      - name: Create beta tag
+        run: |
+          git tag -a v${{ steps.version.outputs.new_version }} -m "Beta Release v${{ steps.version.outputs.new_version }}"
+      
+      - name: Push beta changes
+        run: |
+          git push origin ${{ github.ref_name }} --follow-tags
+      
+      - name: Publish beta to NPM
+        run: |
+          echo "Publishing beta version to NPM..."
+          npm publish --tag ${{ github.event.inputs.beta_type }} --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      
+      - name: Create GitHub Pre-release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.new_version }}
+          name: 🧪 Beta Release v${{ steps.version.outputs.new_version }}
+          body: |
+            ## 🧪 Beta Release v${{ steps.version.outputs.new_version }}
+            
+            This is a **beta release** of @nexcraft/forge. 
+            
+            ### Installation
+            ```bash
+            npm install @nexcraft/forge@${{ github.event.inputs.beta_type }}
+            ```
+            
+            ### ⚠️ Beta Warning
+            This version may contain experimental features and should be used with caution in production environments.
+            
+            ### What's Changed
+            See CHANGELOG.md for detailed changes.
+            
+            **Full Changelog**: https://github.com/dev-ignis/forge/commits/v${{ steps.version.outputs.new_version }}
+          draft: false
+          prerelease: true
+          files: |
+            dist/nexcraft-forge.es.js
+            dist/nexcraft-forge.umd.js
+            dist/index.d.ts
+      
+      - name: Summary
+        run: |
+          echo "🎉 Beta release completed successfully!"
+          echo "📦 Version: ${{ steps.version.outputs.new_version }}"
+          echo "🏷️ NPM Tag: ${{ github.event.inputs.beta_type }}"
+          echo "📥 Install: npm install @nexcraft/forge@${{ github.event.inputs.beta_type }}"
+          echo "🔗 Release: https://github.com/dev-ignis/forge/releases/tag/v${{ steps.version.outputs.new_version }}"
