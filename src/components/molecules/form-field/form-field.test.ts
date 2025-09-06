@@ -507,8 +507,18 @@ describe('ForgeFormField', () => {
         ></forge-form-field>
       `);
       
-      element.value = 'trigger update';
+      // Force multiple updates to ensure performance threshold is exceeded
+      element.value = 'trigger update 1';
       await elementUpdated(element);
+      
+      element.label = 'new label';
+      await elementUpdated(element);
+      
+      element.value = 'trigger update 2';
+      await elementUpdated(element);
+      
+      // Add a small delay to ensure all performance measurements are complete
+      await new Promise(resolve => setTimeout(resolve, 50));
       
       expect(warnSpy).toHaveBeenCalled();
       warnSpy.mockRestore();
