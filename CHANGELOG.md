@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.1-beta.0 - 2025-09-06 (Beta Release)
+
+### 🧪 Beta Changes
+
+> ⚠️ **This is a beta release** - use with caution in production environments
+
 ## v0.5.1-0 - 2025-09-06
 
 ### Changes
