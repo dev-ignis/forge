@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.5.1 - 2025-09-06
+
+### Changes
+- Merge pull request #15 from dev-ignis/develop
+- test: - form field performance;
+- ci: - workflow;
+- Merge pull request #14 from dev-ignis/develop
+- test: - vitest config;
+- Merge pull request #13 from dev-ignis/develop
+- fix: - exclude integrations folder;
+- Merge branch 'main' into develop
+- fix: - sync job;
 ## v0.5.2-dev - 2025-09-06
 
 ### 🚀 Framework Integration Enhancement
