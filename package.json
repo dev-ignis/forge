@@ -1,6 +1,6 @@
 {
   "name": "@nexcraft/forge",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "type": "module",
   "description": "A production-ready, framework-agnostic UI component library built with Web Components and Lit, designed to work seamlessly across React, Vue, Angular, and vanilla JavaScript applications.",
   "main": "./dist/nexcraft-forge.es.js",
@@ -24,6 +24,21 @@
       "import": "./dist/*",
       "require": "./dist/*"
     },
+    "./integrations/react": {
+      "types": "./dist/integrations/react.d.ts",
+      "import": "./dist/integrations/react.js"
+    },
+    "./integrations/vue": {
+      "types": "./dist/integrations/vue.d.ts",
+      "import": "./dist/integrations/vue.js"
+    },
+    "./integrations/angular": {
+      "types": "./dist/integrations/angular.d.ts",
+      "import": "./dist/integrations/angular.js"
+    },
+    "./types/framework-integration": {
+      "types": "./dist/types/framework-integration.d.ts"
+    },
     "./custom-elements.json": "./custom-elements.json"
   },
   "typesVersions": {
@@ -44,7 +59,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run build:types && npm run bundle:types && npm run cleanup:types",
+    "build": "vite build && npm run build:types && npm run bundle:types && npm run cleanup:types && node scripts/build-integrations.js",
     "build:types": "tsc --emitDeclarationOnly",
     "bundle:types": "rollup -c rollup.dts.config.js && mv dist/index.bundled.d.ts dist/index.d.ts",
     "cleanup:types": "node scripts/cleanup-types.js",
