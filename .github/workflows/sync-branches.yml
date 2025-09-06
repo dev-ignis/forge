@@ -64,16 +64,12 @@ jobs:
             git add package.json
             git commit -m "sync: update version to match main ($MAIN_VERSION)
             
-            🤖 Generated with [Claude Code](https://claude.ai/code)
-            
             Co-Authored-By: Claude <noreply@anthropic.com>"
             git push origin develop
           fi
           
           # Try to merge main into develop
-          if git merge main --no-ff -m "sync: merge main into develop
-          
-          🤖 Generated with [Claude Code](https://claude.ai/code)
+          if git merge main --no-ff -m "sync: merge main into develop          
           
           Co-Authored-By: Claude <noreply@anthropic.com>"; then
             git push origin develop
