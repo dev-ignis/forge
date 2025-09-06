@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.5.0 - 2025-09-06
+
+### Changes
+- Merge pull request #10 from dev-ignis/develop
+- Merge branch 'main' into develop
+- docs: - changelog;
+- feat: - sync main and develop;
+- docs: - roadmap;
 All notable changes to @nexcraft/forge will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
