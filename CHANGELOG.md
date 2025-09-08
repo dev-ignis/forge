@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.2 - 2025-09-08
+
+### Changes
+- Merge pull request #16 from dev-ignis/develop
 ## v0.5.2-beta.2 - 2025-09-08 (Beta Release)
 
 ### 🧪 Beta Changes
