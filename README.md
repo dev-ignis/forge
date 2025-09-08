@@ -110,6 +110,23 @@ npm run storybook  # Interactive documentation
 npm run test       # Run tests
 ```
 
+## 📋 Component Index
+
+Quick reference to all 26 components with HTML tag names:
+
+### Organisms (6 components)
+`<forge-tabs>` • `<forge-pagination>` • `<forge-navigation-bar>` • `<forge-data-table>` • `<forge-accordion>` • `<forge-tree-view>`
+
+### Molecules (8 components) 
+`<forge-tooltip>` • `<forge-date-picker>` • `<forge-dropdown>` • `<forge-form-field>` • `<forge-modal>` • `<forge-multi-select>` • `<forge-card>` • `<forge-toast>`
+
+### Atoms (12 components)
+`<forge-button>` • `<forge-input>` • `<forge-icon>` • `<forge-alert>` • `<forge-checkbox>` • `<forge-badge>` • `<forge-switch>` • `<forge-radio-group>` • `<forge-select>` • `<forge-progress>` • `<forge-skeleton>` • `<forge-aspect-ratio>`
+
+**Plus supporting components**: `<forge-progress-circle>` • `<forge-toast-container>` • `<forge-performance-dashboard>`
+
+💡 **Can't find what you're looking for?** Try searching for keywords like "progress", "toast", "skeleton" in the [Component Showcase](#-components-showcase) section below.
+
 ## 📚 Documentation
 
 ### Getting Started
@@ -224,46 +241,46 @@ const slowComponents = performanceDashboard.getSlowComponents(16);
 ### 🏛️ **Organism Components** (Phase 3 - Production Ready!)
 Complex, full-featured components built from atoms and molecules:
 
-| Component | AI Features | Performance Features | Unique Capabilities |
-|-----------|-------------|---------------------|-------------------|
-| **📁 Tabs** | Tab prediction | Lazy panel loading | Drag-to-reorder, closeable tabs, keyboard nav |
-| **🔢 Pagination** | Page suggestion | Optimized renders | Multiple modes, customizable sizes |
-| **🦭 Navigation Bar** | Smart menus | Responsive modes | Mobile drawer, user actions, search |
-| **📊 Data Table** | Sort prediction | Virtual scrolling | Multi-sort, selection, expandable rows |
-| **🎵 Accordion** | Panel management | Lazy content | Multi-expand, animations, icons |
-| **🌳 Tree View** | Node navigation | Lazy loading | Drag-drop, checkboxes, search |
+| Component | AI Features | Performance Features | Unique Capabilities | Documentation |
+|-----------|-------------|---------------------|-------------------|---------------|
+| **📁 Tabs** | Tab prediction | Lazy panel loading | Drag-to-reorder, closeable tabs, keyboard nav | [📚 Docs](./docs/components/organisms/tabs.md) |
+| **🔢 Pagination** | Page suggestion | Optimized renders | Multiple modes, customizable sizes | [📚 Docs](./docs/components/organisms/pagination.md) |
+| **🦭 Navigation Bar** | Smart menus | Responsive modes | Mobile drawer, user actions, search | [📚 Docs](./docs/components/organisms/navigation-bar.md) |
+| **📊 Data Table** | Sort prediction | Virtual scrolling | Multi-sort, selection, expandable rows | [📚 Docs](./docs/components/organisms/data-table.md) |
+| **🎵 Accordion** | Panel management | Lazy content | Multi-expand, animations, icons | [📚 Docs](./docs/components/organisms/accordion.md) |
+| **🌳 Tree View** | Node navigation | Lazy loading | Drag-drop, checkboxes, search | [📚 Docs](./docs/components/organisms/tree-view.md) |
 
 ### 🌟 **Molecule Components** (Advanced & Feature-Rich)
 Advanced components that combine atoms:
 
-| Component | AI Features | Performance Features | Unique Capabilities |
-|-----------|-------------|---------------------|-------------------|
-| **🎯 Tooltip** | Self-positioning AI | <1ms render | Smart viewport detection, auto-repositioning |
-| **📅 DatePicker** | Date prediction | Lazy calendar | i18n support, range selection, constraints |
-| **🔽 Dropdown** | Action suggestions | Virtual scrolling | Nested menus, keyboard nav, groups |
-| **📝 FormField** | Validation AI | Input optimization | Floating labels, inline variants |
-| **🎭 Modal** | Focus management | Stacking optimization | Focus trap, backdrop blur, size variants |
-| **🗂️ MultiSelect** | Smart filtering | Bulk operations | Tag display, search highlighting |
-| **🃏 Card** | Content analysis | Elevation shadows | 6 levels, media support, skeleton states |
-| **🆕 🔔 Toast** | State analysis | Queue management | Auto-dismiss, progress bars, global helpers |
+| Component | AI Features | Performance Features | Unique Capabilities | Documentation |
+|-----------|-------------|---------------------|-------------------|---------------|
+| **🎯 Tooltip** | Self-positioning AI | <1ms render | Smart viewport detection, auto-repositioning | [📚 Docs](./docs/components/molecules/tooltip.md) |
+| **📅 DatePicker** | Date prediction | Lazy calendar | i18n support, range selection, constraints | [📚 Docs](./docs/components/molecules/date-picker.md) |
+| **🔽 Dropdown** | Action suggestions | Virtual scrolling | Nested menus, keyboard nav, groups | [📚 Docs](./docs/components/molecules/dropdown.md) |
+| **📝 FormField** | Validation AI | Input optimization | Floating labels, inline variants | [📚 Docs](./docs/components/molecules/form-field.md) |
+| **🎭 Modal** | Focus management | Stacking optimization | Focus trap, backdrop blur, size variants | [📚 Docs](./docs/components/molecules/modal.md) |
+| **🗂️ MultiSelect** | Smart filtering | Bulk operations | Tag display, search highlighting | [📚 Docs](./docs/components/molecules/multi-select.md) |
+| **🃏 Card** | Content analysis | Elevation shadows | 6 levels, media support, skeleton states | [📚 Docs](./docs/components/molecules/card.md) |
+| **🆕 🔔 Toast** | State analysis | Queue management | Auto-dismiss, progress bars, global helpers | [🚧 Coming Soon](#) |
 
 ### ⚙️ **Atomic Components** (Foundation + Essential)
 Foundation components with comprehensive test coverage:
 
-| Component | Test Coverage | Key Features |
-|-----------|--------------|--------------|
-| **Button** | 92.38% | 5 variants, ripple effect, loading states |
-| **Input** | 84.56% | 7 types, validation, clearable |
-| **Icon** | 78.38% | Registry system, lazy loading |
-| **Alert** | 97.02% | Auto-dismiss, animations |
-| **Checkbox** | 98.50% | Indeterminate state |
-| **Badge** | 100% | Count/dot modes, positions |
-| **Switch** | 98.50% | Loading state, custom labels |
-| **RadioGroup** | 93.79% | Group management, keyboard nav |
-| **Select** | 84.69% | Search/filter, groups |
-| **🆕 Progress** | 100% | Linear & circular variants, indeterminate states |
-| **🆕 Skeleton** | 100% | Shimmer animations, shape variants, accessibility |
-| **🆕 AspectRatio** | 100% | Responsive containers, preset ratios, constraints |
+| Component | Test Coverage | Key Features | Documentation |
+|-----------|--------------|--------------|---------------|
+| **Button** | 92.38% | 5 variants, ripple effect, loading states | [📚 Docs](./docs/components/button.md) |
+| **Input** | 84.56% | 7 types, validation, clearable | [📚 Docs](./docs/components/input.md) |
+| **Icon** | 78.38% | Registry system, lazy loading | [📚 Docs](./docs/components/icon.md) |
+| **Alert** | 97.02% | Auto-dismiss, animations | [📚 Docs](./docs/components/alert.md) |
+| **Checkbox** | 98.50% | Indeterminate state | [📚 Docs](./docs/components/checkbox.md) |
+| **Badge** | 100% | Count/dot modes, positions | [📚 Docs](./docs/components/badge.md) |
+| **Switch** | 98.50% | Loading state, custom labels | [📚 Docs](./docs/components/switch.md) |
+| **RadioGroup** | 93.79% | Group management, keyboard nav | [📚 Docs](./docs/components/radio-group.md) |
+| **Select** | 84.69% | Search/filter, groups | [📚 Docs](./docs/components/select.md) |
+| **🆕 Progress** | 100% | Linear & circular variants, indeterminate states | [🚧 Coming Soon](#) |
+| **🆕 Skeleton** | 100% | Shimmer animations, shape variants, accessibility | [🚧 Coming Soon](#) |
+| **🆕 AspectRatio** | 100% | Responsive containers, preset ratios, constraints | [🚧 Coming Soon](#) |
 
 ### 📊 **Component Stats**
 - **Total Components**: 26 production-ready (12 atoms + 8 molecules + 6 organisms)
@@ -390,3 +407,16 @@ Year 2034: Still working perfectly            // Cost: $0
 
 ### 🚀 **Join the Revolution**
 Stop rewriting. Start building components that outlive frameworks.
+
+<!-- COMPONENT SEARCH KEYWORDS:
+forge-progress linear circular progress-bar loading indicator spinner
+forge-toast notification alert snackbar message popup banner
+forge-skeleton loading placeholder shimmer ghost content-loader
+forge-aspect-ratio responsive container layout ratio media embed
+forge-toast-container global notification manager queue system
+forge-progress-circle circular radial progress donut spinner
+web-components lit typescript shadow-dom css-custom-properties
+ai-ready ai-metadata performance-monitoring design-tokens
+react vue angular vanilla javascript framework-agnostic
+accessibility wcag aria keyboard-navigation screen-reader
+-->
