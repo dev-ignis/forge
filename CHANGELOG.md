@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.5.2-beta.2 - 2025-09-08 (Beta Release)
+
+### 🧪 Beta Changes
+- Merge branch 'main' into develop
+- docs: - readme;
+- fix: icon warnings;
+- test: improve toast dismiss test reliability
+- sync: merge main into develop
+> ⚠️ **This is a beta release** - use with caution in production environments
+
 ## v0.5.2-beta.1 - 2025-09-08 (Beta Release)
 
 ### 🧪 Beta Changes
