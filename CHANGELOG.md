@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.5.2-dev - 2025-09-06
+## v0.5.2-beta.0 - 2025-09-06 (Beta Release)
 
 ### 🚀 Framework Integration Enhancement
 - **React Integration Utilities**: Complete React hooks and utilities (`useForgeComponent`, `useForgeControlled`, `useForgeForm`)
