@@ -262,7 +262,7 @@ Advanced components that combine atoms:
 | **🎭 Modal** | Focus management | Stacking optimization | Focus trap, backdrop blur, size variants | [📚 Docs](./docs/components/molecules/modal.md) |
 | **🗂️ MultiSelect** | Smart filtering | Bulk operations | Tag display, search highlighting | [📚 Docs](./docs/components/molecules/multi-select.md) |
 | **🃏 Card** | Content analysis | Elevation shadows | 6 levels, media support, skeleton states | [📚 Docs](./docs/components/molecules/card.md) |
-| **🆕 🔔 Toast** | State analysis | Queue management | Auto-dismiss, progress bars, global helpers | [🚧 Coming Soon](#) |
+| **🆕 🔔 Toast** | State analysis | Queue management | Auto-dismiss, progress bars, global helpers | [📚 Docs](./docs/components/molecules/toast.md) |
 
 ### ⚙️ **Atomic Components** (Foundation + Essential)
 Foundation components with comprehensive test coverage:
@@ -278,9 +278,9 @@ Foundation components with comprehensive test coverage:
 | **Switch** | 98.50% | Loading state, custom labels | [📚 Docs](./docs/components/switch.md) |
 | **RadioGroup** | 93.79% | Group management, keyboard nav | [📚 Docs](./docs/components/radio-group.md) |
 | **Select** | 84.69% | Search/filter, groups | [📚 Docs](./docs/components/select.md) |
-| **🆕 Progress** | 100% | Linear & circular variants, indeterminate states | [🚧 Coming Soon](#) |
-| **🆕 Skeleton** | 100% | Shimmer animations, shape variants, accessibility | [🚧 Coming Soon](#) |
-| **🆕 AspectRatio** | 100% | Responsive containers, preset ratios, constraints | [🚧 Coming Soon](#) |
+| **🆕 Progress** | 100% | Linear & circular variants, indeterminate states | [📚 Docs](./docs/components/atoms/progress.md) |
+| **🆕 Skeleton** | 100% | Shimmer animations, shape variants, accessibility | [📚 Docs](./docs/components/atoms/skeleton.md) |
+| **🆕 AspectRatio** | 100% | Responsive containers, preset ratios, constraints | [📚 Docs](./docs/components/atoms/aspect-ratio.md) |
 
 ### 📊 **Component Stats**
 - **Total Components**: 26 production-ready (12 atoms + 8 molecules + 6 organisms)
