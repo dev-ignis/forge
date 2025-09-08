@@ -1,6 +1,6 @@
 {
   "name": "@nexcraft/forge",
-  "version": "0.5.1-beta.0",
+  "version": "0.5.2-beta.1",
   "type": "module",
   "description": "A production-ready, framework-agnostic UI component library built with Web Components and Lit, designed to work seamlessly across React, Vue, Angular, and vanilla JavaScript applications.",
   "main": "./dist/nexcraft-forge.es.js",

@@ -1,6 +1,30 @@
 # Changelog
 
+## v0.5.2-beta.1 - 2025-09-08 (Beta Release)
+
+### 🧪 Beta Changes
+
+> ⚠️ **This is a beta release** - use with caution in production environments
+
 ## v0.5.2-beta.0 - 2025-09-06 (Beta Release)
+
+### 🧪 Beta Changes
+
+> ⚠️ **This is a beta release** - use with caution in production environments
+
+## v0.5.1 - 2025-09-06
+
+### Changes
+- Merge pull request #15 from dev-ignis/develop
+- test: - form field performance;
+- ci: - workflow;
+- Merge pull request #14 from dev-ignis/develop
+- test: - vitest config;
+- Merge pull request #13 from dev-ignis/develop
+- fix: - exclude integrations folder;
+- Merge branch 'main' into develop
+- fix: - sync job;
+## v0.5.2-dev - 2025-09-06
 
 ### 🚀 Framework Integration Enhancement
 - **React Integration Utilities**: Complete React hooks and utilities (`useForgeComponent`, `useForgeControlled`, `useForgeForm`)
