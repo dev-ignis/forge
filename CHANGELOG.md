@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.5.2-beta.5 - 2025-09-09 (Beta Release)
+
+### 🧪 Beta Changes
+- Merge branch 'main' into develop
+- feat: - implement Phase 4.1 React integration (resolves #17);
+- feat: add comprehensive TypeScript JSX declarations for web components
+- chore(release): v0.5.2 [skip ci]
+> ⚠️ **This is a beta release** - use with caution in production environments
+
 ## v0.5.2-beta.4 - 2025-09-09 (Beta Release)
 
 ### 🧪 Beta Changes
