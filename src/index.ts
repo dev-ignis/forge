@@ -41,6 +41,17 @@ export { ForgeModal, type ModalSize, type ModalScrollBehavior } from './componen
 export { ForgeToast } from './components/molecules/toast/toast';
 export { ForgeToastContainer, showToast, toast } from './components/molecules/toast/toast-container';
 
+// Organism exports  
+export { ForgeDataGrid } from './components/organisms/data-grid/data-grid';
+export type { 
+  GridColumn, 
+  GridData, 
+  GridSort, 
+  GridFilter, 
+  GridEditor, 
+  ValidationRule as GridValidationRule 
+} from './components/organisms/data-grid/data-grid';
+
 // Type exports
 export type {
   // Common types
@@ -95,3 +106,6 @@ export {
 } from './types/component-types';
 
 export { createForgeEvent } from './types';
+
+// React Integration available at: '@nexcraft/forge/integrations/react'
+// Note: React integration is built separately to avoid JSX dependencies in main build
