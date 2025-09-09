@@ -72,7 +72,7 @@ export interface AIValidationRule {
   type: 'required' | 'pattern' | 'min' | 'max' | 'minLength' | 'maxLength' | 'custom';
   
   /** Validation value or pattern */
-  value?: any;
+  value?: string | number | boolean | RegExp;
   
   /** Error message for validation failure */
   message: string;
