@@ -203,8 +203,8 @@ export class ForgeDataTable extends BaseElement {
   // Private instances
   private virtualScroller?: VirtualScroller;
   private liveRegion?: HTMLDivElement;
-  private debouncedSort = debounce(this.performSort.bind(this), 300);
-  private debouncedFilter = debounce(this.performFilter.bind(this), 500);
+  private debouncedSort = debounce(this.performSort.bind(this) as (...args: unknown[]) => unknown, 300);
+  private debouncedFilter = debounce(this.performFilter.bind(this) as (...args: unknown[]) => unknown, 500);
   
   // Performance monitoring
   private renderStartTime = 0;
