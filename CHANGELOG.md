@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.5.2-beta.3 - 2025-09-09 (Beta Release)
+
+### 🧪 Beta Changes
+- feat: avatar component;
+- docs: - advanced features for data-grid;
+- feat: - data-grid;
+- feat: - improve TypeScript types;
+- docs: - apect-ration / progress-circle / progress / skeleton / toast;
+- sync: merge main into develop
+- Merge pull request #16 from dev-ignis/develop
+> ⚠️ **This is a beta release** - use with caution in production environments
+
 ## v0.5.2-beta.2 - 2025-09-08 (Beta Release)
 
 ### 🧪 Beta Changes
