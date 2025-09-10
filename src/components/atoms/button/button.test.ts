@@ -1,6 +1,6 @@
 import { fixture, expect, html } from '@open-wc/testing';
 import './button';
-import type { ForgeButton } from './button';
+import { ForgeButton } from './button';
 import { BaseElement } from '../../../core/BaseElement';
 
 describe('ForgeButton', () => {
@@ -251,7 +251,7 @@ describe('ForgeButton', () => {
         await el.updateComplete;
         
         expect(el['componentState'].get('disabled')).to.be.true;
-        expect(el['aiMetadata'].criticality).to.equal('medium'); // Criticality is const
+        expect(ForgeButton.aiMetadata.criticality).to.equal('medium'); // Static AI metadata
       });
 
       it('should update criticality when enabled', async () => {
@@ -261,7 +261,7 @@ describe('ForgeButton', () => {
         el.disabled = false;
         await el.updateComplete;
         
-        expect(el['aiMetadata'].criticality).to.equal('medium');
+        expect(ForgeButton.aiMetadata.criticality).to.equal('medium'); // Static AI metadata
       });
 
       it('should initialize component state in connectedCallback', async () => {
