@@ -508,7 +508,7 @@ ${code}
     return JSON.stringify(gptData, null, 2);
   }
 
-  private static formatAsJSONSchema(dataset: AITrainingDataset): string {
+  private static formatAsJSONSchema(_dataset: AITrainingDataset): string {
     const schema = {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       title: 'Forge UI Components Training Dataset',
