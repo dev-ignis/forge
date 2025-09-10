@@ -9,8 +9,7 @@ import type {
   AIComponentMetadata, 
   AIComplianceResult, 
   AIComplianceIssue,
-  AITrainingDataset,
-  AIComponentTrainingData
+  AITrainingDataset
 } from './ai-metadata.types';
 
 export class AIMetadataValidator {
@@ -427,7 +426,7 @@ export class AIMetadataValidator {
 
   private static calculateComplianceScore(
     issues: AIComplianceIssue[],
-    metadata: AIComponentMetadata
+    _metadata: AIComponentMetadata
   ): number {
     let score = 100;
     

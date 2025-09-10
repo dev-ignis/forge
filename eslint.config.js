@@ -67,12 +67,23 @@ export default [
         sourceType: 'module',
         // Don't use project for test files since they're excluded from tsconfig
         project: null
+      },
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        expect: 'readonly',
+        vi: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly'
       }
     },
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-expressions': 'off',
-      'no-console': 'off'
+      'no-console': 'off',
+      'no-undef': 'off'
     }
   },
   {

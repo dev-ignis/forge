@@ -6,7 +6,7 @@
 
 import { expect } from '@open-wc/testing';
 import { AIMetadataUtils } from '../core/ai-metadata.types';
-import type { AIComponentMetadata, AITrainingExample, AIComplianceResult } from '../core/ai-metadata.types';
+import type { AIComponentMetadata } from '../core/ai-metadata.types';
 import '../components/atoms/button/button';
 import { ForgeButton } from '../components/atoms/button/button';
 
