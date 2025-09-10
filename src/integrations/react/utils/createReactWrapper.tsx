@@ -17,7 +17,8 @@ import React, {
   useImperativeHandle,
   type Ref,
   type ReactElement,
-  type HTMLAttributes
+  type HTMLAttributes,
+  type PropsWithChildren
 } from 'react';
 
 // Utility type to extract event handlers from props
@@ -44,10 +45,10 @@ export interface ReactWrapperOptions {
  * @param options Configuration for the wrapper
  * @returns React component that wraps the web component
  */
-export function createReactWrapper<T extends HTMLElement, P extends HTMLAttributes<T>>(
+export function createReactWrapper<T extends HTMLElement, P extends Record<string, any>>(
   options: ReactWrapperOptions
 ) {
-  const WrappedComponent = forwardRef<T, P>((props, ref: Ref<T>) => {
+  const WrappedComponent = forwardRef<T, PropsWithChildren<P>>((props, ref: Ref<T>) => {
     const elementRef = useRef<T>(null);
     const {
       children,
@@ -56,15 +57,15 @@ export function createReactWrapper<T extends HTMLElement, P extends HTMLAttribut
 
     // Separate event handlers from other props
     const eventHandlers = Object.keys(restProps).reduce((handlers, key) => {
-      if (key.startsWith('on') && typeof restProps[key as keyof P] === 'function') {
-        handlers[key] = restProps[key as keyof P];
+      if (key.startsWith('on') && typeof restProps[key] === 'function') {
+        handlers[key] = restProps[key];
       }
       return handlers;
     }, {} as Record<string, any>);
 
     const nonEventProps = Object.keys(restProps).reduce((nonEvents, key) => {
-      if (!key.startsWith('on') || typeof restProps[key as keyof P] !== 'function') {
-        nonEvents[key] = restProps[key as keyof P];
+      if (!key.startsWith('on') || typeof restProps[key] !== 'function') {
+        nonEvents[key] = restProps[key];
       }
       return nonEvents;
     }, {} as Record<string, any>);

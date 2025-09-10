@@ -19,10 +19,18 @@ import type {
   ModalSize,
   GridColumn,
   GridData,
+  AvatarSize,
+  AvatarStatus,
+  StatusPosition,
+  AvatarShape,
+  DropdownItem,
+  DropdownPosition,
+  DropdownVariant,
+  DropdownSize,
 } from '../../../index';
 
 // Base interface for all Forge React components
-export interface ForgeComponentProps extends HTMLAttributes<HTMLElement> {
+export interface ForgeComponentProps extends Omit<HTMLAttributes<HTMLElement>, 'onChange'> {
   children?: ReactNode;
 }
 
@@ -118,4 +126,41 @@ export interface ForgeDataGridProps extends ForgeComponentProps {
   onCellEdit?: (rowId: string, field: string, oldValue: unknown, newValue: unknown) => void;
   onSortChanged?: (sorts: any[]) => void;
   onSearchChanged?: (query: string, results: GridData[]) => void;
+}
+
+// Avatar component props
+export interface ForgeAvatarProps extends ForgeComponentProps {
+  size?: AvatarSize;
+  src?: string;
+  alt?: string;
+  initials?: string;
+  status?: AvatarStatus;
+  statusPosition?: StatusPosition;
+  shape?: AvatarShape;
+  badge?: string | number;
+  loading?: boolean;
+  onError?: (event: FormEvent<HTMLElement>) => void;
+  onLoad?: (event: FormEvent<HTMLElement>) => void;
+}
+
+// Dropdown component props
+export interface ForgeDropdownProps extends ForgeComponentProps {
+  items: DropdownItem[];
+  label?: string;
+  placeholder?: string;
+  position?: DropdownPosition;
+  variant?: DropdownVariant;
+  size?: DropdownSize;
+  disabled?: boolean;
+  multiSelect?: boolean;
+  searchable?: boolean;
+  maxHeight?: string;
+  virtualScrolling?: boolean;
+  virtualThreshold?: number;
+  loading?: boolean;
+  selectedItems?: string[];
+  onSelectionChange?: (selectedItems: string[], allSelected: boolean) => void;
+  onOpen?: () => void;
+  onClose?: () => void;
+  onSearch?: (query: string, results: DropdownItem[]) => void;
 }

@@ -11,7 +11,7 @@ import { useRef, useEffect, type RefObject } from 'react';
  * Provides direct access to the underlying web component
  */
 export function useForgeComponent<T extends HTMLElement>(): {
-  ref: RefObject<T>;
+  ref: RefObject<T | null>;
   component: T | null;
 } {
   const ref = useRef<T>(null);

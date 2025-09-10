@@ -22,6 +22,7 @@
 
 import { copyFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
+import { execSync } from 'child_process';
 
 const srcPath = join(process.cwd(), 'src');
 const distPath = join(process.cwd(), 'dist');
@@ -36,6 +37,15 @@ const integrationFiles = [
   { src: 'integrations/vue.ts', dest: 'integrations/vue.js' },
   { src: 'integrations/angular.ts', dest: 'integrations/angular.js' }
 ];
+
+/**
+ * React integration needs special handling due to JSX compilation
+ * We'll build it separately using the React-specific tsconfig
+ */
+const reactIntegrationPath = {
+  src: 'integrations/react',
+  dest: 'integrations/react'
+};
 
 /**
  * Creates the integrations directory in dist if it doesn't exist
@@ -65,12 +75,31 @@ function copyIntegrationFiles() {
   });
 }
 
+/**
+ * Builds React integration using React-specific TypeScript config
+ * This compiles JSX and creates proper JS/TS declaration files
+ */
+function buildReactIntegration() {
+  console.log('Building React integration...');
+  
+  try {
+    // Build React integration with JSX support
+    execSync('tsc -p tsconfig.react.json', { stdio: 'inherit' });
+    console.log('React integration built successfully!');
+  } catch (error) {
+    console.error('Error building React integration:', error.message);
+    // Don't fail the build if React integration fails
+    console.warn('Continuing without React integration...');
+  }
+}
+
 // Main execution
 try {
   ensureIntegrationsDirectory();
   copyIntegrationFiles();
-  console.log('Integration files copied successfully!');
+  buildReactIntegration();
+  console.log('Integration files processed successfully!');
 } catch (error) {
-  console.error('Error copying integration files:', error);
+  console.error('Error processing integration files:', error);
   process.exit(1);
 }

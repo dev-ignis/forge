@@ -25,6 +25,8 @@ export { ForgeCheckbox } from './components/ForgeCheckbox';
 export { ForgeProgress } from './components/ForgeProgress';
 export { ForgeModal } from './components/ForgeModal';
 export { ForgeDataGrid } from './components/ForgeDataGrid';
+export { ForgeAvatar } from './components/ForgeAvatar';
+export { ForgeDropdown } from './components/ForgeDropdown';
 
 // React-specific utilities
 export { useForgeComponent } from './hooks/useForgeComponent';
@@ -41,6 +43,8 @@ export type {
   ForgeProgressProps,
   ForgeModalProps,
   ForgeDataGridProps,
+  ForgeAvatarProps,
+  ForgeDropdownProps,
 } from './types';
 
 // SSR utilities for Next.js
