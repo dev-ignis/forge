@@ -2,12 +2,12 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "outDir": "./dist/integrations/react",
-    "rootDir": "./src/integrations/react",
     "declaration": true,
-    "emitDeclarationOnly": false
+    "emitDeclarationOnly": false,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
   },
   "include": ["src/integrations/react/**/*"],
-  "exclude": ["node_modules", "**/*.test.ts"]
+  "exclude": ["node_modules", "**/*.test.ts", "dist"]
 }

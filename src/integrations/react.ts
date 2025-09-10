@@ -25,7 +25,11 @@
  */
 
 import React, { useEffect, useRef, useCallback, useState } from 'react';
-import type { ForgeCustomEvent } from '../types/framework-integration';
+
+// Custom event type for Forge components
+interface ForgeCustomEvent<T = any> extends CustomEvent {
+  detail: T;
+}
 
 /**
  * Hook for easier Web Component ref management
