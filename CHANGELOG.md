@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.2-beta.6 - 2025-09-10 (Beta Release)
+
+### 🧪 Beta Changes
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- feat: enhance React integration and clean up build artifacts
+> ⚠️ **This is a beta release** - use with caution in production environments
+
 ## v0.5.2-beta.5 - 2025-09-09 (Beta Release)
 
 ### 🧪 Beta Changes
