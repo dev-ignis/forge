@@ -25,8 +25,8 @@
       "require": "./dist/*"
     },
     "./integrations/react": {
-      "types": "./dist/integrations/react.d.ts",
-      "import": "./dist/integrations/react.js"
+      "types": "./dist/integrations/react/index.d.ts",
+      "import": "./dist/integrations/react/index.js"
     },
     "./integrations/vue": {
       "types": "./dist/integrations/vue.d.ts",
