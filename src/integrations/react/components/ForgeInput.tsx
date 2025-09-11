@@ -8,9 +8,6 @@
 import type { ForgeInputProps } from '../types';
 import { createReactWrapper } from '../utils/createReactWrapper';
 
-// Import the web component to ensure it's registered
-import '../../../components/atoms/input/input';
-
 export const ForgeInput = createReactWrapper<HTMLElement, ForgeInputProps>({
   tagName: 'forge-input',
   displayName: 'ForgeInput',
@@ -22,5 +19,4 @@ export const ForgeInput = createReactWrapper<HTMLElement, ForgeInputProps>({
   propMappings: {
     helperText: 'helper-text'
   },
-  ssrFallback: () => null
 });

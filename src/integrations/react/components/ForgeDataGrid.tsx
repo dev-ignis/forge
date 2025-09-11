@@ -8,8 +8,6 @@
 import type { ForgeDataGridProps } from '../types';
 import { createReactWrapper } from '../utils/createReactWrapper';
 
-// Import the web component to ensure it's registered
-import '../../../components/organisms/data-grid/data-grid';
 
 export const ForgeDataGrid = createReactWrapper<HTMLElement, ForgeDataGridProps>({
   tagName: 'forge-data-grid',
@@ -28,5 +26,4 @@ export const ForgeDataGrid = createReactWrapper<HTMLElement, ForgeDataGridProps>
     showSearch: 'show-search',
     searchQuery: 'search-query'
   },
-  ssrFallback: () => null
 });

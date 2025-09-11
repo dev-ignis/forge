@@ -164,3 +164,179 @@ export interface ForgeDropdownProps extends ForgeComponentProps {
   onClose?: () => void;
   onSearch?: (query: string, results: DropdownItem[]) => void;
 }
+
+// Additional Atom Component Props
+export interface ForgeBadgeProps extends ForgeComponentProps {
+  variant?: 'default' | 'success' | 'warning' | 'error' | 'info';
+  size?: 'sm' | 'md' | 'lg';
+  dot?: boolean;
+}
+
+export interface ForgeIconProps extends ForgeComponentProps {
+  name: string;
+  size?: string | number;
+  color?: string;
+}
+
+export interface ForgeSelectProps extends ForgeComponentProps {
+  value?: string | string[];
+  placeholder?: string;
+  disabled?: boolean;
+  multiple?: boolean;
+  options?: Array<{ value: string; label: string; disabled?: boolean }>;
+  onChange?: (value: string | string[], event: FormEvent<HTMLElement>) => void;
+}
+
+export interface ForgeSwitchProps extends ForgeComponentProps {
+  checked?: boolean;
+  disabled?: boolean;
+  label?: string;
+  size?: 'sm' | 'md' | 'lg';
+  onChange?: (checked: boolean, event: FormEvent<HTMLElement>) => void;
+}
+
+export interface ForgeSkeletonProps extends ForgeComponentProps {
+  width?: string | number;
+  height?: string | number;
+  animated?: boolean;
+  variant?: 'text' | 'rectangular' | 'circular';
+}
+
+export interface ForgeRadioGroupProps extends ForgeComponentProps {
+  name: string;
+  value?: string;
+  disabled?: boolean;
+  orientation?: 'horizontal' | 'vertical';
+  options?: Array<{ value: string; label: string; disabled?: boolean }>;
+  onChange?: (value: string, event: FormEvent<HTMLElement>) => void;
+}
+
+export interface ForgeAspectRatioProps extends ForgeComponentProps {
+  ratio?: string | number;
+}
+
+export interface ForgeProgressCircleProps extends ForgeComponentProps {
+  value?: number;
+  max?: number;
+  indeterminate?: boolean;
+  size?: string | number;
+  strokeWidth?: number;
+  showValue?: boolean;
+}
+
+// Molecule Component Props
+export interface ForgeTooltipProps extends ForgeComponentProps {
+  content: string;
+  position?: 'top' | 'bottom' | 'left' | 'right';
+  delay?: number;
+  disabled?: boolean;
+}
+
+export interface ForgeToastProps extends ForgeComponentProps {
+  title?: string;
+  type?: 'success' | 'error' | 'warning' | 'info';
+  duration?: number;
+  closeable?: boolean;
+  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'top-center' | 'bottom-center';
+  onClose?: () => void;
+}
+
+export interface ForgeFormFieldProps extends ForgeComponentProps {
+  label?: string;
+  required?: boolean;
+  error?: boolean;
+  errorMessage?: string;
+  helperText?: string;
+  disabled?: boolean;
+}
+
+export interface ForgeDatePickerProps extends ForgeComponentProps {
+  value?: string;
+  min?: string;
+  max?: string;
+  disabled?: boolean;
+  placeholder?: string;
+  format?: string;
+  onChange?: (value: string, event: FormEvent<HTMLElement>) => void;
+}
+
+export interface ForgeMultiSelectProps extends ForgeComponentProps {
+  options: Array<{ value: string; label: string; disabled?: boolean }>;
+  value?: string[];
+  placeholder?: string;
+  disabled?: boolean;
+  searchable?: boolean;
+  maxSelections?: number;
+  onChange?: (value: string[], event: FormEvent<HTMLElement>) => void;
+}
+
+// Organism Component Props
+export interface ForgeTabsProps extends ForgeComponentProps {
+  activeTab?: string;
+  variant?: 'default' | 'pills' | 'underline';
+  orientation?: 'horizontal' | 'vertical';
+  tabs?: Array<{ id: string; label: string; disabled?: boolean; content?: ReactNode }>;
+  onTabChange?: (tabId: string) => void;
+}
+
+export interface ForgeAccordionProps extends Omit<ForgeComponentProps, 'onToggle'> {
+  title: string;
+  open?: boolean;
+  disabled?: boolean;
+  variant?: 'default' | 'filled' | 'outlined';
+  onToggle?: (open: boolean) => void;
+}
+
+export interface ForgeDataTableProps extends ForgeComponentProps {
+  columns: Array<{ key: string; title: string; sortable?: boolean; width?: string }>;
+  data: Array<Record<string, any>>;
+  sortable?: boolean;
+  selectable?: boolean;
+  pagination?: boolean;
+  pageSize?: number;
+  currentPage?: number;
+  totalItems?: number;
+  loading?: boolean;
+  onSort?: (column: string, direction: 'asc' | 'desc') => void;
+  onSelectionChange?: (selectedRows: any[]) => void;
+  onPageChange?: (page: number) => void;
+}
+
+export interface ForgePaginationProps extends ForgeComponentProps {
+  currentPage: number;
+  totalPages: number;
+  pageSize?: number;
+  totalItems?: number;
+  showSizeChanger?: boolean;
+  showQuickJumper?: boolean;
+  showTotal?: boolean;
+  disabled?: boolean;
+  onPageChange?: (page: number) => void;
+  onPageSizeChange?: (pageSize: number) => void;
+}
+
+export interface ForgeNavigationBarProps extends ForgeComponentProps {
+  brand?: ReactNode;
+  items?: Array<{ id: string; label: string; href?: string; active?: boolean; disabled?: boolean }>;
+  variant?: 'default' | 'dark' | 'light';
+  fixed?: boolean;
+  sticky?: boolean;
+  onItemClick?: (itemId: string) => void;
+}
+
+export interface ForgeTreeViewProps extends Omit<ForgeComponentProps, 'onSelect'> {
+  data: Array<{
+    id: string;
+    label: string;
+    children?: any[];
+    disabled?: boolean;
+    selected?: boolean;
+    expanded?: boolean;
+  }>;
+  selectable?: boolean;
+  multiSelect?: boolean;
+  expandable?: boolean;
+  showConnectors?: boolean;
+  onSelect?: (nodeId: string, selected: boolean) => void;
+  onExpand?: (nodeId: string, expanded: boolean) => void;
+}
