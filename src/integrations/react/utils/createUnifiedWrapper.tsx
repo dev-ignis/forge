@@ -34,7 +34,7 @@ export interface UnifiedWrapperOptions<P extends Record<string, any>> {
   propMappings?: Record<string, string>;
   
   /** Semantic HTML fallback renderer */
-  fallbackRenderer: (props: any, children: React.ReactNode) => React.ReactElement;
+  fallbackRenderer: (props: any, children: React.ReactNode) => React.ReactElement | null;
   
   /** Default props for fallback */
   fallbackProps?: Partial<P>;
@@ -168,13 +168,24 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
       children
     );
 
-    return React.cloneElement(fallbackElement, {
-      ref: fallbackRef,
+    // Handle case where fallback renderer returns null (e.g., closed modal)
+    if (fallbackElement === null) {
+      return null;
+    }
+
+    const cloneProps: any = {
       'data-forge-component': options.tagName,
       'data-hydration-target': !isSSR,
       suppressHydrationWarning: true,
       ...(fallbackElement.props || {})
-    });
+    };
+    
+    // Only add ref if element supports it
+    if (fallbackRef) {
+      cloneProps.ref = fallbackRef;
+    }
+    
+    return React.cloneElement(fallbackElement, cloneProps);
   });
 
   WrappedComponent.displayName = options.displayName;

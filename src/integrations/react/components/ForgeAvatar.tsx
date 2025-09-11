@@ -25,7 +25,7 @@ export const ForgeAvatar = createUnifiedWrapper<HTMLElement, ForgeAvatarProps>({
   
   fallbackProps: {
     size: 'md',
-    shape: 'circular',
+    shape: 'circle',
     statusPosition: 'bottom-right',
     loading: false
   },
