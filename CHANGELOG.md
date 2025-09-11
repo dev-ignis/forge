@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.2-beta.9 - 2025-09-11 (Beta Release)
+
+### 🧪 Beta Changes
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- feat: complete React integration with automatic SSR support
+> ⚠️ **This is a beta release** - use with caution in production environments
+
 ## v0.5.2-beta.8 - 2025-09-10 (Beta Release)
 
 ### 🧪 Beta Changes
