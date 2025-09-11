@@ -98,11 +98,51 @@ function forgeIntegrationsPlugin() {
         console.log('⚛️ Building React integration...');
         execSync('tsc -p tsconfig.react.json', { stdio: 'inherit' });
         
+        // Move files from temp directory to final location
+        console.log('📁 Moving React files to final directory...');
+        const tempPath = join(process.cwd(), 'dist', 'temp-react');
+        const reactDistPath = join(process.cwd(), 'dist', 'integrations', 'react');
+        const reactSourcePath = join(tempPath, 'integrations', 'react');
+        
+        if (existsSync(reactSourcePath)) {
+          mkdirSync(reactDistPath, { recursive: true });
+          
+          // Copy all files from temp react source to final destination
+          function copyDirectory(src, dest) {
+            if (!existsSync(src)) return;
+            
+            const items = readdirSync(src);
+            for (const item of items) {
+              const srcPath = join(src, item);
+              const destPath = join(dest, item);
+              const stat = statSync(srcPath);
+              
+              if (stat.isDirectory()) {
+                mkdirSync(destPath, { recursive: true });
+                copyDirectory(srcPath, destPath);
+              } else {
+                copyFileSync(srcPath, destPath);
+                console.log(`📄 Moved ${srcPath.replace(process.cwd(), '.')} → ${destPath.replace(process.cwd(), '.')}`);
+              }
+            }
+          }
+          
+          copyDirectory(reactSourcePath, reactDistPath);
+          
+          // Clean up temp directory
+          console.log('🧹 Cleaning up temp directory...');
+          try {
+            execSync(`rm -rf ${tempPath}`, { stdio: 'inherit' });
+          } catch (e) {
+            console.warn('⚠️ Could not clean temp directory');
+          }
+        } else {
+          console.warn(`⚠️ React source path not found: ${reactSourcePath}`);
+        }
+        
         // Fix ES module imports with integrated logic
         console.log('🔧 Fixing React ES module imports...');
-        console.log('🔧 Fixing React integration ES module imports...');
         
-        const reactDistPath = join(process.cwd(), 'dist', 'integrations', 'react');
         const jsFiles = findJsFiles(reactDistPath);
         let fixedFiles = 0;
         
@@ -117,6 +157,7 @@ function forgeIntegrationsPlugin() {
         console.log('✅ All framework integrations processed successfully!');
       } catch (error) {
         console.warn('⚠️ React integration build failed, continuing...');
+        console.error(error);
       }
     }
   };

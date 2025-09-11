@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "outDir": "./dist/integrations/react",
+    "outDir": "./dist/temp-react",
     "declaration": true,
     "emitDeclarationOnly": false,
     "allowSyntheticDefaultImports": true,

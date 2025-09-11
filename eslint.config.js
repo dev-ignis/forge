@@ -59,6 +59,42 @@ export default [
     }
   },
   {
+    files: ['src/integrations/react/**/*.ts', 'src/integrations/react/**/*.tsx'],
+    languageOptions: {
+      parser: typescriptParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        // Don't use project for React files since they're excluded from tsconfig
+        project: null,
+        ecmaFeatures: {
+          jsx: true
+        }
+      },
+      globals: {
+        console: 'readonly',
+        document: 'readonly',
+        window: 'readonly',
+        HTMLElement: 'readonly',
+        React: 'readonly',
+        JSX: 'readonly'
+      }
+    },
+    plugins: {
+      '@typescript-eslint': typescript
+    },
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': ['error', { 
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_' 
+      }],
+      'prefer-const': 'error',
+      'no-var': 'error',
+      'no-console': ['warn', { allow: ['warn', 'error'] }]
+    }
+  },
+  {
     files: ['**/*.test.ts', '**/*.test.tsx'],
     languageOptions: {
       parser: typescriptParser,
@@ -97,7 +133,8 @@ export default [
       '*.config.mjs',
       'scripts/**',
       'src/integrations/vue.ts',
-      'src/integrations/angular.ts'
+      'src/integrations/angular.ts',
+      '**/*.d.ts'
     ]
   }
 ];
