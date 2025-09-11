@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * @fileoverview React Context Provider for Forge components
  * 

@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * @fileoverview Core React wrapper utility for Forge Web Components
  * 

@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * @fileoverview Client-only component for Next.js SSR issues
  * 
