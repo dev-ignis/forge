@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.2-beta.11 - 2025-09-11 (Beta Release)
+
+### 🧪 Beta Changes
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- fix: - module resolution;
+> ⚠️ **This is a beta release** - use with caution in production environments
+
 ## v0.5.2-beta.10 - 2025-09-11 (Beta Release)
 
 ### 🧪 Beta Changes
