@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * @fileoverview React hooks for Forge component integration
  * 

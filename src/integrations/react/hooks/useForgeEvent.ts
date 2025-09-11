@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * @fileoverview Hook for listening to Forge component events
  */
