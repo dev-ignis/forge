@@ -1,18 +1,18 @@
 /**
- * @fileoverview React Integration for @nexcraft/forge
+ * @fileoverview Unified React Integration for @nexcraft/forge
  * 
- * This module provides React wrappers for all Forge Web Components,
- * ensuring seamless integration with React applications including:
+ * This module provides unified React wrappers for all Forge Web Components,
+ * ensuring seamless integration across all React environments including:
  * - TypeScript support with proper React prop types
  * - Event handler mapping (onClick, onChange, etc.)
  * - Controlled/uncontrolled component patterns
- * - **Automatic SSR/Next.js compatibility** - no ClientOnly wrapper needed!
- * - Form integration (React Hook Form, Formik)
- * - Semantic HTML fallbacks during server-side rendering
+ * - **Universal SSR/Client compatibility** - single components work everywhere
+ * - Progressive enhancement with semantic HTML fallbacks
+ * - Form integration utilities
  * 
  * ## Usage
  * 
- * Simply import and use components directly - SSR is handled automatically:
+ * Import and use components directly - they work everywhere:
  * 
  * ```tsx
  * import { ForgeButton, ForgeInput, ForgeCard } from '@nexcraft/forge/integrations/react';
@@ -27,19 +27,21 @@
  * }
  * ```
  * 
- * **No ClientOnly wrapper needed!** Components automatically:
- * - Render semantic HTML during SSR (for SEO and fast loading)
- * - Hydrate to full web components on the client
- * - Handle progressive enhancement seamlessly
+ * **Universal Components:** Single components work in all environments:
+ * - SSR: Renders semantic HTML with proper styling and accessibility
+ * - Client: Progressively enhances to full web components  
+ * - Hydration: Seamlessly upgrades from HTML to web component
+ * - **No ClientOnly wrapper needed** - components are environment-aware
  * 
  * ADR Compliance:
  * - ADR-001: Web Components abstraction with React wrappers
- * - ADR-002: Shadow DOM encapsulation maintained
+ * - ADR-002: Shadow DOM encapsulation (client-side enhancement)
  * - ADR-007: Framework integration patterns
  * - ADR-013: TypeScript interfaces for React props
+ * - ADR-018: Unified SSR/Client architecture
  */
 
-// React wrapper components - Complete library coverage
+// Universal React wrapper components - Work in all environments (SSR + Client)
 // Atom Components
 export { ForgeAlert } from './components/ForgeAlert';
 export { ForgeAspectRatio } from './components/ForgeAspectRatio';
@@ -79,6 +81,9 @@ export { ForgeTreeView } from './components/ForgeTreeView';
 export { useForgeComponent } from './hooks/useForgeComponent';
 export { useForgeEvent } from './hooks/useForgeEvent';
 export { ForgeProvider } from './context/ForgeProvider';
+
+// Form integration hooks (re-exported from main react.ts)
+export { useForgeReactHookForm, useForgeFormik } from '../react';
 
 // TypeScript interfaces for React props - Complete library coverage
 export type {
@@ -121,6 +126,5 @@ export type {
   ForgeComponentProps,
 } from './types';
 
-// SSR utilities for Next.js
-export { withSSRSupport } from './utils/ssr';
-export { ClientOnly } from './components/ClientOnly';
+// Unified wrapper utilities for advanced use cases
+export { createUnifiedWrapper } from './utils/createUnifiedWrapper';
