@@ -17,6 +17,6 @@ export const ForgeInput = createReactWrapper<HTMLElement, ForgeInputProps>({
     onBlur: 'blur'
   },
   propMappings: {
-    helperText: 'helper-text'
+    errorText: 'error-text'
   },
 });

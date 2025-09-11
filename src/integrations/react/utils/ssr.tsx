@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * @fileoverview SSR utilities for Next.js integration
  * 

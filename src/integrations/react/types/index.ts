@@ -54,7 +54,7 @@ export interface ForgeInputProps extends ForgeComponentProps {
   disabled?: boolean;
   required?: boolean;
   error?: boolean;
-  helperText?: string;
+  errorText?: string;
   label?: string;
   onChange?: (value: string, event: FormEvent<HTMLElement>) => void;
   onFocus?: (event: FormEvent<HTMLElement>) => void;

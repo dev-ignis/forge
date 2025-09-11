@@ -6,13 +6,13 @@
  * - TypeScript support with proper React prop types
  * - Event handler mapping (onClick, onChange, etc.)
  * - Controlled/uncontrolled component patterns
- * - **Next.js compatibility** with automatic client-side hydration
+ * - **Automatic SSR/Next.js compatibility** - no ClientOnly wrapper needed!
  * - Form integration (React Hook Form, Formik)
  * - Semantic HTML fallbacks during server-side rendering
  * 
  * ## Usage
  * 
- * Simply import and use components directly - marked as client components for Next.js:
+ * Simply import and use components directly - SSR is handled automatically:
  * 
  * ```tsx
  * import { ForgeButton, ForgeInput, ForgeCard } from '@nexcraft/forge/integrations/react';
@@ -27,10 +27,10 @@
  * }
  * ```
  * 
- * **Client-side components** automatically work with Next.js:
- * - Marked with "use client" directive for proper Next.js handling
- * - Web components load and register on the client side
- * - Compatible with Next.js App Router and Pages Router
+ * **No ClientOnly wrapper needed!** Components automatically:
+ * - Render semantic HTML during SSR (for SEO and fast loading)
+ * - Hydrate to full web components on the client
+ * - Handle progressive enhancement seamlessly
  * 
  * ADR Compliance:
  * - ADR-001: Web Components abstraction with React wrappers
