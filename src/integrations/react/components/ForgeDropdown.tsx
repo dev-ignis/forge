@@ -1,25 +1,44 @@
 /**
- * @fileoverview React wrapper for ForgeDropdown component
- * 
- * Provides React-style Dropdown component with proper TypeScript support,
- * event handling, and SSR compatibility. Supports single/multi-select,
- * search functionality, and virtual scrolling.
+ * @fileoverview Unified React wrapper for ForgeDropdown component
+ *
+ * Works seamlessly in both SSR and client-only environments:
+ * - SSR: Renders semantic HTML button with dropdown trigger styling
+ * - Client: Hydrates to full web component functionality with positioning and search
+ * - No separate SSR/client components needed
+ * - Supports single/multi-select, search functionality, and virtual scrolling
  */
 
 import type { ForgeDropdownProps } from '../types';
-import { createReactWrapper } from '../utils/createReactWrapper';
+import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
+import { FallbackRenderers } from '../utils/createReactWrapperSSR';
 
-
-export const ForgeDropdown = createReactWrapper<HTMLElement, ForgeDropdownProps>({
+export const ForgeDropdown = createUnifiedWrapper<HTMLElement, ForgeDropdownProps>({
   tagName: 'forge-dropdown',
   displayName: 'ForgeDropdown',
+  
   eventMappings: {
     onSelectionChange: 'selection-change',
     onOpen: 'open',
     onClose: 'close',
     onSearch: 'search'
   },
-  propMappings: {
-    selectedItems: 'selected-items'
+  
+  fallbackRenderer: FallbackRenderers.dropdown,
+  
+  fallbackProps: {
+    disabled: false,
+    placeholder: 'Select option',
+    items: []
   },
+  
+  preserveAttributes: [
+    'label',
+    'placeholder',
+    'position',
+    'variant',
+    'size',
+    'disabled',
+    'multi-select',
+    'selected-items'
+  ]
 });

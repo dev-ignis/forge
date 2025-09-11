@@ -1,6 +1,6 @@
 # Next.js Integration Guide
 
-This guide addresses **GitHub Issue #17** integration challenges and provides comprehensive Next.js setup instructions for `@nexcraft/forge`.
+This guide shows how to use **unified Forge components** with Next.js. All components now work seamlessly with SSR out-of-the-box - **no ClientOnly wrapper needed!**
 
 ## Quick Start
 
@@ -21,7 +21,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'My App with Forge Components',
-  description: 'Built with @nexcraft/forge',
+  description: 'Built with @nexcraft/forge unified components',
 };
 
 export default function RootLayout({
@@ -37,157 +37,81 @@ export default function RootLayout({
 }
 ```
 
-### 3. Using Forge Components (Two Approaches)
-
-#### Option A: React Wrapper Components (Recommended)
+### 3. Using Unified Forge Components
 
 ```typescript
 // app/page.tsx
+import { useState } from 'react';
 import { 
   ForgeButton, 
   ForgeInput, 
   ForgeCard, 
   ForgeAlert,
-  ForgeProgress,
-  ClientOnly 
+  ForgeProgress
 } from '@nexcraft/forge/integrations/react';
 
 export default function HomePage() {
   const [inputValue, setInputValue] = useState('');
   
+  // Components work everywhere - SSR, client, hydration!
   return (
-    <ClientOnly fallback={<div>Loading...</div>}>
-      <ForgeCard>
-        <h1>Welcome to Forge + Next.js</h1>
-        
-        <ForgeAlert severity="info">
-          This resolves GitHub Issue #17 integration problems!
-        </ForgeAlert>
-        
-        <ForgeInput
-          label="Your Name"
-          value={inputValue}
-          onChange={(value) => setInputValue(value)}
-          placeholder="Enter your name..."
-        />
-        
-        <ForgeButton 
-          variant="primary" 
-          onClick={() => alert(`Hello, ${inputValue}!`)}
-        >
-          Say Hello
-        </ForgeButton>
-        
-        <ForgeProgress value={75} max={100} />
-      </ForgeCard>
-    </ClientOnly>
+    <ForgeCard>
+      <h1>Welcome to Forge + Next.js</h1>
+      
+      <ForgeAlert severity="info">
+        Unified components work with SSR automatically!
+      </ForgeAlert>
+      
+      <ForgeInput
+        label="Your Name"
+        value={inputValue}
+        onChange={(value) => setInputValue(value)}
+        placeholder="Enter your name..."
+      />
+      
+      <ForgeButton 
+        variant="primary" 
+        onClick={() => alert(`Hello, ${inputValue}!`)}
+      >
+        Say Hello
+      </ForgeButton>
+      
+      <ForgeProgress value={75} max={100} />
+    </ForgeCard>
   );
 }
 ```
 
-#### Option B: Direct Web Components (Advanced)
+## How Unified Components Work
+
+Forge components automatically adapt to their environment:
+
+### Server-Side Rendering (SSR)
+- Renders semantic HTML with proper styling and accessibility
+- No JavaScript required for basic functionality
+- SEO-friendly and fast initial page load
+
+### Client-Side Hydration  
+- Progressively enhances semantic HTML to full web components
+- Maintains all existing state and interactions
+- Graceful degradation if JavaScript fails
+
+### Client-Only Apps (Vite, CRA)
+- Renders web components directly
+- Full interactive functionality from the start
+- No additional configuration needed
 
 ```typescript
-// app/components/ForgeComponents.tsx
-'use client'; // Required for web components
+// Same component works in ALL environments:
 
-import { useEffect } from 'react';
+// ✅ Next.js SSR - renders semantic HTML first
+<ForgeButton variant="primary">Submit</ForgeButton>
 
-export default function ForgeComponents() {
-  useEffect(() => {
-    // Import web components on client side only
-    import('@nexcraft/forge');
-  }, []);
+// ✅ Next.js client-side - hydrates to web component  
+<ForgeButton variant="primary">Submit</ForgeButton>
 
-  return (
-    <div>
-      <forge-button variant="primary">Direct Web Component</forge-button>
-      <forge-input placeholder="Direct input"></forge-input>
-    </div>
-  );
-}
-
-// app/page.tsx
-import dynamic from 'next/dynamic';
-
-const ForgeComponents = dynamic(() => import('./components/ForgeComponents'), {
-  ssr: false, // Disable SSR for web components
-  loading: () => <p>Loading Forge components...</p>
-});
-
-export default function HomePage() {
-  return (
-    <div>
-      <h1>My Next.js App</h1>
-      <ForgeComponents />
-    </div>
-  );
-}
-```
-
-## SSR Configuration
-
-### Method 1: ClientOnly Wrapper (Simplest)
-
-```typescript
-import { ClientOnly, ForgeButton } from '@nexcraft/forge/integrations/react';
-
-export default function MyPage() {
-  return (
-    <ClientOnly fallback={<button>Loading...</button>}>
-      <ForgeButton variant="primary">Server-Safe Button</ForgeButton>
-    </ClientOnly>
-  );
-}
-```
-
-### Method 2: Dynamic Imports with No SSR
-
-```typescript
-import dynamic from 'next/dynamic';
-
-const ForgeButton = dynamic(
-  () => import('@nexcraft/forge/integrations/react').then(mod => ({ default: mod.ForgeButton })),
-  { 
-    ssr: false,
-    loading: () => <button className="loading">Loading...</button>
-  }
-);
-
-export default function MyPage() {
-  return <ForgeButton variant="primary">Dynamic Button</ForgeButton>;
-}
-```
-
-### Method 3: Custom Hook for SSR Detection
-
-```typescript
-// hooks/useIsClient.ts
-import { useState, useEffect } from 'react';
-
-export function useIsClient() {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  return isClient;
-}
-
-// components/MyComponent.tsx
-import { useIsClient } from '../hooks/useIsClient';
-import { ForgeButton } from '@nexcraft/forge/integrations/react';
-
-export default function MyComponent() {
-  const isClient = useIsClient();
-
-  if (!isClient) {
-    return <button className="fallback">Loading...</button>;
-  }
-
-  return <ForgeButton variant="primary">Client-Only Button</ForgeButton>;
-}
+// ✅ Vite/CRA - renders web component directly
+<ForgeButton variant="primary">Submit</ForgeButton>
 ```
 
 ## TypeScript Configuration
@@ -258,7 +182,7 @@ export {};
 
 ```typescript
 import { useForm, Controller } from 'react-hook-form';
-import { ForgeInput, ForgeButton, ClientOnly } from '@nexcraft/forge/integrations/react';
+import { ForgeInput, ForgeButton } from '@nexcraft/forge/integrations/react';
 
 interface FormData {
   email: string;
@@ -272,41 +196,40 @@ export default function MyForm() {
     console.log('Form submitted:', data);
   };
 
+  // No ClientOnly wrapper needed - works with SSR!
   return (
-    <ClientOnly>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          name="email"
-          control={control}
-          rules={{ required: 'Email is required' }}
-          render={({ field, fieldState }) => (
-            <ForgeInput
-              {...field}
-              type="email"
-              label="Email"
-              error={!!fieldState.error}
-              helperText={fieldState.error?.message}
-            />
-          )}
-        />
-        
-        <Controller
-          name="name"
-          control={control}
-          render={({ field }) => (
-            <ForgeInput
-              {...field}
-              label="Full Name"
-              placeholder="Enter your name"
-            />
-          )}
-        />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Controller
+        name="email"
+        control={control}
+        rules={{ required: 'Email is required' }}
+        render={({ field, fieldState }) => (
+          <ForgeInput
+            {...field}
+            type="email"
+            label="Email"
+            error={!!fieldState.error}
+            helperText={fieldState.error?.message}
+          />
+        )}
+      />
+      
+      <Controller
+        name="name"
+        control={control}
+        render={({ field }) => (
+          <ForgeInput
+            {...field}
+            label="Full Name"
+            placeholder="Enter your name"
+          />
+        )}
+      />
 
-        <ForgeButton type="submit" variant="primary">
-          Submit Form
-        </ForgeButton>
-      </form>
-    </ClientOnly>
+      <ForgeButton type="submit" variant="primary">
+        Submit Form
+      </ForgeButton>
+    </form>
   );
 }
 ```
@@ -316,7 +239,7 @@ export default function MyForm() {
 ```typescript
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { ForgeInput, ForgeButton, ClientOnly } from '@nexcraft/forge/integrations/react';
+import { ForgeInput, ForgeButton } from '@nexcraft/forge/integrations/react';
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email').required('Required'),
@@ -325,7 +248,7 @@ const validationSchema = Yup.object({
 
 export default function FormikForm() {
   return (
-    <ClientOnly>
+    {/* Unified components work with SSR automatically */}
       <Formik
         initialValues={{ email: '', name: '' }}
         validationSchema={validationSchema}
@@ -356,7 +279,7 @@ export default function FormikForm() {
           </Form>
         )}
       </Formik>
-    </ClientOnly>
+    {/* End of component section */}
   );
 }
 ```
@@ -368,7 +291,7 @@ export default function FormikForm() {
 'use client';
 
 import { useState } from 'react';
-import { ForgeDataGrid, ClientOnly } from '@nexcraft/forge/integrations/react';
+import { ForgeDataGrid } from '@nexcraft/forge/integrations/react';
 import type { GridColumn, GridData } from '@nexcraft/forge';
 
 const columns: GridColumn[] = [
@@ -400,7 +323,7 @@ export default function UserDataGrid() {
         showSearch
         onSelectionChanged={handleSelectionChange}
       />
-    </ClientOnly>
+    {/* End of component section */}
   );
 }
 ```
@@ -473,7 +396,7 @@ function MyComponent() {
   return (
     <ClientOnly fallback={<button>Loading...</button>}>
       <ForgeButton>Click me</ForgeButton>
-    </ClientOnly>
+    {/* End of component section */}
   );
 }
 ```
@@ -518,23 +441,23 @@ import { ForgeInput, ForgeAlert, ForgeButton, ClientOnly } from '@nexcraft/forge
 
 function MyForm() {
   return (
-    <ClientOnly>
+    {/* Unified components work with SSR automatically */}
       <ForgeInput label="Email" variant="outlined" />
       <ForgeAlert severity="info">Info message</ForgeAlert>
       <ForgeButton variant="primary">Submit</ForgeButton>
-    </ClientOnly>
+    {/* End of component section */}
   );
 }
 ```
 
 ## Best Practices
 
-1. **Always use `ClientOnly` wrapper for SSR apps**
-2. **Prefer React wrappers over direct web components**  
-3. **Use TypeScript for better developer experience**
-4. **Implement proper error boundaries**
-5. **Consider code splitting for large component sets**
-6. **Test both SSR and client-side rendering**
+1. **Use unified React wrappers for all components** - they work everywhere
+2. **Prefer TypeScript for better developer experience and type safety**  
+3. **Implement proper error boundaries** for production apps
+4. **Consider code splitting for large component sets** to optimize performance
+5. **Test in both SSR and client environments** to ensure compatibility
+6. **Leverage semantic HTML fallbacks** for better accessibility and SEO
 
 ## Example Projects
 
