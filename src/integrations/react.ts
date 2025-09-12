@@ -27,11 +27,13 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 
 // Conditional import for optional peer dependencies
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let useController: any = null;
 try {
-  const rhf = require('react-hook-form');
+  // Try to import react-hook-form dynamically
+  const rhf = eval('require')('react-hook-form');
   useController = rhf.useController;
-} catch (error) {
+} catch {
   // react-hook-form not available - that's fine, hook will throw helpful error
 }
 
@@ -384,7 +386,8 @@ export function useForgeReactHookForm(name: string, control: any) {
   const { field, fieldState } = useController({ name, control });
   
   // Create a compatible onChange handler that works with both Forge and RHF signatures
-  const handleChange = useCallback((value: any, event?: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleChange = useCallback((value: any, _event?: any) => {
     // If called with an event object (React Hook Form style), pass it directly
     if (typeof value === 'object' && value.target) {
       field.onChange(value);
