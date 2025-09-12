@@ -187,6 +187,7 @@ export interface ForgeSelectProps extends ForgeComponentProps {
   disabled?: boolean;
   multiple?: boolean;
   name?: string;
+  error?: boolean;
   options?: Array<{ value: string; label: string; disabled?: boolean }>;
   onChange?: (value: string | string[], event: FormEvent<HTMLElement>) => void;
 }

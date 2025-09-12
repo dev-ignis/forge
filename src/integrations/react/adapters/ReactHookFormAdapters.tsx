@@ -45,21 +45,7 @@ type FieldValues = Record<string, any>;
 type Path<T extends FieldValues> = keyof T;
 type RegisterOptions<T extends FieldValues = FieldValues, TName extends Path<T> = Path<T>> = any;
 
-// Get Controller dynamically
-let ControllerComponent: any = null;
-try {
-  if (typeof window !== 'undefined') {
-    // Client-side dynamic import
-    import('react-hook-form').then(rhf => {
-      ControllerComponent = rhf.Controller;
-    });
-  } else {
-    // Server-side - Controller won't work anyway, so skip
-    ControllerComponent = null;
-  }
-} catch {
-  // react-hook-form not available
-}
+// Note: Controller is dynamically loaded at runtime in each component function
 
 // Base adapter props
 interface BaseRHFProps<T extends FieldValues, TName extends Path<T>> {
@@ -83,7 +69,7 @@ export function RHFForgeInput<T extends FieldValues, TName extends Path<T>>({
   // Simple wrapper that uses runtime require to avoid build issues
   let Controller: any = null;
   try {
-    Controller = (global as any).reactHookFormController || (typeof require !== 'undefined' ? require('react-hook-form')?.Controller : null);
+    Controller = (global as any).reactHookFormController;
   } catch {
     Controller = null;
   }
@@ -127,7 +113,7 @@ export function RHFForgeSelect<T extends FieldValues, TName extends Path<T>>({
 }: RHFForgeSelectProps<T, TName>) {
   let Controller: any = null;
   try {
-    Controller = (global as any).reactHookFormController || (typeof require !== 'undefined' ? require('react-hook-form')?.Controller : null);
+    Controller = (global as any).reactHookFormController;
   } catch {
     Controller = null;
   }
@@ -170,7 +156,7 @@ export function RHFForgeCheckbox<T extends FieldValues, TName extends Path<T>>({
 }: RHFForgeCheckboxProps<T, TName>) {
   let Controller: any = null;
   try {
-    Controller = (global as any).reactHookFormController || (typeof require !== 'undefined' ? require('react-hook-form')?.Controller : null);
+    Controller = (global as any).reactHookFormController;
   } catch {
     Controller = null;
   }
@@ -212,7 +198,7 @@ export function RHFForgeRadioGroup<T extends FieldValues, TName extends Path<T>>
 }: RHFForgeRadioGroupProps<T, TName>) {
   let Controller: any = null;
   try {
-    Controller = (global as any).reactHookFormController || (typeof require !== 'undefined' ? require('react-hook-form')?.Controller : null);
+    Controller = (global as any).reactHookFormController;
   } catch {
     Controller = null;
   }
@@ -258,7 +244,7 @@ export function createRHFAdapter<
   }: BaseRHFProps<T, TName> & TProps) {
     let Controller: any = null;
   try {
-    Controller = (global as any).reactHookFormController || (typeof require !== 'undefined' ? require('react-hook-form')?.Controller : null);
+    Controller = (global as any).reactHookFormController;
   } catch {
     Controller = null;
   }

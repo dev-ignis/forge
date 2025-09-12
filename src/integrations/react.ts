@@ -377,13 +377,13 @@ export function useForgeReactHookForm(name: string, control: any) {
     // Runtime require for optional dependency
     const loadReactHookForm = () => {
       try {
-        const module = typeof require !== 'undefined' ? require('react-hook-form') : null;
+        const module = typeof window !== 'undefined' && (window as any).require ? (window as any).require('react-hook-form') : null;
         if (module) {
           setReactHookForm(module);
         } else {
           setError('@nexcraft/forge: react-hook-form is required as a peer dependency to use useForgeReactHookForm. Please install react-hook-form.');
         }
-      } catch (err) {
+      } catch {
         setError('@nexcraft/forge: react-hook-form is required as a peer dependency to use useForgeReactHookForm. Please install react-hook-form.');
       }
     };
@@ -415,7 +415,7 @@ export function useForgeReactHookForm(name: string, control: any) {
   
   // Create a compatible onChange handler that works with both Forge and RHF signatures
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleChange = useCallback((value: any, event?: any) => {
+  const handleChange = useCallback((value: any, _event?: any) => {
     // If called with an event object (React Hook Form style), pass it directly
     if (typeof value === 'object' && value?.target) {
       field.onChange(value);
