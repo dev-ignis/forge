@@ -5,7 +5,7 @@
  * addressing GitHub Issue #17 request for "TypeScript definitions for component props"
  */
 
-import type { ReactNode, HTMLAttributes, FormEvent, MouseEvent, ChangeEvent } from 'react';
+import type { ReactNode, HTMLAttributes, FormEvent, MouseEvent, ChangeEvent, FocusEvent } from 'react';
 import type {
   ButtonVariant,
   ButtonSize,
@@ -56,10 +56,11 @@ export interface ForgeInputProps extends ForgeComponentProps {
   error?: boolean;
   errorText?: string;
   label?: string;
+  name?: string;
   // Support both Forge signature and React Hook Form signature for better compatibility
   onChange?: ((value: string, event: FormEvent<HTMLElement>) => void) | ((event: ChangeEvent<HTMLInputElement>) => void);
-  onFocus?: (event: FormEvent<HTMLElement>) => void;
-  onBlur?: (event: FormEvent<HTMLElement>) => void;
+  onFocus?: ((event: FocusEvent<HTMLInputElement>) => void) | ((event: FormEvent<HTMLElement>) => void);
+  onBlur?: ((event: FocusEvent<HTMLInputElement>) => void) | ((event: FormEvent<HTMLElement>) => void);
 }
 
 // Alert component props
@@ -86,6 +87,7 @@ export interface ForgeCheckboxProps extends ForgeComponentProps {
   disabled?: boolean;
   label?: string;
   value?: string;
+  name?: string;
   onChange?: (checked: boolean, event: FormEvent<HTMLElement>) => void;
 }
 
@@ -184,6 +186,7 @@ export interface ForgeSelectProps extends ForgeComponentProps {
   placeholder?: string;
   disabled?: boolean;
   multiple?: boolean;
+  name?: string;
   options?: Array<{ value: string; label: string; disabled?: boolean }>;
   onChange?: (value: string | string[], event: FormEvent<HTMLElement>) => void;
 }
