@@ -1,6 +1,6 @@
 {
   "name": "@nexcraft/forge",
-  "version": "0.5.2-beta.19",
+  "version": "0.5.2-beta.20",
   "type": "module",
   "description": "The FIRST AI-Native component library built for the age of AI-assisted development. Features built-in AI metadata, design token bridge, and real-time performance monitoring. Works seamlessly across React, Vue, Angular, and vanilla JavaScript with AI coding tools like Cursor, GitHub Copilot, and Claude.",
   "main": "./dist/nexcraft-forge.es.js",
