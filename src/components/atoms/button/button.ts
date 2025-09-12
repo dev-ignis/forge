@@ -3,16 +3,183 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { BaseElement } from '../../../core/BaseElement';
 import type { ButtonVariant, ButtonSize, ButtonType, ForgeButtonProps, ForgeButtonEventDetail } from '../../../types';
+import type { AIComponentMetadata } from '../../../core/ai-metadata.types';
 
 @customElement('forge-button')
 export class ForgeButton extends BaseElement {
-  // Initialize AI metadata
-  protected aiMetadata = {
-    purpose: 'User interaction trigger',
-    context: 'action',
-    dataType: undefined,  // Button doesn't have data type
-    criticality: 'medium' as const,
-    semanticRole: 'button'
+  // Comprehensive AI metadata for AI-native development
+  static aiMetadata: AIComponentMetadata = {
+    // Core Identity
+    purpose: 'Primary action trigger with semantic meaning for user interactions',
+    semanticRole: 'button',
+    category: 'atom',
+    criticality: 'medium',
+    
+    // AI Generation Guidance
+    usagePatterns: [
+      'form submission',
+      'modal triggers',
+      'navigation actions',
+      'data operations (save, delete, edit)',
+      'workflow progression',
+      'menu interactions'
+    ],
+    antiPatterns: [
+      'never use primary variant for destructive actions',
+      'avoid disabled state for async operations - prefer loading state',
+      'do not use buttons for navigation - use links for page changes',
+      'avoid generic text like "Click here" - use descriptive labels'
+    ],
+    contextualRules: [
+      'always provide accessible labels for icon-only buttons',
+      'maintain consistent spacing using design tokens',
+      'ensure WCAG 2.1 AA compliance automatically',
+      'use primary variant sparingly - only one primary action per section',
+      'provide loading states for async operations',
+      'include proper focus management for keyboard users'
+    ],
+    
+    // AI Prompts for Code Generation
+    aiPrompts: {
+      codeGeneration: 'Generate button with semantic HTML, proper ARIA attributes, and accessible interaction patterns',
+      accessibility: 'Include keyboard navigation (Enter/Space), screen reader support, and proper focus management',
+      performance: 'Implement efficient event handling, debounce rapid clicks, and optimize for mobile touch',
+      designSystem: 'Use design tokens for consistent styling, spacing, and maintain design system alignment'
+    },
+    
+    // Framework-Specific Code Examples
+    codeExamples: {
+      react: `import { ForgeButton } from '@nexcraft/forge/integrations/react';
+
+function App() {
+  const handleSubmit = () => {
+    // Handle form submission
+  };
+
+  return (
+    <ForgeButton 
+      variant="primary" 
+      onClick={handleSubmit}
+      loading={isSubmitting}
+      disabled={!isValid}
+    >
+      Submit Form
+    </ForgeButton>
+  );
+}`,
+      vue: `<template>
+  <forge-button 
+    variant="primary"
+    @click="handleSubmit"
+    :loading="isSubmitting"
+    :disabled="!isValid"
+  >
+    Submit Form
+  </forge-button>
+</template>
+
+<script>
+export default {
+  methods: {
+    handleSubmit() {
+      // Handle form submission
+    }
+  }
+}
+</script>`,
+      angular: `<forge-button 
+  variant="primary"
+  (click)="handleSubmit()"
+  [loading]="isSubmitting"
+  [disabled]="!isValid">
+  Submit Form
+</forge-button>`,
+      vanilla: `<forge-button variant="primary" id="submit-btn">
+  Submit Form
+</forge-button>
+
+<script>
+document.getElementById('submit-btn').addEventListener('click', () => {
+  // Handle form submission
+});
+</script>`
+    },
+    
+    // Design System Integration
+    designTokens: {
+      spacing: ['--forge-spacing-sm', '--forge-spacing-md', '--forge-spacing-lg'],
+      colors: ['--forge-color-primary-*', '--forge-color-error', '--forge-color-surface-*'],
+      typography: ['--forge-font-family', '--forge-font-size-*', '--forge-font-weight-*'],
+      borders: ['--forge-border-radius-*'],
+      shadows: ['--forge-shadow-*'],
+      transitions: ['--forge-transition-fast', '--forge-transition-normal']
+    },
+    
+    // Performance Guidelines
+    performanceHints: [
+      'debounce rapid clicks by default (300ms)',
+      'lazy load when not in viewport for large button collections',
+      'use CSS transforms for hover/active states instead of layout changes',
+      'implement efficient ripple effect with requestAnimationFrame',
+      'avoid excessive DOM manipulations during interactions'
+    ],
+    bundleImpact: 'minimal',
+    
+    // Accessibility Guidelines
+    a11yGuidelines: [
+      'WCAG 2.1 AA compliant focus indicators',
+      'Support both keyboard (Enter/Space) and mouse interactions',
+      'Provide clear, descriptive button labels',
+      'Include loading and disabled state announcements',
+      'Maintain minimum 44px touch target size',
+      'Support high contrast mode'
+    ],
+    ariaPatterns: [
+      'aria-label for icon-only buttons',
+      'aria-expanded for dropdown/menu triggers',
+      'aria-controls for elements controlled by button',
+      'aria-current for navigation states',
+      'aria-busy during loading states'
+    ],
+    keyboardInteractions: [
+      'Enter: Activate button action',
+      'Space: Activate button action',
+      'Tab: Move focus to next interactive element',
+      'Shift+Tab: Move focus to previous interactive element'
+    ],
+    
+    // Component Composition Patterns
+    compositionPatterns: {
+      'with-icons': 'Use iconStart or iconEnd props, not nested icon elements for consistency',
+      'in-forms': 'Automatically handle form submission context and validation states',
+      'in-modals': 'Integrate with modal focus management and escape key handling',
+      'in-toolbars': 'Support toolbar keyboard navigation patterns',
+      'as-menu-trigger': 'Include proper ARIA attributes for dropdown menus'
+    },
+    childComponents: [], // Atomic component - no children
+    parentComponents: ['forge-form-field', 'forge-modal', 'forge-toolbar', 'forge-card'],
+    
+    // Testing Guidance
+    testingPatterns: [
+      'test click event handling',
+      'test keyboard activation (Enter/Space)',
+      'test loading state behavior',
+      'test disabled state prevention',
+      'test accessibility attributes',
+      'test focus management',
+      'test variant styling',
+      'test responsive behavior'
+    ],
+    commonTestCases: [
+      'should render with correct variant class',
+      'should handle click events',
+      'should be keyboard accessible',
+      'should show loading spinner when loading=true',
+      'should be non-interactive when disabled=true',
+      'should emit proper events with correct detail',
+      'should have proper ARIA attributes',
+      'should meet WCAG 2.1 AA contrast requirements'
+    ]
   };
 
   static styles = css`

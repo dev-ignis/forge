@@ -1,8 +1,8 @@
 {
   "name": "@nexcraft/forge",
-  "version": "0.5.2",
+  "version": "0.5.2-beta.14",
   "type": "module",
-  "description": "A production-ready, framework-agnostic UI component library built with Web Components and Lit, designed to work seamlessly across React, Vue, Angular, and vanilla JavaScript applications.",
+  "description": "The FIRST AI-Native component library built for the age of AI-assisted development. Features built-in AI metadata, design token bridge, and real-time performance monitoring. Works seamlessly across React, Vue, Angular, and vanilla JavaScript with AI coding tools like Cursor, GitHub Copilot, and Claude.",
   "main": "./dist/nexcraft-forge.es.js",
   "module": "./dist/nexcraft-forge.es.js",
   "types": "./dist/index.d.ts",
@@ -11,7 +11,10 @@
     "custom-elements.json",
     "README.md",
     "LICENSE",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "docs/integrations/",
+    "docs/guides/",
+    "docs/components/"
   ],
   "exports": {
     ".": {
@@ -25,8 +28,8 @@
       "require": "./dist/*"
     },
     "./integrations/react": {
-      "types": "./dist/integrations/react.d.ts",
-      "import": "./dist/integrations/react.js"
+      "types": "./dist/integrations/react/index.d.ts",
+      "import": "./dist/integrations/react/index.js"
     },
     "./integrations/vue": {
       "types": "./dist/integrations/vue.d.ts",
@@ -59,7 +62,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run build:types && npm run bundle:types && npm run cleanup:types && node scripts/build-integrations.js",
+    "build": "vite build && npm run build:types && npm run bundle:types && npm run cleanup:types",
     "build:types": "tsc --emitDeclarationOnly",
     "bundle:types": "rollup -c rollup.dts.config.js && mv dist/index.bundled.d.ts dist/index.d.ts",
     "cleanup:types": "node scripts/cleanup-types.js",
@@ -72,17 +75,24 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "type-check": "tsc --noEmit",
-    "lint": "eslint src/**/*.ts",
+    "lint": "eslint src/**/*.ts --no-warn-ignored",
     "format": "prettier --write src/**/*.{ts,css,html}",
     "analyze": "custom-elements-manifest analyze",
-    "bundle-analyze": "rollup-plugin-visualizer",
-    "generate:component": "node scripts/generate-component.js"
+    "bundle-analyze": "rollup-plugin-visualizer", 
+    "generate:component": "node scripts/generate-component.js",
+    "example:install": "cd examples/nextjs-app && npm install",
+    "example:dev": "cd examples/nextjs-app && npm run dev",
+    "example:build": "npm run build && cd examples/nextjs-app && npm run build",
+    "example:start": "cd examples/nextjs-app && npm run start"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dev-ignis/forge.git"
   },
   "keywords": [
+    "ai-native",
+    "ai-metadata",
+    "ai-assisted-development",
     "web-components",
     "ui-library",
     "design-system",
@@ -90,7 +100,12 @@
     "shadow-dom",
     "lit",
     "theming",
-    "css-custom-properties"
+    "css-custom-properties",
+    "cursor",
+    "github-copilot",
+    "claude",
+    "performance-monitoring",
+    "design-tokens"
   ],
   "author": "Ignis Team",
   "license": "MIT",
@@ -113,6 +128,7 @@
     "@storybook/addon-docs": "^9.1.3",
     "@storybook/addon-vitest": "^9.1.3",
     "@storybook/web-components-vite": "^9.1.3",
+    "@types/react": "^19.1.12",
     "@typescript-eslint/eslint-plugin": "^8.41.0",
     "@typescript-eslint/parser": "^8.41.0",
     "@vitest/coverage-v8": "^3.2.4",
@@ -121,6 +137,7 @@
     "eslint-plugin-storybook": "^9.1.3",
     "happy-dom": "^18.0.1",
     "prettier": "^3.6.2",
+    "react": "^19.1.1",
     "rollup-plugin-dts": "^6.2.3",
     "storybook": "^9.1.3",
     "typescript": "^5.9.2",

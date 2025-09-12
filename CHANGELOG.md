@@ -1,9 +1,108 @@
 # Changelog
 
+## v0.5.2-beta.14 - 2025-09-12 (Beta Release)
+
+### 🧪 Beta Changes
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- fix(react): - complete unified SSR architecture by enabling server-side environment detection;
+> ⚠️ **This is a beta release** - use with caution in production environments
+
+## v0.5.2-beta.13 - 2025-09-12 (Beta Release)
+
+### 🧪 Beta Changes
+- fix: - createUnifiedWrapper;
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- docs: - components;
+> ⚠️ **This is a beta release** - use with caution in production environments
+
+## v0.5.2-beta.12 - 2025-09-12 (Beta Release)
+
+### 🧪 Beta Changes
+- fix: complete unified SSR architecture implementation
+- fix: - complete unified SSR architecture implementation;
+-  feat: implement unified SSR architecture for React components
+- docs: - updated docs for components;
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- docs: - ssr architecture;
+> ⚠️ **This is a beta release** - use with caution in production environments
+
+## v0.5.2-beta.11 - 2025-09-11 (Beta Release)
+
+### 🧪 Beta Changes
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- fix: - module resolution;
+> ⚠️ **This is a beta release** - use with caution in production environments
+
+## v0.5.2-beta.10 - 2025-09-11 (Beta Release)
+
+### 🧪 Beta Changes
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- fix: - react wrappers;
+- docs: - ai native dev.;
+> ⚠️ **This is a beta release** - use with caution in production environments
+
+## v0.5.2-beta.9 - 2025-09-11 (Beta Release)
+
+### 🧪 Beta Changes
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- feat: complete React integration with automatic SSR support
+> ⚠️ **This is a beta release** - use with caution in production environments
+
+## v0.5.2-beta.8 - 2025-09-10 (Beta Release)
+
+### 🧪 Beta Changes
+- fix: - lint;
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- feat: - integrate framework builds into main Vite process;
+> ⚠️ **This is a beta release** - use with caution in production environments
+
+## v0.5.2-beta.7 - 2025-09-10 (Beta Release)
+
+### 🧪 Beta Changes
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- fix: - package export paths;
+> ⚠️ **This is a beta release** - use with caution in production environments
+
+## v0.5.2-beta.6 - 2025-09-10 (Beta Release)
+
+### 🧪 Beta Changes
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- feat: enhance React integration and clean up build artifacts
+> ⚠️ **This is a beta release** - use with caution in production environments
+
+## v0.5.2-beta.5 - 2025-09-09 (Beta Release)
+
+### 🧪 Beta Changes
+- Merge branch 'main' into develop
+- feat: - implement Phase 4.1 React integration (resolves #17);
+- feat: add comprehensive TypeScript JSX declarations for web components
+- chore(release): v0.5.2 [skip ci]
+> ⚠️ **This is a beta release** - use with caution in production environments
+
+## v0.5.2-beta.4 - 2025-09-09 (Beta Release)
+
+### 🧪 Beta Changes
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- fix: - ci node images;
+> ⚠️ **This is a beta release** - use with caution in production environments
+
+## v0.5.2-beta.3 - 2025-09-09 (Beta Release)
+
+### 🧪 Beta Changes
+- feat: avatar component;
+- docs: - advanced features for data-grid;
+- feat: - data-grid;
+- feat: - improve TypeScript types;
+- docs: - apect-ration / progress-circle / progress / skeleton / toast;
+- sync: merge main into develop
+- Merge pull request #16 from dev-ignis/develop
+> ⚠️ **This is a beta release** - use with caution in production environments
+
 ## v0.5.2 - 2025-09-08
 
 ### Changes
 - Merge pull request #16 from dev-ignis/develop
+
 ## v0.5.2-beta.2 - 2025-09-08 (Beta Release)
 
 ### 🧪 Beta Changes

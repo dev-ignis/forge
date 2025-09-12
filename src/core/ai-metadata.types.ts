@@ -1,8 +1,8 @@
 /**
- * AI Metadata Types - ADR-014
+ * AI Metadata Types - ADR-014 & ADR-017
  * 
  * Comprehensive type definitions for AI-ready component metadata
- * that enable intelligent interactions with AI systems.
+ * that enable intelligent interactions with AI systems and AI-native development.
  */
 
 export interface AIMetadata {
@@ -72,7 +72,7 @@ export interface AIValidationRule {
   type: 'required' | 'pattern' | 'min' | 'max' | 'minLength' | 'maxLength' | 'custom';
   
   /** Validation value or pattern */
-  value?: any;
+  value?: string | number | boolean | RegExp;
   
   /** Error message for validation failure */
   message: string;
@@ -244,6 +244,225 @@ export interface AIContextProvider {
 }
 
 /**
+ * AI-Native Development Types - ADR-017
+ * Extended metadata for AI-assisted development
+ */
+
+export interface AIComponentMetadata extends AIMetadata {
+  /** Component category for atomic design */
+  category: 'atom' | 'molecule' | 'organism';
+  
+  /** Common usage patterns for this component */
+  usagePatterns: string[];
+  
+  /** Anti-patterns to avoid */
+  antiPatterns: string[];
+  
+  /** Contextual rules for proper usage */
+  contextualRules: string[];
+  
+  /** AI prompts for code generation */
+  aiPrompts: AIPromptSet;
+  
+  /** Framework-specific code examples */
+  codeExamples: FrameworkExamples;
+  
+  /** Design system integration */
+  designTokens: Record<string, any>;
+  
+  /** Performance guidance */
+  performanceHints: string[];
+  bundleImpact: 'minimal' | 'moderate' | 'significant';
+  
+  /** Accessibility guidelines */
+  a11yGuidelines: string[];
+  ariaPatterns: string[];
+  keyboardInteractions: string[];
+  
+  /** Component composition patterns */
+  compositionPatterns: Record<string, string>;
+  childComponents: string[];
+  parentComponents: string[];
+  
+  /** Testing guidance */
+  testingPatterns: string[];
+  commonTestCases: string[];
+}
+
+export interface AIPromptSet {
+  /** Main code generation prompt */
+  codeGeneration: string;
+  
+  /** Accessibility-focused prompt */
+  accessibility: string;
+  
+  /** Performance optimization prompt */
+  performance: string;
+  
+  /** Design system compliance prompt */
+  designSystem: string;
+  
+  /** Additional context-specific prompts */
+  contextual?: Record<string, string>;
+}
+
+export interface FrameworkExamples {
+  /** React usage example */
+  react: string;
+  
+  /** Vue usage example */
+  vue: string;
+  
+  /** Angular usage example */
+  angular: string;
+  
+  /** Vanilla JavaScript example */
+  vanilla: string;
+  
+  /** Additional framework examples */
+  [key: string]: string;
+}
+
+export interface AITrainingExample {
+  /** Component tag name */
+  component: string;
+  
+  /** Usage context */
+  context: string;
+  
+  /** Good example code */
+  goodExample: string;
+  
+  /** Bad example (if applicable) */
+  badExample?: string;
+  
+  /** Explanation of why this is correct/incorrect */
+  explanation: string;
+  
+  /** Framework this example applies to */
+  framework?: string;
+  
+  /** Additional metadata */
+  tags?: string[];
+}
+
+export interface AIComplianceResult {
+  /** Overall compliance score (0-100) */
+  score: number;
+  
+  /** Compliance status */
+  status: 'compliant' | 'partial' | 'non-compliant';
+  
+  /** Issues found */
+  issues: AIComplianceIssue[];
+  
+  /** Suggestions for improvement */
+  suggestions: string[];
+  
+  /** Areas of compliance */
+  strengths: string[];
+}
+
+export interface AIComplianceIssue {
+  /** Issue category */
+  category: 'accessibility' | 'performance' | 'semantics' | 'design-system' | 'best-practices';
+  
+  /** Issue severity */
+  severity: 'error' | 'warning' | 'info';
+  
+  /** Issue description */
+  description: string;
+  
+  /** How to fix the issue */
+  fix: string;
+  
+  /** Code example of fix */
+  example?: string;
+}
+
+export interface AITrainingDataset {
+  /** Dataset version */
+  version: string;
+  
+  /** Creation timestamp */
+  created: Date;
+  
+  /** Component metadata and examples */
+  components: AIComponentTrainingData[];
+  
+  /** Global patterns and rules */
+  globalPatterns: AIGlobalPattern[];
+  
+  /** Framework-specific guidance */
+  frameworkGuidance: Record<string, AIFrameworkGuidance>;
+}
+
+export interface AIComponentTrainingData {
+  /** Component tag name */
+  tagName: string;
+  
+  /** Component metadata */
+  metadata: AIComponentMetadata;
+  
+  /** Training examples */
+  examples: AITrainingExample[];
+  
+  /** Anti-examples (what not to do) */
+  antiExamples: AITrainingExample[];
+  
+  /** Component relationships */
+  relationships: AIComponentRelationship[];
+}
+
+export interface AIGlobalPattern {
+  /** Pattern identifier */
+  id: string;
+  
+  /** Pattern description */
+  description: string;
+  
+  /** When this pattern applies */
+  applicability: string[];
+  
+  /** Code template */
+  template: string;
+  
+  /** Variables in the template */
+  variables: Record<string, string>;
+}
+
+export interface AIFrameworkGuidance {
+  /** Framework name */
+  framework: string;
+  
+  /** Import patterns */
+  importPatterns: string[];
+  
+  /** Event handling patterns */
+  eventPatterns: Record<string, string>;
+  
+  /** State management patterns */
+  statePatterns: string[];
+  
+  /** Common gotchas */
+  gotchas: string[];
+}
+
+export interface AIComponentRelationship {
+  /** Relationship type */
+  type: 'contains' | 'uses' | 'extends' | 'implements' | 'conflicts-with';
+  
+  /** Target component */
+  target: string;
+  
+  /** Relationship description */
+  description: string;
+  
+  /** Usage example */
+  example?: string;
+}
+
+/**
  * AI Integration helpers
  */
 export class AIMetadataBuilder {
@@ -385,5 +604,149 @@ export const AIMetadataUtils = {
     }
     
     return parts.join(' ');
+  },
+
+  /**
+   * Generate training examples from AI component metadata
+   */
+  generateTrainingExamples(metadata: AIComponentMetadata): AITrainingExample[] {
+    const examples: AITrainingExample[] = [];
+
+    // Generate examples from usage patterns
+    metadata.usagePatterns.forEach((pattern, index) => {
+      const frameworks = ['react', 'vue', 'angular', 'vanilla'] as const;
+      const framework = frameworks[index % frameworks.length];
+      examples.push({
+        component: metadata.purpose.toLowerCase().replace(/\s+/g, '-'),
+        context: pattern,
+        goodExample: metadata.codeExamples[framework] || metadata.codeExamples.vanilla,
+        explanation: `Proper usage for ${pattern} context`,
+        framework,
+        tags: ['best-practice', metadata.category]
+      });
+    });
+
+    // Generate anti-examples from anti-patterns
+    metadata.antiPatterns.forEach(antiPattern => {
+      examples.push({
+        component: metadata.purpose.toLowerCase().replace(/\s+/g, '-'),
+        context: 'anti-pattern',
+        goodExample: metadata.codeExamples.vanilla,
+        badExample: `<!-- Avoid: ${antiPattern} -->`,
+        explanation: `Avoid this pattern: ${antiPattern}`,
+        tags: ['anti-pattern', metadata.category]
+      });
+    });
+
+    return examples;
+  },
+
+  /**
+   * Validate AI component compliance
+   */
+  validateCompliance(element: Element, metadata: AIComponentMetadata): AIComplianceResult {
+    const issues: AIComplianceIssue[] = [];
+    const strengths: string[] = [];
+    const suggestions: string[] = [];
+
+    // Check accessibility compliance
+    if (metadata.a11yGuidelines.length > 0) {
+      if (!element.getAttribute('role') && metadata.semanticRole) {
+        issues.push({
+          category: 'accessibility',
+          severity: 'warning',
+          description: 'Missing semantic role attribute',
+          fix: `Add role="${metadata.semanticRole}" attribute`,
+          example: `<${element.tagName.toLowerCase()} role="${metadata.semanticRole}">...</${element.tagName.toLowerCase()}>`
+        });
+      } else if (element.getAttribute('role')) {
+        strengths.push('Has proper semantic role');
+      }
+
+      // Check ARIA patterns
+      metadata.ariaPatterns.forEach(pattern => {
+        if (!element.getAttribute('aria-label') && !element.getAttribute('aria-labelledby')) {
+          suggestions.push(`Consider adding ${pattern} for better accessibility`);
+        }
+      });
+    }
+
+    // Check performance compliance
+    if (metadata.performanceHints.length > 0) {
+      metadata.performanceHints.forEach(hint => {
+        if (hint.includes('lazy load') && !element.hasAttribute('loading')) {
+          suggestions.push('Consider adding lazy loading for performance');
+        }
+      });
+    }
+
+    // Calculate compliance score
+    const totalChecks = metadata.a11yGuidelines.length + metadata.performanceHints.length + metadata.contextualRules.length;
+    const passedChecks = totalChecks - issues.filter(i => i.severity === 'error').length;
+    const score = totalChecks > 0 ? Math.round((passedChecks / totalChecks) * 100) : 100;
+
+    return {
+      score,
+      status: score >= 90 ? 'compliant' : score >= 70 ? 'partial' : 'non-compliant',
+      issues,
+      suggestions,
+      strengths
+    };
+  },
+
+  /**
+   * Export AI training dataset
+   */
+  exportTrainingDataset(components: Map<string, AIComponentMetadata>): AITrainingDataset {
+    const componentData: AIComponentTrainingData[] = [];
+
+    components.forEach((metadata, tagName) => {
+      componentData.push({
+        tagName,
+        metadata,
+        examples: this.generateTrainingExamples(metadata),
+        antiExamples: [], // Could be expanded
+        relationships: [] // Could be expanded
+      });
+    });
+
+    return {
+      version: '1.0.0',
+      created: new Date(),
+      components: componentData,
+      globalPatterns: [],
+      frameworkGuidance: {
+        react: {
+          framework: 'react',
+          importPatterns: ['import { ComponentName } from "@nexcraft/forge/integrations/react"'],
+          eventPatterns: {
+            onClick: 'onClick={(e) => handleClick(e)}',
+            onChange: 'onChange={(value) => handleChange(value)}'
+          },
+          statePatterns: ['controlled components', 'uncontrolled with refs'],
+          gotchas: ['Remember to handle synthetic events', 'Use proper TypeScript types']
+        },
+        vue: {
+          framework: 'vue',
+          importPatterns: ['import { ComponentName } from "@nexcraft/forge/integrations/vue"'],
+          eventPatterns: {
+            click: '@click="handleClick"',
+            change: '@change="handleChange"'
+          },
+          statePatterns: ['v-model', 'reactive refs'],
+          gotchas: ['Use kebab-case for component names in templates']
+        },
+        angular: {
+          framework: 'angular',
+          importPatterns: ['import { NgxForgeModule } from "@nexcraft/forge/integrations/angular"'],
+          eventPatterns: {
+            click: '(click)="handleClick($event)"',
+            change: '(change)="handleChange($event)"'
+          },
+          statePatterns: ['two-way binding', 'reactive forms'],
+          gotchas: ['Import CUSTOM_ELEMENTS_SCHEMA for web components']
+        }
+      }
+    };
   }
 };
