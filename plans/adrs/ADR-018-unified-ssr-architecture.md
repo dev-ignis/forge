@@ -27,6 +27,15 @@ Meanwhile, the unified approach offers significant advantages:
 
 We will implement a **Unified SSR Architecture** where every React component automatically works in both SSR and client-only environments using a single import and API.
 
+## Alternatives Considered
+
+- Separate SSR and Client Components
+  - Rejected due to API fragmentation, developer confusion, and doubled maintenance.
+- ClientOnly/NoSSR Wrappers per Usage Site
+  - Rejected as it pushes complexity to app teams and hurts DX; fragile in mixed trees.
+- Build-Time Branching (two bundles + conditions)
+  - Rejected for increased build complexity, risk of drift, and limited runtime flexibility.
+
 ### Technical Implementation
 
 #### 1. Unified Wrapper Architecture
