@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nexcraft.dev/schemas/ai-manifest.schema.json",
+  "title": "Forge AI Manifest",
+  "type": "object",
+  "required": ["manifestVersion", "package", "components"],
+  "properties": {
+    "manifestVersion": { "type": "string" },
+    "package": { "type": "string" },
+    "generatedAt": { "type": "string" },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "tag"],
+        "properties": {
+          "id": { "type": "string" },
+          "tag": { "type": "string" },
+          "category": { "type": "string" },
+          "props": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name"],
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" },
+                "required": { "type": "boolean" },
+                "default": {}
+              }
+            }
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name"],
+              "properties": {
+                "name": { "type": "string" },
+                "detail": { "type": "string" }
+              }
+            }
+          },
+          "slots": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "a11y": { "type": "object" },
+          "examples": {
+            "type": "object",
+            "properties": {
+              "web": { "type": "string" },
+              "react": { "type": "string" },
+              "ssr": { "type": "string" }
+            }
+          },
+          "x-ai": { "type": "object" }
+        }
+      }
+    }
+  }
+}
