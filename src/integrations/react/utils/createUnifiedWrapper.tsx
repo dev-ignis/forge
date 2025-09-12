@@ -18,6 +18,9 @@ import React, {
   type PropsWithChildren 
 } from 'react';
 
+// Check if we're in a client environment
+const isClient = typeof window !== 'undefined';
+
 export interface UnifiedWrapperOptions<P extends Record<string, any>> {
   /** Web component tag name */
   tagName: string;
