@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.2-beta.17 - 2025-09-12 (Beta Release)
+
+### 🧪 Beta Changes
+- fix(react): Resolve React Hook Form integration issues and styling
+> ⚠️ **This is a beta release** - use with caution in production environments
+
 ## v0.5.2-beta.16 - 2025-09-12 (Beta Release)
 
 ### 🧪 Beta Changes
