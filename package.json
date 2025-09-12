@@ -78,8 +78,12 @@
     "lint": "eslint src/**/*.ts --no-warn-ignored",
     "format": "prettier --write src/**/*.{ts,css,html}",
     "analyze": "custom-elements-manifest analyze",
-    "bundle-analyze": "rollup-plugin-visualizer",
-    "generate:component": "node scripts/generate-component.js"
+    "bundle-analyze": "rollup-plugin-visualizer", 
+    "generate:component": "node scripts/generate-component.js",
+    "example:install": "cd examples/nextjs-app && npm install",
+    "example:dev": "cd examples/nextjs-app && npm run dev",
+    "example:build": "npm run build && cd examples/nextjs-app && npm run build",
+    "example:start": "cd examples/nextjs-app && npm run start"
   },
   "repository": {
     "type": "git",

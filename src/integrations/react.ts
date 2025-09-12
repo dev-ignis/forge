@@ -26,6 +26,15 @@
 
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 
+// Conditional import for optional peer dependencies
+let useController: any = null;
+try {
+  const rhf = require('react-hook-form');
+  useController = rhf.useController;
+} catch (error) {
+  // react-hook-form not available - that's fine, hook will throw helpful error
+}
+
 // Custom event type for Forge components
 interface ForgeCustomEvent<T = any> extends CustomEvent {
   detail: T;
@@ -368,14 +377,37 @@ export function withForgeComponent<P extends object>(
 
 // React Hook Form integration helper
 export function useForgeReactHookForm(name: string, control: any) {
-  const { field } = control.useController({ name });
-  const { ref } = useForgeControlled(field.value, field.onChange);
+  if (!useController) {
+    throw new Error('@nexcraft/forge: react-hook-form is required as a peer dependency to use useForgeReactHookForm. Please install react-hook-form.');
+  }
+
+  const { field, fieldState } = useController({ name, control });
+  
+  // Create a compatible onChange handler that works with both Forge and RHF signatures
+  const handleChange = useCallback((value: any, event?: any) => {
+    // If called with an event object (React Hook Form style), pass it directly
+    if (typeof value === 'object' && value.target) {
+      field.onChange(value);
+    } else {
+      // If called with a value (Forge component style), create a synthetic event
+      const syntheticEvent = {
+        target: { value, name: field.name },
+        type: 'change'
+      };
+      field.onChange(syntheticEvent);
+    }
+  }, [field]);
+
+  const { ref } = useForgeControlled(field.value, handleChange);
 
   return {
     ref,
     name: field.name,
     value: field.value,
+    onChange: handleChange,
     onBlur: field.onBlur,
+    error: fieldState.error?.message,
+    invalid: fieldState.invalid,
   };
 }
 
