@@ -50,7 +50,7 @@ export abstract class BaseElement extends LitElement {
   };
 
   // AI state tracking
-  protected componentState: Map<string, any> = new Map();
+  protected componentState: Map<string, unknown> = new Map();
 
   constructor() {
     super();
@@ -99,7 +99,7 @@ export abstract class BaseElement extends LitElement {
 
   // AI State getter per ADR-014
   get aiState(): AIComponentState {
-    const stateObject: Record<string, any> = {};
+    const stateObject: Record<string, unknown> = {};
     this.componentState.forEach((value, key) => {
       stateObject[key] = value;
     });
@@ -152,7 +152,7 @@ export abstract class BaseElement extends LitElement {
   }
 
   // Update component state for AI tracking
-  protected updateComponentState(key: string, value: any): void {
+  protected updateComponentState(key: string, value: unknown): void {
     this.componentState.set(key, value);
     
     // Emit state change event for AI listeners

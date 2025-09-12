@@ -22,6 +22,7 @@
     "dist", 
     "**/*.test.ts",
     "src/integrations/vue.ts",
-    "src/integrations/angular.ts"
+    "src/integrations/angular.ts",
+    "src/integrations/react/**/*"
   ]
 }

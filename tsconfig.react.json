@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "outDir": "./dist",
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "module": "ES2022",
+    "moduleResolution": "node"
+  },
+  "include": ["src/integrations/react/**/*"],
+  "exclude": ["node_modules", "**/*.test.ts", "dist"]
+}

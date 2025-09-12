@@ -73,6 +73,12 @@ desktop.ini
 # TypeScript
 *.tsbuildinfo
 
+# TypeScript compilation artifacts in src/ (should never exist - use npm run build instead)
+src/**/*.js
+src/**/*.d.ts
+src/**/*.js.map
+src/**/*.d.ts.map
+
 # Debug
 debug/
 .debug/

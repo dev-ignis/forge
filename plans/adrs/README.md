@@ -67,6 +67,17 @@ Architecture Decision Records capture important architectural decisions along wi
 - **[ADR-015: Atomic Design Composition Pattern](./ADR-015-atomic-composition-pattern.md)**  
   Molecules must use atoms as building blocks for consistency, maintainability, and proper atomic design hierarchy.
 
+### Advanced Integration Patterns
+
+- **[ADR-016: Organism Components Design Pattern](./ADR-016-organism-components-pattern.md)**  
+  Complex multi-feature components that combine molecules and atoms to create complete UI sections.
+
+- **[ADR-017: AI-Native Development Strategy](./ADR-017-ai-native-development-strategy.md)**  
+  Strategic pivot to AI-first component library with comprehensive AI metadata and integration capabilities.
+
+- **[ADR-018: Unified SSR Architecture](./ADR-018-unified-ssr-architecture.md)**  
+  Single component API that automatically works in both SSR and client-only environments with progressive enhancement.
+
 ## ADR Status Definitions
 
 - **Proposed**: The decision is still under discussion
