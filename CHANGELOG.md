@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.5.2-beta.12 - 2025-09-12 (Beta Release)
+
+### 🧪 Beta Changes
+- fix: complete unified SSR architecture implementation
+- fix: - complete unified SSR architecture implementation;
+-  feat: implement unified SSR architecture for React components
+- docs: - updated docs for components;
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- docs: - ssr architecture;
+> ⚠️ **This is a beta release** - use with caution in production environments
+
 ## v0.5.2-beta.11 - 2025-09-11 (Beta Release)
 
 ### 🧪 Beta Changes
