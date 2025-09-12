@@ -61,6 +61,33 @@ export interface UnifiedWrapperOptions<P extends Record<string, any>> {
 export function createUnifiedWrapper<T extends HTMLElement, P extends Record<string, any>>(
   options: UnifiedWrapperOptions<P>
 ) {
+  // Check if we're in SSR environment during wrapper creation
+  if (typeof window === 'undefined') {
+    // During SSR, return a simple functional component that renders the fallback
+    const SSRComponent = forwardRef<T, PropsWithChildren<P>>((props, ref: Ref<T>) => {
+      const { children, ...restProps } = props;
+      const fallbackElement = options.fallbackRenderer({ ...options.fallbackProps, ...restProps }, children);
+      
+      if (fallbackElement === null) {
+        return null;
+      }
+      
+      const enhancedProps = {
+        'data-forge-component': options.tagName,
+        'data-ssr-fallback': true,
+        suppressHydrationWarning: true,
+        ...(fallbackElement.props || {}),
+        ref
+      };
+      
+      return React.cloneElement(fallbackElement, enhancedProps);
+    });
+    
+    SSRComponent.displayName = `${options.displayName}_SSR`;
+    return SSRComponent;
+  }
+
+  // Client-side: Return full unified component
   const WrappedComponent = forwardRef<T, PropsWithChildren<P>>((props, ref: Ref<T>) => {
     const elementRef = useRef<T>(null);
     const fallbackRef = useRef<HTMLElement>(null);
