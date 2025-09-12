@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.5.2-beta.15 - 2025-09-12 (Beta Release)
+
+### 🧪 Beta Changes
+- fix: - lint;
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- fix: - createUnifiedWrapper;
+> ⚠️ **This is a beta release** - use with caution in production environments
+
 ## v0.5.2-beta.14 - 2025-09-12 (Beta Release)
 
 ### 🧪 Beta Changes
