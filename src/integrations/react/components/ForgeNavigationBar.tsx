@@ -8,9 +8,10 @@
  * - Supports multiple variants (default, dark, light), fixed/sticky positioning, and brand customization
  */
 
+import React from 'react';
 import type { ForgeNavigationBarProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeNavigationBar = createUnifiedWrapper<HTMLElement, ForgeNavigationBarProps>({
   tagName: 'forge-navigation-bar',
@@ -20,7 +21,15 @@ export const ForgeNavigationBar = createUnifiedWrapper<HTMLElement, ForgeNavigat
     onItemClick: 'item-click'
   },
   
-  fallbackRenderer: FallbackRenderers.navigationBar,
+  fallbackRenderer: (props, children) => (
+    <nav
+      className={`forge-navigation-bar ${props.variant ? `forge-navigation-bar--${props.variant}` : ''} ${props.fixed ? 'forge-navigation-bar--fixed' : ''} ${props.sticky ? 'forge-navigation-bar--sticky' : ''}`}
+      role="navigation"
+      data-forge-component="forge-navigation-bar"
+    >
+      <div className="forge-navigation-bar-content">{children}</div>
+    </nav>
+  ),
   
   fallbackProps: {
     variant: 'default',

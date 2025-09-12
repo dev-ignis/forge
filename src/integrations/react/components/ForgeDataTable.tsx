@@ -8,9 +8,10 @@
  * - Features: sortable columns, row selection, built-in pagination, and loading indicators
  */
 
+import React from 'react';
 import type { ForgeDataTableProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeDataTable = createUnifiedWrapper<HTMLElement, ForgeDataTableProps>({
   tagName: 'forge-data-table',
@@ -22,7 +23,22 @@ export const ForgeDataTable = createUnifiedWrapper<HTMLElement, ForgeDataTablePr
     onPageChange: 'page-change'
   },
   
-  fallbackRenderer: FallbackRenderers.dataTable,
+  fallbackRenderer: (props, children) => (
+    <div
+      className={`forge-data-table ${props.sortable ? 'forge-data-table--sortable' : ''} ${props.selectable ? 'forge-data-table--selectable' : ''} ${props.loading ? 'forge-data-table--loading' : ''}`}
+      data-forge-component="forge-data-table"
+    >
+      <table className="forge-data-table-table">
+        <thead className="forge-data-table-header">{/* Table headers */}</thead>
+        <tbody className="forge-data-table-body">{children}</tbody>
+      </table>
+      {props.pagination && (
+        <div className="forge-data-table-pagination">
+          Page {props.currentPage || 1}
+        </div>
+      )}
+    </div>
+  ),
   
   fallbackProps: {
     columns: [],

@@ -7,9 +7,10 @@
  * - No separate SSR/client components needed
  */
 
+import React from 'react';
 import type { ForgeAlertProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeAlert = createUnifiedWrapper<HTMLElement, ForgeAlertProps>({
   tagName: 'forge-alert',
@@ -23,7 +24,15 @@ export const ForgeAlert = createUnifiedWrapper<HTMLElement, ForgeAlertProps>({
     'error-text': 'errorText'
   },
   
-  fallbackRenderer: FallbackRenderers.alert,
+  fallbackRenderer: (props, children) => (
+    <div
+      className={`forge-alert ${props.variant ? `forge-alert--${props.variant}` : ''} ${props.severity ? `forge-alert--${props.severity}` : ''}`}
+      role="alert"
+      data-forge-component="forge-alert"
+    >
+      {children}
+    </div>
+  ),
   
   fallbackProps: {
     severity: 'info',

@@ -8,9 +8,10 @@
  * - Supports multiple variants (default, pills, underline), orientations, and tab management
  */
 
+import React from 'react';
 import type { ForgeTabsProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeTabs = createUnifiedWrapper<HTMLElement, ForgeTabsProps>({
   tagName: 'forge-tabs',
@@ -20,7 +21,17 @@ export const ForgeTabs = createUnifiedWrapper<HTMLElement, ForgeTabsProps>({
     onTabChange: 'tab-change'
   },
   
-  fallbackRenderer: FallbackRenderers.tabs,
+  fallbackRenderer: (props, children) => (
+    <div
+      className={`forge-tabs ${props.variant ? `forge-tabs--${props.variant}` : ''} ${props.orientation ? `forge-tabs--${props.orientation}` : ''}`}
+      data-forge-component="forge-tabs"
+    >
+      <div className="forge-tabs-list" role="tablist">
+        {/* Tab headers would be rendered here */}
+      </div>
+      <div className="forge-tabs-content">{children}</div>
+    </div>
+  ),
   
   fallbackProps: {
     variant: 'default',

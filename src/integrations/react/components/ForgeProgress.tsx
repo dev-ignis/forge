@@ -8,15 +8,25 @@
  * - Supports both linear and circular variants, indeterminate states
  */
 
+import React from 'react';
 import type { ForgeProgressProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeProgress = createUnifiedWrapper<HTMLElement, ForgeProgressProps>({
   tagName: 'forge-progress',
   displayName: 'ForgeProgress',
   
-  fallbackRenderer: FallbackRenderers.progress,
+  fallbackRenderer: (props, children) => (
+    <progress
+      className={`forge-progress ${props.variant ? `forge-progress--${props.variant}` : ''} ${props.size ? `forge-progress--${props.size}` : ''}`}
+      value={props.indeterminate ? undefined : props.value || 0}
+      max={props.max || 100}
+      data-forge-component="forge-progress"
+    >
+      {children}
+    </progress>
+  ),
   
   fallbackProps: {
     value: 0,

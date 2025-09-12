@@ -11,9 +11,10 @@
  * This is our Phase 8 flagship component with full unified SSR/client support
  */
 
+import React from 'react';
 import type { ForgeDataGridProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeDataGrid = createUnifiedWrapper<HTMLElement, ForgeDataGridProps>({
   tagName: 'forge-data-grid',
@@ -26,7 +27,31 @@ export const ForgeDataGrid = createUnifiedWrapper<HTMLElement, ForgeDataGridProp
     onSearchChanged: 'search-changed'
   },
   
-  fallbackRenderer: FallbackRenderers.dataGrid,
+  fallbackRenderer: (props, children) => (
+    <div
+      className={`forge-data-grid ${props.selectable ? 'forge-data-grid--selectable' : ''} ${props.editable ? 'forge-data-grid--editable' : ''} ${props.loading ? 'forge-data-grid--loading' : ''}`}
+      data-forge-component="forge-data-grid"
+    >
+      {props.showToolbar && (
+        <div className="forge-data-grid-toolbar">
+          {props.showSearch && (
+            <input
+              type="text"
+              className="forge-data-grid-search"
+              placeholder="Search..."
+              defaultValue={props.searchQuery}
+            />
+          )}
+        </div>
+      )}
+      <div className="forge-data-grid-container">
+        <table className="forge-data-grid-table">
+          <thead className="forge-data-grid-header">{/* Grid headers */}</thead>
+          <tbody className="forge-data-grid-body">{children}</tbody>
+        </table>
+      </div>
+    </div>
+  ),
   
   fallbackProps: {
     columns: [],

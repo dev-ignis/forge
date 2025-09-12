@@ -8,15 +8,26 @@
  * - Supports validation states, required indicators, and accessibility
  */
 
+import React from 'react';
 import type { ForgeFormFieldProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeFormField = createUnifiedWrapper<HTMLElement, ForgeFormFieldProps>({
   tagName: 'forge-form-field',
   displayName: 'ForgeFormField',
   
-  fallbackRenderer: FallbackRenderers.formField,
+  fallbackRenderer: (props, children) => (
+    <div
+      className={`forge-form-field ${props.error ? 'forge-form-field--error' : ''} ${props.disabled ? 'forge-form-field--disabled' : ''}`}
+      data-forge-component="forge-form-field"
+    >
+      {props.label && <label className="forge-form-field-label">{props.label}{props.required && <span>*</span>}</label>}
+      <div className="forge-form-field-input">{children}</div>
+      {props['error-message'] && <span className="forge-form-field-error">{props['error-message']}</span>}
+      {props['helper-text'] && <span className="forge-form-field-helper">{props['helper-text']}</span>}
+    </div>
+  ),
   
   fallbackProps: {
     required: false,

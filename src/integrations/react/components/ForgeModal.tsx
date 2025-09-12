@@ -8,9 +8,10 @@
  * - Supports multiple sizes, backdrop control, and keyboard interaction
  */
 
+import React from 'react';
 import type { ForgeModalProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeModal = createUnifiedWrapper<HTMLElement, ForgeModalProps>({
   tagName: 'forge-modal',
@@ -21,7 +22,17 @@ export const ForgeModal = createUnifiedWrapper<HTMLElement, ForgeModalProps>({
     onOpen: 'open'
   },
   
-  fallbackRenderer: FallbackRenderers.modal,
+  fallbackRenderer: (props, children) => {
+    if (!props.open) return null;
+    return (
+      <div className="forge-modal-overlay" data-forge-component="forge-modal">
+        <div className={`forge-modal forge-modal--${props.size || 'medium'}`}>
+          {props.title && <div className="forge-modal-header">{props.title}</div>}
+          <div className="forge-modal-body">{children}</div>
+        </div>
+      </div>
+    );
+  },
   
   fallbackProps: {
     open: false,

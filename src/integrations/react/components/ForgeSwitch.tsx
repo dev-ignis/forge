@@ -8,9 +8,10 @@
  * - Multiple size variants and accessibility support
  */
 
+import React from 'react';
 import type { ForgeSwitchProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeSwitch = createUnifiedWrapper<HTMLElement, ForgeSwitchProps>({
   tagName: 'forge-switch',
@@ -20,7 +21,22 @@ export const ForgeSwitch = createUnifiedWrapper<HTMLElement, ForgeSwitchProps>({
     onChange: 'change'
   },
   
-  fallbackRenderer: FallbackRenderers.switch,
+  fallbackRenderer: (props, children) => (
+    <label className="forge-switch-container">
+      <input
+        type="checkbox"
+        className={`forge-switch forge-switch--${props.size || 'md'} ${props.disabled ? 'forge-switch--disabled' : ''}`}
+        checked={props.checked || false}
+        disabled={props.disabled}
+        name={props.name}
+        value={props.value}
+        aria-label={props['aria-label']}
+        data-forge-component="forge-switch"
+      />
+      <span className="forge-switch-slider"></span>
+      {children}
+    </label>
+  ),
   
   fallbackProps: {
     checked: false,

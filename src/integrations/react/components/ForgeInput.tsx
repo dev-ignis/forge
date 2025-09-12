@@ -8,9 +8,10 @@
  * - Full form integration support
  */
 
+import React from 'react';
 import type { ForgeInputProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeInput = createUnifiedWrapper<HTMLElement, ForgeInputProps>({
   tagName: 'forge-input',
@@ -26,7 +27,17 @@ export const ForgeInput = createUnifiedWrapper<HTMLElement, ForgeInputProps>({
     errorText: 'error-text'
   },
   
-  fallbackRenderer: FallbackRenderers.input,
+  fallbackRenderer: (props, children) => (
+    <input
+      className={`forge-input forge-input--${props.variant || 'default'} forge-input--${props.size || 'md'}`}
+      type={props.type || 'text'}
+      placeholder={props.placeholder}
+      disabled={props.disabled}
+      required={props.required}
+      value={props.value || ''}
+      data-forge-component="forge-input"
+    />
+  ),
   
   fallbackProps: {
     type: 'text',

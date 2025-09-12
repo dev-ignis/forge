@@ -8,15 +8,24 @@
  * - Supports multiple variants, custom dimensions, and animation control
  */
 
+import React from 'react';
 import type { ForgeSkeletonProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeSkeleton = createUnifiedWrapper<HTMLElement, ForgeSkeletonProps>({
   tagName: 'forge-skeleton',
   displayName: 'ForgeSkeleton',
   
-  fallbackRenderer: FallbackRenderers.skeleton,
+  fallbackRenderer: (props, children) => (
+    <div
+      className={`forge-skeleton ${props.variant ? `forge-skeleton--${props.variant}` : ''} ${props.animated ? 'forge-skeleton--animated' : ''}`}
+      style={{ width: props.width, height: props.height }}
+      data-forge-component="forge-skeleton"
+    >
+      {children}
+    </div>
+  ),
   
   fallbackProps: {
     width: '100%',

@@ -8,15 +8,24 @@
  * - Supports multiple positions, delays, and disable states
  */
 
+import React from 'react';
 import type { ForgeTooltipProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeTooltip = createUnifiedWrapper<HTMLElement, ForgeTooltipProps>({
   tagName: 'forge-tooltip',
   displayName: 'ForgeTooltip',
   
-  fallbackRenderer: FallbackRenderers.tooltip,
+  fallbackRenderer: (props, children) => (
+    <div
+      className={`forge-tooltip ${props.position ? `forge-tooltip--${props.position}` : ''} ${props.disabled ? 'forge-tooltip--disabled' : ''}`}
+      data-forge-component="forge-tooltip"
+      title={props.content}
+    >
+      {children}
+    </div>
+  ),
   
   fallbackProps: {
     position: 'top',

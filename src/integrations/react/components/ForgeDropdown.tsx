@@ -8,9 +8,10 @@
  * - Supports single/multi-select, search functionality, and virtual scrolling
  */
 
+import React from 'react';
 import type { ForgeDropdownProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeDropdown = createUnifiedWrapper<HTMLElement, ForgeDropdownProps>({
   tagName: 'forge-dropdown',
@@ -23,7 +24,17 @@ export const ForgeDropdown = createUnifiedWrapper<HTMLElement, ForgeDropdownProp
     onSearch: 'search'
   },
   
-  fallbackRenderer: FallbackRenderers.dropdown,
+  fallbackRenderer: (props, children) => (
+    <div
+      className={`forge-dropdown ${props.variant ? `forge-dropdown--${props.variant}` : ''} ${props.size ? `forge-dropdown--${props.size}` : ''} ${props.disabled ? 'forge-dropdown--disabled' : ''}`}
+      data-forge-component="forge-dropdown"
+    >
+      <button className="forge-dropdown-trigger" disabled={props.disabled}>
+        {props.placeholder || 'Select option'}
+      </button>
+      <div className="forge-dropdown-content">{children}</div>
+    </div>
+  ),
   
   fallbackProps: {
     disabled: false,

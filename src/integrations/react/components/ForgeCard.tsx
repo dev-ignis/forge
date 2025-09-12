@@ -8,9 +8,10 @@
  * - Perfect for content containers and layout structures
  */
 
+import React from 'react';
 import type { ForgeCardProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeCard = createUnifiedWrapper<HTMLElement, ForgeCardProps>({
   tagName: 'forge-card',
@@ -20,7 +21,14 @@ export const ForgeCard = createUnifiedWrapper<HTMLElement, ForgeCardProps>({
     onClick: 'click'
   },
   
-  fallbackRenderer: FallbackRenderers.card,
+  fallbackRenderer: (props, children) => (
+    <div
+      className={`forge-card forge-card--${props.variant || 'default'} forge-card--${props.size || 'medium'}`}
+      data-forge-component="forge-card"
+    >
+      {children}
+    </div>
+  ),
   
   fallbackProps: {
     variant: 'default',
