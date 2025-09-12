@@ -8,15 +8,23 @@
  * - Supports customizable sizes and colors
  */
 
+import React from 'react';
 import type { ForgeIconProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeIcon = createUnifiedWrapper<HTMLElement, ForgeIconProps>({
   tagName: 'forge-icon',
   displayName: 'ForgeIcon',
   
-  fallbackRenderer: FallbackRenderers.icon,
+  fallbackRenderer: (props, children) => (
+    <i
+      className={`forge-icon ${props.size ? `forge-icon--${props.size}` : ''} ${props.color ? `forge-icon--${props.color}` : ''}`}
+      data-forge-component="forge-icon"
+    >
+      {children}
+    </i>
+  ),
   
   fallbackProps: {
     size: '16px',

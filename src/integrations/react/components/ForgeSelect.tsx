@@ -8,9 +8,10 @@
  * - Supports single/multiple selection and option arrays
  */
 
+import React from 'react';
 import type { ForgeSelectProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeSelect = createUnifiedWrapper<HTMLElement, ForgeSelectProps>({
   tagName: 'forge-select',
@@ -20,7 +21,20 @@ export const ForgeSelect = createUnifiedWrapper<HTMLElement, ForgeSelectProps>({
     onChange: 'change'
   },
   
-  fallbackRenderer: FallbackRenderers.select,
+  fallbackRenderer: (props, children) => (
+    <select
+      className={`forge-select ${props.disabled ? 'forge-select--disabled' : ''} ${props.multiple ? 'forge-select--multiple' : ''}`}
+      disabled={props.disabled}
+      multiple={props.multiple}
+      name={props.name}
+      required={props.required}
+      value={props.value}
+      data-forge-component="forge-select"
+    >
+      {props.placeholder && <option value="" disabled>{props.placeholder}</option>}
+      {children}
+    </select>
+  ),
   
   fallbackProps: {
     disabled: false,

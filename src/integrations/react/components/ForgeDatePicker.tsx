@@ -8,9 +8,10 @@
  * - Supports date ranges, formatting, and validation
  */
 
+import React from 'react';
 import type { ForgeDatePickerProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeDatePicker = createUnifiedWrapper<HTMLElement, ForgeDatePickerProps>({
   tagName: 'forge-date-picker',
@@ -20,7 +21,20 @@ export const ForgeDatePicker = createUnifiedWrapper<HTMLElement, ForgeDatePicker
     onChange: 'change'
   },
   
-  fallbackRenderer: FallbackRenderers.datePicker,
+  fallbackRenderer: (props, children) => (
+    <input
+      type="date"
+      className={`forge-date-picker ${props.disabled ? 'forge-date-picker--disabled' : ''}`}
+      value={props.value}
+      min={props.min}
+      max={props.max}
+      disabled={props.disabled}
+      placeholder={props.placeholder}
+      name={props.name}
+      required={props.required}
+      data-forge-component="forge-date-picker"
+    />
+  ),
   
   fallbackProps: {
     disabled: false,

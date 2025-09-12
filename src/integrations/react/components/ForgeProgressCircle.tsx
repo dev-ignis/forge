@@ -8,15 +8,42 @@
  * - Supports indeterminate states, custom sizes, and value display
  */
 
+import React from 'react';
 import type { ForgeProgressCircleProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeProgressCircle = createUnifiedWrapper<HTMLElement, ForgeProgressCircleProps>({
   tagName: 'forge-progress-circle',
   displayName: 'ForgeProgressCircle',
   
-  fallbackRenderer: FallbackRenderers.progressCircle,
+  fallbackRenderer: (props, children) => (
+    <div
+      className={`forge-progress-circle ${props.indeterminate ? 'forge-progress-circle--indeterminate' : ''}`}
+      style={{ width: props.size, height: props.size }}
+      data-forge-component="forge-progress-circle"
+    >
+      <svg className="forge-progress-circle-svg" viewBox="0 0 100 100">
+        <circle
+          className="forge-progress-circle-track"
+          cx="50"
+          cy="50"
+          r="45"
+          strokeWidth={props.strokeWidth || 4}
+        />
+        <circle
+          className="forge-progress-circle-fill"
+          cx="50"
+          cy="50"
+          r="45"
+          strokeWidth={props.strokeWidth || 4}
+          strokeDasharray={`${((props.value || 0) / (props.max || 100)) * 283} 283`}
+        />
+      </svg>
+      {props.showValue && <span className="forge-progress-circle-value">{props.value}%</span>}
+      {children}
+    </div>
+  ),
   
   fallbackProps: {
     value: 0,

@@ -8,9 +8,10 @@
  * - Supports multiple sizes, shapes, status indicators, and loading states
  */
 
+import React from 'react';
 import type { ForgeAvatarProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeAvatar = createUnifiedWrapper<HTMLElement, ForgeAvatarProps>({
   tagName: 'forge-avatar',
@@ -21,7 +22,18 @@ export const ForgeAvatar = createUnifiedWrapper<HTMLElement, ForgeAvatarProps>({
     onLoad: 'load'
   },
   
-  fallbackRenderer: FallbackRenderers.avatar,
+  fallbackRenderer: (props, children) => (
+    <div
+      className={`forge-avatar ${props.size ? `forge-avatar--${props.size}` : ''} ${props.shape ? `forge-avatar--${props.shape}` : ''}`}
+      data-forge-component="forge-avatar"
+    >
+      {props.src ? (
+        <img src={props.src} alt={props.alt || ''} />
+      ) : (
+        <span className="forge-avatar-initials">{props.initials || children}</span>
+      )}
+    </div>
+  ),
   
   fallbackProps: {
     size: 'md',

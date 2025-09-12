@@ -8,9 +8,10 @@
  * - Supports multiple types, positioning, and dismissal controls
  */
 
+import React from 'react';
 import type { ForgeToastProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeToast = createUnifiedWrapper<HTMLElement, ForgeToastProps>({
   tagName: 'forge-toast',
@@ -20,7 +21,17 @@ export const ForgeToast = createUnifiedWrapper<HTMLElement, ForgeToastProps>({
     onClose: 'close'
   },
   
-  fallbackRenderer: FallbackRenderers.toast,
+  fallbackRenderer: (props, children) => (
+    <div
+      className={`forge-toast ${props.type ? `forge-toast--${props.type}` : ''} ${props.position ? `forge-toast--${props.position}` : ''}`}
+      role={props.role || 'alert'}
+      data-forge-component="forge-toast"
+    >
+      {props.title && <div className="forge-toast-title">{props.title}</div>}
+      <div className="forge-toast-content">{children}</div>
+      {props.closeable && <button className="forge-toast-close" aria-label="Close">×</button>}
+    </div>
+  ),
   
   fallbackProps: {
     type: 'info',

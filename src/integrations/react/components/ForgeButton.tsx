@@ -7,9 +7,10 @@
  * - No separate SSR/client components needed
  */
 
+import React from 'react';
 import type { ForgeButtonProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeButton = createUnifiedWrapper<HTMLElement, ForgeButtonProps>({
   tagName: 'forge-button',
@@ -25,7 +26,19 @@ export const ForgeButton = createUnifiedWrapper<HTMLElement, ForgeButtonProps>({
     'aria-expanded': 'aria-expanded'
   },
   
-  fallbackRenderer: FallbackRenderers.button,
+  fallbackRenderer: (props, children) => (
+    <button
+      className={`forge-button forge-button--${props.variant || 'primary'} forge-button--${props.size || 'md'} ${props.disabled ? 'forge-button--disabled' : ''} ${props.loading ? 'forge-button--loading' : ''}`}
+      disabled={props.disabled}
+      type={props.type || 'button'}
+      aria-label={props['aria-label']}
+      aria-controls={props['aria-controls']}
+      aria-expanded={props['aria-expanded']}
+      data-forge-component="forge-button"
+    >
+      {children}
+    </button>
+  ),
   
   fallbackProps: {
     variant: 'primary',

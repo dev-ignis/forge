@@ -8,9 +8,10 @@
  * - Supports horizontal/vertical orientation and option arrays
  */
 
+import React from 'react';
 import type { ForgeRadioGroupProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeRadioGroup = createUnifiedWrapper<HTMLElement, ForgeRadioGroupProps>({
   tagName: 'forge-radio-group',
@@ -20,7 +21,15 @@ export const ForgeRadioGroup = createUnifiedWrapper<HTMLElement, ForgeRadioGroup
     onChange: 'change'
   },
   
-  fallbackRenderer: FallbackRenderers.radioGroup,
+  fallbackRenderer: (props, children) => (
+    <fieldset
+      className={`forge-radio-group ${props.orientation ? `forge-radio-group--${props.orientation}` : ''} ${props.disabled ? 'forge-radio-group--disabled' : ''}`}
+      disabled={props.disabled}
+      data-forge-component="forge-radio-group"
+    >
+      {children}
+    </fieldset>
+  ),
   
   fallbackProps: {
     disabled: false,

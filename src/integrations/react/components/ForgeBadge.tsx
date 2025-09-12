@@ -8,15 +8,23 @@
  * - Supports multiple variants, sizes, and dot badges
  */
 
+import React from 'react';
 import type { ForgeBadgeProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeBadge = createUnifiedWrapper<HTMLElement, ForgeBadgeProps>({
   tagName: 'forge-badge',
   displayName: 'ForgeBadge',
   
-  fallbackRenderer: FallbackRenderers.badge,
+  fallbackRenderer: (props, children) => (
+    <span
+      className={`forge-badge ${props.variant ? `forge-badge--${props.variant}` : ''} ${props.size ? `forge-badge--${props.size}` : ''}`}
+      data-forge-component="forge-badge"
+    >
+      {children}
+    </span>
+  ),
   
   fallbackProps: {
     variant: 'default',

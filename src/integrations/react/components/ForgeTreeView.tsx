@@ -8,9 +8,10 @@
  * - Supports hierarchical data, single/multi-select, expandable nodes, and visual connectors
  */
 
+import React from 'react';
 import type { ForgeTreeViewProps } from '../types';
 import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
-import { FallbackRenderers } from '../utils/createReactWrapperSSR';
+// FallbackRenderers now defined inline within components
 
 export const ForgeTreeView = createUnifiedWrapper<HTMLElement, ForgeTreeViewProps>({
   tagName: 'forge-tree-view',
@@ -21,7 +22,15 @@ export const ForgeTreeView = createUnifiedWrapper<HTMLElement, ForgeTreeViewProp
     onExpand: 'expand'
   },
   
-  fallbackRenderer: FallbackRenderers.treeView,
+  fallbackRenderer: (props, children) => (
+    <div
+      className={`forge-tree-view ${props.multiSelect ? 'forge-tree-view--multi' : ''} ${props.showConnectors ? 'forge-tree-view--connectors' : ''}`}
+      role="tree"
+      data-forge-component="forge-tree-view"
+    >
+      <ul className="forge-tree-view-list" role="group">{children}</ul>
+    </div>
+  ),
   
   fallbackProps: {
     data: [],
