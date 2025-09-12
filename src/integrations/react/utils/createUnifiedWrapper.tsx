@@ -275,28 +275,41 @@ function updateWebComponent<T extends HTMLElement, P extends Record<string, any>
 
     const eventListener = (event: Event) => {
       if (reactEventName === 'onChange') {
-        // Check if handler expects (value, event) or just (event) based on function length
-        // React Hook Form: onChange(event)
-        // Forge components: onChange(value, event)
-        const handlerLength = handler.length;
+        // Enhanced React Hook Form detection
+        const value = (event as any).detail?.value ?? (event.target as any)?.value;
+        const targetName = (event.target as any)?.name || (event.target as any)?.getAttribute?.('name');
         
-        if (handlerLength <= 1) {
-          // React Hook Form style: onChange(event)
-          const syntheticEvent = {
-            ...event,
-            target: { 
-              ...((event.target as any) || {}),
-              value: (event as any).detail?.value || (event.target as any)?.value,
-              name: (event.target as any)?.name || (event.target as any)?.getAttribute?.('name')
-            },
-            type: 'change'
-          };
-          handler(syntheticEvent);
-        } else {
-          // Forge style: onChange(value, event)
-          const value = (event as any).detail?.value ?? (event.target as any)?.value;
-          handler(value, event);
+        // Try React Hook Form style first (single event parameter)
+        // Most React Hook Form handlers expect: onChange(event: ChangeEvent)
+        try {
+          if (handler.length <= 1) {
+            const syntheticEvent = {
+              target: { 
+                value,
+                name: targetName,
+                type: (event.target as any)?.type || 'text'
+              },
+              currentTarget: {
+                value,
+                name: targetName,
+                type: (event.target as any)?.type || 'text'
+              },
+              type: 'change',
+              preventDefault: () => {},
+              stopPropagation: () => {},
+              nativeEvent: event
+            };
+            
+            handler(syntheticEvent);
+            return;
+          }
+        } catch (error) {
+          // If React Hook Form style fails, fall back to Forge style
+          console.debug('React Hook Form style onChange failed, falling back to Forge style:', error);
         }
+        
+        // Forge style: onChange(value, event)
+        handler(value, event);
       } else if (reactEventName === 'onClick') {
         handler(event);
       } else {
@@ -322,15 +335,38 @@ function setupFallbackEnhancement(
       element.addEventListener('click', handler as EventListener);
     } else if (reactEventName === 'onChange' && element.tagName === 'INPUT') {
       element.addEventListener('input', (e) => {
-        const handlerLength = handler.length;
+        const value = (e.target as HTMLInputElement).value;
+        const targetName = (e.target as HTMLInputElement).name;
         
-        if (handlerLength <= 1) {
-          // React Hook Form style: onChange(event)
-          handler(e);
-        } else {
-          // Forge style: onChange(value, event)
-          handler((e.target as HTMLInputElement).value, e);
+        // Enhanced React Hook Form detection for fallback inputs
+        try {
+          if (handler.length <= 1) {
+            const syntheticEvent = {
+              target: { 
+                value,
+                name: targetName,
+                type: (e.target as HTMLInputElement).type || 'text'
+              },
+              currentTarget: {
+                value,
+                name: targetName,
+                type: (e.target as HTMLInputElement).type || 'text'
+              },
+              type: 'change',
+              preventDefault: () => {},
+              stopPropagation: () => {},
+              nativeEvent: e
+            };
+            
+            handler(syntheticEvent);
+            return;
+          }
+        } catch (error) {
+          console.debug('React Hook Form style onChange failed in fallback, falling back to Forge style:', error);
         }
+        
+        // Forge style: onChange(value, event)
+        handler(value, e);
       });
     }
   });
