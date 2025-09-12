@@ -26,16 +26,10 @@
 
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 
-// Conditional import for optional peer dependencies
+// For now, disable the useForgeReactHookForm hook to avoid import issues
+// The main {...register()} integration works without needing dynamic imports
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-let useController: any = null;
-try {
-  // Try to import react-hook-form dynamically
-  const rhf = eval('require')('react-hook-form');
-  useController = rhf.useController;
-} catch {
-  // react-hook-form not available - that's fine, hook will throw helpful error
-}
+const useController: any = null;
 
 // Custom event type for Forge components
 interface ForgeCustomEvent<T = any> extends CustomEvent {
@@ -380,7 +374,7 @@ export function withForgeComponent<P extends object>(
 // React Hook Form integration helper
 export function useForgeReactHookForm(name: string, control: any) {
   if (!useController) {
-    throw new Error('@nexcraft/forge: react-hook-form is required as a peer dependency to use useForgeReactHookForm. Please install react-hook-form.');
+    throw new Error('@nexcraft/forge: react-hook-form is required as a peer dependency to use useForgeReactHookForm. Please install react-hook-form and restart your development server.');
   }
 
   const { field, fieldState } = useController({ name, control });
