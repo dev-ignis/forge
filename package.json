@@ -11,7 +11,10 @@
     "custom-elements.json",
     "README.md",
     "LICENSE",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "docs/integrations/",
+    "docs/guides/",
+    "docs/components/"
   ],
   "exports": {
     ".": {
