@@ -165,7 +165,7 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
       const fallbackElement = fallbackRef.current;
       if (!fallbackElement) return;
       
-      setupFallbackEnhancement(fallbackElement, eventHandlers);
+      setupFallbackEnhancement(fallbackElement, eventHandlers, restProps);
     };
 
     // Update web component when props change
@@ -276,40 +276,70 @@ function updateWebComponent<T extends HTMLElement, P extends Record<string, any>
     const eventListener = (event: Event) => {
       if (reactEventName === 'onChange') {
         // Enhanced React Hook Form detection
-        const value = (event as any).detail?.value ?? (event.target as any)?.value;
-        const targetName = (event.target as any)?.name || (event.target as any)?.getAttribute?.('name');
+        const isCheckbox = (event.target as any)?.type === 'checkbox' || 
+                          options.tagName === 'forge-checkbox';
         
-        // Try React Hook Form style first (single event parameter)
-        // Most React Hook Form handlers expect: onChange(event: ChangeEvent)
-        try {
-          if (handler.length <= 1) {
-            const syntheticEvent = {
-              target: { 
-                value,
-                name: targetName,
-                type: (event.target as any)?.type || 'text'
-              },
-              currentTarget: {
-                value,
-                name: targetName,
-                type: (event.target as any)?.type || 'text'
-              },
-              type: 'change',
-              preventDefault: () => {},
-              stopPropagation: () => {},
-              nativeEvent: event
-            };
-            
-            handler(syntheticEvent);
-            return;
-          }
-        } catch (error) {
-          // If React Hook Form style fails, fall back to Forge style
-          console.debug('React Hook Form style onChange failed, falling back to Forge style:', error);
+        let value: any;
+        if (isCheckbox) {
+          // For checkboxes, use checked state
+          value = (event as any).detail?.checked ?? (event.target as any)?.checked;
+        } else {
+          // For other inputs, use value
+          value = (event as any).detail?.value ?? (event.target as any)?.value;
         }
         
-        // Forge style: onChange(value, event)
-        handler(value, event);
+        const targetName = (event.target as any)?.name || (event.target as any)?.getAttribute?.('name');
+        
+        // Detect React Hook Form pattern more reliably
+        // React Hook Form register() creates handlers that expect: onChange(event: ChangeEvent)
+        // We detect this by checking if the handler was passed alongside other RHF props
+        const hasRHFPattern = Boolean(
+          // Check if we have name prop (common in RHF)
+          props.name && 
+          // Check if handler expects single parameter (more reliable check)
+          (handler.length === 1 || 
+           // Check if handler string contains RHF-like patterns
+           handler.toString().includes('setValue') ||
+           handler.toString().includes('triggerValidation') ||
+           // Check if we have onBlur alongside onChange (typical RHF pattern)
+           eventHandlers.onBlur)
+        );
+        
+        if (hasRHFPattern) {
+          // React Hook Form style: onChange(event: ChangeEvent)
+          const syntheticEvent = {
+            target: { 
+              value: isCheckbox ? value : value,
+              checked: isCheckbox ? value : undefined,
+              name: targetName,
+              type: isCheckbox ? 'checkbox' : ((event.target as any)?.type || 'text')
+            },
+            currentTarget: {
+              value: isCheckbox ? value : value,
+              checked: isCheckbox ? value : undefined,
+              name: targetName,
+              type: isCheckbox ? 'checkbox' : ((event.target as any)?.type || 'text')
+            },
+            type: 'change',
+            preventDefault: () => {},
+            stopPropagation: () => {},
+            nativeEvent: event
+          };
+          
+          try {
+            handler(syntheticEvent);
+            return;
+          } catch (error) {
+            console.debug('React Hook Form style onChange failed, falling back to Forge style:', error);
+          }
+        }
+        
+        // Forge style: For checkboxes onChange(checked, event), for others onChange(value, event)
+        if (isCheckbox) {
+          handler(value, event);
+        } else {
+          handler(value, event);
+        }
       } else if (reactEventName === 'onClick') {
         handler(event);
       } else {
@@ -326,7 +356,8 @@ function updateWebComponent<T extends HTMLElement, P extends Record<string, any>
 
 function setupFallbackEnhancement(
   element: HTMLElement,
-  eventHandlers: Record<string, Function>
+  eventHandlers: Record<string, Function>,
+  props: Record<string, any>
 ) {
   Object.entries(eventHandlers).forEach(([reactEventName, handler]) => {
     if (typeof handler !== 'function') return;
@@ -335,37 +366,55 @@ function setupFallbackEnhancement(
       element.addEventListener('click', handler as EventListener);
     } else if (reactEventName === 'onChange' && element.tagName === 'INPUT') {
       element.addEventListener('input', (e) => {
-        const value = (e.target as HTMLInputElement).value;
-        const targetName = (e.target as HTMLInputElement).name;
+        const isCheckbox = (e.target as HTMLInputElement).type === 'checkbox';
         
-        // Enhanced React Hook Form detection for fallback inputs
-        try {
-          if (handler.length <= 1) {
-            const syntheticEvent = {
-              target: { 
-                value,
-                name: targetName,
-                type: (e.target as HTMLInputElement).type || 'text'
-              },
-              currentTarget: {
-                value,
-                name: targetName,
-                type: (e.target as HTMLInputElement).type || 'text'
-              },
-              type: 'change',
-              preventDefault: () => {},
-              stopPropagation: () => {},
-              nativeEvent: e
-            };
-            
-            handler(syntheticEvent);
-            return;
-          }
-        } catch (error) {
-          console.debug('React Hook Form style onChange failed in fallback, falling back to Forge style:', error);
+        let value: any;
+        if (isCheckbox) {
+          value = (e.target as HTMLInputElement).checked;
+        } else {
+          value = (e.target as HTMLInputElement).value;
         }
         
-        // Forge style: onChange(value, event)
+        const targetName = (e.target as HTMLInputElement).name;
+        
+        // Enhanced React Hook Form detection for fallback inputs (same logic as main handler)
+        const hasRHFPattern = Boolean(
+          props.name && 
+          (handler.length === 1 || 
+           handler.toString().includes('setValue') ||
+           handler.toString().includes('triggerValidation') ||
+           eventHandlers.onBlur)
+        );
+        
+        if (hasRHFPattern) {
+          const syntheticEvent = {
+            target: { 
+              value: isCheckbox ? value : value,
+              checked: isCheckbox ? value : undefined,
+              name: targetName,
+              type: (e.target as HTMLInputElement).type || 'text'
+            },
+            currentTarget: {
+              value: isCheckbox ? value : value,
+              checked: isCheckbox ? value : undefined,
+              name: targetName,
+              type: (e.target as HTMLInputElement).type || 'text'
+            },
+            type: 'change',
+            preventDefault: () => {},
+            stopPropagation: () => {},
+            nativeEvent: e
+          };
+          
+          try {
+            handler(syntheticEvent);
+            return;
+          } catch (error) {
+            console.debug('React Hook Form style onChange failed in fallback, falling back to Forge style:', error);
+          }
+        }
+        
+        // Forge style: onChange(value, event) for all inputs including checkboxes
         handler(value, e);
       });
     }
