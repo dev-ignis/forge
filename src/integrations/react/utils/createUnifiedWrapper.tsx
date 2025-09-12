@@ -1,5 +1,3 @@
-'use client';
-
 /**
  * @fileoverview Unified React wrapper that works for both client-only and SSR
  * 
