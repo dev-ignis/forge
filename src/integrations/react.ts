@@ -369,92 +369,30 @@ export function withForgeComponent<P extends object>(
 }
 
 // React Hook Form integration helper
-export function useForgeReactHookForm(name: string, control: any) {
-  const [reactHookForm, setReactHookForm] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Runtime require for optional dependency
-    const loadReactHookForm = () => {
-      try {
-        const module = typeof window !== 'undefined' && (window as any).require ? (window as any).require('react-hook-form') : null;
-        if (module) {
-          setReactHookForm(module);
-        } else {
-          setError('@nexcraft/forge: react-hook-form is required as a peer dependency to use useForgeReactHookForm. Please install react-hook-form.');
-        }
-      } catch {
-        setError('@nexcraft/forge: react-hook-form is required as a peer dependency to use useForgeReactHookForm. Please install react-hook-form.');
-      }
-    };
-
-    loadReactHookForm();
-  }, []);
-
-  if (error) {
-    throw new Error(error);
-  }
-
-  if (!reactHookForm) {
-    // Loading state - return placeholder
-    const { ref } = useForgeComponent();
-    return {
-      ref,
-      name,
-      value: '',
-      onChange: () => {},
-      onBlur: () => {},
-      error: null,
-      invalid: false,
-      required: false,
-      disabled: false
-    };
-  }
-
-  const { field, fieldState } = reactHookForm.useController({ name, control });
+// Note: This hook has been deprecated in favor of the RHF adapter components
+// Use RHFForgeInput, RHFForgeSelect, etc. from '@nexcraft/forge/integrations/react' instead
+export function useForgeReactHookForm(name: string, _control: any) {
+  console.warn(
+    '@nexcraft/forge: useForgeReactHookForm is deprecated. ' +
+    'Use RHFForgeInput, RHFForgeSelect, etc. adapter components instead for better reliability. ' +
+    'Import them from "@nexcraft/forge/integrations/react"'
+  );
   
-  // Create a compatible onChange handler that works with both Forge and RHF signatures
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleChange = useCallback((value: any, _event?: any) => {
-    // If called with an event object (React Hook Form style), pass it directly
-    if (typeof value === 'object' && value?.target) {
-      field.onChange(value);
-    } else {
-      // If called with a value (Forge component style), create a synthetic event
-      const syntheticEvent = {
-        target: { value, name: field.name },
-        type: 'change',
-        currentTarget: { value, name: field.name }
-      };
-      field.onChange(syntheticEvent);
-    }
-  }, [field]);
-
-  const handleBlur = useCallback((event?: any) => {
-    if (typeof event === 'object' && event?.target) {
-      field.onBlur(event);
-    } else {
-      const syntheticEvent = {
-        target: { name: field.name },
-        type: 'blur',
-        currentTarget: { name: field.name }
-      };
-      field.onBlur(syntheticEvent);
-    }
-  }, [field]);
-
-  const { ref } = useForgeControlled(field.value, handleChange);
-
+  // Return a basic placeholder that works but encourages migration
+  const { ref } = useForgeComponent();
+  
   return {
     ref,
-    name: field.name,
-    value: field.value,
-    onChange: handleChange,
-    onBlur: handleBlur,
-    error: fieldState.error?.message,
-    invalid: fieldState.invalid,
-    required: control._fields?.[name]?.required || false,
-    disabled: control._fields?.[name]?.disabled || false
+    name,
+    value: '',
+    onChange: () => {
+      console.warn('useForgeReactHookForm: Please use RHF adapter components instead');
+    },
+    onBlur: () => {},
+    error: 'Please use RHF adapter components (RHFForgeInput, RHFForgeSelect, etc.) instead',
+    invalid: false,
+    required: false,
+    disabled: false
   };
 }
 

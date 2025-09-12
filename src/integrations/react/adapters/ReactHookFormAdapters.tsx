@@ -38,14 +38,11 @@ import { ForgeCheckbox } from '../components/ForgeCheckbox';
 import { ForgeRadioGroup } from '../components/ForgeRadioGroup';
 import type { ForgeInputProps, ForgeSelectProps, ForgeCheckboxProps, ForgeRadioGroupProps } from '../types';
 
-// Dynamic imports to handle optional react-hook-form dependency
-type Controller = any;
-type Control<T extends Record<string, any> = Record<string, any>> = any;
+// React Hook Form types - define locally to avoid import issues
 type FieldValues = Record<string, any>;
 type Path<T extends FieldValues> = keyof T;
-type RegisterOptions<T extends FieldValues = FieldValues, TName extends Path<T> = Path<T>> = any;
-
-// Note: Controller is dynamically loaded at runtime in each component function
+type Control<T extends FieldValues = FieldValues> = any;
+type RegisterOptions<TFieldValues extends FieldValues = FieldValues, TName extends Path<TFieldValues> = Path<TFieldValues>> = any;
 
 // Base adapter props
 interface BaseRHFProps<T extends FieldValues, TName extends Path<T>> {
@@ -66,17 +63,42 @@ export function RHFForgeInput<T extends FieldValues, TName extends Path<T>>({
   rhfDefaultValue,
   ...forgeProps
 }: RHFForgeInputProps<T, TName>) {
-  // Simple wrapper that uses runtime require to avoid build issues
-  let Controller: any = null;
-  try {
-    Controller = (global as any).reactHookFormController;
-  } catch {
-    Controller = null;
-  }
+  // Use React Hook Form's Controller from the control object itself
+  // The control object is passed from useForm() and contains the Controller reference
+  const Controller = (control as any)?._formControl?.Controller || (control as any)?.__proto__?.constructor?.Controller;
   
   if (!Controller) {
-    console.warn('RHFForgeInput: react-hook-form not found. Install react-hook-form to use this component.');
-    return null;
+    // Fallback: try to get Controller from react-hook-form if available
+    let RHFController: any = null;
+    try {
+      // Use eval to avoid bundler parsing issues
+      const moduleName = 'react-hook-form';
+      const reactHookForm = eval('require')(moduleName);
+      RHFController = reactHookForm.Controller;
+    } catch {
+      console.warn('RHFForgeInput: react-hook-form not found. Install react-hook-form to use this component.');
+      return null;
+    }
+    
+    return (
+      <RHFController
+        name={name}
+        control={control}
+        rules={rules}
+        defaultValue={rhfDefaultValue}
+        render={({ field, fieldState }: any) => (
+          <ForgeInput
+            {...forgeProps}
+            name={field.name}
+            value={field.value || ''}
+            onChange={(value: string) => field.onChange(value)}
+            onBlur={field.onBlur}
+            error={fieldState.invalid}
+            errorText={fieldState.error?.message}
+          />
+        )}
+      />
+    );
   }
 
   return (
@@ -111,16 +133,38 @@ export function RHFForgeSelect<T extends FieldValues, TName extends Path<T>>({
   rhfDefaultValue,
   ...forgeProps
 }: RHFForgeSelectProps<T, TName>) {
-  let Controller: any = null;
-  try {
-    Controller = (global as any).reactHookFormController;
-  } catch {
-    Controller = null;
-  }
+  const Controller = (control as any)?._formControl?.Controller || (control as any)?.__proto__?.constructor?.Controller;
   
   if (!Controller) {
-    console.warn('RHFForgeSelect: react-hook-form not found. Install react-hook-form to use this component.');
-    return null;
+    let RHFController: any = null;
+    try {
+      // Use eval to avoid bundler parsing issues
+      const moduleName = 'react-hook-form';
+      const reactHookForm = eval('require')(moduleName);
+      RHFController = reactHookForm.Controller;
+    } catch {
+      console.warn('RHFForgeSelect: react-hook-form not found. Install react-hook-form to use this component.');
+      return null;
+    }
+    
+    return (
+      <RHFController
+        name={name}
+        control={control}
+        rules={rules}
+        defaultValue={rhfDefaultValue}
+        render={({ field, fieldState }: any) => (
+          <ForgeSelect
+            {...forgeProps}
+            name={field.name}
+            value={field.value}
+            onChange={(value: string | string[]) => field.onChange(value)}
+            onBlur={field.onBlur}
+            error={fieldState.invalid}
+          />
+        )}
+      />
+    );
   }
 
   return (
@@ -154,16 +198,37 @@ export function RHFForgeCheckbox<T extends FieldValues, TName extends Path<T>>({
   rhfDefaultValue,
   ...forgeProps
 }: RHFForgeCheckboxProps<T, TName>) {
-  let Controller: any = null;
-  try {
-    Controller = (global as any).reactHookFormController;
-  } catch {
-    Controller = null;
-  }
+  const Controller = (control as any)?._formControl?.Controller || (control as any)?.__proto__?.constructor?.Controller;
   
   if (!Controller) {
-    console.warn('RHFForgeCheckbox: react-hook-form not found. Install react-hook-form to use this component.');
-    return null;
+    let RHFController: any = null;
+    try {
+      // Use eval to avoid bundler parsing issues
+      const moduleName = 'react-hook-form';
+      const reactHookForm = eval('require')(moduleName);
+      RHFController = reactHookForm.Controller;
+    } catch {
+      console.warn('RHFForgeCheckbox: react-hook-form not found. Install react-hook-form to use this component.');
+      return null;
+    }
+    
+    return (
+      <RHFController
+        name={name}
+        control={control}
+        rules={rules}
+        defaultValue={rhfDefaultValue}
+        render={({ field, fieldState }: any) => (
+          <ForgeCheckbox
+            {...forgeProps}
+            name={field.name}
+            checked={field.value}
+            onChange={(checked: boolean) => field.onChange(checked)}
+            onBlur={field.onBlur}
+          />
+        )}
+      />
+    );
   }
 
   return (
@@ -196,16 +261,37 @@ export function RHFForgeRadioGroup<T extends FieldValues, TName extends Path<T>>
   rhfDefaultValue,
   ...forgeProps
 }: RHFForgeRadioGroupProps<T, TName>) {
-  let Controller: any = null;
-  try {
-    Controller = (global as any).reactHookFormController;
-  } catch {
-    Controller = null;
-  }
+  const Controller = (control as any)?._formControl?.Controller || (control as any)?.__proto__?.constructor?.Controller;
   
   if (!Controller) {
-    console.warn('RHFForgeRadioGroup: react-hook-form not found. Install react-hook-form to use this component.');
-    return null;
+    let RHFController: any = null;
+    try {
+      // Use eval to avoid bundler parsing issues
+      const moduleName = 'react-hook-form';
+      const reactHookForm = eval('require')(moduleName);
+      RHFController = reactHookForm.Controller;
+    } catch {
+      console.warn('RHFForgeRadioGroup: react-hook-form not found. Install react-hook-form to use this component.');
+      return null;
+    }
+    
+    return (
+      <RHFController
+        name={name}
+        control={control}
+        rules={rules}
+        defaultValue={rhfDefaultValue}
+        render={({ field, fieldState }: any) => (
+          <ForgeRadioGroup
+            {...forgeProps}
+            name={field.name}
+            value={field.value}
+            onChange={(value: string) => field.onChange(value)}
+            onBlur={field.onBlur}
+          />
+        )}
+      />
+    );
   }
 
   return (
@@ -242,16 +328,31 @@ export function createRHFAdapter<
     rhfDefaultValue,
     ...componentProps
   }: BaseRHFProps<T, TName> & TProps) {
-    let Controller: any = null;
-  try {
-    Controller = (global as any).reactHookFormController;
-  } catch {
-    Controller = null;
-  }
+    const Controller = (control as any)?._formControl?.Controller || (control as any)?.__proto__?.constructor?.Controller;
     
     if (!Controller) {
-      console.warn('createRHFAdapter: react-hook-form not found. Install react-hook-form to use this component.');
-      return null;
+      let RHFController: any = null;
+      try {
+        // Use eval to avoid bundler parsing issues
+        const moduleName = 'react-hook-form';
+        const reactHookForm = eval('require')(moduleName);
+        RHFController = reactHookForm.Controller;
+      } catch {
+        console.warn('createRHFAdapter: react-hook-form not found. Install react-hook-form to use this component.');
+        return null;
+      }
+      
+      return (
+        <RHFController
+          name={name}
+          control={control}
+          rules={rules}
+          defaultValue={rhfDefaultValue}
+          render={({ field, fieldState }: any) => (
+            <Component {...propMapper(field, fieldState, componentProps)} />
+          )}
+        />
+      );
     }
 
     return (

@@ -88,7 +88,11 @@ export interface ForgeCheckboxProps extends ForgeComponentProps {
   label?: string;
   value?: string;
   name?: string;
-  onChange?: (checked: boolean, event: FormEvent<HTMLElement>) => void;
+  required?: boolean;
+  // Support both Forge signature and React Hook Form signature
+  onChange?: 
+    | ((checked: boolean, event: FormEvent<HTMLElement>) => void)  // Forge signature
+    | ((event: ChangeEvent<HTMLInputElement>) => void);           // React Hook Form signature
 }
 
 // Progress component props
