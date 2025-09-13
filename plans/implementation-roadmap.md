@@ -17,6 +17,9 @@
 | **Phase 5: Advanced & Enterprise** | Weeks 19-22 | 📋 Planned | [→ View Details](./phases/phase-5-advanced-enterprise.md) |
 | **Phase 6: Production Readiness** | Weeks 23-26 | 📋 Planned | [→ View Details](./phases/phase-6-production-readiness.md) |
 | **🚀 Phase 9: AI-Native Development** | Weeks 27-56 | 🚧 **IN PROGRESS** | [→ View Details](./phases/phase-9-ai-native-development.md) |
+| **Phase 13: RHF Adapters Split** | Weeks TBD | 📋 Planned | [→ View Details](./phases/phase-13-react-hook-form-adapters-split.md) |
+| **Phase 14: Monorepo Platform & Publishing** | Weeks TBD | 📋 Planned | [→ View Details](./phases/phase-14-monorepo-platform-and-publishing.md) |
+| **Phase 15: Release Automation & Versioning** | Weeks TBD | 📋 Planned | [→ View Details](./phases/phase-15-release-automation-and-versioning.md) |
 
 ## 🚀 Current Status
 

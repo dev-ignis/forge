@@ -69,6 +69,8 @@ graph LR
 
 ## 🛠️ Implementation Plan
 
+> Monorepo note: For multi-package releases in this repo, prefer Changesets (see Phase 14) for simplicity and robust per-package publishing. If you choose to keep semantic-release, follow the Monorepo Mode section below to run semantic-release per package.
+
 ### **Phase 1: Setup & Configuration (Day 1)**
 
 #### **Step 1.1: Install Dependencies**
@@ -195,6 +197,80 @@ module.exports = {
   ]
 };
 ```
+
+### Monorepo Mode (Multiple Packages)
+
+There are two viable strategies:
+
+1) Recommended in our monorepo: Changesets (see plans/phases/phase-14-monorepo-platform-and-publishing.md) to handle per-package versioning and publishing.
+
+2) Semantic-release per package (matrix jobs): run semantic-release in each package directory with package-scoped tags and changelogs.
+
+GitHub Actions matrix example:
+
+```yaml
+# .github/workflows/release-mono.yml
+name: Release Monorepo (semantic-release)
+on:
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pkg:
+          - name: forge
+            path: .
+            tag: forge
+            changelog: CHANGELOG.md
+          - name: forge-rhf
+            path: packages/forge-rhf
+            tag: forge-rhf
+            changelog: packages/forge-rhf/CHANGELOG.md
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, registry-url: 'https://registry.npmjs.org' }
+      - run: npm ci
+      - run: npm run build --workspaces
+      - name: Semantic Release (${{ matrix.pkg.name }})
+        working-directory: ${{ matrix.pkg.path }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release
+```
+
+Per-package `.releaserc.js` example (place in each package dir):
+
+```js
+// packages/forge-rhf/.releaserc.js
+module.exports = {
+  tagFormat: 'forge-rhf-v${version}',
+  branches: [
+    '+([0-9])?(.{+([0-9]),x}).x',
+    'main',
+    { name: 'develop', prerelease: 'beta' }
+  ],
+  plugins: [
+    '@semantic-release/commit-analyzer',
+    '@semantic-release/release-notes-generator',
+    ['@semantic-release/changelog', { changelogFile: 'packages/forge-rhf/CHANGELOG.md' }],
+    ['@semantic-release/npm', { npmPublish: true }],
+    ['@semantic-release/git', { assets: ['packages/forge-rhf/CHANGELOG.md', 'packages/forge-rhf/package.json'] }],
+    '@semantic-release/github'
+  ]
+};
+```
+
+Notes:
+- Use package-specific tag formats (e.g., `forge-vX.Y.Z`, `forge-rhf-vX.Y.Z`) to avoid tag collisions.
+- Keep each package’s changelog next to the package.
+- Commit and changelog updates are optional; you can skip `@semantic-release/git` if you don’t want to push changelog changes.
+- Commit filtering by affected paths requires strict commit scopes or a community plugin. For robust per-package change detection, prefer Changesets.
 
 ### **Phase 2: Workflow Migration (Day 1)**
 

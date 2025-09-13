@@ -85,20 +85,6 @@ export { ForgeProvider } from './context/ForgeProvider';
 // Form integration hooks (re-exported from main react.ts)
 export { useForgeReactHookForm, useForgeFormik } from '../react';
 
-// React Hook Form Adapter Components - Guaranteed compatibility
-export { 
-  RHFForgeInput, 
-  RHFForgeSelect, 
-  RHFForgeCheckbox, 
-  RHFForgeRadioGroup,
-  createRHFAdapter
-} from './adapters/ReactHookFormAdapters';
-export type {
-  RHFForgeInputProps,
-  RHFForgeSelectProps, 
-  RHFForgeCheckboxProps,
-  RHFForgeRadioGroupProps
-} from './adapters/ReactHookFormAdapters';
 
 // TypeScript interfaces for React props - Complete library coverage
 export type {
