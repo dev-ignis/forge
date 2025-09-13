@@ -16,10 +16,10 @@ Non-goals
 
 ## Deliverables
 - `ai-manifest.schema.json` (schema + examples)
-- Generator: `scripts/generate-ai-manifest.ts` (merges `custom-elements.json`, TS types, examples)
-- Build integration: `npm run build` emits `/ai-manifest.json` and `/dist/ai-manifest.json`
+- Generator: `scripts/generate-ai-manifest.js` (merges `custom-elements.json`, TS types, examples)
+- Build integration: `npm run build` emits `/ai-manifest.json` and (optionally) `/dist/ai-manifest.json`
 - Tool specs: `ai-tools/react/<component>.json` for priority components
-- Storybook addon/panel: `@storybook` panel that renders the manifest entry for the active component
+- Storybook addon/panel: panel that renders the manifest entry for the active component
 - Docs: `docs/ai-manifest.md`, contributor guide for adding AI metadata per component
 - CI: schema validation + broken-link checks for examples
 
@@ -61,6 +61,24 @@ Non-goals
 - Seed components (5) + examples
 - Tool schemas (React) + Storybook panel
 - Documentation + contributor guide
+
+## Dependencies & Inputs
+- Inputs: `custom-elements.json`, `dist/**/*.d.ts`, curated examples in `docs/components/*` (or `examples/<tag>/*`).
+- Prereqs: type emit stable; CEM available or generator falls back gracefully.
+
+## Schema & Contracts
+- Versioned schema with `manifestVersion` and additive-only policy.
+- React tool schema mapping rules documented (props/events/slots → parameters, children handling, enums).
+
+## Generator Design
+- Read CEM + d.ts, merge examples, produce `ai-manifest.json` in repo root (and optionally `dist/`).
+- Validate against schema; skip gracefully if inputs missing.
+
+## Storybook Panel (Preview)
+- Local addon to render manifest for active component; copy Web/React/SSR examples.
+
+## CI Validation
+- `validate:ai` checks schema conformity and existence/compilation of referenced examples.
 
 ---
 

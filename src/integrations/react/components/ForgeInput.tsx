@@ -38,18 +38,20 @@ export const ForgeInput = createUnifiedWrapper<HTMLElement, ForgeInputProps>({
       'data-forge-component': 'forge-input'
     };
 
-    // Only add value if onChange is also provided (controlled component)
-    if (props.onChange && props.value !== undefined) {
-      inputProps.value = props.value || '';
-      inputProps.onChange = props.onChange;
-    } else if (props.value !== undefined && !props.onChange) {
-      // If value is provided without onChange, use defaultValue instead
-      inputProps.defaultValue = props.value || '';
+    // Detect React Hook Form register pattern
+    const isLikelyRHFRegister = Boolean(props.name && typeof props.onBlur === 'function' && props.ref);
+
+    // Handle controlled vs uncontrolled input patterns safely
+    if (props.value !== undefined) {
+      // Explicit value provided -> controlled
+      inputProps.value = props.value;
+      if (props.onChange) inputProps.onChange = props.onChange;
     } else if (props.onChange) {
-      // onChange provided but no value - controlled component with empty value
-      inputProps.value = props.value || '';
+      // onChange without value: usually RHF register() or uncontrolled React pattern
+      // Keep it uncontrolled so typing works; still wire onChange
       inputProps.onChange = props.onChange;
     }
+    // For RHF register(), don't set defaultValue here; RHF will manage initial value via ref
 
     // Add other React Hook Form props if provided
     if (props.onBlur) inputProps.onBlur = props.onBlur;
