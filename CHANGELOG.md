@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.2-beta.21 - 2025-09-13 (Beta Release)
+
+### 🧪 Beta Changes
+- Merge branch 'develop' of https://github.com/dev-ignis/forge into develop
+- feat: - react hooks;
+> ⚠️ **This is a beta release** - use with caution in production environments
+
 ## v0.5.2-beta.20 - 2025-09-12 (Beta Release)
 
 ### 🧪 Beta Changes
