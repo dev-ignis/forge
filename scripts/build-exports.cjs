@@ -110,6 +110,34 @@ if (typeof customElements !== 'undefined' && !customElements.get('forge-${name}'
 `;
 
   fs.writeFileSync(`dist/exports/${name}.js`, exportContent.trim());
+  
+  // Create TypeScript definition file
+  const typeContent = `import { ${component} } from '../index'
+
+export { ${component} }
+export default ${component}`;
+  
+  fs.writeFileSync(`dist/exports/${name}.d.ts`, typeContent);
 });
+
+// Create plugin TypeScript definition
+const pluginTypeContent = `/**
+ * Tailwind CSS Plugin for @nexcraft/forge
+ */
+import type { Config } from 'tailwindcss'
+
+declare const forgePlugin: {
+  (options?: any): {
+    handler: (api: any) => void
+    config?: Partial<Config>
+  }
+  forgePlugin: any
+  forgeTheme: any
+  forgeUtilities: any
+}
+
+export = forgePlugin`;
+
+fs.writeFileSync('dist/plugin/index.d.ts', pluginTypeContent);
 
 console.log('✅ Built plugin and exports successfully!');
