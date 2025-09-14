@@ -86,32 +86,8 @@ function forgeIntegrationsPlugin() {
         { src: 'src/integrations/angular.ts', dest: 'dist/integrations/angular.js' }
       ];
       
-      // Copy plugin and exports files
-      const additionalFiles = [
-        { src: 'src/plugin/index.ts', dest: 'dist/plugin/index.js' },
-        { src: 'src/exports/button.ts', dest: 'dist/exports/button.js' },
-        { src: 'src/exports/input.ts', dest: 'dist/exports/input.js' },
-        { src: 'src/exports/checkbox.ts', dest: 'dist/exports/checkbox.js' },
-        { src: 'src/exports/select.ts', dest: 'dist/exports/select.js' },
-        { src: 'src/exports/alert.ts', dest: 'dist/exports/alert.js' },
-        { src: 'src/exports/card.ts', dest: 'dist/exports/card.js' },
-        { src: 'src/exports/modal.ts', dest: 'dist/exports/modal.js' }
-      ];
-      
-      // Create necessary directories
-      mkdirSync('dist/plugin', { recursive: true });
-      mkdirSync('dist/exports', { recursive: true });
-      
-      // Copy integration files
+      // Copy integration files only
       integrationFiles.forEach(({ src, dest }) => {
-        if (existsSync(src)) {
-          console.log(`📦 Copying ${src} → ${dest}`);
-          copyFileSync(src, dest);
-        }
-      });
-      
-      // Copy additional files (plugin and exports)
-      additionalFiles.forEach(({ src, dest }) => {
         if (existsSync(src)) {
           console.log(`📦 Copying ${src} → ${dest}`);
           copyFileSync(src, dest);

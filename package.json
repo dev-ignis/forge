@@ -98,11 +98,12 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run build:types && npm run bundle:types && npm run cleanup:types && npm run build:ai",
+      "build": "vite build && npm run build:types && npm run bundle:types && npm run cleanup:types && npm run build:ai && npm run build:exports",
     "build:types": "tsc --emitDeclarationOnly",
     "bundle:types": "rollup -c rollup.dts.config.js && mv dist/index.bundled.d.ts dist/index.d.ts",
     "cleanup:types": "node scripts/cleanup-types.js",
     "build:ai": "node scripts/generate-ai-manifest.js",
+    "build:exports": "node scripts/build-exports.cjs",
     "build:manifest": "custom-elements-manifest analyze",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
