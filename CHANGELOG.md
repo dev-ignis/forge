@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.2-beta.22 - 2025-09-14 (Beta Release)
+
+### 🧪 Beta Changes
+- feat: add Tailwind plugin and selective component imports
+> ⚠️ **This is a beta release** - use with caution in production environments
+
 ## v0.5.2-beta.21 - 2025-09-13 (Beta Release)
 
 ### 🧪 Beta Changes
