@@ -29,7 +29,7 @@ Create a separate, optional package `@nexcraft/forge-rhf` that ships React Hook 
 - [x] ~~Build `@nexcraft/forge-rhf` successfully~~ *N/A - using subpath approach*
 - [x] **Type-check both packages (strict, no errors)**
 - [x] **Validate in Next.js (Turbopack) with `transpilePackages`**
-- [ ] Add docs: `docs/integrations/react-hook-form.md`
+- [x] **Add docs: `docs/integrations/react-hook-form.md`** - *Comprehensive guide with integration patterns, Next.js compatibility, TypeScript support, and examples*
 - [x] **Prepare publish (peer deps, files/exports, publishConfig)** - *Completed with subpath exports*
 - [x] ~~Publish `@nexcraft/forge-rhf` (or dry-run)~~ *Published as part of main package*
 - [x] **Announce and update examples** - *Examples updated and working*

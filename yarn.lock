@@ -3134,6 +3134,11 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
+tailwindcss@^4.1.13:
+  version "4.1.13"
+  resolved "https://registry.npmjs.org/tailwindcss/-/tailwindcss-4.1.13.tgz"
+  integrity sha512-i+zidfmTqtwquj4hMEwdjshYYgMbOrPzb9a0M3ZgNa0JMoZeFC6bxZvO8yr8ozS6ix2SDz0+mvryPeBs2TFE+w==
+
 test-exclude@^7.0.1:
   version "7.0.1"
   resolved "https://registry.npmjs.org/test-exclude/-/test-exclude-7.0.1.tgz"

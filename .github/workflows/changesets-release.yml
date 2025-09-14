@@ -1,0 +1,41 @@
+name: Changesets Release (Manual Stub)
+
+on:
+  # Manual trigger to test or run Changesets publish
+  workflow_dispatch:
+  # Optional: enable automatic publish on main once Changesets is set up
+  # push:
+  #   branches: [ main ]
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    name: Publish Changed Packages via Changesets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (workspaces or single)
+        run: |
+          npm run build --workspaces || npm run build
+
+      - name: Publish with Changesets
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx changeset publish
+
