@@ -1,6 +1,211 @@
 {
   "manifestVersion": "1.0.0",
   "package": "@nexcraft/forge",
-  "generatedAt": "2025-09-14T02:19:32.237Z",
-  "components": []
+  "version": "0.5.2-beta.23",
+  "generatedAt": "2025-09-14T16:51:17.587Z",
+  "description": "AI-native web component library with React/Vue/Angular integrations",
+  "aiNative": true,
+  "compatibility": {
+    "frameworks": ["react", "vue", "angular", "svelte", "vanilla"],
+    "ssr": true,
+    "treeshaking": true,
+    "typescript": true
+  },
+  "quickStart": {
+    "react": {
+      "import": "import { ForgeButton, ForgeInput } from '@nexcraft/forge/integrations/react'",
+      "example": "<ForgeInput type=\"email\" label=\"Email\" /><ForgeButton variant=\"primary\">Submit</ForgeButton>"
+    },
+    "selective": {
+      "import": "import { ForgeButton } from '@nexcraft/forge/button'",
+      "example": "<forge-button variant=\"primary\">Submit</forge-button>"
+    },
+    "tailwind": {
+      "import": "import forgePlugin from '@nexcraft/forge/plugin'",
+      "config": "export default { plugins: [forgePlugin] }"
+    },
+    "forms": {
+      "import": "import { RHFForgeInput } from '@nexcraft/forge/integrations/rhf'",
+      "example": "<RHFForgeInput name=\"email\" control={control} label=\"Email\" />"
+    },
+    "cdn": {
+      "script": "<script type=\"module\" src=\"https://cdn.jsdelivr.net/npm/@nexcraft/forge\"></script>",
+      "example": "<forge-button variant=\"primary\">Click me</forge-button>"
+    }
+  },
+  "components": {
+    "atoms": [
+      {
+        "name": "ForgeButton",
+        "tag": "forge-button",
+        "purpose": "Primary actions, form submissions, CTAs",
+        "reactImport": "@nexcraft/forge/integrations/react",
+        "selectiveImport": "@nexcraft/forge/button",
+        "props": ["variant", "size", "loading", "disabled"],
+        "variants": ["primary", "secondary", "danger", "ghost"],
+        "example": "<ForgeButton variant=\"primary\" loading={isLoading}>Save</ForgeButton>"
+      },
+      {
+        "name": "ForgeInput",
+        "tag": "forge-input", 
+        "purpose": "Text entry, form fields, user input",
+        "reactImport": "@nexcraft/forge/integrations/react",
+        "selectiveImport": "@nexcraft/forge/input",
+        "props": ["type", "label", "placeholder", "required", "error"],
+        "types": ["text", "email", "password", "textarea", "number"],
+        "example": "<ForgeInput type=\"email\" label=\"Email\" required />"
+      },
+      {
+        "name": "ForgeCard",
+        "tag": "forge-card",
+        "purpose": "Content containers, layout sections",
+        "reactImport": "@nexcraft/forge/integrations/react", 
+        "selectiveImport": "@nexcraft/forge/card",
+        "example": "<ForgeCard><div className=\"p-6\">Content</div></ForgeCard>"
+      },
+      {
+        "name": "ForgeAlert",
+        "tag": "forge-alert",
+        "purpose": "Status messages, notifications, feedback",
+        "reactImport": "@nexcraft/forge/integrations/react",
+        "selectiveImport": "@nexcraft/forge/alert",
+        "props": ["severity", "variant", "closable"],
+        "severities": ["info", "success", "warning", "error"],
+        "example": "<ForgeAlert severity=\"success\">Operation completed!</ForgeAlert>"
+      },
+      {
+        "name": "ForgeCheckbox",
+        "tag": "forge-checkbox",
+        "purpose": "Toggle options, boolean inputs",
+        "reactImport": "@nexcraft/forge/integrations/react",
+        "selectiveImport": "@nexcraft/forge/checkbox",
+        "example": "<ForgeCheckbox label=\"Remember me\" />"
+      }
+    ],
+    "molecules": [
+      {
+        "name": "ForgeModal",
+        "tag": "forge-modal",
+        "purpose": "Dialogs, confirmations, overlays",
+        "reactImport": "@nexcraft/forge/integrations/react",
+        "selectiveImport": "@nexcraft/forge/modal",
+        "props": ["open", "onClose"],
+        "example": "<ForgeModal open={isOpen} onClose={() => setIsOpen(false)}>Content</ForgeModal>"
+      },
+      {
+        "name": "ForgeSelect",
+        "tag": "forge-select",
+        "purpose": "Dropdown selections, option pickers",
+        "reactImport": "@nexcraft/forge/integrations/react",
+        "selectiveImport": "@nexcraft/forge/select",
+        "props": ["options", "value", "multiple", "searchable"],
+        "example": "<ForgeSelect options={options} placeholder=\"Select option\" />"
+      }
+    ],
+    "organisms": [
+      {
+        "name": "ForgeDataTable",
+        "tag": "forge-data-table",
+        "purpose": "Data grids, sortable tables with actions",
+        "reactImport": "@nexcraft/forge/integrations/react",
+        "selectiveImport": "@nexcraft/forge/data-table",
+        "props": ["data", "columns", "pagination", "selectable"],
+        "example": "<ForgeDataTable data={users} columns={columns} pagination />"
+      }
+    ]
+  },
+  "commonPatterns": {
+    "loginForm": {
+      "description": "Complete login form with validation",
+      "documentation": "./docs/patterns/AI_COMMON_PATTERNS.md#authentication-patterns",
+      "example": "import { ForgeInput, ForgeButton, ForgeCard } from '@nexcraft/forge/integrations/react'"
+    },
+    "dashboard": {
+      "description": "Executive dashboard with metrics and data table",
+      "documentation": "./docs/patterns/AI_COMMON_PATTERNS.md#dashboard-patterns", 
+      "example": "import { ForgeCard, ForgeDataTable, ForgeBadge } from '@nexcraft/forge/integrations/react'"
+    },
+    "contactForm": {
+      "description": "Multi-field contact form with validation",
+      "documentation": "./docs/patterns/AI_COMMON_PATTERNS.md#form-patterns",
+      "example": "import { ForgeInput, ForgeSelect, ForgeButton } from '@nexcraft/forge/integrations/react'"
+    },
+    "productGrid": {
+      "description": "E-commerce product grid with cards",
+      "documentation": "./docs/patterns/AI_COMMON_PATTERNS.md#e-commerce-patterns",
+      "example": "import { ForgeCard, ForgeButton, ForgeBadge } from '@nexcraft/forge/integrations/react'"
+    }
+  },
+  "integrations": {
+    "react": {
+      "import": "@nexcraft/forge/integrations/react",
+      "description": "Native React components with TypeScript support",
+      "ssr": true,
+      "features": ["TypeScript", "SSR", "Event handling", "Ref forwarding"]
+    },
+    "reactHookForm": {
+      "import": "@nexcraft/forge/integrations/rhf",
+      "description": "React Hook Form integration with validation",
+      "features": ["Form validation", "Error handling", "TypeScript"]
+    },
+    "vue": {
+      "import": "@nexcraft/forge/integrations/vue",
+      "description": "Vue.js directives and v-model support",
+      "features": ["v-model", "Event binding", "Reactivity"]
+    },
+    "angular": {
+      "import": "@nexcraft/forge/integrations/angular",
+      "description": "Angular forms integration",
+      "features": ["Template forms", "Reactive forms", "Validation"]
+    },
+    "tailwind": {
+      "import": "@nexcraft/forge/plugin",
+      "description": "Tailwind CSS plugin with semantic utilities",
+      "features": ["Design tokens", "Utility classes", "Custom properties"]
+    }
+  },
+  "styling": {
+    "approach": "Embedded CSS in Shadow DOM",
+    "customization": "CSS custom properties",
+    "frameworks": ["Tailwind CSS", "CSS-in-JS", "CSS Modules"],
+    "tokens": {
+      "colors": ["--forge-color-primary-*", "--forge-color-success", "--forge-color-error"],
+      "spacing": ["--forge-spacing-sm", "--forge-spacing-md", "--forge-spacing-lg"],
+      "typography": ["--forge-font-family", "--forge-font-size-*"]
+    }
+  },
+  "documentation": {
+    "quickStart": "https://github.com/dev-ignis/forge#-ai-assisted-development",
+    "componentCatalog": "https://github.com/dev-ignis/forge/blob/main/docs/AI_COMPONENT_CATALOG.md",
+    "commonPatterns": "https://github.com/dev-ignis/forge/blob/main/docs/patterns/AI_COMMON_PATTERNS.md",
+    "importGuide": "https://github.com/dev-ignis/forge/blob/main/docs/guides/AI_IMPORT_GUIDE.md",
+    "tailwindPlugin": "https://github.com/dev-ignis/forge/blob/main/docs/guides/tailwind-plugin.md",
+    "selectiveImports": "https://github.com/dev-ignis/forge/blob/main/docs/guides/selective-imports.md",
+    "repository": "https://github.com/dev-ignis/forge"
+  },
+  "bundleSize": {
+    "fullBundle": "~374KB",
+    "selectiveComponent": "~8-15KB", 
+    "reactIntegration": "~380KB",
+    "treeshaking": true
+  },
+  "aiTools": {
+    "cursor": {
+      "supported": true,
+      "configFile": ".cursorrules"
+    },
+    "githubCopilot": {
+      "supported": true,
+      "optimized": true
+    },
+    "claudeCode": {
+      "supported": true,
+      "optimized": true
+    }
+  },
+  "examples": {
+    "basic": "https://github.com/dev-ignis/forge/tree/main/examples",
+    "nextjs": "https://github.com/dev-ignis/forge/tree/main/examples/nextjs-app",
+    "storybook": "https://github.com/dev-ignis/forge/tree/main/.storybook"
+  }
 }
