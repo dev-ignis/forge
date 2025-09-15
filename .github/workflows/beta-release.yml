@@ -123,10 +123,36 @@ jobs:
         run: |
           git push origin ${{ github.ref_name }} --follow-tags
       
-      - name: Publish beta to NPM
+      - name: Check which packages need publishing
+        id: check_changes
         run: |
-          echo "Publishing beta version to NPM..."
+          echo "Checking for package changes..."
+          
+          # Always publish main package for beta releases
+          echo "publish_main=true" >> $GITHUB_OUTPUT
+          
+          # Check if RHF package has changes since last release
+          if git diff --quiet HEAD~1 packages/forge-rhf/; then
+            echo "No changes in @nexcraft/forge-rhf package"
+            echo "publish_rhf=false" >> $GITHUB_OUTPUT
+          else
+            echo "Changes detected in @nexcraft/forge-rhf package"
+            echo "publish_rhf=true" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Publish main package to NPM
+        if: steps.check_changes.outputs.publish_main == 'true'
+        run: |
+          echo "Publishing @nexcraft/forge beta version..."
           npm publish --tag ${{ github.event.inputs.beta_type }} --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      
+      - name: Publish RHF package to NPM
+        if: steps.check_changes.outputs.publish_rhf == 'true'
+        run: |
+          echo "Publishing @nexcraft/forge-rhf (changes detected)..."
+          npm publish --workspace=packages/forge-rhf --tag ${{ github.event.inputs.beta_type }} --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       
