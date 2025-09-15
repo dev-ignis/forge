@@ -37,7 +37,7 @@ import React from 'react';
 // so users explicitly opt-in by installing @nexcraft/forge-rhf
 import { Controller, type FieldValues, type Path, type Control, type RegisterOptions } from 'react-hook-form';
 
-// Import from main package using workspace dependency
+// Import from main package using TypeScript path mapping
 import { ForgeInput } from '@nexcraft/forge/integrations/react';
 import { ForgeSelect } from '@nexcraft/forge/integrations/react';
 import { ForgeCheckbox } from '@nexcraft/forge/integrations/react';

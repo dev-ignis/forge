@@ -106,6 +106,7 @@
     "release": "npx changeset",
     "version-packages": "npx changeset version",
     "publish-packages": "npx changeset publish",
+    "prepare": "husky",
     "build:local": "vite build && npm run build:types && npm run bundle:types && npm run cleanup:types && npm run build:ai && npm run build:exports",
     "build:types": "tsc --emitDeclarationOnly",
     "bundle:types": "rollup -c rollup.dts.config.js && mv dist/index.bundled.d.ts dist/index.d.ts",
@@ -182,6 +183,16 @@
   },
   "peerDependencies": {
     "lit": "^3.0.0"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx,js,jsx}": [
+      "npm run lint:local",
+      "npm run type-check:local"
+    ],
+    "packages/forge-rhf/src/**/*.{ts,tsx,js,jsx}": [
+      "npm run lint --workspace=packages/forge-rhf",
+      "npm run type-check --workspace=packages/forge-rhf"
+    ]
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
