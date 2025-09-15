@@ -1,13 +1,13 @@
 /**
  * @fileoverview React Hook Form Integration for @nexcraft/forge
  * 
- * This module provides React Hook Form adapter components that seamlessly
+ * This package provides React Hook Form adapter components that seamlessly
  * integrate Forge Web Components with React Hook Form's Controller pattern.
  * 
  * ## Usage
  * 
  * ```tsx
- * import { RHFForgeInput, RHFForgeSelect } from '@nexcraft/forge/integrations/rhf';
+ * import { RHFForgeInput, RHFForgeSelect } from '@nexcraft/forge-rhf';
  * import { useForm } from 'react-hook-form';
  * 
  * function MyForm() {
@@ -32,18 +32,20 @@
  * }
  * ```
  * 
- * ## Requirements
+ * ## Installation
  * 
- * This integration requires `react-hook-form` to be installed in your project:
+ * This package requires both `@nexcraft/forge` and `react-hook-form`:
  * 
  * ```bash
- * npm install react-hook-form
+ * npm install @nexcraft/forge @nexcraft/forge-rhf react-hook-form
  * ```
  * 
- * ADR Compliance:
+ * ## Architecture Decision Records (ADR) Compliance
+ * 
  * - ADR-007: Framework integration patterns
  * - ADR-013: TypeScript interfaces for React props
- * - ADR-022: Peer dependency management
+ * - ADR-019: Monorepo package boundaries (separate RHF package)
+ * - ADR-020: Cross-package dependency management
  */
 
 // React Hook Form Adapter Components
@@ -53,7 +55,7 @@ export {
   RHFForgeCheckbox, 
   RHFForgeRadioGroup,
   createRHFAdapter
-} from './ReactHookFormAdapters';
+} from './adapters/ReactHookFormAdapters';
 
 // TypeScript interfaces for RHF adapter props
 export type {
@@ -61,4 +63,4 @@ export type {
   RHFForgeSelectProps, 
   RHFForgeCheckboxProps,
   RHFForgeRadioGroupProps
-} from './ReactHookFormAdapters';
+} from './adapters/ReactHookFormAdapters';

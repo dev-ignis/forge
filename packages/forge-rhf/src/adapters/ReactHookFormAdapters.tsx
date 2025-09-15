@@ -6,7 +6,7 @@
  * 
  * @example
  * ```tsx
- * import { RHFForgeInput, RHFForgeSelect } from '@nexcraft/forge/integrations/rhf';
+ * import { RHFForgeInput, RHFForgeSelect } from '@nexcraft/forge-rhf';
  * 
  * function MyForm() {
  *   const { control } = useForm();
@@ -33,14 +33,16 @@
 
 import React from 'react';
 
-// Import react-hook-form directly - this is now a separate subpath
-// so users explicitly opt-in by importing from @nexcraft/forge/integrations/rhf
+// Import react-hook-form directly - this is now a separate package
+// so users explicitly opt-in by installing @nexcraft/forge-rhf
 import { Controller, type FieldValues, type Path, type Control, type RegisterOptions } from 'react-hook-form';
-import { ForgeInput } from '../components/ForgeInput';
-import { ForgeSelect } from '../components/ForgeSelect';
-import { ForgeCheckbox } from '../components/ForgeCheckbox';
-import { ForgeRadioGroup } from '../components/ForgeRadioGroup';
-import type { ForgeInputProps, ForgeSelectProps, ForgeCheckboxProps, ForgeRadioGroupProps } from '../types';
+
+// Import from main package using workspace dependency
+import { ForgeInput } from '@nexcraft/forge/integrations/react';
+import { ForgeSelect } from '@nexcraft/forge/integrations/react';
+import { ForgeCheckbox } from '@nexcraft/forge/integrations/react';
+import { ForgeRadioGroup } from '@nexcraft/forge/integrations/react';
+import type { ForgeInputProps, ForgeSelectProps, ForgeCheckboxProps, ForgeRadioGroupProps } from '@nexcraft/forge/integrations/react';
 
 
 // Base adapter props - use any for control to avoid version conflicts
