@@ -130,19 +130,27 @@
   },
   "keywords": [
     "ai-native",
+    "ai-components", 
     "ai-metadata",
     "ai-assisted-development",
+    "cursor",
+    "github-copilot",
+    "claude-code",
+    "llm-friendly",
     "web-components",
+    "react",
+    "vue",
+    "angular",
     "ui-library",
     "design-system",
     "custom-elements",
     "shadow-dom",
     "lit",
+    "tree-shaking",
+    "ssr",
+    "tailwind",
     "theming",
     "css-custom-properties",
-    "cursor",
-    "github-copilot",
-    "claude",
     "performance-monitoring",
     "design-tokens"
   ],
@@ -152,6 +160,15 @@
     "url": "https://github.com/dev-ignis/forge/issues"
   },
   "homepage": "https://github.com/dev-ignis/forge#readme",
+  "ai": {
+    "manifest": "./ai-manifest.json",
+    "documentation": "https://github.com/dev-ignis/forge/tree/main/docs",
+    "examples": "https://github.com/dev-ignis/forge/tree/main/docs/patterns",
+    "quickStart": "https://github.com/dev-ignis/forge#-ai-assisted-development",
+    "catalog": "https://github.com/dev-ignis/forge/blob/main/docs/AI_COMPONENT_CATALOG.md",
+    "patterns": "https://github.com/dev-ignis/forge/blob/main/docs/patterns/AI_COMMON_PATTERNS.md",
+    "imports": "https://github.com/dev-ignis/forge/blob/main/docs/guides/AI_IMPORT_GUIDE.md"
+  },
   "dependencies": {
     "lit": "^3.0.0"
   },

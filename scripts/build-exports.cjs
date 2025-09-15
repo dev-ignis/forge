@@ -11,7 +11,7 @@ fs.mkdirSync('dist/exports', { recursive: true });
 // Create plugin/index.js
 const pluginContent = `
 // Tailwind CSS Plugin for @nexcraft/forge
-const plugin = require('tailwindcss/plugin');
+import plugin from 'tailwindcss/plugin';
 
 const forgeTokens = {
   colors: {
@@ -45,7 +45,7 @@ const forgeUtilities = {
   }
 };
 
-module.exports = plugin(
+const forgePlugin = plugin(
   function({ addUtilities, addBase }) {
     addBase({
       ':root': {
@@ -63,9 +63,8 @@ module.exports = plugin(
   }
 );
 
-module.exports.forgePlugin = module.exports;
-module.exports.forgeTheme = forgeTokens;
-module.exports.forgeUtilities = forgeUtilities;
+export default forgePlugin;
+export { forgePlugin, forgeTokens as forgeTheme, forgeUtilities };
 `;
 
 fs.writeFileSync('dist/plugin/index.js', pluginContent.trim());
@@ -87,7 +86,7 @@ components.forEach(({ name, component }) => {
 // This provides selective imports for better tree-shaking
 
 // Import the main bundle to ensure components are available
-require('../nexcraft-forge.umd.js');
+import '../nexcraft-forge.es.js';
 
 // Get the component from the global namespace
 const ${component} = globalThis.NexcraftForge?.${component} || 
@@ -98,15 +97,14 @@ if (!${component}) {
   throw new Error('${component} not found. Make sure @nexcraft/forge is properly loaded.');
 }
 
-// Export for manual registration
-module.exports = { ${component} };
-module.exports.${component} = ${component};
-module.exports.default = ${component};
-
 // Auto-register the component when imported
 if (typeof customElements !== 'undefined' && !customElements.get('forge-${name}')) {
   customElements.define('forge-${name}', ${component});
 }
+
+// Export for both default and named imports
+export { ${component} };
+export default ${component};
 `;
 
   fs.writeFileSync(`dist/exports/${name}.js`, exportContent.trim());
