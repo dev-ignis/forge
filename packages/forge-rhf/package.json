@@ -55,7 +55,10 @@
     "forge",
     "form-adapters",
     "react",
-    "web-components"
+    "web-components",
+    "form-validation",
+    "typescript",
+    "monorepo"
   ],
   "author": "Ignis Team",
   "license": "MIT"
