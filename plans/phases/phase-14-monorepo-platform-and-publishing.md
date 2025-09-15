@@ -399,6 +399,51 @@ module.exports = {
 - [ ] Storybook continues to work correctly
 - [ ] AI manifest generation works for both packages
 
+## Architecture Decision Records (ADR) Impact Assessment
+
+The monorepo migration will affect several existing ADRs that need review and potential updates:
+
+### ADRs Requiring Review for Monorepo Context
+
+**High Impact (Likely need updates):**
+- [ ] **ADR-010-versioning-release.md** - Update for Changesets multi-package versioning
+- [ ] **ADR-011-package-distribution.md** - Update for workspace publishing strategy
+- [ ] **ADR-005-build-tooling.md** - Update for workspace build coordination
+- [ ] **ADR-007-framework-integration.md** - Update for cross-package integration patterns
+
+**Medium Impact (May need updates):**
+- [ ] **ADR-004-testing-strategy.md** - Update for workspace testing approach
+- [ ] **ADR-009-documentation-strategy.md** - Update for multi-package documentation
+- [ ] **ADR-017-ai-native-development-strategy.md** - Update for AI manifest per package
+- [ ] **ADR-018-unified-ssr-architecture.md** - Update for cross-package SSR considerations
+
+**Low Impact (Review recommended):**
+- [ ] **ADR-001-web-components-abstraction.md** - Validate abstractions work across packages
+- [ ] **ADR-008-component-api-design.md** - Ensure API consistency across packages
+- [ ] **ADR-013-typescript-interfaces.md** - Update for cross-package type sharing
+
+**Package-Specific Considerations:**
+- [ ] Document which ADRs apply to `@nexcraft/forge` vs `@nexcraft/forge-rhf`
+- [ ] Create package-specific ADR sections where architectural decisions differ
+- [ ] Ensure cross-package compatibility requirements are documented
+
+### ADR Update Strategy
+
+**During Phase 14:**
+- [ ] Review ADR-010, ADR-011, ADR-005, ADR-007 for immediate conflicts
+- [ ] Update critical ADRs that would block monorepo implementation
+- [ ] Document temporary deviations with plan to update ADRs post-migration
+
+**Post Phase 14:**
+- [ ] Comprehensive ADR review and updates based on actual monorepo implementation
+- [ ] Document lessons learned and architectural decisions made during migration
+- [ ] Update ADR templates to include monorepo considerations for future decisions
+
+**New ADRs Needed:**
+- [ ] **ADR-019-monorepo-package-boundaries** - Define clear boundaries and responsibilities
+- [ ] **ADR-020-cross-package-dependency-management** - Workspace dependency strategy
+- [ ] **ADR-021-monorepo-testing-coordination** - Testing across package boundaries
+
 ## Phase 14 → Phase 15 Handoff
 
 Once Phase 14 is complete, Phase 15 should:
@@ -407,6 +452,7 @@ Once Phase 14 is complete, Phase 15 should:
 - [ ] Implement automated Version Packages PR creation
 - [ ] Add documentation site publishing integration
 - [ ] Configure NPM_TOKEN and other release automation secrets
+- [ ] Complete ADR updates for release automation decisions
 
 The monorepo foundation from Phase 14 will make Phase 15 release automation much more powerful and reliable.
 
