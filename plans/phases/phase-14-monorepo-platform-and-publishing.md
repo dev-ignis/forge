@@ -117,6 +117,301 @@ Note: For a minimal migration, keep the existing package at root (`"."` in works
 - Turbopack quirks: Keep ESM-only and explicit `exports`; document `transpilePackages`.
 - Cross-package type drift: CI type-check all workspaces; pin peer ranges thoughtfully.
 
+## Current State Analysis
+
+### Existing Structure
+The repository currently has:
+- Single package structure with main package at root
+- RHF adapters in `src/integrations/react/rhf/` (temporary location from Phase 13)
+- Complex manual release workflows (5 GitHub Actions files)
+- AI manifest and build artifacts causing conflicts during releases
+- Manual version bumping and changelog maintenance becoming unwieldy
+
+### Migration Prerequisites
+Before starting Phase 14, ensure:
+- [ ] Current build (`npm run build`) passes successfully
+- [ ] All tests pass (`npm test`)
+- [ ] AI manifest implementation is stable (`npm run build:ai`)
+- [ ] Current package.json exports are working correctly
+
+## Enhanced Work Plan (Detailed Implementation)
+
+### Step 1: Workspace Foundation Setup
+
+**1.1 Root Package.json Configuration**
+```json
+{
+  "name": "@nexcraft/forge-monorepo",
+  "private": true,
+  "workspaces": [
+    ".",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces", 
+    "type-check": "npm run type-check --workspaces",
+    "lint": "npm run lint --workspaces",
+    "clean": "npm run clean --workspaces",
+    "release": "npx changeset",
+    "version-packages": "npx changeset version",
+    "publish-packages": "npx changeset publish"
+  }
+}
+```
+
+**1.2 Update Current Package Configuration**
+- Ensure current package.json has proper `name: "@nexcraft/forge"`
+- Verify `publishConfig.access: "public"` exists
+- Maintain existing `exports` and `files` configuration
+
+### Step 2: RHF Adapters Package Extraction
+
+**2.1 Create Package Structure**
+```
+packages/
+└── forge-rhf/
+    ├── package.json
+    ├── src/
+    │   ├── index.ts
+    │   └── adapters/
+    │       ├── ForgeInputAdapter.tsx
+    │       ├── ForgeCheckboxAdapter.tsx
+    │       └── createUnifiedWrapper.tsx
+    ├── dist/
+    ├── tsconfig.json
+    └── vite.config.ts
+```
+
+**2.2 RHF Package Configuration**
+```json
+{
+  "name": "@nexcraft/forge-rhf",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "@nexcraft/forge": "workspace:*",
+    "react": "^18.0.0",
+    "react-hook-form": "^7.45.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "react": "^18.2.0",
+    "react-hook-form": "^7.45.0",
+    "typescript": "^5.0.0",
+    "vite": "^4.4.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
+```
+
+**2.3 Migration Steps**
+- [ ] Move `src/integrations/react/rhf/` → `packages/forge-rhf/src/`
+- [ ] Update imports to use `@nexcraft/forge/integrations/react` 
+- [ ] Create separate build configuration for RHF package
+- [ ] Update main package to remove RHF exports from `src/integrations/react/index.ts`
+
+### Step 3: Build System Coordination
+
+**3.1 Shared Configuration**
+- [ ] Create shared `tsconfig.base.json` at root
+- [ ] Each package extends base config with package-specific paths
+- [ ] Shared ESLint config for consistent code style
+- [ ] Shared Vitest config for testing standards
+
+**3.2 Build Dependencies**
+- [ ] Main package builds first (dependency)
+- [ ] RHF package builds after main package
+- [ ] Consider using `npm-run-all` or similar for build orchestration
+
+**3.3 Package Import Resolution**
+```typescript
+// In packages/forge-rhf/src/adapters/ForgeInputAdapter.tsx
+import { ForgeInput } from '@nexcraft/forge/integrations/react'
+import type { ForgeInputProps } from '@nexcraft/forge/integrations/react'
+```
+
+### Step 4: CI/CD Workflow Updates
+
+**4.1 Update Existing ci.yml**
+```yaml
+# Update steps to use workspace commands
+- name: Install dependencies
+  run: npm ci
+
+- name: Type check all packages
+  run: npm run type-check --workspaces
+
+- name: Lint all packages  
+  run: npm run lint --workspaces
+
+- name: Test all packages
+  run: npm run test --workspaces
+
+- name: Build all packages
+  run: npm run build --workspaces
+```
+
+**4.2 Workflow Dependencies**
+- [ ] Update artifact uploads to include both packages
+- [ ] Ensure build order respects package dependencies
+- [ ] Update Storybook build to work with workspace structure
+
+### Step 5: Changesets Integration
+
+**5.1 Initialize Changesets**
+```bash
+npm install -D @changesets/cli
+npx changeset init
+```
+
+**5.2 Changesets Configuration**
+```json
+// .changeset/config.json
+{
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": []
+}
+```
+
+**5.3 Changelog Integration**
+- [ ] Configure changelog generation per package
+- [ ] Ensure changelogs reference cross-package changes appropriately
+- [ ] Integrate with existing CHANGELOG.md approach
+
+### Step 6: Testing and Validation
+
+**6.1 Local Testing**
+```bash
+# Build all packages
+npm run build
+
+# Test workspace imports
+cd packages/forge-rhf
+npm run build
+node -e "console.log(require('./dist/index.js'))"
+
+# Test cross-package imports work
+npm run type-check
+```
+
+**6.2 Publishing Dry Run**
+```bash
+# Test package publishing without actually publishing
+npm run build --workspaces
+npx changeset publish --dry-run
+```
+
+**6.3 Next.js Integration Testing**
+- [ ] Create example app that imports both packages
+- [ ] Verify `transpilePackages: ['@nexcraft/forge', '@nexcraft/forge-rhf']` works
+- [ ] Test tree-shaking and bundle size impact
+
+### Step 7: Documentation Updates
+
+**7.1 Migration Documentation**
+- [ ] Document new import paths for RHF adapters
+- [ ] Update examples to show separate package usage
+- [ ] Breaking change documentation for existing users
+
+**7.2 Consumer App Guidance**
+```javascript
+// Next.js config example
+module.exports = {
+  transpilePackages: ['@nexcraft/forge', '@nexcraft/forge-rhf'],
+  // ... other config
+}
+```
+
+**7.3 Developer Workflow Documentation**
+- [ ] Workspace commands reference
+- [ ] Local development setup
+- [ ] Release process with Changesets
+- [ ] Cross-package development patterns
+
+## Risk Assessment and Mitigations
+
+### Technical Risks
+
+**1. Build Complexity**
+- Risk: Build failures due to dependency order
+- Mitigation: Clear build dependency graph, proper peer dependency configuration
+
+**2. Import Resolution**
+- Risk: Circular dependencies or import resolution failures
+- Mitigation: Strict package boundaries, explicit peer dependencies
+
+**3. Version Drift**
+- Risk: Packages getting out of sync with incompatible versions
+- Mitigation: Changesets linked releases, CI validation of cross-package compatibility
+
+### Process Risks
+
+**1. Migration Disruption**
+- Risk: Breaking changes for existing consumers
+- Mitigation: Gradual migration, backward compatibility exports, clear migration guide
+
+**2. Release Complexity**
+- Risk: More complex release process with multiple packages
+- Mitigation: Automated Changesets workflow, clear documentation
+
+**3. Developer Experience**
+- Risk: Increased complexity for local development
+- Mitigation: Workspace scripts, shared tooling, good documentation
+
+## Success Metrics
+
+**Technical Metrics:**
+- [ ] All workspace commands execute successfully
+- [ ] Build time doesn't significantly increase
+- [ ] Bundle sizes remain optimal for consumers
+- [ ] Cross-package type checking works correctly
+
+**Process Metrics:**
+- [ ] Changesets workflow reduces manual release overhead
+- [ ] CI build time remains reasonable (<10 minutes)
+- [ ] Developer onboarding time doesn't increase significantly
+
+**Quality Metrics:**
+- [ ] No regression in test coverage
+- [ ] Storybook continues to work correctly
+- [ ] AI manifest generation works for both packages
+
+## Phase 14 → Phase 15 Handoff
+
+Once Phase 14 is complete, Phase 15 should:
+- [ ] Enhance the basic Changesets workflow created in Phase 14
+- [ ] Consolidate the 5 existing GitHub workflows into 2 workspace-aware workflows
+- [ ] Implement automated Version Packages PR creation
+- [ ] Add documentation site publishing integration
+- [ ] Configure NPM_TOKEN and other release automation secrets
+
+The monorepo foundation from Phase 14 will make Phase 15 release automation much more powerful and reliable.
+
 ## References
 - Phase 13 (Adapters Split): plans/phases/phase-13-react-hook-form-adapters-split.md
+- Phase 15 (Release Automation): plans/phases/phase-15-release-automation-and-versioning.md
 - Changesets: https://github.com/changesets/changesets
+- npm workspaces: https://docs.npmjs.com/cli/v7/using-npm/workspaces
