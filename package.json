@@ -1,6 +1,6 @@
 {
   "name": "@nexcraft/forge",
-  "version": "0.5.2-beta.22",
+  "version": "0.5.2-beta.23",
   "type": "module",
   "description": "The FIRST AI-Native component library built for the age of AI-assisted development. Features built-in AI metadata, design token bridge, and real-time performance monitoring. Works seamlessly across React, Vue, Angular, and vanilla JavaScript with AI coding tools like Cursor, GitHub Copilot, and Claude.",
   "main": "./dist/nexcraft-forge.es.js",
@@ -98,7 +98,7 @@
   },
   "scripts": {
     "dev": "vite",
-      "build": "vite build && npm run build:types && npm run bundle:types && npm run cleanup:types && npm run build:ai && npm run build:exports",
+    "build": "vite build && npm run build:types && npm run bundle:types && npm run cleanup:types && npm run build:ai && npm run build:exports",
     "build:types": "tsc --emitDeclarationOnly",
     "bundle:types": "rollup -c rollup.dts.config.js && mv dist/index.bundled.d.ts dist/index.d.ts",
     "cleanup:types": "node scripts/cleanup-types.js",
