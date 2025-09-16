@@ -1,47 +1,5 @@
 # @nexcraft/forge-rhf
 
-## 1.0.0
-
-### Minor Changes
-
-- - **fix**: - rhf peer dependency; (b38f5af)
-  - **fix**: - align package versions with published npm versions; (e7400ba)
-  - **fix**: - correct forge-rhf version from 1.0.0 to 0.3.0; (a4c841f)
-  - **feat**: align package versions with npm registry for stable v0.7.0 release (a39eeeb)
-  - **fix**: resolve GitHub Actions CI failures and dependency conflicts (6eb371d)
-
-### Patch Changes
-
-- Updated dependencies
-  - @nexcraft/forge@0.7.0
-
-## 0.3.0
-
-### Minor Changes
-
-- a39eeeb: # v0.7.0 - Stable Release
-
-  Stable release bringing all the latest features from the develop branch:
-
-  ## 🤖 AI-Native Development Features
-  - Enhanced AI Manifest with WCAG 2.1 AA compliance data
-  - Complete GitHub Pages deployment pipeline
-  - AI metadata validation and component intelligence
-
-  ## 🏗️ Infrastructure & Build System
-  - Next.js example app with static export capabilities
-  - Improved build system and framework integration
-  - Enhanced documentation and testing infrastructure
-
-  ## 📦 Package Updates
-  - @nexcraft/forge: 0.6.0 → 0.7.0
-  - @nexcraft/forge-rhf: 0.2.0 → 0.3.0
-
-### Patch Changes
-
-- Updated dependencies [a39eeeb]
-  - @nexcraft/forge@0.7.0
-
 ## 0.2.0
 
 ### Patch Changes

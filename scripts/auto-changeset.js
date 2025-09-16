@@ -31,6 +31,13 @@ function parseConventionalCommit(message) {
  */
 async function generateChangesets() {
   try {
+    // Check if there are already pending changesets
+    const existingChangesets = execSync('find .changeset -name "*.md" -not -name "README.md" | wc -l', { encoding: 'utf8' }).trim();
+    if (parseInt(existingChangesets) > 0) {
+      console.log('✅ Existing changesets found - skipping auto-generation');
+      return;
+    }
+
     // Get the last release tag
     let lastTag;
     try {
