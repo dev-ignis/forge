@@ -1,0 +1,40 @@
+{
+  "name": "@nexcraft/forge-nextjs-example",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Next.js example app demonstrating @nexcraft/forge component integration",
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "export": "next build && next export",
+    "lint": "eslint",
+    "test:integration": "npm run build && npm run start"
+  },
+  "dependencies": {
+    "@nexcraft/forge": "^0.5.2-beta.23",
+    "next": "15.5.3",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-hook-form": "^7.62.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.3",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "keywords": [
+    "forge",
+    "nextjs",
+    "example",
+    "react-hook-form",
+    "ssr",
+    "web-components"
+  ]
+}

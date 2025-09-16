@@ -4,6 +4,14 @@ This directory contains the strategic planning documents for @nexcraft/forge, or
 
 ## 📁 **Planning Structure**
 
+### 🔒 **[00-security-and-quality.md](./00-security-and-quality.md)** - Cross-cutting Concerns (Ongoing)
+**Focus**: Security, accessibility, internationalization, and quality assurance
+- Component security audit and vulnerability management
+- Supply chain security and package integrity
+- WCAG 2.2 compliance and enhanced accessibility
+- Internationalization and global readiness
+- Cross-browser testing and quality assurance
+
 ### 🚀 **[01-immediate-priorities.md](./01-immediate-priorities.md)** - Critical Fixes (2-4 weeks)
 **Focus**: Production readiness and technical debt resolution
 - TypeScript type safety improvements
