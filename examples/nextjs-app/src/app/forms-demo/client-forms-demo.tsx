@@ -52,7 +52,7 @@ export default function ClientFormsDemo() {
 
   // Optional: Debug RHF register output (enable with NEXT_PUBLIC_DEBUG_RHF=true)
   React.useEffect(() => {
-    if (process.env.NEXT_PUBLIC_DEBUG_RHF === 'true') {
+    if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_DEBUG_RHF === 'true') {
       // eslint-disable-next-line no-console
       console.warn('Debug nameRegister:', nameRegister);
       // eslint-disable-next-line no-console

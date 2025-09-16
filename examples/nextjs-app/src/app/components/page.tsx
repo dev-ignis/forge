@@ -67,7 +67,7 @@ export default function ComponentsShowcase() {
               <ForgeAlert severity="error">Something went wrong.</ForgeAlert>
 
               <div className="pt-2">
-                <ForgeTooltip text="Hello from Tooltip!">
+                <ForgeTooltip content="Hello from Tooltip!">
                   <ForgeButton variant="secondary">Hover me</ForgeButton>
                 </ForgeTooltip>
               </div>
@@ -108,8 +108,12 @@ export default function ComponentsShowcase() {
             <h2 className="text-xl font-semibold">Tabs</h2>
             <ForgeTabs
               activeTab={activeTab}
-              onChange={(e: any) => setActiveTab(e?.target?.value || 'tab-1')}
-              tabs="tab-1,tab-2,tab-3"
+              onTabChange={(e: any) => setActiveTab(e?.detail?.tabId || 'tab-1')}
+              tabs={[
+                { id: 'tab-1', label: 'Tab 1' },
+                { id: 'tab-2', label: 'Tab 2' },
+                { id: 'tab-3', label: 'Tab 3' }
+              ]}
             >
               <div slot="tab-1" className="text-gray-700">Content for Tab 1</div>
               <div slot="tab-2" className="text-gray-700">Here is Tab 2 content</div>
