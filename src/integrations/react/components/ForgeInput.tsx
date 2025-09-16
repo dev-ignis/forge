@@ -27,17 +27,40 @@ export const ForgeInput = createUnifiedWrapper<HTMLElement, ForgeInputProps>({
     errorText: 'error-text'
   },
   
-  fallbackRenderer: (props, children) => (
-    <input
-      className={`forge-input forge-input--${props.variant || 'default'} forge-input--${props.size || 'md'}`}
-      type={props.type || 'text'}
-      placeholder={props.placeholder}
-      disabled={props.disabled}
-      required={props.required}
-      value={props.value || ''}
-      data-forge-component="forge-input"
-    />
-  ),
+  fallbackRenderer: (props, children) => {
+    // Handle both controlled and uncontrolled input patterns
+    const inputProps: any = {
+      className: `forge-input forge-input--${props.variant || 'default'} forge-input--${props.size || 'md'}`,
+      type: props.type || 'text',
+      placeholder: props.placeholder,
+      disabled: props.disabled,
+      required: props.required,
+      'data-forge-component': 'forge-input'
+    };
+
+    // Detect React Hook Form register pattern
+    const isLikelyRHFRegister = Boolean(props.name && typeof props.onBlur === 'function' && props.ref);
+
+    // Handle controlled vs uncontrolled input patterns safely
+    if (props.value !== undefined) {
+      // Explicit value provided -> controlled
+      inputProps.value = props.value;
+      if (props.onChange) inputProps.onChange = props.onChange;
+    } else if (props.onChange) {
+      // onChange without value: usually RHF register() or uncontrolled React pattern
+      // Keep it uncontrolled so typing works; still wire onChange
+      inputProps.onChange = props.onChange;
+    }
+    // For RHF register(), don't set defaultValue here; RHF will manage initial value via ref
+
+    // Add other React Hook Form props if provided
+    if (props.onBlur) inputProps.onBlur = props.onBlur;
+    if (props.onFocus) inputProps.onFocus = props.onFocus;
+    if (props.name) inputProps.name = props.name;
+    if (props.ref) inputProps.ref = props.ref;
+
+    return <input {...inputProps} />;
+  },
   
   fallbackProps: {
     type: 'text',

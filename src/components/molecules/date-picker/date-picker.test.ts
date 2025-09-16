@@ -343,7 +343,7 @@ describe('ForgeDatePicker', () => {
       const isToday = element.isToday(today);
       expect(isToday).toBe(true);
       
-      const notToday = new Date(2025, 8, 15);
+      const notToday = new Date(2024, 0, 1); // January 1, 2024 - definitely not today
       const isNotToday = element.isToday(notToday);
       expect(isNotToday).toBe(false);
     });

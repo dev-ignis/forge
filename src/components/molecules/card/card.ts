@@ -7,6 +7,13 @@ import type { AIMetadata, AIAction, AIStateExplanation } from '../../../core/ai-
 export type CardVariant = 'default' | 'outlined' | 'elevated' | 'filled';
 export type CardSize = 'small' | 'medium' | 'large';
 
+/**
+ * @slot - Default slot for main card content
+ * @slot actions - Action buttons or controls
+ * @slot footer - Footer content like metadata or links
+ * @slot header - Custom header content (overrides title/subtitle)
+ * @slot media - Media content like images, videos, or graphics
+ */
 @customElement('forge-card')
 export class ForgeCard extends BaseElement {
   static override styles = css`

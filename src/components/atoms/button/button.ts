@@ -5,6 +5,9 @@ import { BaseElement } from '../../../core/BaseElement';
 import type { ButtonVariant, ButtonSize, ButtonType, ForgeButtonProps, ForgeButtonEventDetail } from '../../../types';
 import type { AIComponentMetadata } from '../../../core/ai-metadata.types';
 
+/**
+ * @slot - Default slot for button text and content
+ */
 @customElement('forge-button')
 export class ForgeButton extends BaseElement {
   // Comprehensive AI metadata for AI-native development

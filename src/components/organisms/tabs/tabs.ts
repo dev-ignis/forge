@@ -21,6 +21,9 @@ export interface TabItem {
 /**
  * @element forge-tabs
  * @description Advanced tabs component with lazy loading, keyboard navigation, and drag-to-reorder
+ * 
+ * @slot [tab-id] - Tab content slots (named by tab ID)
+ * 
  * @fires tabchange - When active tab changes
  * @fires tabclose - When a tab is closed
  * @fires tabreorder - When tabs are reordered

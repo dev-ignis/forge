@@ -6,6 +6,9 @@ export type BadgeVariant = 'default' | 'primary' | 'success' | 'warning' | 'erro
 export type BadgeSize = 'sm' | 'md' | 'lg';
 export type BadgePosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'inline';
 
+/**
+ * @slot - Default slot for badge content (if not using count)
+ */
 @customElement('forge-badge')
 export class ForgeBadge extends BaseElement {
   static override styles = css`
@@ -431,6 +434,66 @@ export class ForgeBadge extends BaseElement {
         Count: ${this.renderCount}
       </div>
     `;
+  }
+
+  override getPossibleActions() {
+    return [
+      {
+        name: 'show',
+        description: 'Show the badge',
+        available: this.invisible
+      },
+      {
+        name: 'hide',
+        description: 'Hide the badge',
+        available: !this.invisible
+      },
+      {
+        name: 'increment',
+        description: 'Increment the count',
+        available: !this.dot && this.count < 999
+      },
+      {
+        name: 'decrement',
+        description: 'Decrement the count',
+        available: !this.dot && this.count > 0
+      },
+      {
+        name: 'reset',
+        description: 'Reset count to zero and show badge',
+        available: this.count > 0 || this.invisible
+      },
+      {
+        name: 'focus',
+        description: 'Focus the badge',
+        available: true
+      }
+    ];
+  }
+
+  override explainState() {
+    const states = ['visible', 'hidden'];
+    if (this.dot) states.push('dot-indicator');
+    if (this.pulse) states.push('pulsing');
+    if (this.count > 0) states.push('counting');
+    
+    let currentState = this.invisible ? 'hidden' : 'visible';
+    if (this.dot) currentState = 'dot-indicator';
+    else if (this.count > 0) currentState = 'counting';
+
+    let description = `Badge with ${this.variant} variant`;
+    if (this.dot) description += ', showing as dot indicator';
+    else if (this.count > 0) description += `, displaying count: ${this.getDisplayCount()}`;
+    else if (this.content) description += `, displaying content: ${this.content}`;
+    
+    description += this.invisible ? ', currently hidden' : ', currently visible';
+    if (this.pulse) description += ', pulsing animation active';
+
+    return {
+      currentState,
+      possibleStates: states,
+      stateDescription: description
+    };
   }
 }
 

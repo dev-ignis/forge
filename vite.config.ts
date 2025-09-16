@@ -86,6 +86,7 @@ function forgeIntegrationsPlugin() {
         { src: 'src/integrations/angular.ts', dest: 'dist/integrations/angular.js' }
       ];
       
+      // Copy integration files only
       integrationFiles.forEach(({ src, dest }) => {
         if (existsSync(src)) {
           console.log(`📦 Copying ${src} → ${dest}`);

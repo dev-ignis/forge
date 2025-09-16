@@ -16,32 +16,63 @@
 | **Phase 4: Framework Integration** | Weeks 15-18 | ✅ **COMPLETED** | [→ View Details](./phases/phase-4-framework-integration.md) |
 | **Phase 5: Advanced & Enterprise** | Weeks 19-22 | 📋 Planned | [→ View Details](./phases/phase-5-advanced-enterprise.md) |
 | **Phase 6: Production Readiness** | Weeks 23-26 | 📋 Planned | [→ View Details](./phases/phase-6-production-readiness.md) |
-| **🚀 Phase 9: AI-Native Development** | Weeks 27-56 | 🚧 **IN PROGRESS** | [→ View Details](./phases/phase-9-ai-native-development.md) |
+| **🚀 Phase 9: AI-Native Development** | Weeks 27-56 | ✅ **CORE COMPLETE** | [→ View Details](./phases/phase-9-ai-native-development.md) |
+| **Phase 12: RHF Adapters Split** | Weeks TBD | ✅ **COMPLETED** | [→ View Details](./phases/phase-12-react-hook-form-adapters-split.md) |
+| **Phase 13: Monorepo Platform & Publishing** | Weeks TBD | 🚧 **IN PROGRESS** | [→ View Details](./phases/phase-13-monorepo-platform-and-publishing.md) |
+| **Phase 14: Release Automation & Versioning** | Weeks TBD | 🚧 **IN PROGRESS** | [→ View Details](./phases/phase-14-release-automation-and-versioning.md) |
+
+## 🎯 **Current Strategic Priorities**
+
+**📋 [Project Priorities Overview](./priorities/README.md)** - Strategic roadmap organized by timeline
+
+### 🚀 **[01-immediate-priorities.md](./priorities/01-immediate-priorities.md)** (2-4 weeks)
+**Focus**: Production readiness and technical debt resolution
+- TypeScript type safety improvements (44 warnings)
+- Lit performance optimization
+- Test cleanup and quality improvements
+- Bundle size optimization
+
+### 📈 **[02-short-term-roadmap.md](./priorities/02-short-term-roadmap.md)** (1-3 months)
+**Focus**: Feature enhancement and ecosystem growth
+- Enhanced Design Token Bridge with Figma plugin
+- Advanced Performance Monitoring dashboard
+- AI-First Development Platform
+- Enhanced Framework Integrations
+- Developer Tools & Community Building
+
+### 🚀 **[03-long-term-vision.md](./priorities/03-long-term-vision.md)** (6-18 months)
+**Focus**: Market leadership and industry innovation
+- Industry Standard Establishment (W3C proposals)
+- Enterprise Platform Development
+- AI Revolution & ML Integration
+- Global Ecosystem Development
 
 ## 🚀 Current Status
 
-### 🎉 Major Milestone: AI-Native Development Era Begins!
-- **Phases 1-4**: ✅ **COMPLETED** (27+ production-ready components with full framework integration)
-- **Current Focus**: 🚀 Phase 9 - AI-Native Development Strategy
-- **Achievement**: First AI-Native component library with comprehensive metadata system
-- **Next Milestone**: AI-powered development tools and VS Code extension
-- [→ View Current Phase](./phases/phase-9-ai-native-development.md)
+### 🎉 Major Milestone: Production-Ready Beta with Strategic Priorities!
+- **Phases 1-4**: ✅ **COMPLETED** (framework integration finished)
+- **Phase 12**: ✅ **COMPLETED** (RHF adapters split)
+- **Phases 13-14**: 🚧 **IN PROGRESS** (monorepo foundation established, automation partially complete)
+- **Current Focus**: 🚀 **[01-immediate-priorities.md](./priorities/01-immediate-priorities.md)** — Production readiness
+- **Next Milestone**: Complete monorepo automation and TypeScript warnings resolution
+- **Strategic Direction**: **[02-short-term-roadmap.md](./priorities/02-short-term-roadmap.md)** — AI-first platform
 
 ### Recent Achievements 🎯
-- ✅ **27+ AI-Native components** - First library built for AI-assisted development
-- ✅ **Phase 9.1 Complete** - Comprehensive AI metadata system implemented
-- ✅ **React Integration Fixed** - GitHub issue #22 resolved with proper ES modules
-- ✅ **AI-Powered Development** - Components communicate with Cursor, Copilot, Claude
-- ✅ **1,184/1,184 tests passing** - Comprehensive test coverage maintained
-- ✅ **Performance monitoring** - All components meet <2ms render budget with AI tracking
+- ✅ **AI-Native Development COMPLETE**: AI methods implemented on all 30 components (Phase 9.1)
+- ✅ **AI Manifest Enhanced**: Extracted method implementations for 11 components with detailed actions/states
+- ✅ **AI Documentation**: Comprehensive AI methods guide created (docs/ai-methods.md)
+- ✅ Framework integration stabilized (React/Vite ES modules)
+- ✅ AI-powered patterns in docs and examples
+- ✅ All tests passing (see coverage in CI; vitest thresholds enforced)
+- ✅ Performance monitoring: components target <2ms render budget
 
 ## 🎯 Key Deliverables
 
 ### Core Differentiators
 - [Unique Value Proposition](./unique-value-proposition.md)
-- ✅ [🚀 AI-Native Development (Phase 9)](./phases/phase-9-ai-native-development.md) - **IN PROGRESS**
-- ✅ [AI Metadata System (ADR-017)](./adrs/ADR-017-ai-native-development-strategy.md) - **IMPLEMENTED**
-- ✅ [AI-Ready Components (ADR-014)](./adrs/ADR-014-ai-ready-components.md) - **ENHANCED** 
+- ✅ [🚀 AI-Native Development (Phase 9)](./phases/phase-9-ai-native-development.md) - **CORE COMPLETE**
+- ✅ [AI Metadata System (ADR-017)](./adrs/ADR-017-ai-native-development-strategy.md) - **FULLY IMPLEMENTED**
+- ✅ [AI-Ready Components (ADR-014)](./adrs/ADR-014-ai-ready-components.md) - **COMPLETE WITH ENHANCED MANIFEST** 
 - ✅ Design Token Bridge - **IMPLEMENTED** (Phase 2)
 - ✅ Performance Budget System - **IMPLEMENTED** (Phase 2)
 - ✅ Framework Integration Tools (Phase 4) - **COMPLETED**
@@ -61,8 +92,8 @@
 
 | Metric | Target | Current |
 |--------|--------|---------|
-| **Components** | 30+ | 22+ ✅ |
-| **Test Coverage** | >90% | 100% ✅ (881/881 tests) |
+| **Components** | 30+ | 27+ ✅ |
+| **Test Coverage** | >90% | All tests passing (see report) |
 | **Bundle Size (Core)** | <10KB | 7.8KB ✅ |
 | **Performance** | <1ms render | ✅ (with monitoring) |
 | **Documentation** | 100% | 100% ✅ (Storybook) |
@@ -78,12 +109,13 @@
 - [x] **Storybook Documentation**: 100% component coverage ✅
 
 ### 🚧 In Progress
-- [ ] **Phase 4**: Framework integration (React, Vue, Angular wrappers)
-- [ ] **Beta Release**: Prepare v1.0.0-beta.1 for npm publishing
+- [ ] **[01-immediate-priorities.md](./priorities/01-immediate-priorities.md)**: TypeScript warnings, Lit optimization, test cleanup
+- [ ] **Production Readiness**: Bundle optimization, documentation updates
+- [ ] **Quality Improvements**: Performance monitoring ✅, AI manifest enhancement ✅
 
 ### 📋 Planned
-- [ ] **Phase 5**: Enterprise features and advanced patterns
-- [ ] **Phase 6**: Production readiness and final optimizations
+- [ ] **[02-short-term-roadmap.md](./priorities/02-short-term-roadmap.md)**: AI-first platform, design token bridge, dev tools
+- [ ] **[03-long-term-vision.md](./priorities/03-long-term-vision.md)**: Market leadership, industry standards, global ecosystem
 - [ ] **v1.0.0 Release**: Stable production release 🎉
 
 ## 📝 Quick Reference
@@ -94,17 +126,15 @@
 - [Testing Strategy](./architecture/testing-strategy.md)
 
 ### Theming & Design
-- [Theming Integration Plan](./theming-integration-plan.md)
+- [ADR-003: CSS Custom Properties Theming](./adrs/ADR-003-css-custom-properties-theming.md)
 - [Composable Theming Strategy](./research/composable-theming-strategy.md)
 - Design Token System (Phase 0 ✅)
 
 ### Publishing & Deployment
 - [Publishing Strategy](../docs/publishing-deployment-strategy.md)
 - [Quick Start Guide](./quick-start-guide.md)
-- [Development Workflow](./process/development-workflow.md)
+- [Developmen---
 
----
-
-**Last Updated**: September 5, 2025  
-**Next Review**: Phase 4 Planning  
-**Status**: Ahead of Schedule 🟢 (Phases 1-3 Complete!)
+**Last Updated**: September 16, 2024  
+**Next Review**: Weekly (Immediate Priorities)  
+**Status**: Production-Ready Beta 🟢 (Strategic Priorities Established!)

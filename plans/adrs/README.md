@@ -112,5 +112,4 @@ All ADRs should be reviewed by:
 ## References
 
 - [Architectural Decision Records](https://adr.github.io/)
-- [Main Strategy Document](/plans/main.md)
 - [Implementation Roadmap](/plans/implementation-roadmap.md)

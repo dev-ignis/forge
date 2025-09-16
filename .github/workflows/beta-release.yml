@@ -109,46 +109,10 @@ jobs:
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "is_beta=true" >> $GITHUB_OUTPUT
       
-      - name: Generate beta changelog entry
-        run: |
-          VERSION="${{ steps.version.outputs.new_version }}"
-          DATE=$(date +%Y-%m-%d)
-          
-          # Create changelog entry for beta
-          cat > CHANGELOG_ENTRY.md << EOF
-          ## v$VERSION - $DATE (Beta Release)
-          
-          ### 🧪 Beta Changes
-          EOF
-          
-          # Add recent commits since last tag
-          if git describe --tags --abbrev=0 2>/dev/null; then
-            git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"- %s" >> CHANGELOG_ENTRY.md
-          else
-            git log --pretty=format:"- %s" -10 >> CHANGELOG_ENTRY.md
-          fi
-          
-          echo "" >> CHANGELOG_ENTRY.md
-          echo "> ⚠️ **This is a beta release** - use with caution in production environments" >> CHANGELOG_ENTRY.md
-          
-          # Prepend to CHANGELOG.md
-          if [ -f CHANGELOG.md ]; then
-            head -n 2 CHANGELOG.md > CHANGELOG_NEW.md
-            cat CHANGELOG_ENTRY.md >> CHANGELOG_NEW.md
-            echo "" >> CHANGELOG_NEW.md
-            tail -n +3 CHANGELOG.md >> CHANGELOG_NEW.md
-            mv CHANGELOG_NEW.md CHANGELOG.md
-          else
-            echo "# Changelog" > CHANGELOG.md
-            echo "" >> CHANGELOG.md
-            cat CHANGELOG_ENTRY.md >> CHANGELOG.md
-          fi
-          
-          rm CHANGELOG_ENTRY.md
       
       - name: Commit beta version
         run: |
-          git add package.json CHANGELOG.md
+          git add package.json
           git commit -m "chore(release): v${{ steps.version.outputs.new_version }} [beta] [skip ci]" || echo "No changes to commit"
       
       - name: Create beta tag
@@ -159,10 +123,36 @@ jobs:
         run: |
           git push origin ${{ github.ref_name }} --follow-tags
       
-      - name: Publish beta to NPM
+      - name: Check which packages need publishing
+        id: check_changes
         run: |
-          echo "Publishing beta version to NPM..."
+          echo "Checking for package changes..."
+          
+          # Always publish main package for beta releases
+          echo "publish_main=true" >> $GITHUB_OUTPUT
+          
+          # Check if RHF package has changes since last release
+          if git diff --quiet HEAD~1 packages/forge-rhf/; then
+            echo "No changes in @nexcraft/forge-rhf package"
+            echo "publish_rhf=false" >> $GITHUB_OUTPUT
+          else
+            echo "Changes detected in @nexcraft/forge-rhf package"
+            echo "publish_rhf=true" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Publish main package to NPM
+        if: steps.check_changes.outputs.publish_main == 'true'
+        run: |
+          echo "Publishing @nexcraft/forge beta version..."
           npm publish --tag ${{ github.event.inputs.beta_type }} --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      
+      - name: Publish RHF package to NPM
+        if: steps.check_changes.outputs.publish_rhf == 'true'
+        run: |
+          echo "Publishing @nexcraft/forge-rhf (changes detected)..."
+          npm publish --workspace=packages/forge-rhf --tag ${{ github.event.inputs.beta_type }} --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       
@@ -185,7 +175,7 @@ jobs:
             This version may contain experimental features and should be used with caution in production environments.
             
             ### What's Changed
-            See CHANGELOG.md for detailed changes.
+            See the git commit history for detailed changes.
             
             **Full Changelog**: https://github.com/dev-ignis/forge/commits/v${{ steps.version.outputs.new_version }}
           draft: false
