@@ -107,7 +107,7 @@
     "clean": "rm -rf dist && npm run clean --workspace=packages/forge-rhf",
     "release": "npx changeset",
     "version-packages": "npx changeset version",
-    "publish-packages": "npx changeset publish",
+    "publish-packages": "npm publish --access public && npm publish --workspace=packages/forge-rhf --access public",
     "prepare": "husky",
     "build:core": "vite build && npm run build:types && npm run bundle:types && npm run cleanup:types && npm run build:exports",
     "build:local": "npm run build:core && npm run build:ai && npm run validate:ai",
