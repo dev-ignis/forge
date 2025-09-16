@@ -18,8 +18,8 @@ permissions:
 
 # Allow only one concurrent deployment
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: deploy-examples-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-and-deploy:
