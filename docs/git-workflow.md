@@ -44,11 +44,16 @@ This project uses a **GitHub Flow** strategy with automated branch synchronizati
 
 ### Automated Synchronization
 
-The `.github/workflows/sync-branches.yml` workflow:
-- Triggers on every push to `main`
+The `.github/workflows/main-branch.yml` workflow includes branch synchronization:
+- Triggers after successful releases on `main`
 - Updates `develop` branch version to match `main`
 - Merges `main` changes into `develop`
 - Handles conflicts gracefully
+
+Additionally, `.github/workflows/develop-ci.yml` provides CI for develop branch:
+- Runs on pushes to `develop` and PRs targeting `develop`
+- Executes linting, type checking, testing, and building
+- Provides fast feedback without release overhead
 
 ## Version Management
 

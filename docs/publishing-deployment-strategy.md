@@ -7,16 +7,15 @@ This document outlines the comprehensive publishing and deployment strategy for 
 ## Current Implementation Status
 
 ### ✅ Fully Implemented
-- GitHub Actions CI pipeline (`.github/workflows/ci.yml`)
-- GitHub Actions Release pipeline (`.github/workflows/release.yml`)
-- **NEW:** Beta Release workflow (`.github/workflows/beta-release.yml`)
-- **NEW:** Branch Synchronization workflow (`.github/workflows/sync-branches.yml`)
+- **CONSOLIDATED:** Main Branch CI & Release pipeline (`.github/workflows/main-branch.yml`)
+- **NEW:** Develop Branch CI pipeline (`.github/workflows/develop-ci.yml`)
+- **LEGACY:** Beta Release workflow (`.github/workflows/beta-release.yml`) - for manual beta releases
 - NPM publishing to @nexcraft/forge (stable releases)
-- NPM beta publishing with tags (@beta, @alpha, @rc)
-- Automated version bumping with conventional commits
-- Comprehensive changelog generation
+- NPM workspace support for @nexcraft/forge-rhf package
+- Automated Changesets-based versioning and publishing
+- Comprehensive changelog generation with Changesets
 - GitHub Releases with automated notes
-- Storybook documentation deployment
+- GitHub Pages deployment for examples
 - Git branch synchronization (main ↔ develop)
 
 ### 🚧 Enhancements Made
@@ -84,60 +83,64 @@ Following semantic versioning with conventional commits:
 
 ## GitHub Actions Workflows
 
-### 1. Continuous Integration (`ci.yml`)
+### 1. Main Branch CI & Release (`main-branch.yml`)
 
-Runs on all pushes to main/develop and PRs.
+**Triggers:**
+- Pushes to `main` (full CI + release pipeline)
+- PRs to `main` (CI only, no release)
 
 **Features:**
-- Matrix testing (Node 18.x, 20.x)
-- Playwright browser caching
+- Matrix testing (Node 20.x, 22.x)
 - ESLint and TypeScript checking
-- Test coverage reporting
-- Build verification
+- Test coverage reporting with artifacts
+- Build verification for both packages
 - Storybook build
+- Changesets-based automatic releases
+- Branch synchronization with develop
+- Example app updates after publishing
 
 **Quality Gates:**
-- 90% minimum test coverage (per ADR-004)
 - Zero TypeScript errors
 - Zero ESLint errors
 - All tests must pass
+- Successful builds for all packages
 
-### 2. Release & Publish (`release.yml`)
+### 2. Develop Branch CI (`develop-ci.yml`)
 
-Triggered after successful CI on main branch.
+**Triggers:**
+- Pushes to `develop`
+- PRs targeting `develop`
 
 **Features:**
-- Automatic version bumping based on commits
-- Changelog generation
-- NPM package publishing
-- GitHub release creation
-- Storybook deployment (when configured)
+- Matrix testing (Node 20.x, 22.x)
+- Lightweight CI (lint, type-check, test, build)
+- Fast feedback without release overhead
+- No publishing or deployment steps
 
 **Process:**
-1. CI workflow completes successfully
-2. Release workflow triggers via `workflow_run`
-3. Determines version bump from commit messages
-4. Updates package.json and CHANGELOG.md
-5. Creates git tag
-6. Publishes to NPM
-7. Creates GitHub release
+1. Run linting and type checking
+2. Execute test suite
+3. Verify build processes
+4. Provide fast feedback for development
 
 ### Key Improvements Made
 
-1. **Fixed CI/CD Issues:**
-   - Updated deprecated GitHub Actions from v3 to v4
-   - Added Playwright browser caching
-   - Fixed ESLint v9 configuration
-   - Handled first release edge cases
+1. **Workflow Consolidation:**
+   - Consolidated 3 separate workflows into unified `main-branch.yml`
+   - Reduced workflow overhead from 3→1 on main branch merges
+   - Added separate lightweight CI for develop branch
+   - Fixed GitHub Actions permissions for PR creation
 
-2. **Optimized Workflows:**
-   - Prevented duplicate runs with workflow_run trigger
-   - Added `[skip ci]` to release commits
-   - Improved version detection for conventional commits
+2. **Monorepo Support:**
+   - Added npm workspaces support for @nexcraft/forge-rhf
+   - Implemented Changesets for coordinated releases
+   - Fixed workspace build processes and dependencies
 
-3. **Package Naming:**
-   - Migrated from @ignis/forge to @nexcraft/forge
-   - Updated all build outputs accordingly
+3. **Quality & Performance:**
+   - Updated to Node.js 20.x and 22.x matrix testing
+   - Fixed Husky pre-commit hooks (CRLF→LF line endings)
+   - Improved build reliability and error handling
+   - Added comprehensive artifact uploads for debugging
 
 ## CDN Distribution
 
