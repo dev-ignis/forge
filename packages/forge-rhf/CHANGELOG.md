@@ -1,5 +1,20 @@
 # @nexcraft/forge-rhf
 
+## 2.0.0
+
+### Minor Changes
+
+- - **fix**: - rhf peer dependency; (b38f5af)
+  - **fix**: - align package versions with published npm versions; (e7400ba)
+  - **fix**: - correct forge-rhf version from 1.0.0 to 0.3.0; (a4c841f)
+  - **feat**: align package versions with npm registry for stable v0.7.0 release (a39eeeb)
+  - **fix**: resolve GitHub Actions CI failures and dependency conflicts (6eb371d)
+
+### Patch Changes
+
+- Updated dependencies
+  - @nexcraft/forge@0.8.0
+
 ## 1.0.0
 
 ### Minor Changes
