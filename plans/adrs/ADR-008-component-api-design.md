@@ -168,6 +168,25 @@ renderItem?: (item: any) => TemplateResult;
 
 ## Slot Naming Standards
 
+### Slot Documentation Requirements
+All components with slots **MUST** include JSDoc `@slot` documentation for CEM (Custom Elements Manifest) extraction:
+
+```typescript
+/**
+ * @element my-card
+ * @description A card component with customizable sections
+ * 
+ * @slot header - Header content like titles and action buttons
+ * @slot - Default slot for main card content  
+ * @slot footer - Footer content like metadata or links
+ */
+@customElement('my-card')
+export class MyCard extends BaseElement {
+  // Component implementation
+}
+```
+
+### Slot Naming Conventions
 ```html
 <!-- CORRECT: Descriptive, lowercase slot names -->
 <my-card>
@@ -183,6 +202,12 @@ renderItem?: (item: any) => TemplateResult;
   <footer><slot name="footer"></slot></footer>
 </article>
 ```
+
+### Slot Documentation Format
+- **Default slot**: Use `@slot - Description` (dash with space for unnamed slot)
+- **Named slots**: Use `@slot name - Description` format
+- **Descriptions**: Clear, concise explanation of slot purpose
+- **Order**: Document default slot first, then named slots alphabetically
 
 ## Alternatives Considered
 
@@ -261,6 +286,7 @@ class Input extends LitElement {
 - [ ] Boolean props are positive
 - [ ] Variants are consistent across library
 - [ ] Slots are lowercase and descriptive
+- [ ] **Slots have JSDoc @slot documentation**
 - [ ] Complex data uses properties, not attributes
 - [ ] API is minimal and focused
 
@@ -279,7 +305,7 @@ Each component must document:
 1. **Properties**: Type, default value, description
 2. **Attributes**: Reflected properties
 3. **Events**: Name, detail structure, when fired
-4. **Slots**: Name, purpose, default content
+4. **Slots**: Name, purpose, default content (via JSDoc @slot tags)
 5. **CSS Custom Properties**: Theming variables
 6. **Parts**: Exposed Shadow DOM parts
 

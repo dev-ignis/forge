@@ -25,6 +25,7 @@
 **📚 AI Documentation**:
 - [🎯 Component Catalog](./docs/AI_COMPONENT_CATALOG.md) - Copy-paste component examples
 - [🎨 Common Patterns](./docs/patterns/AI_COMMON_PATTERNS.md) - Login, dashboard, form patterns  
+- [🎨 Styling Guide](./docs/guides/AI_STYLING_GUIDE.md) - Complete styling reference (variants, CSS, Tailwind)
 - [📦 Import Guide](./docs/guides/AI_IMPORT_GUIDE.md) - All import methods & framework examples
 - [🤖 AI Manifest](./ai-manifest.json) - Structured component metadata
 

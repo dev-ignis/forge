@@ -6,6 +6,9 @@ export type BadgeVariant = 'default' | 'primary' | 'success' | 'warning' | 'erro
 export type BadgeSize = 'sm' | 'md' | 'lg';
 export type BadgePosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'inline';
 
+/**
+ * @slot - Default slot for badge content (if not using count)
+ */
 @customElement('forge-badge')
 export class ForgeBadge extends BaseElement {
   static override styles = css`

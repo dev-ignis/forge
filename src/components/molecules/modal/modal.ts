@@ -8,6 +8,11 @@ import '../../atoms/button/button';
 export type ModalSize = 'small' | 'medium' | 'large' | 'full';
 export type ModalScrollBehavior = 'body' | 'entire';
 
+/**
+ * @slot header - Custom header content (overrides title prop)
+ * @slot - Default slot for main modal content
+ * @slot footer - Footer content like action buttons
+ */
 @customElement('forge-modal')
 export class ForgeModal extends BaseElement {
   static override styles = css`

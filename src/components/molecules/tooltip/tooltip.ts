@@ -8,6 +8,9 @@ export type TooltipPosition = 'top' | 'right' | 'bottom' | 'left' | 'auto';
 export type TooltipTrigger = 'hover' | 'click' | 'focus' | 'manual';
 export type TooltipVariant = 'default' | 'dark' | 'light' | 'error' | 'warning' | 'success';
 
+/**
+ * @slot - Default slot for tooltip content
+ */
 @customElement('forge-tooltip')
 export class ForgeTooltip extends BaseElement {
   static override styles = css`

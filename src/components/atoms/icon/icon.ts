@@ -434,6 +434,78 @@ export class ForgeIcon extends BaseElement {
       </div>
     `;
   }
+
+  override getPossibleActions() {
+    return [
+      {
+        name: 'reload',
+        description: 'Reload icon from source',
+        available: this.error && (!!this.name || !!this.src)
+      },
+      {
+        name: 'clearCache',
+        description: 'Clear icon from cache',
+        available: !!this.name && ForgeIcon.iconRegistry.has(this.name)
+      },
+      {
+        name: 'startSpin',
+        description: 'Start spinning animation',
+        available: !this.spin && !this.loading
+      },
+      {
+        name: 'stopSpin',
+        description: 'Stop spinning animation',
+        available: this.spin
+      },
+      {
+        name: 'startPulse',
+        description: 'Start pulse animation',
+        available: !this.pulse && !this.loading
+      },
+      {
+        name: 'stopPulse',
+        description: 'Stop pulse animation',
+        available: this.pulse
+      },
+      {
+        name: 'focus',
+        description: 'Focus the icon',
+        available: true
+      }
+    ];
+  }
+
+  override explainState() {
+    const states = ['idle', 'loading', 'loaded', 'error'];
+    if (this.spin) states.push('spinning');
+    if (this.pulse) states.push('pulsing');
+    
+    let currentState = 'idle';
+    if (this.loading) currentState = 'loading';
+    else if (this.error) currentState = 'error';
+    else if (this.iconData) currentState = 'loaded';
+
+    let description = `Icon component`;
+    if (this.name) description += ` displaying "${this.name}" icon`;
+    else if (this.src) description += ` loading from custom source`;
+    else description += ` without icon specified`;
+    
+    if (this.loading) description += ', currently loading';
+    else if (this.error) description += ', failed to load';
+    else if (this.iconData) description += ', successfully loaded';
+    
+    if (this.spin) description += ', spinning animation active';
+    if (this.pulse) description += ', pulse animation active';
+    
+    const cacheHit = !!(this.name && ForgeIcon.iconRegistry.has(this.name));
+    if (cacheHit) description += ', cached in registry';
+
+    return {
+      currentState,
+      possibleStates: states,
+      stateDescription: description
+    };
+  }
 }
 
 declare global {

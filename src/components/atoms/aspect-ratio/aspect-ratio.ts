@@ -8,6 +8,8 @@ import { BaseElement } from '../../../core/BaseElement';
  * 
  * @element forge-aspect-ratio
  * 
+ * @slot - Default slot for content with aspect ratio
+ * 
  * @csspart container - The aspect ratio container element
  * @csspart content - The content wrapper element
  * 

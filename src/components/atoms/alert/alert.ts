@@ -6,6 +6,10 @@ import '../icon/icon';
 export type AlertSeverity = 'info' | 'success' | 'warning' | 'error';
 export type AlertVariant = 'filled' | 'outlined' | 'standard';
 
+/**
+ * @slot - Default slot for alert content
+ * @slot actions - Action buttons or controls
+ */
 @customElement('forge-alert')
 export class ForgeAlert extends BaseElement {
   static override styles = css`

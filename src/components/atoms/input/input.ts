@@ -11,6 +11,10 @@ export type InputSize = 'sm' | 'md' | 'lg';
 export type InputVariant = 'default' | 'filled' | 'outlined';
 export type ValidationState = 'default' | 'error' | 'warning' | 'success';
 
+/**
+ * @slot prefix - Content to display before the input (icons, text)
+ * @slot suffix - Content to display after the input (icons, buttons)
+ */
 @customElement('forge-input')
 export class ForgeInput extends BaseElement {
   // Initialize AI metadata
