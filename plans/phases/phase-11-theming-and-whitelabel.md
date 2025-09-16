@@ -1,4 +1,4 @@
-# Phase 12: Theming & Whitelabel
+# Phase 11: Theming & Whitelabel
 
 ## Objective
 Deliver a token‑first theming system that ships base tokens and theme packs (light/dark), supports scoped brand overrides, and exposes stable styling surfaces (tokens + parts) without breaking Shadow DOM encapsulation.

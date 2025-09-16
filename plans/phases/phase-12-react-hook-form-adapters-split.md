@@ -1,4 +1,4 @@
-# Phase 13: React Hook Form Adapters Split
+# Phase 12: React Hook Form Adapters Split
 
 ## Objective
 Create a separate, optional package `@nexcraft/forge-rhf` that ships React Hook Form (RHF) adapters for the Forge React bindings, eliminating runtime detection and ensuring clean ESM interop with Next.js + Turbopack.
@@ -184,6 +184,6 @@ Notes:
 
 ## Monorepo Strategy & Publishing
 
-See Phase 14 for the full monorepo plan and publishing workflows:
+See Phase 13 for the full monorepo plan and publishing workflows:
 
-- Phase 14: Monorepo Platform & Publishing — plans/phases/phase-14-monorepo-platform-and-publishing.md
+- Phase 13: Monorepo Platform & Publishing — plans/phases/phase-13-monorepo-platform-and-publishing.md

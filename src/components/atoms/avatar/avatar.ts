@@ -9,6 +9,9 @@ export type AvatarStatus = 'online' | 'offline' | 'busy' | 'away' | 'none';
 export type StatusPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
 export type AvatarShape = 'circle' | 'square' | 'rounded';
 
+/**
+ * @event forge-avatar-click - Fired when a clickable avatar is clicked
+ */
 @customElement('forge-avatar')
 export class ForgeAvatar extends BaseElement {
   // Initialize AI metadata

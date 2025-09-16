@@ -1,4 +1,4 @@
-# Cursor AI Rules for @nexcraft/forge
+# Claude AI Instructions for @nexcraft/forge
 
 ## Package Information
 - Package: @nexcraft/forge

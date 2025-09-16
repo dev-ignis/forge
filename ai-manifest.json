@@ -1,7 +1,7 @@
 {
   "manifestVersion": "1.0.0",
   "package": "@nexcraft/forge",
-  "generatedAt": "2025-09-16T03:31:44.434Z",
+  "generatedAt": "2025-09-16T04:02:49.829Z",
   "components": [
     {
       "id": "forge-alert",
@@ -112,11 +112,28 @@
           "description": "Action buttons or controls"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "alert",
+        "ariaAttributes": [
+          "aria-live",
+          "aria-atomic",
+          "aria-label",
+          "aria-describedby"
+        ],
+        "keyboardNavigation": [
+          "Escape (if closable)",
+          "Tab"
+        ],
+        "screenReaderBehavior": "Automatically announced when displayed due to alert role",
+        "focusManagement": "Can receive focus if closable, maintains focus ring",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all severity variants",
+        "reducedMotion": "Respects prefers-reduced-motion for entry/exit animations"
+      },
       "examples": {
         "documentation": "docs/components/atoms/alert.md",
         "source": "dist/components/alert/alert.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-alert\" role=\"alert\" aria-live=\"polite\">\n  <div class=\"forge-alert__content\">\n    <span class=\"forge-alert__message\">Alert message content</span>\n    <button class=\"forge-alert__close\" aria-label=\"Close alert\" type=\"button\">×</button>\n  </div>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -202,11 +219,24 @@
           "description": "Default slot for content with aspect ratio"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "none",
+        "ariaAttributes": [
+          "aria-label (inherited by content)"
+        ],
+        "keyboardNavigation": [
+          "Inherits from slotted content"
+        ],
+        "screenReaderBehavior": "Transparent to screen readers, passes through content semantics",
+        "focusManagement": "Focus management handled by slotted content",
+        "colorContrast": "Neutral component, contrast managed by content",
+        "reducedMotion": "No animations by default"
+      },
       "examples": {
         "documentation": "docs/components/atoms/aspect-ratio.md",
         "source": "dist/components/aspect-ratio/aspect-ratio.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-aspect-ratio\" style=\"aspect-ratio: 16/9; max-width: 100%;\">\n  <div class=\"forge-aspect-ratio__content\">\n    <!-- Slotted content maintains aspect ratio -->\n  </div>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -319,11 +349,27 @@
           "description": "Fired when a clickable avatar is clicked"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "img",
+        "ariaAttributes": [
+          "aria-label",
+          "alt",
+          "aria-describedby"
+        ],
+        "keyboardNavigation": [
+          "Tab (if clickable)",
+          "Enter/Space (if clickable)"
+        ],
+        "screenReaderBehavior": "Announces as image with descriptive label",
+        "focusManagement": "Receives focus when clickable, maintains focus ring",
+        "colorContrast": "WCAG AA compliant for status indicators",
+        "reducedMotion": "Respects prefers-reduced-motion for hover effects"
+      },
       "examples": {
         "documentation": "docs/components/atoms/avatar.md",
         "source": "dist/components/avatar/avatar.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-avatar\" role=\"img\" aria-label=\"User avatar\">\n  <img src=\"/placeholder-avatar.jpg\" alt=\"User avatar\" class=\"forge-avatar__image\" />\n  <div class=\"forge-avatar__fallback\" aria-hidden=\"true\">U</div>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -440,11 +486,27 @@
           "description": "Default slot for badge content (if not using count)"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "status",
+        "ariaAttributes": [
+          "aria-label",
+          "aria-live",
+          "aria-atomic"
+        ],
+        "keyboardNavigation": [
+          "Tab",
+          "Not interactive by default"
+        ],
+        "screenReaderBehavior": "Announces count changes via aria-live",
+        "focusManagement": "Generally not focusable unless interactive",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all variants",
+        "reducedMotion": "Respects prefers-reduced-motion for pulse animation"
+      },
       "examples": {
         "documentation": "docs/components/atoms/badge.md",
         "source": "dist/components/badge/badge.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<span class=\"forge-badge\" role=\"status\" aria-label=\"Notification badge\">\n  <span class=\"forge-badge__content\">3</span>\n</span>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -588,11 +650,30 @@
           "description": "Default slot for button text and content"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "button",
+        "ariaAttributes": [
+          "aria-label",
+          "aria-pressed",
+          "aria-disabled",
+          "aria-describedby",
+          "aria-expanded"
+        ],
+        "keyboardNavigation": [
+          "Tab",
+          "Enter",
+          "Space"
+        ],
+        "screenReaderBehavior": "Announces button purpose, state, and content clearly",
+        "focusManagement": "Receives focus via tab navigation, maintains visible focus ring",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all variants",
+        "reducedMotion": "Respects prefers-reduced-motion for ripple effects"
+      },
       "examples": {
         "documentation": "docs/components/atoms/button.md",
         "source": "dist/components/button/button.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<button class=\"forge-button\" type=\"button\" aria-describedby=\"button-help\">\n  <span class=\"forge-button__content\">Button Text</span>\n</button>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -711,11 +792,29 @@
         }
       ],
       "events": [],
-      "a11y": {},
+      "a11y": {
+        "role": "checkbox",
+        "ariaAttributes": [
+          "aria-checked",
+          "aria-disabled",
+          "aria-required",
+          "aria-describedby",
+          "aria-invalid"
+        ],
+        "keyboardNavigation": [
+          "Tab",
+          "Space"
+        ],
+        "screenReaderBehavior": "Announces label, state (checked/unchecked/mixed), and validation",
+        "focusManagement": "Receives focus via tab navigation, maintains focus ring",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) including focus states",
+        "reducedMotion": "Respects prefers-reduced-motion for check animations"
+      },
       "examples": {
         "documentation": "docs/components/atoms/checkbox.md",
         "source": "dist/components/checkbox/checkbox.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<label class=\"forge-checkbox\">\n  <input type=\"checkbox\" class=\"forge-checkbox__input\" aria-describedby=\"checkbox-help\" />\n  <span class=\"forge-checkbox__checkmark\" aria-hidden=\"true\"></span>\n  <span class=\"forge-checkbox__label\">Checkbox Label</span>\n</label>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -868,11 +967,26 @@
         }
       ],
       "events": [],
-      "a11y": {},
+      "a11y": {
+        "role": "img",
+        "ariaAttributes": [
+          "aria-label",
+          "aria-hidden",
+          "role"
+        ],
+        "keyboardNavigation": [
+          "Generally not interactive"
+        ],
+        "screenReaderBehavior": "Hidden from screen readers when decorative, labeled when semantic",
+        "focusManagement": "Not focusable unless interactive",
+        "colorContrast": "WCAG AA compliant when used as interactive elements",
+        "reducedMotion": "Respects prefers-reduced-motion for spin/pulse animations"
+      },
       "examples": {
         "documentation": "docs/components/atoms/icon.md",
         "source": "dist/components/icon/icon.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<span class=\"forge-icon\" role=\"img\" aria-label=\"Icon description\">\n  <svg class=\"forge-icon__svg\" viewBox=\"0 0 24 24\" aria-hidden=\"true\">\n    <use href=\"#icon-name\"></use>\n  </svg>\n</span>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -1054,11 +1168,30 @@
           "description": "Content to display after the input (icons, buttons)"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "textbox",
+        "ariaAttributes": [
+          "aria-label",
+          "aria-describedby",
+          "aria-required",
+          "aria-invalid",
+          "aria-autocomplete"
+        ],
+        "keyboardNavigation": [
+          "Tab",
+          "Text input",
+          "Escape (clear if clearable)"
+        ],
+        "screenReaderBehavior": "Announces label, value, validation state, and helper text",
+        "focusManagement": "Receives focus via tab navigation, maintains focus ring",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for text and borders",
+        "reducedMotion": "Respects prefers-reduced-motion for focus transitions"
+      },
       "examples": {
         "documentation": "docs/components/atoms/input.md",
         "source": "dist/components/input/input.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-input\">\n  <label class=\"forge-input__label\" for=\"input-id\">Input Label</label>\n  <input class=\"forge-input__field\" type=\"text\" id=\"input-id\" placeholder=\"Enter text...\" aria-describedby=\"input-help\" />\n  <div class=\"forge-input__helper\" id=\"input-help\">Helper text</div>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -1141,10 +1274,27 @@
           "description": "The text content displayed in the center of the circle"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "progressbar",
+        "ariaAttributes": [
+          "aria-valuenow",
+          "aria-valuemax",
+          "aria-valuemin",
+          "aria-label",
+          "aria-describedby"
+        ],
+        "keyboardNavigation": [
+          "Not interactive"
+        ],
+        "screenReaderBehavior": "Announces progress value and description",
+        "focusManagement": "Not focusable",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for progress indicator",
+        "reducedMotion": "Respects prefers-reduced-motion for indeterminate animation"
+      },
       "examples": {
         "documentation": "docs/components/atoms/progress-circle.md",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-progress-circle\" role=\"progressbar\" aria-valuenow=\"75\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-label=\"Circular progress\">\n  <svg class=\"forge-progress-circle__svg\" viewBox=\"0 0 100 100\">\n    <circle class=\"forge-progress-circle__track\" cx=\"50\" cy=\"50\" r=\"45\" fill=\"none\" stroke-width=\"8\"/>\n    <circle class=\"forge-progress-circle__fill\" cx=\"50\" cy=\"50\" r=\"45\" fill=\"none\" stroke-width=\"8\" stroke-dasharray=\"282.7\" stroke-dashoffset=\"70.7\"/>\n  </svg>\n  <div class=\"forge-progress-circle__label\">75%</div>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -1208,11 +1358,28 @@
           "description": "The text content displayed alongside the progress bar"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "progressbar",
+        "ariaAttributes": [
+          "aria-valuenow",
+          "aria-valuemax",
+          "aria-valuemin",
+          "aria-label",
+          "aria-describedby"
+        ],
+        "keyboardNavigation": [
+          "Not interactive"
+        ],
+        "screenReaderBehavior": "Announces progress value and description",
+        "focusManagement": "Not focusable",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for progress indicator",
+        "reducedMotion": "Respects prefers-reduced-motion for indeterminate animation"
+      },
       "examples": {
         "documentation": "docs/components/atoms/progress.md",
         "source": "dist/components/progress/progress.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-progress\" role=\"progressbar\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-label=\"Loading progress\">\n  <div class=\"forge-progress__track\">\n    <div class=\"forge-progress__fill\" style=\"width: 50%\"></div>\n  </div>\n  <div class=\"forge-progress__label\">50%</div>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -1325,11 +1492,29 @@
         }
       ],
       "events": [],
-      "a11y": {},
+      "a11y": {
+        "role": "radiogroup",
+        "ariaAttributes": [
+          "aria-label",
+          "aria-describedby",
+          "aria-required",
+          "aria-invalid"
+        ],
+        "keyboardNavigation": [
+          "Tab (to group)",
+          "Arrow keys (between options)",
+          "Space"
+        ],
+        "screenReaderBehavior": "Announces group label, selected option, and validation state",
+        "focusManagement": "Group receives tab focus, arrow keys navigate options",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all states",
+        "reducedMotion": "Respects prefers-reduced-motion for selection animations"
+      },
       "examples": {
         "documentation": "docs/components/atoms/radio-group.md",
         "source": "dist/components/radio-group/radio-group.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<fieldset class=\"forge-radio-group\" role=\"radiogroup\" aria-labelledby=\"radio-legend\">\n  <legend class=\"forge-radio-group__legend\" id=\"radio-legend\">Radio Group Label</legend>\n  <label class=\"forge-radio-group__option\">\n    <input type=\"radio\" name=\"radio-group\" value=\"option1\" class=\"forge-radio-group__input\" />\n    <span class=\"forge-radio-group__radio\" aria-hidden=\"true\"></span>\n    <span class=\"forge-radio-group__text\">Option 1</span>\n  </label>\n  <label class=\"forge-radio-group__option\">\n    <input type=\"radio\" name=\"radio-group\" value=\"option2\" class=\"forge-radio-group__input\" />\n    <span class=\"forge-radio-group__radio\" aria-hidden=\"true\"></span>\n    <span class=\"forge-radio-group__text\">Option 2</span>\n  </label>\n</fieldset>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -1473,11 +1658,33 @@
         }
       ],
       "events": [],
-      "a11y": {},
+      "a11y": {
+        "role": "combobox",
+        "ariaAttributes": [
+          "aria-expanded",
+          "aria-haspopup",
+          "aria-label",
+          "aria-describedby",
+          "aria-required",
+          "aria-invalid"
+        ],
+        "keyboardNavigation": [
+          "Tab",
+          "Enter/Space (open)",
+          "Arrow keys",
+          "Escape (close)",
+          "Type to search"
+        ],
+        "screenReaderBehavior": "Announces label, selected value, expanded state, and options",
+        "focusManagement": "Receives focus via tab navigation, manages focus in dropdown",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all states",
+        "reducedMotion": "Respects prefers-reduced-motion for dropdown animations"
+      },
       "examples": {
         "documentation": "docs/components/molecules/multi-select.md",
         "source": "dist/components/select/select.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-select\">\n  <label class=\"forge-select__label\" for=\"select-id\">Select Label</label>\n  <select class=\"forge-select__native\" id=\"select-id\" aria-describedby=\"select-help\">\n    <option value=\"\">Choose an option...</option>\n    <option value=\"option1\">Option 1</option>\n    <option value=\"option2\">Option 2</option>\n  </select>\n  <div class=\"forge-select__helper\" id=\"select-help\">Helper text</div>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -1562,11 +1769,25 @@
         }
       ],
       "events": [],
-      "a11y": {},
+      "a11y": {
+        "role": "status",
+        "ariaAttributes": [
+          "aria-label",
+          "aria-live"
+        ],
+        "keyboardNavigation": [
+          "Not interactive"
+        ],
+        "screenReaderBehavior": "Announces loading state to indicate content is loading",
+        "focusManagement": "Not focusable",
+        "colorContrast": "WCAG AA compliant for skeleton appearance",
+        "reducedMotion": "Respects prefers-reduced-motion for shimmer animation"
+      },
       "examples": {
         "documentation": "docs/components/atoms/skeleton.md",
         "source": "dist/components/skeleton/skeleton.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-skeleton\" role=\"status\" aria-label=\"Loading content\">\n  <div class=\"forge-skeleton__block\" style=\"width: 100%; height: 20px; background: #e2e8f0; border-radius: 4px;\"></div>\n  <div class=\"forge-skeleton__block\" style=\"width: 75%; height: 20px; background: #e2e8f0; border-radius: 4px; margin-top: 8px;\"></div>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -1669,11 +1890,29 @@
         }
       ],
       "events": [],
-      "a11y": {},
+      "a11y": {
+        "role": "switch",
+        "ariaAttributes": [
+          "aria-checked",
+          "aria-disabled",
+          "aria-label",
+          "aria-describedby"
+        ],
+        "keyboardNavigation": [
+          "Tab",
+          "Space",
+          "Enter"
+        ],
+        "screenReaderBehavior": "Announces switch purpose and state (on/off)",
+        "focusManagement": "Receives focus via tab navigation, maintains focus ring",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all states",
+        "reducedMotion": "Respects prefers-reduced-motion for toggle animations"
+      },
       "examples": {
         "documentation": "docs/components/atoms/switch.md",
         "source": "dist/components/switch/switch.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<label class=\"forge-switch\">\n  <input type=\"checkbox\" class=\"forge-switch__input\" aria-describedby=\"switch-help\" />\n  <span class=\"forge-switch__track\" aria-hidden=\"true\">\n    <span class=\"forge-switch__thumb\"></span>\n  </span>\n  <span class=\"forge-switch__label\">Switch Label</span>\n</label>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -1806,11 +2045,27 @@
           "description": "Action buttons or controls"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "article",
+        "ariaAttributes": [
+          "aria-label",
+          "aria-describedby",
+          "role"
+        ],
+        "keyboardNavigation": [
+          "Tab (if clickable)",
+          "Enter (if clickable)"
+        ],
+        "screenReaderBehavior": "Announces as article/card with title and content structure",
+        "focusManagement": "Receives focus when interactive, maintains focus ring",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for text and borders",
+        "reducedMotion": "Respects prefers-reduced-motion for hover/focus effects"
+      },
       "examples": {
         "documentation": "docs/components/molecules/card.md",
         "source": "dist/components/card/card.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<article class=\"forge-card\" role=\"article\">\n  <header class=\"forge-card__header\">\n    <h3 class=\"forge-card__title\">Card Title</h3>\n    <p class=\"forge-card__subtitle\">Card subtitle</p>\n  </header>\n  <div class=\"forge-card__media\" aria-hidden=\"true\">\n    <img src=\"/placeholder.jpg\" alt=\"\" />\n  </div>\n  <div class=\"forge-card__content\">\n    <p>Card content goes here.</p>\n  </div>\n  <footer class=\"forge-card__footer\">\n    <div class=\"forge-card__actions\">\n      <button type=\"button\" class=\"forge-button\">Action</button>\n    </div>\n  </footer>\n</article>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -1950,11 +2205,32 @@
         }
       ],
       "events": [],
-      "a11y": {},
+      "a11y": {
+        "role": "combobox",
+        "ariaAttributes": [
+          "aria-expanded",
+          "aria-haspopup",
+          "aria-label",
+          "aria-describedby",
+          "aria-required",
+          "aria-invalid"
+        ],
+        "keyboardNavigation": [
+          "Tab",
+          "Enter/Space (open calendar)",
+          "Arrow keys (navigate dates)",
+          "Escape (close)"
+        ],
+        "screenReaderBehavior": "Announces selected date, calendar state, and navigation instructions",
+        "focusManagement": "Manages focus within calendar popup, returns focus on close",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all calendar elements",
+        "reducedMotion": "Respects prefers-reduced-motion for calendar animations"
+      },
       "examples": {
         "documentation": "docs/components/molecules/date-picker.md",
         "source": "dist/components/date-picker/date-picker.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-date-picker\" role=\"generic\">\n  <!-- Component content rendered server-side -->\n  <noscript>This component requires JavaScript to function properly.</noscript>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -2045,11 +2321,30 @@
         }
       ],
       "events": [],
-      "a11y": {},
+      "a11y": {
+        "role": "menu",
+        "ariaAttributes": [
+          "aria-expanded",
+          "aria-haspopup",
+          "aria-orientation",
+          "aria-activedescendant"
+        ],
+        "keyboardNavigation": [
+          "Tab",
+          "Enter/Space (trigger)",
+          "Arrow keys (navigate)",
+          "Escape (close)"
+        ],
+        "screenReaderBehavior": "Announces menu items and current selection",
+        "focusManagement": "Manages focus within dropdown, returns focus to trigger",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for menu items",
+        "reducedMotion": "Respects prefers-reduced-motion for dropdown animations"
+      },
       "examples": {
         "documentation": "docs/components/molecules/dropdown.md",
         "source": "dist/components/dropdown/dropdown.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-dropdown\" role=\"generic\">\n  <!-- Component content rendered server-side -->\n  <noscript>This component requires JavaScript to function properly.</noscript>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -2176,11 +2471,26 @@
         }
       ],
       "events": [],
-      "a11y": {},
+      "a11y": {
+        "role": "group",
+        "ariaAttributes": [
+          "aria-labelledby",
+          "aria-describedby",
+          "aria-invalid"
+        ],
+        "keyboardNavigation": [
+          "Tab through form controls"
+        ],
+        "screenReaderBehavior": "Groups related form controls with shared label and description",
+        "focusManagement": "Focus management handled by contained form controls",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for labels and text",
+        "reducedMotion": "Respects prefers-reduced-motion for validation animations"
+      },
       "examples": {
         "documentation": "docs/components/molecules/form-field.md",
         "source": "dist/components/form-field/form-field.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-form-field\" role=\"generic\">\n  <!-- Component content rendered server-side -->\n  <noscript>This component requires JavaScript to function properly.</noscript>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -2314,11 +2624,29 @@
           "description": "Footer content like action buttons"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "dialog",
+        "ariaAttributes": [
+          "aria-modal",
+          "aria-labelledby",
+          "aria-describedby",
+          "aria-hidden"
+        ],
+        "keyboardNavigation": [
+          "Tab (within modal)",
+          "Escape (close)",
+          "Focus trap enabled"
+        ],
+        "screenReaderBehavior": "Announces as modal dialog, focuses first interactive element",
+        "focusManagement": "Traps focus within modal, returns focus on close",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for content",
+        "reducedMotion": "Respects prefers-reduced-motion for entry/exit animations"
+      },
       "examples": {
         "documentation": "docs/components/molecules/modal.md",
         "source": "dist/components/modal/modal.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"modal-title\" aria-describedby=\"modal-content\" aria-hidden=\"false\">\n  <div class=\"forge-modal__backdrop\"></div>\n  <div class=\"forge-modal__container\">\n    <header class=\"forge-modal__header\">\n      <h2 class=\"forge-modal__title\" id=\"modal-title\">Modal Title</h2>\n      <button class=\"forge-modal__close\" aria-label=\"Close modal\" type=\"button\">×</button>\n    </header>\n    <div class=\"forge-modal__content\" id=\"modal-content\">\n      <p>Modal content goes here.</p>\n    </div>\n    <footer class=\"forge-modal__footer\">\n      <button type=\"button\" class=\"forge-button\">Cancel</button>\n      <button type=\"button\" class=\"forge-button forge-button--primary\">Confirm</button>\n    </footer>\n  </div>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -2423,11 +2751,31 @@
           "detail": "CustomEvent"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "listbox",
+        "ariaAttributes": [
+          "aria-multiselectable",
+          "aria-expanded",
+          "aria-label",
+          "aria-describedby",
+          "aria-required"
+        ],
+        "keyboardNavigation": [
+          "Tab",
+          "Enter/Space (toggle)",
+          "Arrow keys",
+          "Ctrl+A (select all)"
+        ],
+        "screenReaderBehavior": "Announces selected items count and individual selections",
+        "focusManagement": "Manages focus within multi-select dropdown",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all states",
+        "reducedMotion": "Respects prefers-reduced-motion for selection animations"
+      },
       "examples": {
         "documentation": "docs/components/molecules/multi-select.md",
         "source": "dist/components/multi-select/multi-select.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-multi-select\" role=\"generic\">\n  <!-- Component content rendered server-side -->\n  <noscript>This component requires JavaScript to function properly.</noscript>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -2481,9 +2829,23 @@
         }
       ],
       "events": [],
-      "a11y": {},
+      "a11y": {
+        "role": "region",
+        "ariaAttributes": [
+          "aria-label",
+          "aria-live"
+        ],
+        "keyboardNavigation": [
+          "Tab (through contained toasts)"
+        ],
+        "screenReaderBehavior": "Container for toast notifications, manages aria-live announcements",
+        "focusManagement": "Focus management handled by contained toasts",
+        "colorContrast": "Neutral container, contrast managed by toast content",
+        "reducedMotion": "Respects prefers-reduced-motion for stacking animations"
+      },
       "examples": {
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-toast-container\" role=\"generic\">\n  <!-- Component content rendered server-side -->\n  <noscript>This component requires JavaScript to function properly.</noscript>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -2589,11 +2951,28 @@
           "description": "Action button slot"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "status",
+        "ariaAttributes": [
+          "aria-live",
+          "aria-atomic",
+          "aria-label",
+          "aria-describedby"
+        ],
+        "keyboardNavigation": [
+          "Tab (to action buttons)",
+          "Escape (dismiss)"
+        ],
+        "screenReaderBehavior": "Automatically announced when displayed via aria-live",
+        "focusManagement": "Can receive focus if containing interactive elements",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all variants",
+        "reducedMotion": "Respects prefers-reduced-motion for entry/exit animations"
+      },
       "examples": {
         "documentation": "docs/components/molecules/toast.md",
         "source": "dist/components/toast/toast.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-toast\" role=\"generic\">\n  <!-- Component content rendered server-side -->\n  <noscript>This component requires JavaScript to function properly.</noscript>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -2698,11 +3077,26 @@
           "description": "Default slot for tooltip content"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "tooltip",
+        "ariaAttributes": [
+          "aria-describedby",
+          "aria-hidden"
+        ],
+        "keyboardNavigation": [
+          "Escape (close)",
+          "Focus trigger to show"
+        ],
+        "screenReaderBehavior": "Associated with trigger element via aria-describedby",
+        "focusManagement": "Not focusable, shown/hidden based on trigger focus",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for tooltip content",
+        "reducedMotion": "Respects prefers-reduced-motion for show/hide animations"
+      },
       "examples": {
         "documentation": "docs/components/molecules/tooltip.md",
         "source": "dist/components/tooltip/tooltip.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-tooltip\" role=\"generic\">\n  <!-- Component content rendered server-side -->\n  <noscript>This component requires JavaScript to function properly.</noscript>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -2751,11 +3145,28 @@
           "detail": "CustomEvent"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "region",
+        "ariaAttributes": [
+          "aria-expanded",
+          "aria-controls",
+          "aria-labelledby"
+        ],
+        "keyboardNavigation": [
+          "Tab (to headers)",
+          "Enter/Space (toggle)",
+          "Arrow keys (navigate headers)"
+        ],
+        "screenReaderBehavior": "Announces header content and expanded/collapsed state",
+        "focusManagement": "Focus moves between accordion headers",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for headers and content",
+        "reducedMotion": "Respects prefers-reduced-motion for expand/collapse animations"
+      },
       "examples": {
         "documentation": "docs/components/organisms/accordion.md",
         "source": "dist/components/accordion/accordion.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-accordion\" role=\"generic\">\n  <!-- Component content rendered server-side -->\n  <noscript>This component requires JavaScript to function properly.</noscript>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -2948,11 +3359,30 @@
           "description": "Custom content for expanded row details"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "grid",
+        "ariaAttributes": [
+          "aria-rowcount",
+          "aria-colcount",
+          "aria-label",
+          "aria-describedby"
+        ],
+        "keyboardNavigation": [
+          "Tab",
+          "Arrow keys (navigate cells)",
+          "Home/End",
+          "Page Up/Down"
+        ],
+        "screenReaderBehavior": "Announces grid structure, headers, and cell content",
+        "focusManagement": "Manages focus within grid cells using arrow key navigation",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all grid elements",
+        "reducedMotion": "Respects prefers-reduced-motion for sorting/filtering animations"
+      },
       "examples": {
         "documentation": "docs/components/organisms/data-grid.md",
         "source": "dist/components/data-grid/data-grid.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-data-grid\" role=\"generic\">\n  <!-- Component content rendered server-side -->\n  <noscript>This component requires JavaScript to function properly.</noscript>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -3145,11 +3575,28 @@
           "detail": "CustomEvent"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "table",
+        "ariaAttributes": [
+          "aria-label",
+          "aria-describedby",
+          "aria-rowcount",
+          "aria-colcount"
+        ],
+        "keyboardNavigation": [
+          "Tab (through interactive elements)",
+          "Arrow keys (if interactive)"
+        ],
+        "screenReaderBehavior": "Announces table structure with proper headers and data relationships",
+        "focusManagement": "Focus managed by interactive elements within table",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for table content",
+        "reducedMotion": "Respects prefers-reduced-motion for sorting animations"
+      },
       "examples": {
         "documentation": "docs/components/organisms/data-table.md",
         "source": "dist/components/data-table/data-table.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-data-table\" role=\"generic\">\n  <!-- Component content rendered server-side -->\n  <noscript>This component requires JavaScript to function properly.</noscript>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -3247,11 +3694,26 @@
           "description": "Custom trigger content for dropdowns"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "navigation",
+        "ariaAttributes": [
+          "aria-label",
+          "aria-current"
+        ],
+        "keyboardNavigation": [
+          "Tab (through nav items)",
+          "Enter/Space (activate)"
+        ],
+        "screenReaderBehavior": "Announces as navigation with current page indication",
+        "focusManagement": "Focus moves through navigation items",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for navigation links",
+        "reducedMotion": "Respects prefers-reduced-motion for hover/active animations"
+      },
       "examples": {
         "documentation": "docs/components/organisms/navigation-bar.md",
         "source": "dist/components/navigation-bar/navigation-bar.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-navigation-bar\" role=\"generic\">\n  <!-- Component content rendered server-side -->\n  <noscript>This component requires JavaScript to function properly.</noscript>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -3350,11 +3812,27 @@
           "detail": "CustomEvent"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "navigation",
+        "ariaAttributes": [
+          "aria-label",
+          "aria-current",
+          "aria-describedby"
+        ],
+        "keyboardNavigation": [
+          "Tab (through page links)",
+          "Enter/Space (navigate)"
+        ],
+        "screenReaderBehavior": "Announces pagination controls and current page",
+        "focusManagement": "Focus moves through pagination controls",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for pagination controls",
+        "reducedMotion": "Respects prefers-reduced-motion for page transition effects"
+      },
       "examples": {
         "documentation": "docs/components/organisms/pagination.md",
         "source": "dist/components/pagination/pagination.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-pagination\" role=\"generic\">\n  <!-- Component content rendered server-side -->\n  <noscript>This component requires JavaScript to function properly.</noscript>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -3446,11 +3924,29 @@
           "description": "Tab content slots (named by tab ID)"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "tablist",
+        "ariaAttributes": [
+          "aria-orientation",
+          "aria-label",
+          "aria-selected",
+          "aria-controls"
+        ],
+        "keyboardNavigation": [
+          "Tab (to tab list)",
+          "Arrow keys (between tabs)",
+          "Space/Enter (activate)"
+        ],
+        "screenReaderBehavior": "Announces tab list, selected tab, and associated content",
+        "focusManagement": "Arrow keys navigate tabs, Tab moves to panel content",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for tabs and panels",
+        "reducedMotion": "Respects prefers-reduced-motion for tab switching animations"
+      },
       "examples": {
         "documentation": "docs/components/organisms/tabs.md",
         "source": "dist/components/tabs/tabs.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-tabs\" role=\"generic\">\n  <!-- Component content rendered server-side -->\n  <noscript>This component requires JavaScript to function properly.</noscript>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {
@@ -3541,11 +4037,31 @@
           "detail": "CustomEvent"
         }
       ],
-      "a11y": {},
+      "a11y": {
+        "role": "tree",
+        "ariaAttributes": [
+          "aria-expanded",
+          "aria-level",
+          "aria-setsize",
+          "aria-posinset",
+          "aria-selected"
+        ],
+        "keyboardNavigation": [
+          "Tab (to tree)",
+          "Arrow keys (navigate)",
+          "Enter/Space (toggle)",
+          "*  (expand all)"
+        ],
+        "screenReaderBehavior": "Announces tree structure, node states, and hierarchical relationships",
+        "focusManagement": "Manages focus within tree structure using arrow key navigation",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum) for tree nodes",
+        "reducedMotion": "Respects prefers-reduced-motion for expand/collapse animations"
+      },
       "examples": {
         "documentation": "docs/components/organisms/tree-view.md",
         "source": "dist/components/tree-view/tree-view.d.ts",
-        "readme": "README.md"
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-tree-view\" role=\"generic\">\n  <!-- Component content rendered server-side -->\n  <noscript>This component requires JavaScript to function properly.</noscript>\n</div>"
       },
       "aiMethods": {
         "getPossibleActions": {

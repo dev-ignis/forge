@@ -1,4 +1,4 @@
-# Phase 14: Monorepo Platform & Publishing
+# Phase 13: Monorepo Platform & Publishing
 
 ## Objective
 Evolve the repository into a stable monorepo that can build, test, version, and publish multiple packages independently (e.g., `@nexcraft/forge`, `@nexcraft/forge-rhf`) with minimal friction and strong Next.js/Turbopack compatibility.
@@ -19,7 +19,7 @@ Evolve the repository into a stable monorepo that can build, test, version, and 
 - [ ] CI builds and type-checks all workspaces
 - [ ] Next.js guidance documented (`transpilePackages`)
 - [ ] Developer scripts added (build/test/type-check across workspaces)
-- [ ] Changesets initialized (or link to Phase 15 for release setup)
+- [ ] Changesets initialized (or link to Phase 14 for release setup)
 - [ ] Monorepo docs finalized and linked from README
 
 ## Rationale (Why Monorepo)
@@ -122,13 +122,13 @@ Note: For a minimal migration, keep the existing package at root (`"."` in works
 ### Existing Structure
 The repository currently has:
 - Single package structure with main package at root
-- RHF adapters in `src/integrations/react/rhf/` (temporary location from Phase 13)
+- RHF adapters in `src/integrations/react/rhf/` (temporary location from Phase 12)
 - Complex manual release workflows (5 GitHub Actions files)
 - AI manifest and build artifacts causing conflicts during releases
 - Manual version bumping and changelog maintenance becoming unwieldy
 
 ### Migration Prerequisites
-Before starting Phase 14, ensure:
+Before starting Phase 13, ensure:
 - [ ] Current build (`npm run build`) passes successfully
 - [ ] All tests pass (`npm test`)
 - [ ] AI manifest implementation is stable (`npm run build:ai`)
@@ -429,12 +429,12 @@ The monorepo migration will affect several existing ADRs that need review and po
 
 ### ADR Update Strategy
 
-**During Phase 14:**
+**During Phase 13:**
 - [ ] Review ADR-010, ADR-011, ADR-005, ADR-007 for immediate conflicts
 - [ ] Update critical ADRs that would block monorepo implementation
 - [ ] Document temporary deviations with plan to update ADRs post-migration
 
-**Post Phase 14:**
+**Post Phase 13:**
 - [ ] Comprehensive ADR review and updates based on actual monorepo implementation
 - [ ] Document lessons learned and architectural decisions made during migration
 - [ ] Update ADR templates to include monorepo considerations for future decisions
@@ -444,9 +444,9 @@ The monorepo migration will affect several existing ADRs that need review and po
 - [ ] **ADR-020-cross-package-dependency-management** - Workspace dependency strategy
 - [ ] **ADR-021-monorepo-testing-coordination** - Testing across package boundaries
 
-## Phase 14 → Phase 15 Handoff
+## Phase 13 → Phase 14 Handoff
 
-Once Phase 14 is complete, Phase 15 should:
+Once Phase 13 is complete, Phase 14 should:
 - [ ] Enhance the basic Changesets workflow created in Phase 14
 - [ ] Consolidate the 5 existing GitHub workflows into 2 workspace-aware workflows
 - [ ] Implement automated Version Packages PR creation
@@ -454,10 +454,10 @@ Once Phase 14 is complete, Phase 15 should:
 - [ ] Configure NPM_TOKEN and other release automation secrets
 - [ ] Complete ADR updates for release automation decisions
 
-The monorepo foundation from Phase 14 will make Phase 15 release automation much more powerful and reliable.
+The monorepo foundation from Phase 13 will make Phase 14 release automation much more powerful and reliable.
 
 ## References
-- Phase 13 (Adapters Split): plans/phases/phase-13-react-hook-form-adapters-split.md
-- Phase 15 (Release Automation): plans/phases/phase-15-release-automation-and-versioning.md
+- Phase 12 (Adapters Split): plans/phases/phase-12-react-hook-form-adapters-split.md
+- Phase 14 (Release Automation): plans/phases/phase-14-release-automation-and-versioning.md
 - Changesets: https://github.com/changesets/changesets
 - npm workspaces: https://docs.npmjs.com/cli/v7/using-npm/workspaces

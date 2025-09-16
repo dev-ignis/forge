@@ -9,9 +9,13 @@ export type ModalSize = 'small' | 'medium' | 'large' | 'full';
 export type ModalScrollBehavior = 'body' | 'entire';
 
 /**
- * @slot header - Custom header content (overrides title prop)
  * @slot - Default slot for main modal content
  * @slot footer - Footer content like action buttons
+ * @slot header - Custom header content (overrides title prop)
+ * @event open - Fired when the modal is opened (ADR-008 compliant)
+ * @event close - Fired when the modal is closed (ADR-008 compliant)
+ * @event modalopen - Deprecated alias for 'open' (backward compatibility)
+ * @event modalclose - Deprecated alias for 'close' (backward compatibility)
  */
 @customElement('forge-modal')
 export class ForgeModal extends BaseElement {
@@ -474,6 +478,13 @@ export class ForgeModal extends BaseElement {
     if (!event.defaultPrevented) {
       this.open = false;
     }
+    // ADR-008: emit standard 'close' event as well
+    const std = new CustomEvent('close', {
+      bubbles: true,
+      composed: true,
+      cancelable: true
+    });
+    this.dispatchEvent(std);
   }
 
   public show(): void {
@@ -486,6 +497,13 @@ export class ForgeModal extends BaseElement {
     if (!event.defaultPrevented) {
       this.open = true;
     }
+    // ADR-008: emit standard 'open' event as well
+    const std = new CustomEvent('open', {
+      bubbles: true,
+      composed: true,
+      cancelable: true
+    });
+    this.dispatchEvent(std);
   }
 
   protected render() {
