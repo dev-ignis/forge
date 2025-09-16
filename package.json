@@ -197,6 +197,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
     "@chromatic-com/storybook": "^4.1.1",
+    "@custom-elements-manifest/analyzer": "^0.10.5",
     "@eslint/js": "^9.34.0",
     "@happy-dom/global-registrator": "^18.0.1",
     "@open-wc/testing": "^4.0.0",
@@ -221,5 +222,6 @@
     "typescript": "^5.9.2",
     "vite": "^5.4.19",
     "vitest": "^3.2.4"
-  }
+  },
+  "customElements": "custom-elements.json"
 }

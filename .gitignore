@@ -73,6 +73,9 @@ desktop.ini
 # TypeScript
 *.tsbuildinfo
 
+# Generated metadata files
+custom-elements.json
+
 # TypeScript compilation artifacts in src/ (should never exist - use npm run build instead)
 src/**/*.js
 src/**/*.d.ts

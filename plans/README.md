@@ -8,6 +8,7 @@
 ### Getting Started
 - **[Getting Started](../docs/GETTING_STARTED.md)** ⭐ - Day 1 implementation guide with code examples
 - **[Implementation Roadmap](./implementation-roadmap.md)** - 6-month phased development plan
+- **[Project Priorities](./priorities/README.md)** 🎯 - Strategic roadmap organized by timeline (Immediate, Short-term, Long-term)
 
 ### Technical Architecture
 - **[Technology Stack](./architecture/technology-stack.md)** - Core technology decisions (Lit, Vite, TypeScript)
