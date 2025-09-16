@@ -151,22 +151,31 @@ function determineAffectedPackages(hash) {
 
     const packages = new Set();
     
-    for (const file of changedFiles) {
-      if (file.startsWith('packages/forge-rhf/')) {
-        packages.add('@nexcraft/forge-rhf');
-      } else if (file.startsWith('src/') || file.includes('package.json')) {
-        packages.add('@nexcraft/forge');
-      }
+    // Only include packages if they have meaningful changes (not just version/config changes)
+    const meaningfulForgeRhfChanges = changedFiles.some(file => 
+      file.startsWith('packages/forge-rhf/src/') || 
+      file.startsWith('packages/forge-rhf/README.md')
+    );
+    
+    const meaningfulMainChanges = changedFiles.some(file => 
+      file.startsWith('src/components/') || 
+      file.startsWith('src/core/') ||
+      file.startsWith('src/utils/') ||
+      file.startsWith('src/integrations/') ||
+      file === 'README.md'
+    );
+    
+    if (meaningfulForgeRhfChanges) {
+      packages.add('@nexcraft/forge-rhf');
     }
-
-    // If no specific package detected, assume main package
-    if (packages.size === 0) {
+    
+    if (meaningfulMainChanges) {
       packages.add('@nexcraft/forge');
     }
 
     return Array.from(packages);
   } catch {
-    return ['@nexcraft/forge'];
+    return [];
   }
 }
 
