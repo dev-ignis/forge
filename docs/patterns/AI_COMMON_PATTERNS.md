@@ -4,6 +4,8 @@
 
 This guide provides complete, production-ready patterns using Forge components. Perfect for AI-assisted development and quick prototyping.
 
+> 🎨 **Styling Reference**: For detailed styling options, see the [AI Styling Guide](../guides/AI_STYLING_GUIDE.md)
+
 ## 🔐 Authentication Patterns
 
 ### Login Form (Basic)
@@ -893,6 +895,6 @@ function ProductGrid({ products }) {
 
 ## 📚 Related Documentation
 
-- [Component Catalog](../AI_COMPONENT_CATALOG.md)
+- [AI Methods Guide](../ai-methods.md)
 - [Import Guide](../guides/selective-imports.md)
 - [Tailwind Plugin](../guides/tailwind-plugin.md)

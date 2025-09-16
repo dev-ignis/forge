@@ -186,6 +186,75 @@ AI agents can discover these methods through:
 
 ## Examples
 
+### Quick Component Usage
+
+#### Basic Components with AI Methods
+```jsx
+// React Examples
+import { ForgeButton, ForgeInput, ForgeAlert } from '@nexcraft/forge/integrations/react'
+
+// Button with AI-aware interactions
+<ForgeButton 
+  variant="primary" 
+  size="lg"
+  onClick={() => {
+    // AI can query what actions are available
+    console.log(button.getPossibleActions());
+  }}
+>
+  Save Changes
+</ForgeButton>
+
+// Input with validation and AI state
+<ForgeInput 
+  type="email" 
+  label="Email Address" 
+  placeholder="user@example.com"
+  required
+  helperText="We'll never share your email"
+/>
+
+// Alert with closable state
+<ForgeAlert 
+  severity="success" 
+  variant="filled"
+  closable={true}
+>
+  Your changes have been saved successfully!
+</ForgeAlert>
+```
+
+#### Authentication Form Example
+```jsx
+// Login Form with AI-queryable state
+function LoginForm() {
+  return (
+    <ForgeCard className="max-w-md mx-auto">
+      <div className="p-6">
+        <h2 className="text-2xl font-bold text-center mb-6">Sign In</h2>
+        <form className="space-y-4">
+          <ForgeInput 
+            type="email" 
+            label="Email" 
+            placeholder="Enter your email"
+            required 
+          />
+          <ForgeInput 
+            type="password" 
+            label="Password" 
+            placeholder="Enter your password"
+            required 
+          />
+          <ForgeButton type="submit" variant="primary" className="w-full">
+            Sign In
+          </ForgeButton>
+        </form>
+      </div>
+    </ForgeCard>
+  )
+}
+```
+
 ### React Integration
 ```tsx
 import { useRef, useEffect } from 'react';
@@ -217,6 +286,82 @@ const canValidate = component.getPossibleActions()
 if (canValidate) {
   // AI knows this action is safe to perform
   component.validate();
+}
+```
+
+### Framework Patterns
+
+#### React Hook Form Integration
+```jsx
+import { useForm } from 'react-hook-form'
+import { RHFForgeInput, RHFForgeSelect } from '@nexcraft/forge/integrations/rhf'
+
+function UserForm() {
+  const { control, handleSubmit } = useForm()
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <RHFForgeInput 
+        name="firstName"
+        label="First Name"
+        control={control}
+        rules={{ required: 'First name is required' }}
+      />
+      
+      <RHFForgeInput 
+        name="email"
+        type="email"
+        label="Email"
+        control={control}
+        rules={{ 
+          required: 'Email is required',
+          pattern: {
+            value: /^\S+@\S+$/i,
+            message: 'Invalid email address'
+          }
+        }}
+      />
+      
+      <ForgeButton type="submit" variant="primary">
+        Submit
+      </ForgeButton>
+    </form>
+  )
+}
+```
+
+#### Next.js SSR Pattern
+```jsx
+// pages/users.js
+import { ForgeCard, ForgeButton } from '@nexcraft/forge/integrations/react'
+
+export default function UsersPage({ users }) {
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">Users</h1>
+      <div className="grid gap-4">
+        {users.map(user => (
+          <ForgeCard key={user.id}>
+            <div className="p-4 flex justify-between items-center">
+              <div>
+                <h3 className="font-semibold">{user.name}</h3>
+                <p className="text-gray-600">{user.email}</p>
+              </div>
+              <ForgeButton variant="secondary" size="sm">
+                View Profile
+              </ForgeButton>
+            </div>
+          </ForgeCard>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export async function getServerSideProps() {
+  // Components render semantic HTML during SSR
+  const users = await fetchUsers()
+  return { props: { users } }
 }
 ```
 

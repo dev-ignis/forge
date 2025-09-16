@@ -2,11 +2,38 @@
 
 ## Introduction
 
-Welcome to AI-Native Development with @nexcraft/forge - the FIRST component library built specifically for the age of AI-assisted development. This guide will help you leverage AI coding tools like Cursor, GitHub Copilot, and Claude to build better applications faster.
+Welcome to AI-Native Development with @nexcraft/forge - the **FIRST AI-native component library**, designed from the ground up to work seamlessly with AI-powered development tools like GitHub Copilot, Cursor IDE, Claude, and ChatGPT. This comprehensive guide will help you leverage AI coding tools to build better applications faster with components that include rich metadata enabling AI tools to generate better, more semantic, and more accessible code.
 
 ## What is AI-Native Development?
 
 AI-Native Development is a paradigm shift where components are designed to communicate directly with AI systems, providing context, constraints, and capabilities automatically. Instead of AI tools guessing about component behavior, they have direct access to structured metadata.
+
+## What Makes @nexcraft/forge AI-Native?
+
+### 1. Comprehensive AI Metadata
+
+Every component includes rich metadata that AI tools can use to understand:
+- **Purpose and Usage Patterns**: When and how to use each component
+- **Anti-Patterns**: What to avoid and why  
+- **Accessibility Guidelines**: Automatic WCAG 2.1 AA compliance
+- **Performance Hints**: Optimization strategies built into suggestions
+- **Framework Examples**: Ready-to-use code for React, Vue, Angular, and vanilla JS
+
+### 2. Semantic Code Generation
+
+AI tools generate code that is:
+- ✅ **Accessible by default**: Proper ARIA attributes and keyboard navigation
+- ✅ **Performance optimized**: Built-in best practices for speed
+- ✅ **Design system compliant**: Consistent with design tokens
+- ✅ **Semantically correct**: Proper HTML semantics and structure
+
+### 3. Context-Aware Suggestions
+
+AI understands context and suggests:
+- The right component for your use case
+- Proper prop combinations
+- Accessibility considerations
+- Performance optimizations
 
 ### Traditional vs AI-Native
 

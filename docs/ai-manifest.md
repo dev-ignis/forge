@@ -4,6 +4,7 @@ The AI Manifest (ai-manifest.json) is a machine-readable index of Forge componen
 
 ## Contents
 - Components: tag, category, props (type/required/default), events (name/detail), slots
+- AI Methods: getPossibleActions(), explainState(), aiState getter for intelligent component interaction
 - A11y patterns and design token references
 - Examples: Web Components, React, SSR fallback
 

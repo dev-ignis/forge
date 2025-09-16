@@ -162,7 +162,7 @@ All Forge components support:
 
 ## Related Documentation
 
-- [Component Architecture](../../COMPONENTS.md)
-- [AI Integration Guide](../../ai-integration-examples.md)
-- [Performance Monitoring](../../performance-monitoring.md)
-- [Theming System](../../theming/token-reference.md)
+- [AI-Native Development Guide](../guides/ai-native-development.md)
+- [AI Import Guide](../guides/AI_IMPORT_GUIDE.md)
+- [Common UI Patterns](../patterns/AI_COMMON_PATTERNS.md)
+- [AI Styling Guide](../guides/AI_STYLING_GUIDE.md)
