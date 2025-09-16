@@ -93,6 +93,11 @@ jobs:
           path: storybook-static/
           retention-days: 7
 
+      - name: Auto-generate Changesets from Commits
+        if: matrix.node-version == '20.x' && github.event_name == 'push'
+        run: |
+          npm run auto-changeset
+          
       - name: Create Release Pull Request or Publish to npm
         if: matrix.node-version == '20.x' && github.event_name == 'push'
         id: changesets
