@@ -1,6 +1,6 @@
 # @nexcraft/forge-rhf
 
-## 1.0.0
+## 0.3.0
 
 ### Minor Changes
 
@@ -27,14 +27,7 @@
 - Updated dependencies [a39eeeb]
   - @nexcraft/forge@0.7.0
 
-## 2.0.0
-
-### Patch Changes
-
-- Updated dependencies [a59944d]
-  - @nexcraft/forge@0.8.0
-
-## 1.0.0
+## 0.2.0
 
 ### Patch Changes
 
