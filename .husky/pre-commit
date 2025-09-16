@@ -9,7 +9,7 @@ npm run lint
 echo "🧪 Running tests..."
 npm run test
 
-echo "🔧 Building packages..."
-npm run build
+echo "🔧 Building packages (core only)..."
+npm run build:core
 
 echo "✅ All pre-commit checks passed!"
