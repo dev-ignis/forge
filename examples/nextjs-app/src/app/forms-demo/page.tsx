@@ -16,7 +16,9 @@ export default function FormsDemo() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
-    alert(`Form submitted!\n${JSON.stringify(formData, null, 2)}`);
+    if (typeof window !== 'undefined') {
+      alert(`Form submitted!\n${JSON.stringify(formData, null, 2)}`);
+    }
   };
 
   const handleInputChange = (field: string) => (e: any) => {
