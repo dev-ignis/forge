@@ -2,6 +2,8 @@
 
 ## Status
 **ACCEPTED** - 2024-01-15
+Updated: 2025-09-12
+Supersedes: ADR-017-ai-native-development.md
 
 ## Context
 
@@ -16,6 +18,12 @@ The software development landscape is rapidly evolving with the widespread adopt
 ## Decision
 
 We will transform @nexcraft/forge into the **FIRST AI-Native component library** by implementing a comprehensive AI metadata system that enables direct communication between components and AI systems.
+
+In addition, we will formalize machine-consumable artifacts and validation:
+- Generate a versioned `ai-manifest.json` at build time (root and `dist/`) by merging Custom Elements Manifest, TypeScript types, and curated examples.
+- Emit function-calling tool specs per framework starting with React in `ai-tools/react/*.json`.
+- Validate artifacts in CI (schema + example links) and preview them via a Storybook “AI” panel.
+- Keep AI metadata out of runtime code paths; artifacts are build outputs for tools.
 
 ### Core Strategy
 
@@ -60,6 +68,20 @@ interface AIComponentMetadata {
   performanceHints: string[];
   a11yGuidelines: string[];
   ariaPatterns: string[];
+  keyboardInteractions?: string[];
+
+  // Design & Composition
+  designTokens?: Record<string, any>;
+  compositionPatterns?: Record<string, string>;
+  childComponents?: string[];
+  parentComponents?: string[];
+
+  // Testing Guidance
+  testingPatterns?: string[];
+  commonTestCases?: string[];
+
+  // Bundle impact (advisory)
+  bundleImpact?: 'minimal' | 'moderate' | 'significant';
 }
 ```
 
@@ -83,6 +105,12 @@ button.explainState(); // "Button is enabled and primary variant. Ready for inte
 button.getPossibleActions(); // [{ name: 'click', available: true, description: '...' }]
 button.aiState; // Complete state object for AI consumption
 ```
+
+### AI Manifest & Tooling Artifacts
+
+- `ai-manifest.json` (root + dist): authoritative list of components with props, events, slots, a11y patterns, and examples for Web, React, and SSR fallback.
+- `ai-tools/react/<component>.json`: function-like schemas enabling LLM function-calling to produce concrete code snippets.
+- Storybook “AI” panel: renders manifest for the active component and validates examples compile.
 
 ## Consequences
 
@@ -232,18 +260,27 @@ console.log(button.aiState.performance);
 </forge-modal>
 ```
 
+## Acceptance Criteria
+
+- `npm run build` produces validated `ai-manifest.json` and `ai-tools/react/*` artifacts.
+- Storybook AI panel displays correct data for seed components (Button, Input, Select, Modal, Alert).
+- CI fails on schema or example link validation errors.
+- Contributor docs explain how to extend AI metadata and examples.
+
 ## Related Documents
 
 - [Phase 9: AI-Native Development Plan](../phases/phase-9-ai-native-development.md)
+- [Phase 11: AI Manifest & Tooling](../phases/phase-11-ai-manifest-and-tooling.md)
 - [AI Metadata System Documentation](../../docs/ai-metadata-system.md)
 - [AI-Native Development Guide](../../docs/guides/ai-native-development.md)
 - [ADR-014: AI-Ready Components](./ADR-014-ai-ready-components.md)
 
 ## Change Log
 
-- **2024-01-15**: Initial ADR created
-- **2024-01-15**: Phase 9.1 metadata system implemented
-- **2024-01-15**: All 27 components enhanced with AI metadata
+- 2024-01-15: Initial ADR created
+- 2024-01-15: Phase 9.1 metadata system implemented
+- 2024-01-15: All 27 components enhanced with AI metadata
+- 2025-09-12: Consolidated ADR-017 records; added AI Manifest & Tooling artifacts and CI validation
 
 ---
 

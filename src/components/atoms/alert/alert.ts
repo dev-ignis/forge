@@ -6,6 +6,11 @@ import '../icon/icon';
 export type AlertSeverity = 'info' | 'success' | 'warning' | 'error';
 export type AlertVariant = 'filled' | 'outlined' | 'standard';
 
+/**
+ * @slot - Default slot for alert content
+ * @slot actions - Action buttons or controls
+ * @event close - Fired when the alert is closed
+ */
 @customElement('forge-alert')
 export class ForgeAlert extends BaseElement {
   static override styles = css`
@@ -436,6 +441,41 @@ export class ForgeAlert extends BaseElement {
         Count: ${this.renderCount}
       </div>
     `;
+  }
+
+  override getPossibleActions() {
+    return [
+      {
+        name: 'close',
+        description: 'Close the alert',
+        available: this.closable && !this.closing
+      },
+      {
+        name: 'focus',
+        description: 'Focus the alert',
+        available: true
+      },
+      {
+        name: 'acknowledge',
+        description: 'Acknowledge the alert message',
+        available: !this.closing
+      }
+    ];
+  }
+
+  override explainState() {
+    const states = ['default', 'closing'];
+    if (this.autoDismiss > 0) states.push('auto-dismissing');
+    
+    let currentState = 'default';
+    if (this.closing) currentState = 'closing';
+    else if (this.autoDismiss > 0) currentState = 'auto-dismissing';
+
+    return {
+      currentState,
+      possibleStates: states,
+      stateDescription: `Alert with ${this.severity} severity${this.closing ? ', currently closing' : ''}${this.autoDismiss > 0 ? `, auto-dismissing in ${this.autoDismiss}ms` : ''}${this.closable ? ', user can close' : ', cannot be closed'}`
+    };
   }
 }
 

@@ -6,8 +6,9 @@
 ## 📚 Documentation Structure
 
 ### Getting Started
-- **[Quick Start Guide](./quick-start-guide.md)** ⭐ - Day 1 implementation guide with complete code examples
+- **[Getting Started](../docs/GETTING_STARTED.md)** ⭐ - Day 1 implementation guide with code examples
 - **[Implementation Roadmap](./implementation-roadmap.md)** - 6-month phased development plan
+- **[Project Priorities](./priorities/README.md)** 🎯 - Strategic roadmap organized by timeline (Immediate, Short-term, Long-term)
 
 ### Technical Architecture
 - **[Technology Stack](./architecture/technology-stack.md)** - Core technology decisions (Lit, Vite, TypeScript)
@@ -18,7 +19,7 @@
 - **[Testing Strategy](./architecture/testing-strategy.md)** - Multi-layered testing approach with tools and patterns
 
 ### Architecture Decisions
-- **[ADRs](./adrs/)** - 12 formal Architecture Decision Records documenting key decisions
+- **[ADRs](./adrs/)** - 18 formal Architecture Decision Records documenting key decisions
   - ADR-001: Web Components Abstraction (Lit)
   - ADR-002: Shadow DOM Encapsulation
   - ADR-003: CSS Custom Properties Theming
@@ -37,13 +38,12 @@
 
 ## 🎯 Current Sprint Focus
 
-### Phase 0: Foundation (Current)
+### Phase 9: AI-Native Development (Current)
 - [x] Planning documentation complete
 - [x] Architecture decisions documented
-- [ ] Project initialization
-- [ ] BaseElement implementation
-- [ ] First component (Button)
-- [ ] Testing infrastructure
+- [x] AI metadata foundation
+- [ ] VS Code/assistant integrations
+- [ ] Advanced AI features and training data export
 
 ### Next Phases
 - **Phase 1** (Weeks 3-6): Atomic Components
@@ -87,14 +87,14 @@
 
 ## 📝 Plan Maintenance
 
-- **Last Updated**: 2024
+- **Last Updated**: 2025
 - **Review Cycle**: Weekly during active development
 - **Approval Required**: Technical Lead for ADR changes
 - **Living Documents**: All plans updated as implementation progresses
 
 ## 🤝 Contributing
 
-See [Development Workflow](./development-workflow.md) for:
+See [Development Workflow](./process/development-workflow.md) for:
 - Git branch strategy
 - Commit conventions
 - PR process

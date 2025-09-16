@@ -70,7 +70,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dist-${{ matrix.node-version }}
-          path: dist/
+          path: |
+            dist/
+            packages/forge-rhf/dist/
           retention-days: 7
   
   build-docs:

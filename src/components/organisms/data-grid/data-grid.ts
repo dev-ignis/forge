@@ -146,6 +146,9 @@ class VirtualScroller {
 /**
  * @element forge-data-grid
  * @description Advanced data grid with virtual scrolling, sorting, filtering, and editing capabilities
+ * 
+ * @slot expanded-row - Custom content for expanded row details
+ * 
  * @fires sort - When column sorting changes
  * @fires filter - When filters change
  * @fires selection-change - When row selection changes

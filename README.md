@@ -12,6 +12,23 @@
 
 **The FIRST AI-Native component library with built-in AI metadata, design token bridge, and real-time performance dashboard.** Every component can explain its state to AI systems, monitor its own performance, and integrate seamlessly with AI coding tools like Cursor, GitHub Copilot, and Claude. Import design tokens from any system (Figma, Tailwind, Material Design) with zero configuration - built for the age of AI-assisted development.
 
+## 🤖 **FOR AI ASSISTANTS & LLMs**
+
+**AI Context**: @nexcraft/forge is an AI-native web component library with 26+ components and React/Vue/Angular integrations.
+
+**Quick AI Reference**:
+- 📦 **React**: `import { ForgeButton, ForgeInput } from '@nexcraft/forge/integrations/react'`
+- 🌲 **Selective**: `import { ForgeButton } from '@nexcraft/forge/button'`
+- 🎨 **Tailwind**: `import forgePlugin from '@nexcraft/forge/plugin'`
+- 📝 **Forms**: `import { RHFForgeInput } from '@nexcraft/forge/integrations/rhf'`
+
+**📚 AI Documentation**:
+- [🤖 AI Methods Guide](./docs/ai-methods.md) - Complete AI methods reference with examples (getPossibleActions, explainState, aiState)
+- [🎨 Common Patterns](./docs/patterns/AI_COMMON_PATTERNS.md) - Login, dashboard, form patterns  
+- [🎨 Styling Guide](./docs/guides/AI_STYLING_GUIDE.md) - Complete styling reference (variants, CSS, Tailwind)
+- [📦 Import Guide](./docs/guides/AI_IMPORT_GUIDE.md) - All import methods & framework examples
+- [🤖 AI Manifest](./ai-manifest.json) - Structured component metadata
+
 ## 🎯 Why Choose @nexcraft/forge?
 
 ### ✨ **What Makes @nexcraft/forge Special:**

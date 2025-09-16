@@ -18,6 +18,9 @@ import React, {
   type PropsWithChildren 
 } from 'react';
 
+// Check if we're in a client environment
+const isClient = typeof window !== 'undefined';
+
 export interface UnifiedWrapperOptions<P extends Record<string, any>> {
   /** Web component tag name */
   tagName: string;
@@ -86,7 +89,7 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
   }
 
   // Client-side: Return full unified component
-  const WrappedComponent = forwardRef<T, PropsWithChildren<P>>((props, ref: Ref<T>) => {
+  const WrappedComponent = forwardRef<T, PropsWithChildren<P>>((props, forwardedRef: Ref<T>) => {
     const elementRef = useRef<T>(null);
     const fallbackRef = useRef<HTMLElement>(null);
     const [isHydrated, setIsHydrated] = useState(false);
@@ -121,22 +124,31 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
     const { eventHandlers, nonEventProps } = separateProps(restProps);
 
     // Expose appropriate ref
-    useImperativeHandle(ref, () => {
+    useImperativeHandle(forwardedRef, () => {
       return (isHydrated ? elementRef.current : fallbackRef.current) as T;
     }, [isHydrated]);
 
+    const assignForwardedRef = (node: any) => {
+      if (!forwardedRef) return;
+      if (typeof forwardedRef === 'function') {
+        try { forwardedRef(node); } catch {}
+      } else {
+        try { (forwardedRef as any).current = node; } catch {}
+      }
+    };
+
     // Upgrade fallback to web component
     const upgradeToWebComponent = () => {
-      const fallbackElement = fallbackRef.current;
+      const fallbackElement = fallbackRef.current as HTMLElement | null;
       if (!fallbackElement?.parentNode) return;
 
       // Create web component
-      const webComponent = document.createElement(options.tagName) as T;
-      
-      // Transfer attributes
+      const webComponent = document.createElement(options.tagName) as T & { checked?: boolean };
+
+      // Transfer attributes we care about from the fallback element
       if (options.preserveAttributes) {
         options.preserveAttributes.forEach(attr => {
-          const value = fallbackElement.getAttribute(attr);
+          const value = fallbackElement.getAttribute?.(attr);
           if (value !== null) {
             webComponent.setAttribute(attr, value);
           }
@@ -148,12 +160,95 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
         webComponent.appendChild(fallbackElement.firstChild);
       }
 
-      // Set up web component
+      // Set up web component with props/handlers
       updateWebComponent(webComponent, nonEventProps, eventHandlers, options);
 
-      // Replace fallback
+      // Special handling: preserve native input for label/htmlFor and RHF register()
+      const isNativeInput = fallbackElement.tagName === 'INPUT' || fallbackElement.tagName === 'TEXTAREA';
+
+      if (isNativeInput) {
+        const input = fallbackElement as HTMLInputElement;
+        const type = (input.type || '').toLowerCase();
+
+        // Insert the web component after the input, then visually hide the input
+        input.parentNode!.insertBefore(webComponent, input.nextSibling);
+
+        // Ensure the web component reflects the input's initial state
+        try {
+          if (type === 'checkbox' || type === 'radio') {
+            const checked = !!input.checked;
+            if (checked) webComponent.setAttribute('checked', ''); else webComponent.removeAttribute('checked');
+            (webComponent as any).checked = checked;
+          } else {
+            const value = (input as any).value ?? '';
+            if (value !== undefined) {
+              (webComponent as any).value = value;
+              if (String(value).length > 0) webComponent.setAttribute('value', String(value));
+            }
+          }
+        } catch {}
+
+        // Visually hide the input but keep it in the DOM to preserve label association and RHF ref
+        const prevStyle = input.getAttribute('style') || '';
+        input.setAttribute('data-forge-hidden-input', '');
+        input.setAttribute(
+          'style',
+          `${prevStyle};position:absolute;opacity:0;width:0;height:0;margin:0;padding:0;pointer-events:none;`
+        );
+
+        // Sync from web component -> input and dispatch native events so RHF sees them
+        const wcToInput = (evt: Event) => {
+          if (type === 'checkbox' || type === 'radio') {
+            const checked = (evt as any).detail?.checked ?? (webComponent as any).checked ?? webComponent.hasAttribute('checked');
+            if (input.checked !== !!checked) {
+              input.checked = !!checked;
+              input.dispatchEvent(new Event('input', { bubbles: true }));
+              input.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          } else {
+            const value = (evt as any).detail?.value ?? (webComponent as any).value ?? '';
+            if (input.value !== String(value ?? '')) {
+              input.value = String(value ?? '');
+              input.dispatchEvent(new Event('input', { bubbles: true }));
+              input.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          }
+        };
+        webComponent.addEventListener('change', wcToInput);
+        webComponent.addEventListener('input', wcToInput as any);
+
+        // Sync from input -> web component (e.g., programmatic changes or label for=)
+        const inputToWc = () => {
+          if (type === 'checkbox' || type === 'radio') {
+            const checked = !!input.checked;
+            try { (webComponent as any).checked = checked; } catch {}
+            if (checked) webComponent.setAttribute('checked', ''); else webComponent.removeAttribute('checked');
+            webComponent.dispatchEvent(new CustomEvent('change', { detail: { checked }, bubbles: true }));
+          } else {
+            const value = input.value;
+            try { (webComponent as any).value = value; } catch {}
+            webComponent.setAttribute('value', String(value ?? ''));
+            webComponent.dispatchEvent(new CustomEvent('input', { detail: { value }, bubbles: true }));
+          }
+        };
+        input.addEventListener('change', inputToWc);
+        input.addEventListener('input', inputToWc);
+
+        // Store listeners for potential cleanup
+        (webComponent as any)._forgeLinkedInput = input;
+        (webComponent as any)._forgeLinkedInputListeners = { wcToInput, inputToWc };
+
+        // Keep refs pointing at the web component (interactive element)
+        elementRef.current = webComponent;
+        assignForwardedRef(webComponent);
+        setIsHydrated(true);
+        return;
+      }
+
+      // Default path: replace fallback with web component
       fallbackElement.parentNode.replaceChild(webComponent, fallbackElement);
       elementRef.current = webComponent;
+      assignForwardedRef(webComponent);
       setIsHydrated(true);
     };
 
@@ -162,7 +257,7 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
       const fallbackElement = fallbackRef.current;
       if (!fallbackElement) return;
       
-      setupFallbackEnhancement(fallbackElement, eventHandlers);
+      setupFallbackEnhancement(fallbackElement, eventHandlers, restProps);
     };
 
     // Update web component when props change
@@ -179,11 +274,24 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
         return null;
       }
       
+      // Ensure listeners are attached via addEventListener, not React props
+      useEffect(() => {
+        if (elementRef.current) {
+          updateWebComponent(elementRef.current as T, nonEventProps, eventHandlers, options);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [JSON.stringify(nonEventProps), Object.keys(eventHandlers).join(',')]);
+
       return React.createElement(options.tagName, {
-        ref: elementRef,
+        ref: (node: any) => {
+          elementRef.current = node;
+          assignForwardedRef(node);
+          if (node) {
+            updateWebComponent(node as T, nonEventProps, eventHandlers, options);
+          }
+        },
         suppressHydrationWarning: true,
-        ...convertPropsToAttributes(nonEventProps, options),
-        ...setupEventHandlers(eventHandlers, options)
+        ...convertPropsToAttributes(nonEventProps, options)
       }, children);
     }
 
@@ -207,7 +315,12 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
     
     // Only add ref if element supports it
     if (fallbackRef) {
-      cloneProps.ref = fallbackRef;
+      cloneProps.ref = (node: any) => {
+        // Keep internal ref for upgrade/hydration
+        (fallbackRef as any).current = node;
+        // Also forward to consumer (e.g., RHF register()) so ref remains valid pre/post upgrade
+        assignForwardedRef(node);
+      };
     }
     
     return React.cloneElement(fallbackElement, cloneProps);
@@ -272,28 +385,90 @@ function updateWebComponent<T extends HTMLElement, P extends Record<string, any>
 
     const eventListener = (event: Event) => {
       if (reactEventName === 'onChange') {
-        // Check if handler expects (value, event) or just (event) based on function length
-        // React Hook Form: onChange(event)
-        // Forge components: onChange(value, event)
-        const handlerLength = handler.length;
-        
-        if (handlerLength <= 1) {
-          // React Hook Form style: onChange(event)
-          const syntheticEvent = {
-            ...event,
-            target: { 
-              ...((event.target as any) || {}),
-              value: (event as any).detail?.value || (event.target as any)?.value,
-              name: (event.target as any)?.name || (event.target as any)?.getAttribute?.('name')
-            },
-            type: 'change'
-          };
-          handler(syntheticEvent);
+        // Enhanced React Hook Form detection
+        const isCheckbox = (event.target as any)?.type === 'checkbox' ||
+          options.tagName === 'forge-checkbox';
+
+        let value: any;
+        if (isCheckbox) {
+          // For checkboxes, use checked state
+          value = (event as any).detail?.checked ?? (event.target as any)?.checked;
         } else {
-          // Forge style: onChange(value, event)
-          const value = (event as any).detail?.value ?? (event.target as any)?.value;
-          handler(value, event);
+          // For other inputs, use value
+          value = (event as any).detail?.value ?? (event.target as any)?.value;
         }
+
+        const targetName = (event.target as any)?.name || (event.target as any)?.getAttribute?.('name');
+
+        // Detect RHF-like handler
+        const hasRHFPattern = Boolean(
+          props.name &&
+          (handler.length === 1 || eventHandlers.onBlur)
+        );
+
+        // If handler looks like Forge signature (2+ params), prefer (value, event). Otherwise pass event.
+        const wantsForgeSignature = handler.length >= 2;
+
+        if (hasRHFPattern || !wantsForgeSignature) {
+          // React Hook Form style: onChange(event: ChangeEvent)
+          const syntheticEvent = {
+            target: {
+              value,
+              checked: isCheckbox ? value : undefined,
+              name: targetName,
+              type: isCheckbox ? 'checkbox' : ((event.target as any)?.type || 'text')
+            },
+            currentTarget: {
+              value,
+              checked: isCheckbox ? value : undefined,
+              name: targetName,
+              type: isCheckbox ? 'checkbox' : ((event.target as any)?.type || 'text')
+            },
+            type: 'change',
+            preventDefault: () => {},
+            stopPropagation: () => {},
+            nativeEvent: event
+          } as any;
+
+          // Dev-only: warn if we are about to pass non-serializable objects as values
+          if (process.env.NODE_ENV !== 'production') {
+            try {
+              const v = (syntheticEvent as any).target?.value;
+              const isElem = typeof Element !== 'undefined' && v instanceof Element;
+              const isEvt = typeof Event !== 'undefined' && v instanceof Event;
+              if (isElem || isEvt) {
+                // eslint-disable-next-line no-console
+                console.warn(
+                  '[Forge] onChange value appears non-serializable (Element/Event). Check mapping.',
+                  { tag: options.tagName, name: targetName }
+                );
+              }
+            } catch {}
+          }
+
+          try {
+            handler(syntheticEvent);
+            return;
+          } catch {
+            // Fall through to Forge signature if consumer expects it
+          }
+        }
+
+        // Forge style: onChange(valueOrChecked, event)
+        if (process.env.NODE_ENV !== 'production') {
+          try {
+            const isElem = typeof Element !== 'undefined' && (value as any) instanceof Element;
+            const isEvt = typeof Event !== 'undefined' && (value as any) instanceof Event;
+            if (isElem || isEvt) {
+              // eslint-disable-next-line no-console
+              console.warn(
+                '[Forge] onChange first argument is Element/Event; expected primitive. Check mapping.',
+                { tag: options.tagName, name: targetName }
+              );
+            }
+          } catch {}
+        }
+        handler(value, event);
       } else if (reactEventName === 'onClick') {
         handler(event);
       } else {
@@ -310,27 +485,11 @@ function updateWebComponent<T extends HTMLElement, P extends Record<string, any>
 
 function setupFallbackEnhancement(
   element: HTMLElement,
-  eventHandlers: Record<string, Function>
+  _eventHandlers: Record<string, Function>,
+  _props: Record<string, any>
 ) {
-  Object.entries(eventHandlers).forEach(([reactEventName, handler]) => {
-    if (typeof handler !== 'function') return;
-    
-    if (reactEventName === 'onClick') {
-      element.addEventListener('click', handler as EventListener);
-    } else if (reactEventName === 'onChange' && element.tagName === 'INPUT') {
-      element.addEventListener('input', (e) => {
-        const handlerLength = handler.length;
-        
-        if (handlerLength <= 1) {
-          // React Hook Form style: onChange(event)
-          handler(e);
-        } else {
-          // Forge style: onChange(value, event)
-          handler((e.target as HTMLInputElement).value, e);
-        }
-      });
-    }
-  });
+  // No-op: React synthetic event handlers are already attached via JSX props
+  // Avoid attaching native listeners here to prevent duplicate event dispatches.
 }
 
 function convertPropsToAttributes(props: Record<string, any>, options: UnifiedWrapperOptions<any>) {

@@ -462,6 +462,74 @@ export class ForgeCheckbox extends BaseElement {
       </div>
     `;
   }
+
+  override getPossibleActions() {
+    return [
+      {
+        name: 'toggle',
+        description: 'Toggle checked state',
+        available: !this.disabled && !this.indeterminate
+      },
+      {
+        name: 'check',
+        description: 'Set to checked',
+        available: !this.disabled && !this.checked
+      },
+      {
+        name: 'uncheck',
+        description: 'Set to unchecked',
+        available: !this.disabled && this.checked
+      },
+      {
+        name: 'setIndeterminate',
+        description: 'Set to indeterminate state',
+        available: !this.disabled && !this.indeterminate
+      },
+      {
+        name: 'reset',
+        description: 'Reset to default state',
+        available: this.checked || this.indeterminate || this.error
+      },
+      {
+        name: 'focus',
+        description: 'Focus the checkbox',
+        available: !this.disabled
+      },
+      {
+        name: 'validate',
+        description: 'Validate required state',
+        available: this.required
+      }
+    ];
+  }
+
+  override explainState() {
+    const states = ['unchecked', 'checked', 'indeterminate'];
+    if (this.error) states.push('error');
+    if (this.disabled) states.push('disabled');
+    
+    let currentState = 'unchecked';
+    if (this.indeterminate) currentState = 'indeterminate';
+    else if (this.checked) currentState = 'checked';
+    if (this.disabled) currentState = 'disabled';
+    else if (this.error) currentState = 'error';
+
+    let description = `Checkbox with ${this.variant} variant`;
+    if (this.checked) description += ', currently checked';
+    else if (this.indeterminate) description += ', in indeterminate state';
+    else description += ', currently unchecked';
+    
+    if (this.disabled) description += ', disabled';
+    if (this.required) description += ', required field';
+    if (this.error) description += ', has validation error';
+    if (this.label) description += `, labeled: ${this.label}`;
+
+    return {
+      currentState,
+      possibleStates: states,
+      stateDescription: description
+    };
+  }
 }
 
 declare global {

@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "baseUrl": "../..",
+    "paths": {
+      "@nexcraft/forge/integrations/react": ["src/integrations/react/index.ts"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "../../src/integrations/react/**/*",
+    "../../src/types/**/*"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
+}

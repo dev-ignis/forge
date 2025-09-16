@@ -1,0 +1,213 @@
+# GitHub Copilot Instructions for @nexcraft/forge
+
+## Package Information
+- Package: @nexcraft/forge
+- Description: AI-native web component library with React/Vue/Angular integrations
+- Repository: https://github.com/dev-ignis/forge
+- Documentation: ./docs/ai-methods.md
+
+## Import Preferences
+
+### React Projects (Recommended)
+```javascript
+// Prefer React integrations for better TypeScript support and SSR
+import { ForgeButton, ForgeInput, ForgeCard } from '@nexcraft/forge/integrations/react'
+
+// For forms with validation
+import { RHFForgeInput, RHFForgeSelect } from '@nexcraft/forge/integrations/rhf'
+```
+
+### Tree-shaking / Bundle Optimization
+```javascript
+// Use selective imports for smaller bundles
+import { ForgeButton } from '@nexcraft/forge/button'
+import { ForgeInput } from '@nexcraft/forge/input'
+import { ForgeCard } from '@nexcraft/forge/card'
+```
+
+### Tailwind CSS Projects
+```javascript
+// Add Tailwind plugin for semantic utilities
+import forgePlugin from '@nexcraft/forge/plugin'
+
+// tailwind.config.js
+export default {
+  plugins: [forgePlugin]
+}
+```
+
+## Component Guidelines
+
+### Available Components
+- **Atoms**: ForgeButton, ForgeInput, ForgeCard, ForgeAlert, ForgeCheckbox, ForgeBadge, ForgeIcon, ForgeSwitch, ForgeProgress, ForgeSkeleton
+- **Molecules**: ForgeModal, ForgeSelect, ForgeTooltip, ForgeDropdown, ForgeFormField, ForgeMultiSelect, ForgeToast
+- **Organisms**: ForgeDataTable, ForgeTabs, ForgePagination, ForgeNavigationBar, ForgeAccordion, ForgeTreeView
+
+### Component Patterns
+```javascript
+// Login form pattern
+<ForgeCard>
+  <ForgeInput type="email" label="Email" required />
+  <ForgeInput type="password" label="Password" required />
+  <ForgeButton variant="primary" type="submit">Sign In</ForgeButton>
+</ForgeCard>
+
+// Dashboard metrics card
+<ForgeCard>
+  <div className="p-6">
+    <h3 className="text-lg font-semibold">Total Users</h3>
+    <p className="text-3xl font-bold">{metrics.users}</p>
+    <ForgeBadge variant="success">+12%</ForgeBadge>
+  </div>
+</ForgeCard>
+
+// Data table with actions
+<ForgeDataTable 
+  data={users}
+  columns={[
+    { key: 'name', title: 'Name' },
+    { key: 'email', title: 'Email' },
+    { 
+      key: 'actions', 
+      title: 'Actions',
+      render: (_, row) => (
+        <ForgeButton size="sm" variant="ghost">Edit</ForgeButton>
+      )
+    }
+  ]}
+/>
+```
+
+## Styling Guidelines
+
+### CSS Custom Properties (Theming)
+```css
+/* Override design tokens */
+forge-button {
+  --forge-color-primary-500: #3b82f6;
+  --forge-border-radius-md: 8px;
+}
+```
+
+### Tailwind Integration
+```javascript
+// Use built-in variants (preferred)
+<ForgeButton variant="primary" size="lg">Primary Button</ForgeButton>
+
+// Combine with Tailwind classes
+<ForgeButton className="w-full mt-4" variant="primary">Full Width</ForgeButton>
+
+// Use plugin utilities
+<forge-button className="btn-forge btn-forge-primary">Semantic Button</forge-button>
+```
+
+## Framework Integration
+
+### React + TypeScript
+```typescript
+import { ForgeButton } from '@nexcraft/forge/integrations/react'
+
+interface Props {
+  onSubmit: () => void
+  loading?: boolean
+}
+
+function SubmitButton({ onSubmit, loading }: Props) {
+  return (
+    <ForgeButton 
+      variant="primary" 
+      loading={loading}
+      onClick={onSubmit}
+    >
+      Submit
+    </ForgeButton>
+  )
+}
+```
+
+### React Hook Form
+```javascript
+import { useForm } from 'react-hook-form'
+import { RHFForgeInput, RHFForgeSelect } from '@nexcraft/forge/integrations/rhf'
+
+function UserForm() {
+  const { control, handleSubmit } = useForm()
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <RHFForgeInput
+        name="email"
+        label="Email"
+        control={control}
+        rules={{ required: 'Email is required' }}
+      />
+      <RHFForgeSelect
+        name="role"
+        label="Role"
+        control={control}
+        options={roleOptions}
+      />
+    </form>
+  )
+}
+```
+
+### Next.js SSR
+```javascript
+// Components work with SSR out of the box
+import { ForgeCard, ForgeButton } from '@nexcraft/forge/integrations/react'
+
+export default function Page() {
+  return (
+    <ForgeCard>
+      <div className="p-6">
+        <h1>SSR Compatible</h1>
+        <ForgeButton variant="primary">Click me</ForgeButton>
+      </div>
+    </ForgeCard>
+  )
+}
+```
+
+## Common Use Cases
+
+### Authentication Forms
+- Use ForgeInput with type="email" and type="password"
+- Wrap in ForgeCard for container
+- Use ForgeButton with variant="primary" for submit
+- Add ForgeAlert for error messages
+
+### Dashboards
+- Use ForgeCard for metric containers
+- Use ForgeBadge for status indicators
+- Use ForgeProgress for progress bars
+- Use ForgeDataTable for data display
+
+### Modal Dialogs
+- Use ForgeModal with open/onClose props
+- Use ForgeButton with variant="secondary" for cancel
+- Use ForgeButton with variant="primary" for confirm
+
+### Data Tables
+- Use ForgeDataTable with data and columns props
+- Add pagination={true} for large datasets
+- Use custom render functions for actions
+- Use selectable={true} for bulk operations
+
+## Performance Tips
+- Use selective imports for better tree-shaking
+- Components include built-in performance monitoring
+- All styles are embedded (no external CSS needed)
+- SSR-compatible out of the box
+
+## Documentation Links
+- AI Methods Guide: ./docs/ai-methods.md
+- Common Patterns: ./docs/patterns/AI_COMMON_PATTERNS.md
+- Import Guide: ./docs/guides/AI_IMPORT_GUIDE.md
+- AI Manifest: ./ai-manifest.json
+
+## Avoid These Patterns
+- Don't import from internal paths like '@nexcraft/forge/src/components'
+- Don't mix full bundle import with selective imports
+- Don't use CSS frameworks that conflict with Shadow DOM
+- Don't use React wrappers with non-React frameworks

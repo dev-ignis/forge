@@ -1,0 +1,187 @@
+name: Deploy Examples to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths: 
+      - 'examples/**'
+      - 'docs/**'
+      - '.github/workflows/deploy-examples.yml'
+  
+  # Allow manual trigger
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build main package
+        run: npm run build
+
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Create docs site structure
+        run: |
+          mkdir -p _site
+          
+          # Copy main documentation
+          cp -r docs/* _site/
+          
+          # Copy built Storybook
+          cp -r storybook-static _site/storybook
+          
+          # Create main index.html
+          cat > _site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Forge UI Component Library</title>
+            <style>
+              body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+              h1 { color: #3b82f6; }
+              .card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; margin: 1rem 0; }
+              .button { display: inline-block; padding: 0.5rem 1rem; background: #3b82f6; color: white; text-decoration: none; border-radius: 6px; margin: 0.5rem 0.5rem 0.5rem 0; }
+              .button:hover { background: #2563eb; }
+            </style>
+          </head>
+          <body>
+            <h1>🔥 Forge UI Component Library</h1>
+            <p>The FIRST AI-Native component library built for the age of AI-assisted development.</p>
+            
+            <div class="card">
+              <h2>📚 Documentation</h2>
+              <a href="./components/" class="button">Component Docs</a>
+              <a href="./guides/" class="button">Guides</a>
+              <a href="./patterns/" class="button">Patterns</a>
+            </div>
+            
+            <div class="card">
+              <h2>🎨 Interactive Showcase</h2>
+              <a href="./storybook/" class="button">Storybook</a>
+            </div>
+            
+            <div class="card">
+              <h2>💻 Live Examples</h2>
+              <a href="./examples/nextjs/" class="button">Next.js Example</a>
+              <a href="./examples/react/" class="button">React Example (Coming Soon)</a>
+              <a href="./examples/vue/" class="button">Vue Example (Coming Soon)</a>
+              <a href="./examples/vanilla/" class="button">Vanilla JS Example (Coming Soon)</a>
+            </div>
+            
+            <div class="card">
+              <h2>🚀 Quick Start</h2>
+              <pre><code>npm install @nexcraft/forge</code></pre>
+              <p>Visit our <a href="https://github.com/dev-ignis/forge">GitHub repository</a> for complete documentation.</p>
+            </div>
+          </body>
+          </html>
+          EOF
+
+      - name: Install Next.js example dependencies
+        run: |
+          cd examples/nextjs-app
+          npm ci
+
+      - name: Build Next.js example
+        run: |
+          cd examples/nextjs-app
+          npm run build
+          npm run export
+
+      - name: Copy Next.js example to site
+        run: |
+          mkdir -p _site/examples/nextjs
+          cp -r examples/nextjs-app/out/* _site/examples/nextjs/
+
+      - name: Create examples index
+        run: |
+          mkdir -p _site/examples
+          cat > _site/examples/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Forge UI Examples</title>
+            <style>
+              body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+              h1 { color: #3b82f6; }
+              .example { border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; margin: 1rem 0; }
+              .button { display: inline-block; padding: 0.5rem 1rem; background: #3b82f6; color: white; text-decoration: none; border-radius: 6px; margin: 0.5rem 0.5rem 0.5rem 0; }
+              .button:hover { background: #2563eb; }
+              .status { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.875rem; }
+              .available { background: #dcfce7; color: #166534; }
+              .coming-soon { background: #fef3c7; color: #92400e; }
+            </style>
+          </head>
+          <body>
+            <h1>🔥 Forge UI Examples</h1>
+            <p>Live examples showing Forge components in different frameworks.</p>
+            
+            <div class="example">
+              <h2>Next.js Example <span class="status available">✅ Available</span></h2>
+              <p>Complete Next.js application showcasing Forge components with SSR support.</p>
+              <a href="./nextjs/" class="button">View Live Demo</a>
+              <a href="https://github.com/dev-ignis/forge/tree/main/examples/nextjs-app" class="button">View Source</a>
+            </div>
+            
+            <div class="example">
+              <h2>React Example <span class="status coming-soon">🚧 Coming Soon</span></h2>
+              <p>Pure React application with Forge component integration.</p>
+            </div>
+            
+            <div class="example">
+              <h2>Vue Example <span class="status coming-soon">🚧 Coming Soon</span></h2>
+              <p>Vue.js application demonstrating Forge components.</p>
+            </div>
+            
+            <div class="example">
+              <h2>Vanilla JS Example <span class="status coming-soon">🚧 Coming Soon</span></h2>
+              <p>Plain JavaScript implementation without any framework.</p>
+            </div>
+            
+            <p><a href="../">← Back to Main Documentation</a></p>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

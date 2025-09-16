@@ -21,6 +21,9 @@ export interface NavItem {
 /**
  * @element forge-navigation-bar
  * @description Responsive navigation bar with mobile drawer, dropdowns, and route detection
+ * 
+ * @slot trigger - Custom trigger content for dropdowns
+ * 
  * @fires navclick - When a navigation item is clicked
  * @fires useraction - When a user menu action is selected
  */

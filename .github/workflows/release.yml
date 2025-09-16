@@ -158,41 +158,11 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           echo "new_version=$VERSION" >> $GITHUB_OUTPUT
       
-      - name: Generate changelog entry
-        if: steps.version.outputs.skip != 'true'
-        run: |
-          VERSION="${{ steps.bump.outputs.new_version }}"
-          DATE=$(date +%Y-%m-%d)
-          
-          # Create changelog entry
-          cat > CHANGELOG_ENTRY.md << EOF
-          ## v$VERSION - $DATE
-          
-          ### Changes
-          EOF
-          
-          # Add commit messages
-          git log $(git describe --tags --abbrev=0 2>/dev/null || echo '')..HEAD --pretty=format:"- %s" >> CHANGELOG_ENTRY.md || echo "- Initial release" >> CHANGELOG_ENTRY.md
-          
-          # Prepend to CHANGELOG.md (after the header)
-          if [ -f CHANGELOG.md ]; then
-            head -n 2 CHANGELOG.md > CHANGELOG_NEW.md
-            cat CHANGELOG_ENTRY.md >> CHANGELOG_NEW.md
-            echo "" >> CHANGELOG_NEW.md
-            tail -n +3 CHANGELOG.md >> CHANGELOG_NEW.md
-            mv CHANGELOG_NEW.md CHANGELOG.md
-          else
-            echo "# Changelog" > CHANGELOG.md
-            echo "" >> CHANGELOG.md
-            cat CHANGELOG_ENTRY.md >> CHANGELOG.md
-          fi
-          
-          rm CHANGELOG_ENTRY.md
       
       - name: Commit version bump
         if: steps.version.outputs.skip != 'true'
         run: |
-          git add package.json package-lock.json CHANGELOG.md
+          git add package.json package-lock.json
           git commit -m "chore(release): v${{ steps.bump.outputs.new_version }} [skip ci]" || echo "No changes to commit"
       
       - name: Create git tag
@@ -226,7 +196,12 @@ jobs:
         with:
           tag_name: v${{ steps.bump.outputs.new_version }}
           name: Release v${{ steps.bump.outputs.new_version }}
-          body_path: CHANGELOG.md
+          body: |
+            ## Release v${{ steps.bump.outputs.new_version }}
+            
+            See the [CHANGELOG.md](https://github.com/dev-ignis/forge/blob/main/CHANGELOG.md) for detailed changes.
+            
+            **Full Changelog**: https://github.com/dev-ignis/forge/commits/v${{ steps.bump.outputs.new_version }}
           draft: false
           prerelease: ${{ steps.version.outputs.bump_type == 'prerelease' }}
           files: |
