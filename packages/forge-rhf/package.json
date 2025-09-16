@@ -1,6 +1,6 @@
 {
   "name": "@nexcraft/forge-rhf",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "React Hook Form adapters for @nexcraft/forge components",
   "main": "./dist/index.js",
@@ -24,7 +24,7 @@
     "prepare": "husky"
   },
   "peerDependencies": {
-    "@nexcraft/forge": "^0.6.0",
+    "@nexcraft/forge": "^0.7.0",
     "react": "^18.0.0",
     "react-hook-form": "^7.45.0"
   },
