@@ -8,11 +8,11 @@ export type CardVariant = 'default' | 'outlined' | 'elevated' | 'filled';
 export type CardSize = 'small' | 'medium' | 'large';
 
 /**
- * @slot media - Media content like images, videos, or graphics
- * @slot header - Custom header content (overrides title/subtitle)
  * @slot - Default slot for main card content
- * @slot footer - Footer content like metadata or links
  * @slot actions - Action buttons or controls
+ * @slot footer - Footer content like metadata or links
+ * @slot header - Custom header content (overrides title/subtitle)
+ * @slot media - Media content like images, videos, or graphics
  */
 @customElement('forge-card')
 export class ForgeCard extends BaseElement {

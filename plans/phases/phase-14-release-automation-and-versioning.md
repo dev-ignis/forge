@@ -1,4 +1,4 @@
-# Phase 15: Release Automation & Versioning
+# Phase 14: Release Automation & Versioning
 
 ## Objective
 Adopt a robust, monorepo-friendly release system that versions and publishes only changed packages automatically with high-quality changelogs.

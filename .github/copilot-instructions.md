@@ -1,4 +1,4 @@
-# Cursor AI Rules for @nexcraft/forge
+# GitHub Copilot Instructions for @nexcraft/forge
 
 ## Package Information
 - Package: @nexcraft/forge
