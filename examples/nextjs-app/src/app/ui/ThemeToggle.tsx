@@ -9,6 +9,8 @@ export default function ThemeToggle() {
   });
 
   React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const root = document.documentElement;
     root.setAttribute('data-forge-theme', theme);
     root.style.setProperty('--forge-theme', theme);
