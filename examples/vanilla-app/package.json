@@ -1,0 +1,22 @@
+{
+  "name": "@nexcraft/forge-vanilla-app",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite --port 9092",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "description": "Vanilla JS example app for @nexcraft/forge",
+  "dependencies": {
+    "@nexcraft/forge": "0.7.0"
+  },
+  "devDependencies": {
+    "vite": "5.4.20"
+  }
+}

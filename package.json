@@ -13,6 +13,8 @@
   "files": [
     "dist",
     "ai-manifest.json",
+    "ai-index.json",
+    "ai-tools/",
     "custom-elements.json",
     "README.md",
     "LICENSE",
@@ -80,7 +82,10 @@
     "./types/framework-integration": {
       "types": "./dist/types/framework-integration.d.ts"
     },
-    "./custom-elements.json": "./custom-elements.json"
+    "./custom-elements.json": "./custom-elements.json",
+    "./ai-manifest.json": "./ai-manifest.json",
+    "./ai-index.json": "./ai-index.json",
+    "./ai-tools/*": "./ai-tools/*"
   },
   "typesVersions": {
     "*": {
@@ -115,7 +120,7 @@
     "build:types": "tsc --emitDeclarationOnly",
     "bundle:types": "rollup -c rollup.dts.config.js && mv dist/index.bundled.d.ts dist/index.d.ts",
     "cleanup:types": "node scripts/cleanup-types.js",
-    "build:ai": "node scripts/generate-ai-manifest.js",
+    "build:ai": "node scripts/generate-ai-manifest.js && node scripts/generate-ai-index.js",
     "build:exports": "node scripts/build-exports.cjs",
     "build:manifest": "custom-elements-manifest analyze",
     "preview": "vite preview",
@@ -132,9 +137,18 @@
     "analyze": "custom-elements-manifest analyze",
     "bundle-analyze": "rollup-plugin-visualizer",
     "generate:component": "node scripts/generate-component.js",
-    "example:install": "cd examples/nextjs-app && npm install",
-    "example:dev": "cd examples/nextjs-app && npm run dev",
-    "example:build": "npm run build && cd examples/nextjs-app && npm run build",
+    "example:install": "npm --prefix examples/nextjs-app install && npm --prefix examples/vue-app install && npm --prefix examples/vanilla-app install",
+    "example:install:nextjs": "cd examples/nextjs-app && npm install",
+    "example:install:vue": "cd examples/vue-app && npm install", 
+    "example:install:vanilla": "cd examples/vanilla-app && npm install",
+    "example:dev": "npm run example:dev:nextjs & npm run example:dev:vue & npm run example:dev:vanilla & wait",
+    "example:dev:nextjs": "cd examples/nextjs-app && npm run dev",
+    "example:dev:vue": "cd examples/vue-app && npm run dev",
+    "example:dev:vanilla": "cd examples/vanilla-app && npm run dev",
+    "example:build": "npm run build && npm run example:build:nextjs && npm run example:build:vue && npm run example:build:vanilla",
+    "example:build:nextjs": "cd examples/nextjs-app && npm run build",
+    "example:build:vue": "cd examples/vue-app && npm run build", 
+    "example:build:vanilla": "cd examples/vanilla-app && npm run build",
     "example:start": "cd examples/nextjs-app && npm run start"
   },
   "repository": {
