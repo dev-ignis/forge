@@ -60,6 +60,9 @@ jobs:
       - name: Validate AI Manifest
         run: npm run validate:ai
 
+      - name: Run prepublish checks
+        run: npm run prepublish-check
+
       - name: Generate cache key
         id: cache-key
         run: echo "key=${{ github.sha }}-${{ matrix.node-version }}" >> $GITHUB_OUTPUT
