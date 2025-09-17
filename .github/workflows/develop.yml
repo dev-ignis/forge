@@ -1,10 +1,10 @@
-name: Develop Branch CI
+name: Develop CI
 
 on:
   push:
-    branches: [ develop ]
+    branches: [develop]
   pull_request:
-    branches: [ develop ]
+    branches: [develop]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -15,11 +15,12 @@ permissions:
 
 jobs:
   ci:
-    name: CI
+    name: CI (Develop)
     runs-on: ubuntu-latest
+    # Only run on single Node version for develop branch to save resources
     strategy:
       matrix:
-        node-version: [20.x, 22.x]
+        node-version: [20.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -49,3 +50,10 @@ jobs:
 
       - name: Validate AI Manifest
         run: npm run validate:ai
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-develop-${{ matrix.node-version }}
+          path: coverage/
+          retention-days: 3
