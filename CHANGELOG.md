@@ -1,5 +1,20 @@
 # Changelog
-All notable changes to @nexcraft/forge will be documented in this file.
+
+## 0.7.0
+
+### Minor Changes
+
+- - **fix**: YAML syntax error in workflow condition (8de4abe)
+    - **fix**: resolve auto-changeset infinite loop and clean up changelog (d83bb62)
+    - **feat**: enhance CI/CD workflows with performance and reliability improvements (4509bed)
+    - **feat**: - auto publish; (02ad4cd)
+    - **fix**: - align package versions with published npm versions; (e7400ba)
+    - **feat**: - consolidate workflows into single main-branch workflow; (08be8d3)
+    - **feat**: align package versions with npm registry for stable v0.7.0 release (a39eeeb)
+    - **feat**: add changeset for v0.7.0 release (main package only) │ │ │ │ Fixes Changesets version mismatch by creating a changeset that only │ │ affects @nexcraft/forge (0.6.0 → 0.7.0) and leaves @nexcraft/forge-rhf │ │ at its current published version (0.2.0). ; (a59944d)
+    - **fix**: - deploy examples; (bdfc80e)
+    - **fix**: resolve Next.js example build errors and configure GitHub Pages │ │ │ │ - Fix ForgeTooltip prop usage: change text to content prop │ │ - Fix ForgeTabs props: use array format and onTabChange event handler │ │ - Add .eslintrc.json with proper browser/Node.js environment globals │ │ - Fix SSR compatibility issues with localStorage, alert, and process.env (f042e2a)
+      All notable changes to @nexcraft/forge will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
