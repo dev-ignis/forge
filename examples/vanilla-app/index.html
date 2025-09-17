@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Forge Vanilla App</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>@nexcraft/forge — Vanilla JS Demo</h1>
+      <div class="toolbar">
+        <button id="theme-light">Light</button>
+        <button id="theme-dark">Dark</button>
+        <button id="theme-auto">Auto</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <section>
+        <h2>Buttons</h2>
+        <div class="row gap">
+          <forge-button variant="primary">Primary</forge-button>
+          <forge-button variant="secondary">Secondary</forge-button>
+          <forge-button variant="danger">Danger</forge-button>
+          <forge-button variant="ghost">Ghost</forge-button>
+          <forge-button variant="link">Link</forge-button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Input + Checkbox</h2>
+        <div class="col gap">
+          <label class="label">Your name</label>
+          <forge-input id="name" placeholder="Type your name..."></forge-input>
+          <div class="row gap">
+            <forge-checkbox id="news"></forge-checkbox>
+            <span>Subscribe to newsletter</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Alerts</h2>
+        <div class="col gap">
+          <forge-alert severity="success">Success: Operation completed.</forge-alert>
+          <forge-alert severity="warning">Warning: Check your input.</forge-alert>
+          <forge-alert severity="error">Error: Something went wrong.</forge-alert>
+          <forge-alert severity="info">Info: Here’s a helpful tip.</forge-alert>
+        </div>
+      </section>
+
+      <section>
+        <h2>Card + Tooltip</h2>
+        <forge-card class="card">
+          <div slot="header" class="card-header">
+            <strong>Welcome</strong>
+          </div>
+          <div>
+            This is a basic card using slots. Hover the button for a tooltip.
+          </div>
+          <div slot="actions" class="row gap">
+            <forge-tooltip text="Helpful info here">
+              <forge-button variant="secondary">Hover me</forge-button>
+            </forge-tooltip>
+            <forge-button id="open-modal" variant="primary">Open Modal</forge-button>
+          </div>
+        </forge-card>
+      </section>
+
+      <section>
+        <h2>Modal</h2>
+        <forge-modal id="demo-modal">
+          <div slot="header" class="row space-between">
+            <span>Forge Modal</span>
+          </div>
+          <div>
+            <p>
+              This modal demonstrates open/close events and actions.
+            </p>
+          </div>
+          <div slot="footer" class="row gap right">
+            <forge-button id="close-modal" variant="secondary">Cancel</forge-button>
+            <forge-button id="confirm-modal" variant="primary">Confirm</forge-button>
+          </div>
+        </forge-modal>
+      </section>
+
+      <section>
+        <h2>Progress</h2>
+        <div class="row gap">
+          <forge-progress id="progress" value="25"></forge-progress>
+          <forge-progress-circle id="progress-circle" value="40"></forge-progress-circle>
+          <forge-button id="inc-progress" variant="secondary">+10%</forge-button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Tabs</h2>
+        <forge-tabs id="tabs" tabs="tab-1,tab-2,tab-3">
+          <div slot="tab-1">Content for tab 1</div>
+          <div slot="tab-2">Content for tab 2</div>
+          <div slot="tab-3">Content for tab 3</div>
+        </forge-tabs>
+      </section>
+
+      <section>
+        <h2>AI State Demo</h2>
+        <div class="col gap">
+          <forge-button id="ai-button" variant="primary">AI Button</forge-button>
+          <pre id="ai-state" class="pre"></pre>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+  </html>
+

@@ -80,19 +80,35 @@ function forgeIntegrationsPlugin() {
       // Ensure integrations directory exists
       mkdirSync('dist/integrations', { recursive: true });
       
-      // Copy Vue and Angular files (they don't need compilation)
-      const integrationFiles = [
-        { src: 'src/integrations/vue.ts', dest: 'dist/integrations/vue.js' },
-        { src: 'src/integrations/angular.ts', dest: 'dist/integrations/angular.js' }
-      ];
-      
-      // Copy integration files only
-      integrationFiles.forEach(({ src, dest }) => {
-        if (existsSync(src)) {
-          console.log(`📦 Copying ${src} → ${dest}`);
-          copyFileSync(src, dest);
-        }
-      });
+      // Compile Vue and Angular files to remove TypeScript syntax
+      try {
+        console.log('🚀 Compiling Vue integration...');
+        execSync('npx tsc src/integrations/vue.ts --outDir dist/integrations --target es2020 --module es2020 --moduleResolution node --declaration --skipLibCheck', { stdio: 'inherit' });
+        
+        console.log('🚀 Compiling Angular integration...');
+        execSync('npx tsc src/integrations/angular.ts --outDir dist/integrations --target es2020 --module es2020 --moduleResolution node --declaration --skipLibCheck', { stdio: 'inherit' });
+        
+        console.log('✅ Vue and Angular integrations compiled successfully!');
+      } catch (error) {
+        console.warn('⚠️ Vue/Angular integration compilation failed, falling back to copy...');
+        console.error(error);
+        
+        // Fallback: copy files but strip type imports
+        const integrationFiles = [
+          { src: 'src/integrations/vue.ts', dest: 'dist/integrations/vue.js' },
+          { src: 'src/integrations/angular.ts', dest: 'dist/integrations/angular.js' }
+        ];
+        
+        integrationFiles.forEach(({ src, dest }) => {
+          if (existsSync(src)) {
+            console.log(`📦 Copying and fixing ${src} → ${dest}`);
+            const content = readFileSync(src, 'utf8');
+            // Strip import type statements
+            const fixedContent = content.replace(/import\s+type\s+\{[^}]*\}\s+from\s+[^;]+;/g, '');
+            writeFileSync(dest, fixedContent);
+          }
+        });
+      }
       
       // Build React integration with proper JSX/TS handling
       try {

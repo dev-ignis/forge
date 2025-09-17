@@ -200,11 +200,48 @@ export default function Page() {
 - All styles are embedded (no external CSS needed)
 - SSR-compatible out of the box
 
+## AI Discovery & Integration
+
+### Component Discovery
+```javascript
+// Quick component overview (fast discovery)
+import aiIndex from '@nexcraft/forge/ai-index.json'
+console.log(`Available: ${aiIndex.summary.totalComponents} components`)
+
+// Detailed component specifications
+import aiManifest from '@nexcraft/forge/ai-manifest.json'
+console.log(aiManifest.components[0]) // Full component details
+
+// Framework-specific schemas
+import buttonSpec from '@nexcraft/forge/ai-tools/react/button.json'
+import vanillaSpec from '@nexcraft/forge/ai-tools/vanilla/button.json'
+```
+
+### AI Method Usage
+```javascript
+// All components have AI methods for intelligent interactions
+const button = document.querySelector('forge-button')
+
+// Get available actions
+const actions = button.getPossibleActions()
+// Returns: [{ name: 'click', description: 'Click the button', available: true }]
+
+// Explain current state  
+const state = button.explainState()
+// Returns: { currentState: 'enabled', possibleStates: ['enabled', 'disabled', 'loading'] }
+
+// Get comprehensive AI state
+const aiState = button.aiState
+// Returns: Complete component metadata and current state
+```
+
 ## Documentation Links
+- **AI Index**: ./ai-index.json (quick component discovery)
+- **AI Manifest**: ./ai-manifest.json (detailed specifications)
+- **AI Tools**: ./ai-tools/ (framework-specific schemas)
 - AI Methods Guide: ./docs/ai-methods.md
 - Common Patterns: ./docs/patterns/AI_COMMON_PATTERNS.md
 - Import Guide: ./docs/guides/AI_IMPORT_GUIDE.md
-- AI Manifest: ./ai-manifest.json
 
 ## Avoid These Patterns
 - Don't import from internal paths like '@nexcraft/forge/src/components'
