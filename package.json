@@ -4,7 +4,7 @@
     ".",
     "packages/*"
   ],
-  "version": "0.7.0",
+  "version": "0.7.1",
   "type": "module",
   "description": "The FIRST AI-Native component library built for the age of AI-assisted development. Features built-in AI metadata, design token bridge, and real-time performance monitoring. Works seamlessly across React, Vue, Angular, and vanilla JavaScript with AI coding tools like Cursor, GitHub Copilot, and Claude.",
   "main": "./dist/nexcraft-forge.es.js",
@@ -139,7 +139,7 @@
     "generate:component": "node scripts/generate-component.js",
     "example:install": "npm --prefix examples/nextjs-app install && npm --prefix examples/vue-app install && npm --prefix examples/vanilla-app install",
     "example:install:nextjs": "cd examples/nextjs-app && npm install",
-    "example:install:vue": "cd examples/vue-app && npm install", 
+    "example:install:vue": "cd examples/vue-app && npm install",
     "example:install:vanilla": "cd examples/vanilla-app && npm install",
     "example:dev": "npm run example:dev:nextjs & npm run example:dev:vue & npm run example:dev:vanilla & wait",
     "example:dev:nextjs": "cd examples/nextjs-app && npm run dev",
@@ -147,7 +147,7 @@
     "example:dev:vanilla": "cd examples/vanilla-app && npm run dev",
     "example:build": "npm run build && npm run example:build:nextjs && npm run example:build:vue && npm run example:build:vanilla",
     "example:build:nextjs": "cd examples/nextjs-app && npm run build",
-    "example:build:vue": "cd examples/vue-app && npm run build", 
+    "example:build:vue": "cd examples/vue-app && npm run build",
     "example:build:vanilla": "cd examples/vanilla-app && npm run build",
     "example:start": "cd examples/nextjs-app && npm run start"
   },
