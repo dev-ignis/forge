@@ -1,16 +1,53 @@
 #!/usr/bin/env sh
-echo "🔍 Running pre-commit checks..."
+set -e
 
-echo "📝 Type checking..."
-npm run type-check
+echo "🔍 Pre-commit: checking staged changes …"
+CHANGED="$(git diff --cached --name-only)"
 
-echo "🧹 Linting..."
-npm run lint
+# Paths that should trigger checks
+SRC_RE='^(src/|packages/forge-rhf/src/)'
+TEST_RE='^(src/.*\.(test|spec)\.ts|packages/forge-rhf/src/.*\.(test|spec)\.ts)'
+TYPE_RE='^((src|packages/forge-rhf/src)/.*\.(ts|tsx)|tsconfig.*|src/types/)'
+BUILD_CRITICAL_RE='^(rollup.*|vite.*|scripts/|package\.json|package-lock\.json|tsconfig.*|\.(eslintrc|eslint).*|\.prettierrc.*)'
 
-echo "🧪 Running tests..."
-npm run test
+matches() {
+  # Returns 0 if any staged file matches the given regex
+  echo "$CHANGED" | grep -E "$1" >/dev/null 2>&1
+}
 
-echo "🔧 Building packages (core only)..."
-npm run build:core
+# Early exit if nothing meaningful changed
+if ! matches "$SRC_RE" && ! matches "$TEST_RE" && ! matches "$TYPE_RE" && ! matches "$BUILD_CRITICAL_RE"; then
+  echo "🟡 No source/build-critical changes detected. Skipping lint, type-check, tests, and build."
+  exit 0
+fi
 
-echo "✅ All pre-commit checks passed!"
+# 1) Lint only staged files (prefer lint-staged)
+if matches "$SRC_RE" || matches "$TEST_RE" || matches "$TYPE_RE"; then
+  if command -v npx >/dev/null 2>&1; then
+    echo "🧹 Linting (staged files)…"
+    npx lint-staged
+  else
+    echo "🧹 Linting (full repo)…"
+    npm run lint
+  fi
+fi
+
+# 2) Type check if TS or config changed
+if matches "$TYPE_RE" || matches "$BUILD_CRITICAL_RE"; then
+  echo "📝 Type checking…"
+  npm run type-check
+fi
+
+# 3) Run tests only if source or tests changed
+if matches "$SRC_RE" || matches "$TEST_RE"; then
+  echo "🧪 Running tests…"
+  npm run test
+fi
+
+# 4) Build only if build-critical files changed (optional)
+if matches "$BUILD_CRITICAL_RE"; then
+  echo "🔧 Building (core)…"
+  npm run build:core
+fi
+
+echo "✅ Pre-commit checks passed."
