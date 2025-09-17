@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.1
+
+### Patch Changes
+
+- 8334291: Fix auto-changeset script to prevent incorrect version bumps for packages that don't have meaningful changes
+
 ## 0.7.0
 
 ### Minor Changes
