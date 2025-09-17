@@ -1,0 +1,461 @@
+{
+  "indexVersion": "1.0.0",
+  "package": "@nexcraft/forge",
+  "generatedAt": "2025-09-17T17:50:07.580Z",
+  "summary": {
+    "totalComponents": 30,
+    "categories": {
+      "atom": 30
+    },
+    "frameworks": [
+      "vanilla",
+      "react",
+      "vue",
+      "angular"
+    ],
+    "hasAiMethods": true,
+    "hasA11yInfo": true,
+    "hasExamples": true
+  },
+  "quickAccess": {
+    "manifest": "./ai-manifest.json",
+    "customElements": "./custom-elements.json",
+    "readme": "./README.md",
+    "docs": "./docs/",
+    "examples": "./examples/",
+    "integrations": {
+      "react": "./integrations/react",
+      "vue": "./integrations/vue",
+      "angular": "./integrations/angular"
+    }
+  },
+  "components": [
+    {
+      "tag": "forge-alert",
+      "id": "forge-alert",
+      "category": "atom",
+      "description": "alert component",
+      "props": 22,
+      "events": 1,
+      "slots": true,
+      "hasAiMethods": true,
+      "a11yRole": "alert",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-aspect-ratio",
+      "id": "forge-aspect-ratio",
+      "category": "atom",
+      "description": "aspect ratio component",
+      "props": 9,
+      "events": 0,
+      "slots": true,
+      "hasAiMethods": true,
+      "a11yRole": "none",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-avatar",
+      "id": "forge-avatar",
+      "category": "atom",
+      "description": "avatar component",
+      "props": 18,
+      "events": 1,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "img",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-badge",
+      "id": "forge-badge",
+      "category": "atom",
+      "description": "badge component",
+      "props": 22,
+      "events": 0,
+      "slots": true,
+      "hasAiMethods": true,
+      "a11yRole": "status",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-button",
+      "id": "forge-button",
+      "category": "atom",
+      "description": "button component",
+      "props": 19,
+      "events": 0,
+      "slots": true,
+      "hasAiMethods": true,
+      "a11yRole": "button",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-checkbox",
+      "id": "forge-checkbox",
+      "category": "atom",
+      "description": "checkbox component",
+      "props": 24,
+      "events": 0,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "checkbox",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-icon",
+      "id": "forge-icon",
+      "category": "atom",
+      "description": "icon component",
+      "props": 22,
+      "events": 0,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "img",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-input",
+      "id": "forge-input",
+      "category": "atom",
+      "description": "input component",
+      "props": 26,
+      "events": 0,
+      "slots": true,
+      "hasAiMethods": true,
+      "a11yRole": "textbox",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-progress-circle",
+      "id": "forge-progress-circle",
+      "category": "atom",
+      "description": "progress circle component",
+      "props": 14,
+      "events": 0,
+      "slots": true,
+      "hasAiMethods": true,
+      "a11yRole": "progressbar",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-progress",
+      "id": "forge-progress",
+      "category": "atom",
+      "description": "progress component",
+      "props": 9,
+      "events": 0,
+      "slots": true,
+      "hasAiMethods": true,
+      "a11yRole": "progressbar",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-radio-group",
+      "id": "forge-radio-group",
+      "category": "atom",
+      "description": "radio group component",
+      "props": 17,
+      "events": 0,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "radiogroup",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-select",
+      "id": "forge-select",
+      "category": "atom",
+      "description": "select component",
+      "props": 27,
+      "events": 0,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "combobox",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-skeleton",
+      "id": "forge-skeleton",
+      "category": "atom",
+      "description": "skeleton component",
+      "props": 9,
+      "events": 0,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "status",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-switch",
+      "id": "forge-switch",
+      "category": "atom",
+      "description": "switch component",
+      "props": 16,
+      "events": 0,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "switch",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-card",
+      "id": "forge-card",
+      "category": "atom",
+      "description": "card component",
+      "props": 19,
+      "events": 0,
+      "slots": true,
+      "hasAiMethods": true,
+      "a11yRole": "article",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-date-picker",
+      "id": "forge-date-picker",
+      "category": "atom",
+      "description": "date picker component",
+      "props": 30,
+      "events": 0,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "combobox",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-dropdown",
+      "id": "forge-dropdown",
+      "category": "atom",
+      "description": "dropdown component",
+      "props": 17,
+      "events": 0,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "menu",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-form-field",
+      "id": "forge-form-field",
+      "category": "atom",
+      "description": "form field component",
+      "props": 26,
+      "events": 0,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "group",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-modal",
+      "id": "forge-modal",
+      "category": "atom",
+      "description": "modal component",
+      "props": 22,
+      "events": 2,
+      "slots": true,
+      "hasAiMethods": true,
+      "a11yRole": "dialog",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-multi-select",
+      "id": "forge-multi-select",
+      "category": "atom",
+      "description": "multi select component",
+      "props": 20,
+      "events": 1,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "listbox",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-toast-container",
+      "id": "forge-toast-container",
+      "category": "atom",
+      "description": "toast container component",
+      "props": 8,
+      "events": 0,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "region",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-toast",
+      "id": "forge-toast",
+      "category": "atom",
+      "description": "toast component",
+      "props": 16,
+      "events": 1,
+      "slots": true,
+      "hasAiMethods": true,
+      "a11yRole": "status",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-tooltip",
+      "id": "forge-tooltip",
+      "category": "atom",
+      "description": "tooltip component",
+      "props": 16,
+      "events": 1,
+      "slots": true,
+      "hasAiMethods": true,
+      "a11yRole": "tooltip",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-accordion",
+      "id": "forge-accordion",
+      "category": "atom",
+      "description": "accordion component",
+      "props": 5,
+      "events": 1,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "region",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-data-grid",
+      "id": "forge-data-grid",
+      "category": "atom",
+      "description": "data grid component",
+      "props": 33,
+      "events": 8,
+      "slots": true,
+      "hasAiMethods": true,
+      "a11yRole": "grid",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-data-table",
+      "id": "forge-data-table",
+      "category": "atom",
+      "description": "data table component",
+      "props": 36,
+      "events": 2,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "table",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-navigation-bar",
+      "id": "forge-navigation-bar",
+      "category": "atom",
+      "description": "navigation bar component",
+      "props": 12,
+      "events": 4,
+      "slots": true,
+      "hasAiMethods": true,
+      "a11yRole": "navigation",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-pagination",
+      "id": "forge-pagination",
+      "category": "atom",
+      "description": "pagination component",
+      "props": 15,
+      "events": 3,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "navigation",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-tabs",
+      "id": "forge-tabs",
+      "category": "atom",
+      "description": "tabs component",
+      "props": 12,
+      "events": 3,
+      "slots": true,
+      "hasAiMethods": true,
+      "a11yRole": "tablist",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
+      "tag": "forge-tree-view",
+      "id": "forge-tree-view",
+      "category": "atom",
+      "description": "tree view component",
+      "props": 15,
+      "events": 2,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "tree",
+      "keyboardSupport": true,
+      "examples": true
+    }
+  ],
+  "usage": {
+    "vanilla": {
+      "install": "npm install @nexcraft/forge",
+      "import": "import '@nexcraft/forge'",
+      "example": "<forge-button>Click me</forge-button>"
+    },
+    "react": {
+      "install": "npm install @nexcraft/forge",
+      "import": "import { ForgeButton } from '@nexcraft/forge/integrations/react'",
+      "example": "<ForgeButton>Click me</ForgeButton>"
+    },
+    "vue": {
+      "install": "npm install @nexcraft/forge",
+      "import": "import '@nexcraft/forge'",
+      "example": "<forge-button>Click me</forge-button>"
+    },
+    "angular": {
+      "install": "npm install @nexcraft/forge",
+      "import": "import '@nexcraft/forge'",
+      "example": "<forge-button>Click me</forge-button>"
+    }
+  },
+  "aiIntegration": {
+    "manifestPath": "./ai-manifest.json",
+    "functionCalling": "./ai-tools/",
+    "methodsAvailable": [
+      "getPossibleActions",
+      "explainState",
+      "aiState"
+    ],
+    "discovery": "Use this index for quick component discovery, then reference the full manifest for detailed information",
+    "examples": {
+      "getComponentInfo": "const manifest = await import('@nexcraft/forge/ai-manifest.json')",
+      "useComponent": "document.querySelector('forge-button').getPossibleActions()",
+      "inspectState": "document.querySelector('forge-input').explainState()"
+    }
+  }
+}
