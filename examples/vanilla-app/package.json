@@ -14,7 +14,7 @@
   "license": "MIT",
   "description": "Vanilla JS example app for @nexcraft/forge",
   "dependencies": {
-    "@nexcraft/forge": "0.7.0"
+    "@nexcraft/forge": "0.7.1"
   },
   "devDependencies": {
     "vite": "5.4.20"
