@@ -4,9 +4,6 @@ description: 'Setup Node.js 20.x with npm cache and install dependencies'
 runs:
   using: 'composite'
   steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
     - name: Setup Node.js 20.x
       uses: actions/setup-node@v4
       with:
