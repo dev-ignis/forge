@@ -125,6 +125,9 @@ jobs:
           NEW_VERSION=$(node -p "require('./package.json').version")
           echo "Publishing version: $NEW_VERSION"
           
+          # Update workspace package version to match
+          npm version $NEW_VERSION --workspace=packages/forge-rhf --no-git-tag-version
+          
           # Publish main package
           npm publish --tag beta --access public
           
