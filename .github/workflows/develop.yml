@@ -128,6 +128,9 @@ jobs:
           # Update workspace package version to match
           npm version $NEW_VERSION --workspace=packages/forge-rhf --no-git-tag-version
           
+          # Rebuild packages with new version
+          npm run build
+          
           # Publish main package
           npm publish --tag beta --access public
           
