@@ -116,7 +116,7 @@
     "publish-packages": "npm publish --access public && npm publish --workspace=packages/forge-rhf --access public",
     "prepare": "husky",
     "build:core": "vite build && npm run build:types && npm run bundle:types && npm run cleanup:types && npm run build:exports",
-    "build:local": "npm run build:core && npm run build:ai && npm run validate:ai",
+    "build:local": "npm run build:core && (npm run build:manifest || echo '⚠️ CEM generation failed, using existing custom-elements.json') && npm run build:ai && npm run validate:ai",
     "build:types": "tsc --emitDeclarationOnly",
     "bundle:types": "rollup -c rollup.dts.config.js && mv dist/index.bundled.d.ts dist/index.d.ts",
     "cleanup:types": "node scripts/cleanup-types.js",
@@ -241,7 +241,8 @@
     "tailwindcss": "^4.1.13",
     "typescript": "^5.9.2",
     "vite": "^5.4.19",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "vue": "^3.5.21"
   },
   "customElements": "custom-elements.json"
 }
