@@ -397,6 +397,17 @@ const pkg = readJSONSafe(resolve(root, 'package.json')) || { name: 'unknown' };
 const cemPath = resolve(root, 'custom-elements.json');
 const cem = existsSync(cemPath) ? readJSONSafe(cemPath) : null;
 
+// Fail fast if CEM is missing or invalid
+if (!cem) {
+  console.error('❌ [ai] custom-elements.json not found. Run "npm run build:manifest" first.');
+  process.exit(1);
+}
+
+if (!cem.modules || !Array.isArray(cem.modules)) {
+  console.error('❌ [ai] custom-elements.json is invalid or empty.');
+  process.exit(1);
+}
+
 // Find example files for each component that are shipped with the package
 function findExampleFiles(componentTag) {
   const examples = {};
@@ -618,6 +629,26 @@ const manifest = {
   components
 };
 
+// Validate we extracted components
+const expectedMinComponents = 30; // Known minimum component count
+console.log(`📊 [ai] Generated manifest with ${components.length} components`);
+if (components.length < expectedMinComponents) {
+  console.error(`❌ [ai] Generated manifest has only ${components.length} components, expected at least ${expectedMinComponents}`);
+  console.error('❌ [ai] Check custom-elements.json or component source files');
+  
+  // Debug: List components found in CEM
+  if (cem?.modules) {
+    const foundComponents = cem.modules
+      .flatMap(m => m.declarations || [])
+      .filter(d => d.customElement)
+      .map(d => d.tagName)
+      .sort();
+    console.error(`🔍 [ai] Components found in CEM: ${foundComponents.join(', ')}`);
+  }
+  
+  process.exit(1);
+}
+
 const outPath = resolve(root, 'ai-manifest.json');
 writeFileSync(outPath, JSON.stringify(manifest, null, 2));
 
@@ -628,4 +659,11 @@ try {
   writeFileSync(distPath, JSON.stringify(manifest, null, 2));
 } catch {}
 
-console.log(`[ai] Manifest generated at ${outPath}`);
+// Success metrics
+const componentsWithAI = components.filter(c => 
+  c.aiMethods && (c.aiMethods.getPossibleActions || c.aiMethods.explainState)
+).length;
+
+console.log(`✅ [ai] Manifest generated at ${outPath}`);
+console.log(`✅ [ai] ${components.length} components extracted`);
+console.log(`✅ [ai] ${componentsWithAI} components have AI method implementations`);

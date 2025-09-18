@@ -190,3 +190,13 @@ Issues with the example app? Please report them:
 - [GitHub Issues](https://github.com/dev-ignis/forge/issues)
 - Include example app version and browser details
 - Provide steps to reproduce any issues
+
+## 🤖 New in v0.7.1: AI-Native Features
+
+This example now includes a new **AI Demo** page (`/ai-demo`) showcasing:
+- AI manifest and discovery system
+- Function-calling specifications for AI tools  
+- Real-time component state analysis
+- AI-powered action suggestions
+
+Visit [http://localhost:9091/ai-demo](http://localhost:9091/ai-demo) to explore the AI-native capabilities!
