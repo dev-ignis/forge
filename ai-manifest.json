@@ -1,7 +1,7 @@
 {
   "manifestVersion": "1.0.0",
   "package": "@nexcraft/forge",
-  "generatedAt": "2025-09-17T18:41:39.686Z",
+  "generatedAt": "2025-09-18T02:56:51.435Z",
   "components": [
     {
       "id": "forge-alert",

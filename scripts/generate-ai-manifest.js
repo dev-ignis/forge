@@ -630,10 +630,22 @@ const manifest = {
 };
 
 // Validate we extracted components
-const expectedMinComponents = 25; // Known minimum component count
+const expectedMinComponents = 30; // Known minimum component count
+console.log(`📊 [ai] Generated manifest with ${components.length} components`);
 if (components.length < expectedMinComponents) {
   console.error(`❌ [ai] Generated manifest has only ${components.length} components, expected at least ${expectedMinComponents}`);
   console.error('❌ [ai] Check custom-elements.json or component source files');
+  
+  // Debug: List components found in CEM
+  if (cem?.modules) {
+    const foundComponents = cem.modules
+      .flatMap(m => m.declarations || [])
+      .filter(d => d.customElement)
+      .map(d => d.tagName)
+      .sort();
+    console.error(`🔍 [ai] Components found in CEM: ${foundComponents.join(', ')}`);
+  }
+  
   process.exit(1);
 }
 

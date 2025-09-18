@@ -18,7 +18,7 @@ We are committed to providing a welcoming and inclusive environment. Please be r
 ## Getting Started
 
 ### Prerequisites
-- Node.js 18+ and npm 9+
+- Node.js 18+ (20+ recommended) and npm 9+
 - Git
 - Basic knowledge of Web Components and Lit
 - Familiarity with TypeScript
@@ -112,10 +112,10 @@ export class ForgeMyComponent extends BaseElement {
 ## Testing Requirements
 
 ### Coverage Minimums
-- Statements: 90%
-- Branches: 90%
-- Functions: 90%
-- Lines: 90%
+- Statements: 70%
+- Branches: 70%
+- Functions: 70%
+- Lines: 70%
 
 ### Test Types Required
 
@@ -153,10 +153,9 @@ export const Loading: Story = { /* ... */ };
 
 ### Running Tests
 ```bash
-npm run test              # Unit tests
-npm run test:e2e          # E2E tests
-npm run test:visual       # Visual regression
-npm run test:a11y         # Accessibility
+npm run test               # Unit tests (vitest)
+npm run test:watch         # Watch mode
+npm run test:coverage      # Coverage report
 ```
 
 ## Submitting Changes
@@ -168,6 +167,7 @@ npm run test:a11y         # Accessibility
 - [ ] Storybook stories created/updated
 - [ ] Accessibility audit passes
 - [ ] Bundle size checked
+ - [ ] AI artifacts valid (`npm run validate:ai`)
 
 ### Commit Messages
 Follow conventional commits:
@@ -238,6 +238,48 @@ Brief description of changes
 ### General
 - Keep components focused (single responsibility)
 - Prefer composition over configuration
+
+## AI-Native Requirements (Important)
+
+All components in Forge are AI‑ready. When adding or modifying components:
+
+- Implement AI methods in the component class (inherited from `BaseElement`):
+  - `getPossibleActions()`
+  - `explainState()`
+  - Ensure `aiState` reflects meaningful state/attributes
+- Annotate slots with JSDoc `@slot` for CEM extraction (used by the AI manifest)
+- Provide semantic and a11y context where applicable:
+  - `semantic-role`, `ai-context`, ARIA labels and descriptions
+- Keep prop and event typings accurate (TypeScript) to drive correct manifest output
+- Run `npm run build:local` locally when feasible to ensure AI artifacts generate and validate
+
+### AI Artifact Debugging (Quick Tip)
+
+If AI artifacts look empty or tools can’t find metadata:
+
+- Generate and validate locally:
+  - `npm run build:local` (runs CEM + AI generators)
+  - `npm run validate:ai` (basic checks)
+- Inspect outputs:
+  - Repo root: `ai-manifest.json` (should list all components)
+  - Dist: `dist/ai-manifest.json` (bundled types alongside)
+  - Published package (node_modules/@nexcraft/forge): `ai-manifest.json`, `ai-index.json`, `ai-tools/*`
+- Sanity checks:
+  - `components.length` should be > 0 (expect ~30)
+  - `custom-elements.json` should be present in the package
+  - Exports resolve: `require.resolve('@nexcraft/forge/ai-manifest.json')`
+- See also:
+  - Docs: `docs/ai-manifest.md`, `docs/ai-methods.md`
+
+## Pre-commit Hooks
+
+We use Husky to run staged‑aware checks. The hook will skip expensive steps when non‑code files change, and will:
+- Lint staged files (via lint‑staged)
+- Type‑check on TS/config changes
+- Run tests on source/test changes
+- Build (core) only on build‑critical changes
+
+You generally don’t need to run these manually; CI will re‑verify everything.
 - Make components controlled when possible
 - Emit CustomEvents for all state changes
 
