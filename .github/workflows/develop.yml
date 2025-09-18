@@ -14,46 +14,55 @@ permissions:
   contents: read
 
 jobs:
-  ci:
-    name: CI (Develop)
+  # Fast feedback jobs (run in parallel)
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
-    # Only run on single Node version for develop branch to save resources
-    strategy:
-      matrix:
-        node-version: [20.x]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
+      - name: Setup
+        uses: ./.github/actions/setup-node
 
       - name: Run linter
         run: npm run lint
 
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: ./.github/actions/setup-node
+
       - name: Type check
         run: npm run type-check
 
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: ./.github/actions/setup-node
+
       - name: Run tests with coverage
         run: npm run test:coverage
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-develop
+          path: coverage/
+          retention-days: 3
+
+  # Build job (runs after lint/typecheck/test pass)
+  build:
+    name: Build & Validate
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, test]
+    steps:
+      - name: Setup
+        uses: ./.github/actions/setup-node
 
       - name: Build packages
         run: npm run build
 
       - name: Validate AI Manifest
         run: npm run validate:ai
-
-      - name: Upload coverage reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-develop-${{ matrix.node-version }}
-          path: coverage/
-          retention-days: 3
