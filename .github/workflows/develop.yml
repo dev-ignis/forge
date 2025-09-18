@@ -131,7 +131,7 @@ jobs:
           # Publish main package
           npm publish --tag beta --access public
           
-          # Publish forge-rhf package from its directory to avoid workspace conflicts
-          cd packages/forge-rhf && npm publish --tag beta --access public
+          # Publish forge-rhf package
+          npm publish --workspace=packages/forge-rhf --tag beta --access public
           
           echo "✅ Published $NEW_VERSION to npm with beta tag"
