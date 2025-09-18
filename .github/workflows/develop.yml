@@ -129,9 +129,9 @@ jobs:
           npm version $NEW_VERSION --workspace=packages/forge-rhf --no-git-tag-version
           
           # Publish main package
-          npm publish --tag beta --access public
+          npm publish --tag beta --access public --legacy-peer-deps
           
           # Publish forge-rhf package
-          npm publish --workspace=packages/forge-rhf --tag beta --access public
+          npm publish --workspace=packages/forge-rhf --tag beta --access public --legacy-peer-deps
           
           echo "✅ Published $NEW_VERSION to npm with beta tag"
