@@ -128,13 +128,10 @@ jobs:
           # Update workspace package version to match
           npm version $NEW_VERSION --workspace=packages/forge-rhf --no-git-tag-version
           
-          # Reinstall dependencies to resolve peer deps with new version
-          npm install --legacy-peer-deps
-          
           # Publish main package
           npm publish --tag beta --access public
           
-          # Publish forge-rhf package
-          npm publish --workspace=packages/forge-rhf --tag beta --access public
+          # Publish forge-rhf package with legacy peer deps to avoid conflicts
+          npm publish --workspace=packages/forge-rhf --tag beta --access public --legacy-peer-deps
           
           echo "✅ Published $NEW_VERSION to npm with beta tag"
