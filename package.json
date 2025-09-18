@@ -116,7 +116,7 @@
     "publish-packages": "npm publish --access public && npm publish --workspace=packages/forge-rhf --access public",
     "prepare": "husky",
     "build:core": "vite build && npm run build:types && npm run bundle:types && npm run cleanup:types && npm run build:exports",
-    "build:local": "npm run build:core && npm run build:manifest && npm run build:ai && npm run validate:ai",
+    "build:local": "npm run build:core && npm run build:ai && npm run validate:ai",
     "build:types": "tsc --emitDeclarationOnly",
     "bundle:types": "rollup -c rollup.dts.config.js && mv dist/index.bundled.d.ts dist/index.d.ts",
     "cleanup:types": "node scripts/cleanup-types.js",
