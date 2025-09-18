@@ -4,7 +4,7 @@
     ".",
     "packages/*"
   ],
-  "version": "0.7.0",
+  "version": "0.7.1",
   "type": "module",
   "description": "The FIRST AI-Native component library built for the age of AI-assisted development. Features built-in AI metadata, design token bridge, and real-time performance monitoring. Works seamlessly across React, Vue, Angular, and vanilla JavaScript with AI coding tools like Cursor, GitHub Copilot, and Claude.",
   "main": "./dist/nexcraft-forge.es.js",
@@ -132,7 +132,7 @@
     "test:coverage": "vitest run --coverage",
     "type-check:local": "tsc --noEmit",
     "lint:local": "eslint src/**/*.ts --no-warn-ignored",
-    "format": "prettier --write src/**/*.{ts,css,html}",
+    "format": "prettier --write \"{src,docs,plans,.github}/**/*.{ts,tsx,js,jsx,css,html,md,mdx,yml,yaml,json}\"",
     "validate:ai": "node scripts/validate-ai-manifest.js",
     "analyze": "custom-elements-manifest analyze",
     "bundle-analyze": "rollup-plugin-visualizer",
@@ -203,13 +203,22 @@
     "lit": "^3.0.0"
   },
   "lint-staged": {
-    "src/**/*.{ts,tsx,js,jsx}": [
-      "npm run lint:local",
-      "npm run type-check:local"
+    "src/**/*.{ts,tsx,js,jsx,css,html}": [
+      "prettier --write",
+      "npm run lint:local"
     ],
     "packages/forge-rhf/src/**/*.{ts,tsx,js,jsx}": [
-      "npm run lint --workspace=packages/forge-rhf",
-      "npm run type-check --workspace=packages/forge-rhf"
+      "prettier --write",
+      "npm run lint --workspace=packages/forge-rhf"
+    ],
+    "{docs,plans}/**/*.md": [
+      "prettier --write"
+    ],
+    ".github/**/*.yml": [
+      "prettier --write"
+    ],
+    "**/*.{json,mdx}": [
+      "prettier --write"
     ]
   },
   "devDependencies": {
