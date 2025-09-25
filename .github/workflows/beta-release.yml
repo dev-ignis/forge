@@ -108,6 +108,12 @@ jobs:
           echo "New version: $NEW_VERSION"
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "is_beta=true" >> $GITHUB_OUTPUT
+
+      - name: Reinstall dependencies after version bump
+        run: |
+          echo "Refreshing install to align workspace tree with ${{ steps.version.outputs.new_version }}"
+          rm -rf node_modules package-lock.json
+          npm ci
       
       
       - name: Commit beta version
@@ -147,6 +153,7 @@ jobs:
           npm publish --tag ${{ github.event.inputs.beta_type }} --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm_config_legacy_peer_deps: true
       
       - name: Publish RHF package to NPM
         if: steps.check_changes.outputs.publish_rhf == 'true'
@@ -155,6 +162,7 @@ jobs:
           npm publish --workspace=packages/forge-rhf --tag ${{ github.event.inputs.beta_type }} --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm_config_legacy_peer_deps: true
       
       - name: Create GitHub Pre-release
         uses: softprops/action-gh-release@v2
