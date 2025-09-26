@@ -1,19 +1,19 @@
 /**
  * Vue Integration Utilities
  * Helper functions and composables for using Forge components in Vue applications
- * 
+ *
  * @module VueIntegration
  * @example
  * ```vue
  * <script setup>
  * import { ref } from 'vue';
  * import { useForgeComponent, useForgeVModel, useForgeTheme } from '@nexcraft/forge/integrations/vue';
- * 
+ *
  * const { elementRef } = useForgeComponent();
  * const { theme } = useForgeTheme();
  * const inputValue = ref('');
  * </script>
- * 
+ *
  * <template>
  *   <div :data-forge-theme="theme">
  *     <forge-button ref="elementRef" variant="primary">Click Me</forge-button>
@@ -29,20 +29,20 @@ import type { ForgeCustomEvent } from '../types/framework-integration';
 
 /**
  * Composable for Web Component ref management
- * 
+ *
  * Provides a Vue ref for accessing Forge component DOM elements.
  * Foundation for all other Forge Vue integrations.
- * 
+ *
  * @template T - The type of HTML element (defaults to HTMLElement)
  * @returns Object containing elementRef and getElement function
- * 
+ *
  * @example
  * ```vue
  * <script setup>
  * import { useForgeComponent } from '@nexcraft/forge/integrations/vue';
- * 
+ *
  * const { elementRef, getElement } = useForgeComponent();
- * 
+ *
  * const showModal = () => {
  *   const modal = getElement();
  *   if (modal && 'show' in modal) {
@@ -50,7 +50,7 @@ import type { ForgeCustomEvent } from '../types/framework-integration';
  *   }
  * };
  * </script>
- * 
+ *
  * <template>
  *   <div>
  *     <button @click="showModal">Open Modal</button>
@@ -60,7 +60,7 @@ import type { ForgeCustomEvent } from '../types/framework-integration';
  *   </div>
  * </template>
  * ```
- * 
+ *
  * @since 0.5.0
  */
 export function useForgeComponent<T extends HTMLElement = HTMLElement>() {
@@ -73,38 +73,38 @@ export function useForgeComponent<T extends HTMLElement = HTMLElement>() {
 
 /**
  * Composable for v-model integration
- * 
+ *
  * Enables seamless v-model support for Forge components in Vue 3.
  * Handles two-way data binding and event synchronization.
- * 
+ *
  * @template T - The type of the model value (defaults to string)
  * @param emit - The emit function from setup context
  * @param props - Component props containing modelValue
  * @param eventType - The event type to listen for (defaults to 'input')
  * @returns Object containing elementRef for the component
- * 
+ *
  * @example
  * ```vue
  * <script setup>
  * import { useForgeVModel } from '@nexcraft/forge/integrations/vue';
- * 
+ *
  * const props = defineProps({ modelValue: String });
  * const emit = defineEmits(['update:modelValue']);
- * 
+ *
  * const { elementRef } = useForgeVModel(emit, props);
  * </script>
- * 
+ *
  * <template>
  *   <forge-input ref="elementRef" v-bind="$attrs" />
  * </template>
  * ```
- * 
+ *
  * @since 0.5.0
  */
 export function useForgeVModel<T = string>(
   emit: (event: 'update:modelValue', value: T) => void,
   props: { modelValue?: T },
-  eventType: string = 'input'
+  eventType: string = 'input',
 ) {
   const { elementRef } = useForgeComponent();
 
@@ -137,7 +137,7 @@ export function useForgeVModel<T = string>(
       if (element && (element as any).value !== newValue) {
         (element as any).value = newValue;
       }
-    }
+    },
   );
 
   return { elementRef };
@@ -145,25 +145,25 @@ export function useForgeVModel<T = string>(
 
 /**
  * Composable for theme management
- * 
+ *
  * Provides reactive theme management for Forge components.
  * Automatically applies theme changes to the document root and provides
  * the theme to child components.
- * 
+ *
  * @returns Object containing reactive theme ref
- * 
+ *
  * @example
  * ```vue
  * <script setup>
  * import { useForgeTheme } from '@nexcraft/forge/integrations/vue';
- * 
+ *
  * const { theme } = useForgeTheme();
- * 
+ *
  * const toggleTheme = () => {
  *   theme.value = theme.value === 'light' ? 'dark' : 'light';
  * };
  * </script>
- * 
+ *
  * <template>
  *   <div :data-forge-theme="theme">
  *     <button @click="toggleTheme">Toggle Theme</button>
@@ -171,7 +171,7 @@ export function useForgeVModel<T = string>(
  *   </div>
  * </template>
  * ```
- * 
+ *
  * @since 0.5.0
  */
 export function useForgeTheme() {
@@ -183,7 +183,7 @@ export function useForgeTheme() {
       document.documentElement.setAttribute('data-forge-theme', newTheme);
       document.documentElement.style.setProperty('--forge-theme', newTheme);
     },
-    { immediate: true }
+    { immediate: true },
   );
 
   // Provide theme to child components
@@ -201,7 +201,7 @@ export function useForgeThemeContext() {
 // Composable for form validation integration
 export function useForgeValidation(
   elementRef: Ref<HTMLElement | null>,
-  validator?: (value: any) => string | null
+  validator?: (value: any) => string | null,
 ) {
   const error = ref<string | null>(null);
   const isValid = computed(() => !error.value);
@@ -276,7 +276,9 @@ export function useForgeDataTable<T = any>(initialData: T[] = []) {
     Object.entries(filters.value).forEach(([key, value]) => {
       if (value) {
         result = result.filter((item) =>
-          String(item[key as keyof T]).toLowerCase().includes(String(value).toLowerCase())
+          String((item as any)[key])
+            .toLowerCase()
+            .includes(String(value).toLowerCase()),
         );
       }
     });
@@ -285,8 +287,8 @@ export function useForgeDataTable<T = any>(initialData: T[] = []) {
     if (sortConfig.value) {
       const { key, direction } = sortConfig.value;
       result.sort((a, b) => {
-        const aVal = a[key as keyof T];
-        const bVal = b[key as keyof T];
+        const aVal = (a as any)[key];
+        const bVal = (b as any)[key];
         const compare = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
         return direction === 'asc' ? compare : -compare;
       });
@@ -322,19 +324,19 @@ export function useForgeDataTable<T = any>(initialData: T[] = []) {
 
 /**
  * Vue plugin for global Forge component registration
- * 
+ *
  * Provides easy setup for Forge components in Vue applications with
  * optional component registration and global theme management.
- * 
+ *
  * @namespace ForgeVuePlugin
  * @since 0.5.0
- * 
+ *
  * @example
  * ```js
  * import { createApp } from 'vue';
  * import { ForgeVuePlugin } from '@nexcraft/forge/integrations/vue';
  * import App from './App.vue';
- * 
+ *
  * const app = createApp(App);
  * app.use(ForgeVuePlugin, {
  *   components: ['all'], // Register all components globally
@@ -379,7 +381,7 @@ export const ForgeVuePlugin = {
     // Add global properties
     app.config.globalProperties.$forge = {
       theme,
-      setTheme: (newTheme: string) => {
+      setTheme: (newTheme: 'light' | 'dark' | 'auto') => {
         theme.value = newTheme;
       },
     };
@@ -397,7 +399,7 @@ export const vForge = {
     // Auto-setup v-model
     if (binding.modifiers.model && binding.value) {
       const { emit, value } = binding.value;
-      
+
       el.addEventListener('input', (event: any) => {
         const newValue = event.detail?.value ?? event.target?.value;
         emit('update:modelValue', newValue);
@@ -462,31 +464,25 @@ export const ForgeComponents = {
     props: ['data', 'columns', 'sortable', 'filterable', 'selectable'],
     emits: ['sort', 'filter', 'select', 'row-click'],
     setup(props: any, { emit }: any) {
-      const {
-        elementRef,
-        processedData,
-        selectedRows,
-        handleSort,
-        handleFilter,
-        handleSelect,
-      } = useForgeDataTable(props.data);
+      const { elementRef, processedData, selectedRows, handleSort, handleFilter, handleSelect } =
+        useForgeDataTable(props.data);
 
       onMounted(() => {
         const element = elementRef.value;
         if (!element) return;
 
         element.addEventListener('sort', (event) => {
-          handleSort(event);
+          handleSort(event as ForgeCustomEvent<{ key: string; direction: 'asc' | 'desc' }>);
           emit('sort', event);
         });
 
         element.addEventListener('filter', (event) => {
-          handleFilter(event);
+          handleFilter(event as ForgeCustomEvent<{ filters: Record<string, any> }>);
           emit('filter', event);
         });
 
         element.addEventListener('select', (event) => {
-          handleSelect(event);
+          handleSelect(event as ForgeCustomEvent<{ selected: any[] }>);
           emit('select', event);
         });
 
