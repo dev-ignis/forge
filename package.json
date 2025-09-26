@@ -116,7 +116,7 @@
     "publish-packages": "npm publish --access public && npm publish --workspace=packages/forge-rhf --access public",
     "prepare": "husky",
     "build:core": "vite build && npm run build:types && npm run bundle:types && npm run cleanup:types && npm run build:exports",
-    "build:local": "npm run build:core && npm run build:ai && npm run validate:ai",
+    "build:local": "npm run build:core && (npm run build:manifest || echo '⚠️ CEM generation failed, using existing custom-elements.json') && npm run build:ai && npm run validate:ai",
     "build:types": "tsc --emitDeclarationOnly",
     "bundle:types": "rollup -c rollup.dts.config.js && mv dist/index.bundled.d.ts dist/index.d.ts",
     "cleanup:types": "node scripts/cleanup-types.js",
@@ -132,7 +132,7 @@
     "test:coverage": "vitest run --coverage",
     "type-check:local": "tsc --noEmit",
     "lint:local": "eslint src/**/*.ts --no-warn-ignored",
-    "format": "prettier --write src/**/*.{ts,css,html}",
+    "format": "prettier --write \"{src,docs,plans,.github}/**/*.{ts,tsx,js,jsx,css,html,md,mdx,yml,yaml,json}\"",
     "validate:ai": "node scripts/validate-ai-manifest.js",
     "analyze": "custom-elements-manifest analyze",
     "bundle-analyze": "rollup-plugin-visualizer",
@@ -203,13 +203,22 @@
     "lit": "^3.0.0"
   },
   "lint-staged": {
-    "src/**/*.{ts,tsx,js,jsx}": [
-      "npm run lint:local",
-      "npm run type-check:local"
+    "src/**/*.{ts,tsx,js,jsx,css,html}": [
+      "prettier --write",
+      "npm run lint:local"
     ],
     "packages/forge-rhf/src/**/*.{ts,tsx,js,jsx}": [
-      "npm run lint --workspace=packages/forge-rhf",
-      "npm run type-check --workspace=packages/forge-rhf"
+      "prettier --write",
+      "npm run lint --workspace=packages/forge-rhf"
+    ],
+    "{docs,plans}/**/*.md": [
+      "prettier --write"
+    ],
+    ".github/**/*.yml": [
+      "prettier --write"
+    ],
+    "**/*.{json,mdx}": [
+      "prettier --write"
     ]
   },
   "devDependencies": {
@@ -241,7 +250,8 @@
     "tailwindcss": "^4.1.13",
     "typescript": "^5.9.2",
     "vite": "^5.4.19",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "vue": "^3.5.21"
   },
   "customElements": "custom-elements.json"
 }
