@@ -40,10 +40,11 @@ export class ForgeComponentDirective implements OnInit, OnDestroy {
     handler: (event: ForgeCustomEvent<T>) => void
   ): void {
     const element = this.elementRef.nativeElement;
-    element.addEventListener(eventType, handler);
+    const wrappedHandler = (event: Event) => handler(event as ForgeCustomEvent<T>);
+    element.addEventListener(eventType, wrappedHandler);
     
     this.listeners.push(() => {
-      element.removeEventListener(eventType, handler);
+      element.removeEventListener(eventType, wrappedHandler);
     });
   }
 

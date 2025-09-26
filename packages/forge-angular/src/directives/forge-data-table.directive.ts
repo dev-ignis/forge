@@ -32,13 +32,13 @@ export class ForgeDataTableDirective extends ForgeComponentDirective {
   override ngOnInit(): void {
     super.ngOnInit();
 
-    this.addEventListener('sort', (event) => this.sort.emit(event));
-    this.addEventListener('filter', (event) => this.filter.emit(event));
-    this.addEventListener('select', (event) => {
+    this.addEventListener<ForgeTableSortEvent>('sort', (event) => this.sort.emit(event));
+    this.addEventListener<ForgeTableFilterEvent>('filter', (event) => this.filter.emit(event));
+    this.addEventListener<ForgeTableSelectEvent>('select', (event) => {
       this._selectedRows = event.detail.selected;
       this.select.emit(event);
     });
-    this.addEventListener('row-click', (event) => this.rowClick.emit(event));
+    this.addEventListener<ForgeTableRowClickEvent>('row-click', (event) => this.rowClick.emit(event));
 
     // Set initial data
     if (this.data) {

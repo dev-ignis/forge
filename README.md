@@ -106,8 +106,9 @@ function App() {
   <forge-button @click="handleClick" :ai-context="context">Click</forge-button>
 </template>
 
-// Angular Example
-<forge-button (click)="handleClick()" [aiContext]="context">Click</forge-button>
+// Angular Example (with dedicated package)
+npm install @nexcraft/forge-angular
+<forge-button forgeComponent (click)="handleClick()" [aiContext]="context">Click</forge-button>
 
 // Vanilla JS - Full Power!
 const btn = document.querySelector('forge-button');
@@ -126,6 +127,24 @@ npm run dev        # Component development
 npm run storybook  # Interactive documentation
 npm run test       # Run tests
 ```
+
+## 📦 Framework Packages
+
+### Core Package
+- **`@nexcraft/forge`** - Web components + React/Vue integrations
+
+### Optional Framework Extensions
+- **`@nexcraft/forge-angular`** - Angular directives, services & reactive forms
+- **`@nexcraft/forge-rhf`** - React Hook Form adapters
+
+```bash
+# Install what you need
+npm install @nexcraft/forge                    # Core web components
+npm install @nexcraft/forge-angular           # + Angular integration  
+npm install @nexcraft/forge-rhf               # + React Hook Form
+```
+
+📖 **[View Integration Guides →](./docs/integrations/)**
 
 ## 📋 Component Index
 

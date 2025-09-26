@@ -27,8 +27,9 @@ export class ForgeControlValueAccessor implements ControlValueAccessor, OnInit, 
     const element = this.elementRef.nativeElement;
 
     // Handle input events
-    const inputHandler = (event: ForgeCustomEvent) => {
-      const value = event.detail?.value ?? (event.target as any)?.value;
+    const inputHandler = (event: Event) => {
+      const forgeEvent = event as ForgeCustomEvent;
+      const value = forgeEvent.detail?.value ?? (event.target as any)?.value;
       this.onChange(value);
     };
 

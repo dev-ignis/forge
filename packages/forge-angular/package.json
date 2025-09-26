@@ -45,7 +45,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dev-ignis/forge.git",
+    "url": "git+https://github.com/dev-ignis/forge.git",
     "directory": "packages/forge-angular"
   },
   "publishConfig": {
