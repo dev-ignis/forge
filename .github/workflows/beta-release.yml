@@ -106,19 +106,23 @@ jobs:
           
           NEW_VERSION=$(node -p "require('./package.json').version")
           echo "New version: $NEW_VERSION"
+          
+          # Sync workspace package version  
+          npm version $NEW_VERSION --workspace=packages/forge-rhf --no-git-tag-version
+          
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "is_beta=true" >> $GITHUB_OUTPUT
 
-      - name: Reinstall dependencies after version bump
+      - name: Update dependencies after version bump
         run: |
-          echo "Refreshing install to align workspace tree with ${{ steps.version.outputs.new_version }}"
-          rm -rf node_modules package-lock.json
-          npm ci
+          echo "Updating workspace dependencies for ${{ steps.version.outputs.new_version }}"
+          rm -f package-lock.json
+          npm install --legacy-peer-deps
       
       
       - name: Commit beta version
         run: |
-          git add package.json
+          git add package.json packages/forge-rhf/package.json
           git commit -m "chore(release): v${{ steps.version.outputs.new_version }} [beta] [skip ci]" || echo "No changes to commit"
       
       - name: Create beta tag

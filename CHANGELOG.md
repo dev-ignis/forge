@@ -4,9 +4,9 @@
 
 ### Patch Changes
 
-- 0ca60c5: Fix AI manifest generation build ordering and add validation gates
+- 8334291: Fix auto-changeset script to prevent incorrect version bumps for packages that don't have meaningful changes
 
-  ## High-confidence fixes for 0.7.2
+- 0ca60c5: Fix AI manifest generation build ordering and add validation gates
 
   **Build ordering and packaging:**
   - Ensure CEM is generated before AI manifest generation (build:manifest → build:ai)
@@ -27,8 +27,6 @@
   - Improved error messages with actionable fix suggestions
 
   These changes ensure the published package contains valid AI artifacts and prevents shipping empty manifests like in v0.7.1.
-
-- 8334291: Fix auto-changeset script to prevent incorrect version bumps for packages that don't have meaningful changes
 
 ## 0.7.0
 
