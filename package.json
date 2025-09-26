@@ -43,10 +43,6 @@
       "types": "./dist/integrations/vue.d.ts",
       "import": "./dist/integrations/vue.js"
     },
-    "./integrations/angular": {
-      "types": "./dist/integrations/angular.d.ts",
-      "import": "./dist/integrations/angular.js"
-    },
     "./plugin": {
       "types": "./dist/plugin/index.d.ts",
       "import": "./dist/plugin/index.js"
