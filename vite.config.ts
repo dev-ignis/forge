@@ -80,23 +80,19 @@ function forgeIntegrationsPlugin() {
       // Ensure integrations directory exists
       mkdirSync('dist/integrations', { recursive: true });
       
-      // Compile Vue and Angular files to remove TypeScript syntax
+      // Compile Vue integration to remove TypeScript syntax
       try {
         console.log('🚀 Compiling Vue integration...');
         execSync('npx tsc src/integrations/vue.ts --outDir dist/integrations --target es2020 --module es2020 --moduleResolution node --declaration --skipLibCheck', { stdio: 'inherit' });
         
-        console.log('🚀 Compiling Angular integration...');
-        execSync('npx tsc src/integrations/angular.ts --outDir dist/integrations --target es2020 --module es2020 --moduleResolution node --declaration --skipLibCheck', { stdio: 'inherit' });
-        
-        console.log('✅ Vue and Angular integrations compiled successfully!');
+        console.log('✅ Vue integration compiled successfully!');
       } catch (error) {
-        console.warn('⚠️ Vue/Angular integration compilation failed, falling back to copy...');
+        console.warn('⚠️ Vue integration compilation failed, falling back to copy...');
         console.error(error);
         
-        // Fallback: copy files but strip type imports
+        // Fallback: copy Vue file but strip type imports
         const integrationFiles = [
-          { src: 'src/integrations/vue.ts', dest: 'dist/integrations/vue.js' },
-          { src: 'src/integrations/angular.ts', dest: 'dist/integrations/angular.js' }
+          { src: 'src/integrations/vue.ts', dest: 'dist/integrations/vue.js' }
         ];
         
         integrationFiles.forEach(({ src, dest }) => {
@@ -127,9 +123,9 @@ function forgeIntegrationsPlugin() {
           }
         }
         
-        console.log(`\n🎉 Fixed ${fixedFiles} files out of ${jsFiles.length} total JavaScript files`);
+        console.log(`\\n🎉 Fixed ${fixedFiles} files out of ${jsFiles.length} total JavaScript files`);
         console.log('✅ React integration imports should now work correctly');
-        console.log('✅ All framework integrations processed successfully!');
+        console.log('✅ Framework integrations processed successfully!');
       } catch (error) {
         console.warn('⚠️ React integration build failed, continuing...');
         console.error(error);
