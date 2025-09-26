@@ -15,6 +15,13 @@ Welcome to the Forge UI Component Library documentation. This directory contains
 - **[Styling Guide](./guides/styling.md)** - CSS and theming patterns
 - **[Accessibility Guide](./guides/accessibility.md)** - WCAG compliance
 
+### AI‑Native
+- **[AI Metadata System](./ai-metadata-system.md)** - System overview (ADR‑014)
+- **[AI Methods](./ai-methods.md)** - getPossibleActions, explainState, aiState
+- **[AI Manifest](./ai-manifest.md)** - Generated artifacts and validation
+- **[AI Integration Examples](./ai-integration-examples.md)** - Using Forge with ChatGPT/Claude/Copilot
+ - Quick tip: If AI artifacts look empty, see “AI Artifact Debugging” in [Contributing](./CONTRIBUTING.md#ai-artifact-debugging-quick-tip)
+
 ### API Reference
 - **[Components](./api/components/)** - Component API documentation
 - **[Utilities](./api/utilities/)** - Helper functions and utilities
@@ -42,26 +49,24 @@ Welcome to the Forge UI Component Library documentation. This directory contains
 - **[ADRs](../plans/adrs/)** - Architecture Decision Records
 - **[Technology Stack](../plans/architecture/technology-stack.md)** - Core technologies
 
-## 📊 Implementation Status
+## 🧪 Examples
 
-### Current Progress
-- **[Implementation Status](./IMPLEMENTATION_STATUS.md)** - Complete progress overview
-- **[Implementation Sessions](./implementation-sessions/)** - Detailed session documentation
-- **[Latest Session Log](./implementation-sessions/2025-08-28-session.md)** - August 28, 2025 session details
-- **[Updated Changelog](../CHANGELOG.md)** - Phase 0 completion status
-
-### Phase 0 Complete ✅
-- BaseElement foundation class
-- ForgeButton component with full features
-- Design token system established
-- Development environment functional
+- **Next.js App**: `examples/nextjs-app` (SSR + RHF)  
+  Commands: `npm run example:install:nextjs`, `npm run example:dev:nextjs`
+- **Vue 3 App**: `examples/vue-app`  
+  Commands: `npm run example:install:vue`, `npm run example:dev:vue`
+- **Vanilla JS App**: `examples/vanilla-app`  
+  Commands: `npm run example:install:vanilla`, `npm run example:dev:vanilla`
 
 ## 🔍 Quick Links
 
 ### For Component Users
-1. [Interactive Demo](../demo/index.html) - Try components live (run `npm run dev`)
-2. [Design Tokens](../src/tokens/base.css) - CSS Custom Properties theme system
-3. [Component Status](./IMPLEMENTATION_STATUS.md#component-implementation-status) - What's available now
+1. Storybook (run `npm run storybook`) — interactive docs
+2. Design Tokens: CSS Custom Properties theme system (`src/`)
+3. AI Artifacts (in published package):
+   - `@nexcraft/forge/ai-manifest.json`
+   - `@nexcraft/forge/ai-index.json`
+   - `@nexcraft/forge/ai-tools/*`
 
 ### For Contributors
 1. [Setup Guide](./CONTRIBUTING.md#setup) - Get started

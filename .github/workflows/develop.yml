@@ -1,0 +1,140 @@
+name: Develop CI
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [develop]
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish beta version to npm'
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Fast feedback jobs (run in parallel)
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node & Install
+        uses: ./.github/actions/setup-node
+
+      - name: Run linter
+        run: npm run lint
+
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node & Install
+        uses: ./.github/actions/setup-node
+
+      - name: Type check
+        run: npm run type-check
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node & Install
+        uses: ./.github/actions/setup-node
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-develop
+          path: coverage/
+          retention-days: 3
+
+  # Build job (runs after lint/typecheck/test pass)
+  build:
+    name: Build & Validate
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, test]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node & Install
+        uses: ./.github/actions/setup-node
+
+      - name: Build packages
+        run: npm run build
+
+      - name: Validate AI Manifest
+        run: npm run validate:ai
+
+  # Manual publish job (beta releases from develop)
+  publish:
+    name: Publish Beta
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == true }}
+    environment: npm-publish
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node & Install
+        uses: ./.github/actions/setup-node
+
+      - name: Build packages
+        run: npm run build
+
+      - name: Configure npm authentication
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+      - name: Publish beta to npm
+        run: |
+          # Get current version and increment beta
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $CURRENT_VERSION"
+          
+          # Check if already a prerelease, if not make it beta
+          if [[ $CURRENT_VERSION == *"beta"* ]]; then
+            # Increment existing beta
+            npm version prerelease --preid=beta --no-git-tag-version
+          else
+            # Convert to beta prerelease
+            npm version prerelease --preid=beta --no-git-tag-version
+          fi
+          
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "Publishing version: $NEW_VERSION"
+          
+          # Update workspace package version to match
+          npm version $NEW_VERSION --workspace=packages/forge-rhf --no-git-tag-version
+          
+          # Skip rebuild since packages were built in previous step
+          # The version in package.json will be updated in the published tarball
+          
+          # Publish main package
+          npm publish --tag beta --access public
+          
+          # Publish forge-rhf package with legacy peer deps
+          npm publish --workspace=packages/forge-rhf --tag beta --access public --legacy-peer-deps
+          
+          echo "✅ Published $NEW_VERSION to npm with beta tag"
