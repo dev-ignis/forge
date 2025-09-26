@@ -1,16 +1,91 @@
 {
   "manifestVersion": "1.0.0",
   "package": "@nexcraft/forge",
-  "generatedAt": "2025-09-17T17:04:19.454Z",
+  "generatedAt": "2025-09-25T22:52:23.259Z",
   "components": [
+    {
+      "id": "forge-performance-dashboard",
+      "tag": "forge-performance-dashboard",
+      "category": "atom",
+      "props": [
+        {
+          "name": "autoRefresh",
+          "type": "boolean"
+        },
+        {
+          "name": "refreshInterval",
+          "type": "number"
+        },
+        {
+          "name": "showViolations",
+          "type": "boolean"
+        },
+        {
+          "name": "metrics",
+          "type": "Record<string, AIPerformanceMetrics>"
+        },
+        {
+          "name": "summaries",
+          "type": "ComponentMetricsSummary[]"
+        },
+        {
+          "name": "violations",
+          "type": "PerformanceViolation[]"
+        },
+        {
+          "name": "lastUpdated"
+        },
+        {
+          "name": "dashboard",
+          "type": "PerformanceDashboard"
+        },
+        {
+          "name": "unsubscribe",
+          "type": "() => void | undefined"
+        },
+        {
+          "name": "refreshTimer",
+          "type": "number | undefined"
+        }
+      ],
+      "events": [],
+      "a11y": {
+        "role": "generic",
+        "ariaAttributes": [
+          "aria-label"
+        ],
+        "keyboardNavigation": [
+          "Standard keyboard navigation"
+        ],
+        "screenReaderBehavior": "Announces component content",
+        "focusManagement": "Standard focus management",
+        "colorContrast": "WCAG AA compliant (4.5:1 minimum)",
+        "reducedMotion": "Respects prefers-reduced-motion settings"
+      },
+      "examples": {
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-performance-dashboard\" role=\"generic\">\n  <!-- Component content rendered server-side -->\n  <noscript>This component requires JavaScript to function properly.</noscript>\n</div>"
+      },
+      "aiMethods": {
+        "getPossibleActions": {
+          "description": "Returns array of available actions for the component",
+          "returns": "AIAction[] - Array of {name, description, available} objects"
+        },
+        "explainState": {
+          "description": "Explains the current state of the component",
+          "returns": "AIStateExplanation - {currentState, possibleStates, stateDescription}"
+        },
+        "aiState": {
+          "description": "Getter that returns comprehensive component state for AI",
+          "returns": "AIComponentState - Complete component metadata and state"
+        }
+      }
+    },
     {
       "id": "forge-alert",
       "tag": "forge-alert",
       "category": "atom",
       "props": [
-        {
-          "name": "styles"
-        },
         {
           "name": "severity",
           "type": "AlertSeverity"
@@ -94,6 +169,22 @@
         {
           "name": "iconMap",
           "type": "Record<AlertSeverity, string>"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "aiMetadata",
+          "type": "AIMetadata"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [
@@ -179,10 +270,7 @@
       "props": [
         {
           "name": "aiMetadata",
-          "type": "object"
-        },
-        {
-          "name": "styles"
+          "type": "AIMetadata"
         },
         {
           "name": "ratio",
@@ -209,7 +297,56 @@
           "type": "'fill' | 'contain' | 'cover' | 'none' | 'scale-down'"
         },
         {
-          "name": "aiState"
+          "name": "aiState",
+          "type": "AIComponentState"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
         }
       ],
       "events": [],
@@ -280,9 +417,6 @@
           "type": "AIMetadata"
         },
         {
-          "name": "styles"
-        },
-        {
           "name": "src",
           "type": "string | undefined"
         },
@@ -341,6 +475,58 @@
         },
         {
           "name": "_handleKeyDown"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [
@@ -391,9 +577,6 @@
       "tag": "forge-badge",
       "category": "atom",
       "props": [
-        {
-          "name": "styles"
-        },
         {
           "name": "variant",
           "type": "BadgeVariant"
@@ -477,6 +660,22 @@
         {
           "name": "previousCount",
           "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "aiMetadata",
+          "type": "AIMetadata"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [],
@@ -569,10 +768,7 @@
       "props": [
         {
           "name": "aiMetadata",
-          "type": "AIComponentMetadata"
-        },
-        {
-          "name": "styles"
+          "type": "AIMetadata"
         },
         {
           "name": "variant",
@@ -641,6 +837,58 @@
         {
           "name": "renderMetrics",
           "type": "object"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [],
@@ -695,9 +943,6 @@
       "tag": "forge-checkbox",
       "category": "atom",
       "props": [
-        {
-          "name": "styles"
-        },
         {
           "name": "checked",
           "type": "boolean"
@@ -789,6 +1034,22 @@
         {
           "name": "renderCount",
           "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "aiMetadata",
+          "type": "AIMetadata"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [],
@@ -881,9 +1142,6 @@
       "category": "atom",
       "props": [
         {
-          "name": "styles"
-        },
-        {
           "name": "iconRegistry"
         },
         {
@@ -964,6 +1222,22 @@
         {
           "name": "renderCount",
           "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "aiMetadata",
+          "type": "AIMetadata"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [],
@@ -1055,10 +1329,7 @@
       "props": [
         {
           "name": "aiMetadata",
-          "type": "object"
-        },
-        {
-          "name": "styles"
+          "type": "AIMetadata"
         },
         {
           "name": "type",
@@ -1155,6 +1426,58 @@
         {
           "name": "inputElement",
           "type": "HTMLInputElement"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [],
@@ -1215,10 +1538,7 @@
       "props": [
         {
           "name": "aiMetadata",
-          "type": "object"
-        },
-        {
-          "name": "styles"
+          "type": "AIMetadata"
         },
         {
           "name": "value",
@@ -1264,7 +1584,56 @@
           "name": "circumference"
         },
         {
-          "name": "aiState"
+          "name": "aiState",
+          "type": "AIComponentState"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
         }
       ],
       "events": [],
@@ -1318,10 +1687,7 @@
       "props": [
         {
           "name": "aiMetadata",
-          "type": "object"
-        },
-        {
-          "name": "styles"
+          "type": "AIMetadata"
         },
         {
           "name": "value",
@@ -1348,7 +1714,56 @@
           "type": "string"
         },
         {
-          "name": "aiState"
+          "name": "aiState",
+          "type": "AIComponentState"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
         }
       ],
       "events": [],
@@ -1425,9 +1840,6 @@
       "category": "atom",
       "props": [
         {
-          "name": "styles"
-        },
-        {
           "name": "value",
           "type": "string"
         },
@@ -1488,7 +1900,59 @@
         },
         {
           "name": "aiMetadata",
-          "type": "object"
+          "type": "AIMetadata"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [],
@@ -1553,9 +2017,6 @@
       "tag": "forge-select",
       "category": "atom",
       "props": [
-        {
-          "name": "styles"
-        },
         {
           "name": "value",
           "type": "string"
@@ -1654,7 +2115,59 @@
         },
         {
           "name": "aiMetadata",
-          "type": "object"
+          "type": "AIMetadata"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [],
@@ -1735,10 +2248,7 @@
       "props": [
         {
           "name": "aiMetadata",
-          "type": "object"
-        },
-        {
-          "name": "styles"
+          "type": "AIMetadata"
         },
         {
           "name": "width",
@@ -1765,7 +2275,56 @@
           "type": "string"
         },
         {
-          "name": "aiState"
+          "name": "aiState",
+          "type": "AIComponentState"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
         }
       ],
       "events": [],
@@ -1826,9 +2385,6 @@
       "category": "atom",
       "props": [
         {
-          "name": "styles"
-        },
-        {
           "name": "checked",
           "type": "boolean"
         },
@@ -1886,7 +2442,59 @@
         },
         {
           "name": "aiMetadata",
-          "type": "object"
+          "type": "AIMetadata"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [],
@@ -1946,9 +2554,6 @@
       "tag": "forge-card",
       "category": "atom",
       "props": [
-        {
-          "name": "styles"
-        },
         {
           "name": "variant",
           "type": "CardVariant"
@@ -2020,29 +2625,81 @@
         {
           "name": "aiMetadata",
           "type": "AIMetadata"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [],
       "slots": [
         {
-          "name": "media",
-          "description": "Media content like images, videos, or graphics"
-        },
-        {
-          "name": "header",
-          "description": "Custom header content (overrides title/subtitle)"
-        },
-        {
           "name": "default",
           "description": "Default slot for main card content"
+        },
+        {
+          "name": "actions",
+          "description": "Action buttons or controls"
         },
         {
           "name": "footer",
           "description": "Footer content like metadata or links"
         },
         {
-          "name": "actions",
-          "description": "Action buttons or controls"
+          "name": "header",
+          "description": "Custom header content (overrides title/subtitle)"
+        },
+        {
+          "name": "media",
+          "description": "Media content like images, videos, or graphics"
         }
       ],
       "a11y": {
@@ -2087,9 +2744,6 @@
       "tag": "forge-date-picker",
       "category": "atom",
       "props": [
-        {
-          "name": "styles"
-        },
         {
           "name": "_value",
           "type": "Date | null"
@@ -2202,6 +2856,58 @@
         },
         {
           "name": "handleInputChange"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [],
@@ -2252,9 +2958,6 @@
       "tag": "forge-dropdown",
       "category": "atom",
       "props": [
-        {
-          "name": "styles"
-        },
         {
           "name": "items",
           "type": "DropdownItem[]"
@@ -2318,6 +3021,58 @@
         {
           "name": "aiMetadata",
           "type": "AIMetadata"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [],
@@ -2368,10 +3123,7 @@
       "props": [
         {
           "name": "aiMetadata",
-          "type": "object"
-        },
-        {
-          "name": "styles"
+          "type": "AIMetadata"
         },
         {
           "name": "label",
@@ -2468,6 +3220,58 @@
         {
           "name": "inputElement",
           "type": "ForgeInput | undefined"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [],
@@ -2512,9 +3316,6 @@
       "tag": "forge-modal",
       "category": "atom",
       "props": [
-        {
-          "name": "styles"
-        },
         {
           "name": "open",
           "type": "boolean"
@@ -2598,23 +3399,79 @@
         {
           "name": "aiMetadata",
           "type": "AIMetadata"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [
         {
+          "name": "open",
+          "description": "Fired when the modal is opened (ADR-008 compliant)"
+        },
+        {
+          "name": "close",
+          "description": "Fired when the modal is closed (ADR-008 compliant)"
+        },
+        {
           "name": "modalopen",
-          "description": "Fired when the modal is opened"
+          "description": "Deprecated alias for 'open' (backward compatibility)"
         },
         {
           "name": "modalclose",
-          "description": "Fired when the modal is closed"
+          "description": "Deprecated alias for 'close' (backward compatibility)"
         }
       ],
       "slots": [
-        {
-          "name": "header",
-          "description": "Custom header content (overrides title prop)"
-        },
         {
           "name": "default",
           "description": "Default slot for main modal content"
@@ -2622,6 +3479,10 @@
         {
           "name": "footer",
           "description": "Footer content like action buttons"
+        },
+        {
+          "name": "header",
+          "description": "Custom header content (overrides title prop)"
         }
       ],
       "a11y": {
@@ -2668,9 +3529,6 @@
       "tag": "forge-multi-select",
       "category": "atom",
       "props": [
-        {
-          "name": "styles"
-        },
         {
           "name": "options",
           "type": "MultiSelectOption[]"
@@ -2742,6 +3600,58 @@
         },
         {
           "name": "handleKeydown"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [
@@ -2799,10 +3709,7 @@
       "props": [
         {
           "name": "aiMetadata",
-          "type": "object"
-        },
-        {
-          "name": "styles"
+          "type": "AIMetadata"
         },
         {
           "name": "position",
@@ -2825,7 +3732,56 @@
           "type": "Array<{\r\n    id: string;\r\n    title?: string;\r\n    message: string;\r\n    variant?: 'info' | 'success' | 'warning' | 'error';\r\n    duration?: number;\r\n    dismissible?: boolean;\r\n    persistent?: boolean;\r\n    showProgress?: boolean;\r\n  }>"
         },
         {
-          "name": "aiState"
+          "name": "aiState",
+          "type": "AIComponentState"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
         }
       ],
       "events": [],
@@ -2869,10 +3825,7 @@
       "props": [
         {
           "name": "aiMetadata",
-          "type": "object"
-        },
-        {
-          "name": "styles"
+          "type": "AIMetadata"
         },
         {
           "name": "title",
@@ -2927,7 +3880,56 @@
           "type": "(event: AnimationEvent) => void | undefined"
         },
         {
-          "name": "aiState"
+          "name": "aiState",
+          "type": "AIComponentState"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
         }
       ],
       "events": [
@@ -3001,9 +4003,6 @@
       "category": "atom",
       "props": [
         {
-          "name": "styles"
-        },
-        {
           "name": "content",
           "type": "string"
         },
@@ -3062,6 +4061,58 @@
         {
           "name": "aiMetadata",
           "type": "AIMetadata"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [
@@ -3119,9 +4170,6 @@
       "category": "atom",
       "props": [
         {
-          "name": "styles"
-        },
-        {
           "name": "panels",
           "type": "AccordionPanel[]"
         },
@@ -3136,6 +4184,58 @@
         {
           "name": "aiState",
           "type": "AIComponentState"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "aiMetadata",
+          "type": "AIMetadata"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
         }
       ],
       "events": [
@@ -3188,9 +4288,6 @@
       "tag": "forge-data-grid",
       "category": "atom",
       "props": [
-        {
-          "name": "styles"
-        },
         {
           "name": "columns",
           "type": "GridColumn[]"
@@ -3317,6 +4414,58 @@
         {
           "name": "filteredData",
           "type": "GridData[]"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
         }
       ],
       "events": [
@@ -3427,9 +4576,6 @@
       "category": "atom",
       "props": [
         {
-          "name": "styles"
-        },
-        {
           "name": "columns",
           "type": "TableColumn[]"
         },
@@ -3479,7 +4625,7 @@
         },
         {
           "name": "performanceMode",
-          "type": "'auto' | 'fast' | 'quality'"
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
         },
         {
           "name": "dataProvider",
@@ -3561,6 +4707,54 @@
         {
           "name": "aiState",
           "type": "AIComponentState"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "aiMetadata",
+          "type": "AIMetadata"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
         }
       ],
       "events": [
@@ -3619,9 +4813,6 @@
       "category": "atom",
       "props": [
         {
-          "name": "styles"
-        },
-        {
           "name": "items",
           "type": "NavItem[]"
         },
@@ -3664,6 +4855,58 @@
         {
           "name": "aiState",
           "type": "AIComponentState"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "aiMetadata",
+          "type": "AIMetadata"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
         }
       ],
       "events": [
@@ -3736,9 +4979,6 @@
       "category": "atom",
       "props": [
         {
-          "name": "styles"
-        },
-        {
           "name": "currentPage",
           "type": "number"
         },
@@ -3793,6 +5033,58 @@
         {
           "name": "aiState",
           "type": "AIComponentState"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "aiMetadata",
+          "type": "AIMetadata"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
         }
       ],
       "events": [
@@ -3855,9 +5147,6 @@
       "category": "atom",
       "props": [
         {
-          "name": "styles"
-        },
-        {
           "name": "tabs",
           "type": "TabItem[]"
         },
@@ -3899,6 +5188,58 @@
         {
           "name": "aiState",
           "type": "AIComponentState"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "aiMetadata",
+          "type": "AIMetadata"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
         }
       ],
       "events": [
@@ -3969,9 +5310,6 @@
       "category": "atom",
       "props": [
         {
-          "name": "styles"
-        },
-        {
           "name": "nodes",
           "type": "TreeNode[]"
         },
@@ -4023,6 +5361,58 @@
         {
           "name": "aiState",
           "type": "AIComponentState"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "aiMetadata",
+          "type": "AIMetadata"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
         }
       ],
       "events": [

@@ -1,14 +1,17 @@
-name: Deploy Examples to GitHub Pages
+name: Deploy
 
 on:
+  workflow_run:
+    workflows: ["Release"]
+    types: [completed]
+    branches: [main]
+  # Also trigger on direct changes to examples or docs
   push:
     branches: [main]
     paths: 
       - 'examples/**'
       - 'docs/**'
-      - '.github/workflows/deploy-examples.yml'
-  
-  # Allow manual trigger
+      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 permissions:
@@ -16,17 +19,22 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment
 concurrency:
-  group: deploy-examples-${{ github.ref }}
+  group: deploy-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    # Only run if Release workflow succeeded or on direct push to examples/docs
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') ||
+      (github.event_name == 'push')
     
     steps:
       - name: Checkout
@@ -41,10 +49,28 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build main package
+      - name: Try to download cached build artifacts
+        id: download-build
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: build-${{ github.sha }}-20.x
+          path: .
+
+      - name: Build main package if no cached artifacts
+        if: steps.download-build.outcome == 'failure'
         run: npm run build
 
-      - name: Build Storybook
+      - name: Try to download cached Storybook artifacts
+        id: download-storybook
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: storybook-${{ github.sha }}
+          path: storybook-static/
+
+      - name: Build Storybook if no cached artifacts
+        if: steps.download-storybook.outcome == 'failure'
         run: npm run build-storybook
 
       - name: Setup Pages
