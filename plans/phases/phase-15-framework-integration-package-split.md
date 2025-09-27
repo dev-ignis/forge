@@ -83,7 +83,52 @@ Originally, the main package contained all framework integrations, causing:
 - [x] ✅ **PUBLISHED**: `@nexcraft/forge-vue@0.1.0` available on npm
 - [x] ✅ Update documentation and README
 
+### **Phase 15.4: React Package (Ultimate Architecture)** 🚧 **IN PROGRESS**
+- [ ] **Evaluation**: React integration is 38 files with 33 components (substantial!)
+- [ ] **Decision**: Extract to `@nexcraft/forge-react` for **pure web components** core package
+- [ ] New workspace package: `packages/forge-react`
+- [ ] Migrate React integration from `src/integrations/react/` (all 38 files)
+- [ ] Remove React compilation from main package
+- [ ] Update package exports (remove React subpath)
+- [ ] Keep `@nexcraft/forge-rhf` separate (specialized React Hook Form purpose)
+- [ ] **PUBLISH**: `@nexcraft/forge-react@0.1.0` to npm
+- [ ] Update documentation and README
+- [ ] **Achievement**: `@nexcraft/forge` becomes pure web components (truly framework-agnostic)
+
 ## Technical Implementation
+
+### **React Package Setup**
+```json
+// packages/forge-react/package.json
+{
+  "name": "@nexcraft/forge-react",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./hooks": {
+      "types": "./dist/hooks/index.d.ts",
+      "import": "./dist/hooks/index.js"
+    },
+    "./ssr": {
+      "types": "./dist/ssr/index.d.ts",
+      "import": "./dist/ssr/index.js"
+    }
+  },
+  "peerDependencies": {
+    "@nexcraft/forge": ">=0.7.0",
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  }
+}
+```
 
 ### **Angular Package Setup**
 ```json
@@ -119,12 +164,19 @@ Originally, the main package contained all framework integrations, causing:
 
 ### **Usage Pattern**
 ```typescript
-// Core Forge components (main package)
-import { ForgeButton, ForgeInput } from '@nexcraft/forge';
+// Core Forge components (main package) - Pure web components
+import '@nexcraft/forge/components';
+
+// React integration (separate package)
+import { ForgeButton, ForgeInput, ForgeCard } from '@nexcraft/forge-react';
+import { useForgeComponent, useForgeEvent } from '@nexcraft/forge-react/hooks';
 
 // Angular integration (separate package)
 import { ForgeDirective, ForgeFormsModule } from '@nexcraft/forge-angular';
 import { ForgeInputAdapter } from '@nexcraft/forge-angular/forms';
+
+// Vue integration (separate package)
+import { useForgeComponent, useForgeVModel } from '@nexcraft/forge-vue';
 ```
 
 ## Timeline (1-2 weeks)
@@ -168,13 +220,16 @@ import { ForgeInputAdapter } from '@nexcraft/forge-angular/forms';
 ## Acceptance Criteria
 
 - [x] ✅ `@nexcraft/forge` builds without any Angular or Vue references
+- [ ] ⏳ `@nexcraft/forge` builds without React references (pure web components)
 - [x] ✅ `@nexcraft/forge-angular` provides full Angular integration (published)
 - [x] ✅ `@nexcraft/forge-vue` provides full Vue integration (published)
+- [ ] ⏳ `@nexcraft/forge-react` provides full React integration (in progress)
 - [x] ✅ CI output is clean with no compilation warnings
 - [x] ✅ Documentation clearly explains package separation
 - [x] ✅ Angular developers can use Forge components seamlessly
 - [x] ✅ Vue developers can use Forge components seamlessly  
-- [x] ✅ Main package remains focused on web components + React only
+- [ ] ⏳ React developers can use Forge components seamlessly
+- [ ] ⏳ Main package is **pure web components** (truly framework-agnostic)
 
 ## Related Phases
 
@@ -184,17 +239,23 @@ import { ForgeInputAdapter } from '@nexcraft/forge-angular/forms';
 
 ---
 
-**Status**: ✅ **COMPLETED**  
+**Status**: 🚧 **IN PROGRESS** (Phase 15.4: React extraction)  
 **Dependencies**: ✅ Phase 13 monorepo infrastructure (satisfied)  
-**Achievements**: ✅ Clean CI output, truly minimal core package, better framework support
+**Achievements**: ✅ Clean CI output, Angular/Vue packages published, React extraction planned
 
-## 🎉 **Phase 15 Complete!**
+## 🎯 **Phase 15.4: React Package Goal**
 
-### **Published Packages:**
-- `@nexcraft/forge-angular@0.1.0` - Angular integration
-- `@nexcraft/forge-vue@0.1.0` - Vue composables & plugin
+### **Current Published Packages:**
+- `@nexcraft/forge-angular@0.1.0` - Angular integration ✅
+- `@nexcraft/forge-vue@0.1.0` - Vue composables & plugin ✅
+- `@nexcraft/forge-rhf@0.3.0` - React Hook Form adapters ✅
 
-### **Core Package Now Minimal:**
-- `@nexcraft/forge` - Web components + React only (373.91 kB)
-- Zero framework compilation noise ✅
-- Truly modular architecture ✅
+### **Next: Ultimate Architecture**
+- `@nexcraft/forge-react@0.1.0` - React integration (in progress)
+- `@nexcraft/forge` - **Pure web components** (ultimate goal)
+
+### **Benefits of React Extraction:**
+- 🎯 **Pure web components core** - truly framework-agnostic
+- 📦 **Smaller bundle size** - no React dependencies in core
+- 🧩 **Consistent architecture** - all frameworks are optional
+- 🚀 **Better performance** - framework code only when needed

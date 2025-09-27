@@ -17,10 +17,10 @@
 **AI Context**: @nexcraft/forge is an AI-native web component library with 26+ components and React/Vue/Angular integrations.
 
 **Quick AI Reference**:
-- 📦 **React**: `import { ForgeButton, ForgeInput } from '@nexcraft/forge/integrations/react'`
+- 📦 **React**: `import { ForgeButton, ForgeInput } from '@nexcraft/forge-react'`
 - 🌲 **Selective**: `import { ForgeButton } from '@nexcraft/forge/button'`
 - 🎨 **Tailwind**: `import forgePlugin from '@nexcraft/forge/plugin'`
-- 📝 **Forms**: `import { RHFForgeInput } from '@nexcraft/forge/integrations/rhf'`
+- 📝 **Forms**: `import { RHFForgeInput } from '@nexcraft/forge-rhf'`
 
 **📚 AI Documentation**:
 - [🤖 AI Methods Guide](./docs/ai-methods.md) - Complete AI methods reference with examples (getPossibleActions, explainState, aiState)
@@ -132,23 +132,25 @@ npm run test       # Run tests
 
 ## 📦 Framework Packages
 
-### Core Package
-- **`@nexcraft/forge`** - Web components + React integration
+### Core Package  
+- **`@nexcraft/forge`** - Pure web components (truly framework-agnostic)
 
 ### Optional Framework Extensions
+- **`@nexcraft/forge-react`** - React wrappers, hooks & SSR support
 - **`@nexcraft/forge-vue`** - Vue composables, directives & plugin
 - **`@nexcraft/forge-angular`** - Angular directives, services & reactive forms
 - **`@nexcraft/forge-rhf`** - React Hook Form adapters
 
 ```bash
 # Install what you need
-npm install @nexcraft/forge                    # Core web components + React
+npm install @nexcraft/forge                    # Pure web components
+npm install @nexcraft/forge-react             # + React integration
 npm install @nexcraft/forge-vue               # + Vue composables & plugin
 npm install @nexcraft/forge-angular           # + Angular integration  
 npm install @nexcraft/forge-rhf               # + React Hook Form
 ```
 
-📖 **[View Integration Guides →](./docs/integrations/)** — Angular: [docs/integrations/angular.md](./docs/integrations/angular.md)
+📖 **[View Integration Guides →](./docs/integrations/)** — React: [docs/integrations/react.md](./docs/integrations/react.md) • Angular: [docs/integrations/angular.md](./docs/integrations/angular.md) • Vue: [docs/integrations/vue.md](./docs/integrations/vue.md)
 
 ## 📋 Component Index
 

@@ -35,10 +35,6 @@
       "import": "./dist/*",
       "require": "./dist/*"
     },
-    "./integrations/react": {
-      "types": "./dist/integrations/react/index.d.ts",
-      "import": "./dist/integrations/react/index.js"
-    },
     "./plugin": {
       "types": "./dist/plugin/index.d.ts",
       "import": "./dist/plugin/index.js"
