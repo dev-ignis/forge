@@ -101,13 +101,15 @@ function App() {
   return <forge-button ref={button} onClick={handleClick}>Click</forge-button>
 }
 
-// Vue Example
+// Vue Example (with dedicated package)
+npm install @nexcraft/forge-vue
 <template>
   <forge-button @click="handleClick" :ai-context="context">Click</forge-button>
 </template>
 
 // Angular Example (with dedicated package)
 npm install @nexcraft/forge-angular
+// In Angular templates
 <forge-button forgeComponent (click)="handleClick()" [aiContext]="context">Click</forge-button>
 
 // Vanilla JS - Full Power!
@@ -131,20 +133,22 @@ npm run test       # Run tests
 ## 📦 Framework Packages
 
 ### Core Package
-- **`@nexcraft/forge`** - Web components + React/Vue integrations
+- **`@nexcraft/forge`** - Web components + React integration
 
 ### Optional Framework Extensions
+- **`@nexcraft/forge-vue`** - Vue composables, directives & plugin
 - **`@nexcraft/forge-angular`** - Angular directives, services & reactive forms
 - **`@nexcraft/forge-rhf`** - React Hook Form adapters
 
 ```bash
 # Install what you need
-npm install @nexcraft/forge                    # Core web components
+npm install @nexcraft/forge                    # Core web components + React
+npm install @nexcraft/forge-vue               # + Vue composables & plugin
 npm install @nexcraft/forge-angular           # + Angular integration  
 npm install @nexcraft/forge-rhf               # + React Hook Form
 ```
 
-📖 **[View Integration Guides →](./docs/integrations/)**
+📖 **[View Integration Guides →](./docs/integrations/)** — Angular: [docs/integrations/angular.md](./docs/integrations/angular.md)
 
 ## 📋 Component Index
 
@@ -166,7 +170,7 @@ Quick reference to all 26 components with HTML tag names:
 ## 📚 Documentation
 
 ### Getting Started
-- **[Quick Start Guide](./plans/quick-start-guide.md)** - Get your first component running in 4 hours
+- **[Quick Start Guide](./docs/GETTING_STARTED.md)** - Get your first component running in 4 hours
 - **[Unique Value Proposition](./plans/unique-value-proposition.md)** - Why @nexcraft/forge is different
 - **[Component Architecture](./plans/architecture/component-architecture.md)** - Learn our patterns and conventions
 
