@@ -4,35 +4,47 @@
 Extract framework-specific integrations into separate, optional packages to keep the main `@nexcraft/forge` package lightweight and eliminate CI noise from unused dependencies.
 
 ## Scope
-- Split Angular integration into `@nexcraft/forge-angular`
-- Consider Vue integration package `@nexcraft/forge-vue` (future)
-- Maintain `@nexcraft/forge` as core web components + React wrappers only
+- Split Angular integration into `@nexcraft/forge-angular` ✅ **COMPLETED**
+- Split Vue integration into `@nexcraft/forge-vue` ✅ **COMPLETED**
+- Split React integration into `@nexcraft/forge-react` 🚧 **PLANNED**
+- Maintain `@nexcraft/forge` as **pure web components only** (truly framework-agnostic)
 - Follow the successful pattern established by `@nexcraft/forge-rhf`
 
 ## Problem Statement
-Currently, the main package attempts to compile Angular integration during build, causing:
-- ❌ CI noise: TypeScript errors when Angular deps not installed
+Originally, the main package contained all framework integrations, causing:
+- ❌ CI noise: TypeScript errors when framework deps not installed
 - ❌ Build warnings: Fallback compilation mode required
-- ❌ Forced dependencies: Users don't need Angular if they use React/Vue
-- ❌ Bundle bloat potential: Framework-specific code in main package
+- ❌ Forced dependencies: Users forced to download framework code they don't use
+- ❌ Bundle bloat: Framework-specific code increasing core package size
+- ❌ **Architectural impurity**: Core package tied to specific frameworks
 
 ## Solution Architecture
 
-### **Package Structure**
+### **Package Structure (ULTIMATE MINIMAL ARCHITECTURE)**
 ```
-@nexcraft/forge              // Core web components + React integration
-├── src/components/          // Web components (unchanged)
-├── src/integrations/react/  // React wrappers (keep)
-└── src/integrations/vue.ts  // Vue composables (keep, lightweight)
+@nexcraft/forge              // PURE web components (truly framework-agnostic)
+└── src/components/          // Web components ONLY
 
-@nexcraft/forge-angular      // Angular integration (NEW)
+@nexcraft/forge-react        // React integration (NEW - Phase 15.4)
+├── src/components/          // React component wrappers (33 components)
+├── src/utils/               // React utilities
+├── src/types/               // React TypeScript definitions
+└── src/ssr/                 // SSR compatibility
+
+@nexcraft/forge-vue          // Vue integration (COMPLETED ✅)
+├── src/composables/         // Vue composables
+├── src/directives/          // Vue directives  
+├── src/plugin/              // Vue plugin
+└── src/types/               // Vue TypeScript definitions
+
+@nexcraft/forge-angular      // Angular integration (COMPLETED ✅)
 ├── src/directives/          // Angular directives
 ├── src/services/            // Angular services  
-├── src/components/          // Angular component wrappers
-└── src/forms/               // Angular reactive forms integration
+├── src/forms/               // Angular reactive forms integration
+└── src/types/               // Angular TypeScript definitions
 
 @nexcraft/forge-rhf          // React Hook Form (EXISTING ✅)
-└── src/adapters/            // RHF adapters
+└── src/adapters/            // RHF adapters (keeps specialized purpose)
 ```
 
 ### **Benefits**
@@ -61,10 +73,15 @@ Currently, the main package attempts to compile Angular integration during build
 - [x] ✅ Update main package documentation (README.md updated with framework packages section)
 - [x] ✅ **PUBLISHED**: `@nexcraft/forge-angular@0.1.0` available on npm
 
-### **Phase 15.3: Vue Package (Future Consideration)**
-- [ ] Evaluate if Vue integration warrants separate package
-- [ ] Vue composables are lightweight, may stay in main package
-- [ ] Consider `@nexcraft/forge-vue` if ecosystem grows complex
+### **Phase 15.3: Vue Package (Active Implementation)** ✅ **COMPLETED**
+- [x] ✅ **Evaluation Complete**: Vue integration is 500+ lines (NOT lightweight!)
+- [x] ✅ **Decision**: Extract to `@nexcraft/forge-vue` for truly minimal core package
+- [x] ✅ New workspace package: `packages/forge-vue`
+- [x] ✅ Migrate Vue integration from `src/integrations/vue.ts` (composables, plugin, types)
+- [x] ✅ Remove Vue compilation from main package
+- [x] ✅ Update package exports (remove Vue subpath)
+- [x] ✅ **PUBLISHED**: `@nexcraft/forge-vue@0.1.0` available on npm
+- [x] ✅ Update documentation and README
 
 ## Technical Implementation
 
@@ -150,12 +167,14 @@ import { ForgeInputAdapter } from '@nexcraft/forge-angular/forms';
 
 ## Acceptance Criteria
 
-- [ ] `@nexcraft/forge` builds without any Angular references
-- [ ] `@nexcraft/forge-angular` provides full Angular integration
-- [ ] CI output is clean with no compilation warnings
-- [ ] Documentation clearly explains package separation
-- [ ] Angular developers can use Forge components seamlessly
-- [ ] Main package remains focused on web components + React
+- [x] ✅ `@nexcraft/forge` builds without any Angular or Vue references
+- [x] ✅ `@nexcraft/forge-angular` provides full Angular integration (published)
+- [x] ✅ `@nexcraft/forge-vue` provides full Vue integration (published)
+- [x] ✅ CI output is clean with no compilation warnings
+- [x] ✅ Documentation clearly explains package separation
+- [x] ✅ Angular developers can use Forge components seamlessly
+- [x] ✅ Vue developers can use Forge components seamlessly  
+- [x] ✅ Main package remains focused on web components + React only
 
 ## Related Phases
 
@@ -165,6 +184,17 @@ import { ForgeInputAdapter } from '@nexcraft/forge-angular/forms';
 
 ---
 
-**Status**: Ready to implement  
-**Depends on**: Phase 13 monorepo infrastructure (workspace setup)  
-**Enables**: Clean CI output, focused packages, better Angular support
+**Status**: ✅ **COMPLETED**  
+**Dependencies**: ✅ Phase 13 monorepo infrastructure (satisfied)  
+**Achievements**: ✅ Clean CI output, truly minimal core package, better framework support
+
+## 🎉 **Phase 15 Complete!**
+
+### **Published Packages:**
+- `@nexcraft/forge-angular@0.1.0` - Angular integration
+- `@nexcraft/forge-vue@0.1.0` - Vue composables & plugin
+
+### **Core Package Now Minimal:**
+- `@nexcraft/forge` - Web components + React only (373.91 kB)
+- Zero framework compilation noise ✅
+- Truly modular architecture ✅
