@@ -80,32 +80,6 @@ function forgeIntegrationsPlugin() {
       // Ensure integrations directory exists
       mkdirSync('dist/integrations', { recursive: true });
       
-      // Compile Vue integration to remove TypeScript syntax
-      try {
-        console.log('🚀 Compiling Vue integration...');
-        execSync('npx tsc src/integrations/vue.ts --outDir dist/integrations --target es2020 --module es2020 --moduleResolution node --declaration --skipLibCheck', { stdio: 'inherit' });
-        
-        console.log('✅ Vue integration compiled successfully!');
-      } catch (error) {
-        console.warn('⚠️ Vue integration compilation failed, falling back to copy...');
-        console.error(error);
-        
-        // Fallback: copy Vue file but strip type imports
-        const integrationFiles = [
-          { src: 'src/integrations/vue.ts', dest: 'dist/integrations/vue.js' }
-        ];
-        
-        integrationFiles.forEach(({ src, dest }) => {
-          if (existsSync(src)) {
-            console.log(`📦 Copying and fixing ${src} → ${dest}`);
-            const content = readFileSync(src, 'utf8');
-            // Strip import type statements
-            const fixedContent = content.replace(/import\s+type\s+\{[^}]*\}\s+from\s+[^;]+;/g, '');
-            writeFileSync(dest, fixedContent);
-          }
-        });
-      }
-      
       // Build React integration with proper JSX/TS handling
       try {
         console.log('⚛️ Building React integration...');

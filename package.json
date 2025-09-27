@@ -39,10 +39,6 @@
       "types": "./dist/integrations/react/index.d.ts",
       "import": "./dist/integrations/react/index.js"
     },
-    "./integrations/vue": {
-      "types": "./dist/integrations/vue.d.ts",
-      "import": "./dist/integrations/vue.js"
-    },
     "./plugin": {
       "types": "./dist/plugin/index.d.ts",
       "import": "./dist/plugin/index.js"
@@ -105,7 +101,7 @@
     "test": "npm run test:local",
     "type-check": "npm run type-check:local && npm run type-check --workspace=packages/forge-rhf",
     "lint": "npm run lint:local && npm run lint --workspace=packages/forge-rhf",
-    "clean": "rm -rf dist && npm run clean --workspace=packages/forge-rhf",
+    "clean": "rm -rf dist && npm run clean --workspace=packages/forge-rhf && npm run clean --workspace=packages/forge-angular",
     "release": "npx changeset",
     "auto-changeset": "node scripts/auto-changeset.js",
     "version-packages": "npx changeset version",
