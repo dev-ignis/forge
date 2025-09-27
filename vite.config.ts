@@ -70,40 +70,17 @@ function fixImportsInFile(filePath) {
   return false;
 }
 
-// Plugin to handle all framework integrations
-function forgeIntegrationsPlugin() {
+// Plugin for any remaining build tasks
+function forgeBuildPlugin() {
   return {
-    name: 'forge-integrations',
+    name: 'forge-build',
     writeBundle() {
-      console.log('🔧 Processing framework integrations...');
-      
-      // Ensure integrations directory exists
-      mkdirSync('dist/integrations', { recursive: true });
-      
-      // Build React integration with proper JSX/TS handling
-      try {
-        console.log('⚛️ Building React integration...');
-        execSync('tsc -p tsconfig.react.json', { stdio: 'inherit' });
-        
-        // Fix ES module imports directly in the output location
-        console.log('🔧 Fixing React ES module imports...');
-        const reactDistPath = join(process.cwd(), 'dist', 'integrations', 'react');
-        const jsFiles = findJsFiles(reactDistPath);
-        let fixedFiles = 0;
-        
-        for (const file of jsFiles) {
-          if (fixImportsInFile(file)) {
-            fixedFiles++;
-          }
-        }
-        
-        console.log(`\\n🎉 Fixed ${fixedFiles} files out of ${jsFiles.length} total JavaScript files`);
-        console.log('✅ React integration imports should now work correctly');
-        console.log('✅ Framework integrations processed successfully!');
-      } catch (error) {
-        console.warn('⚠️ React integration build failed, continuing...');
-        console.error(error);
-      }
+      console.log('✅ Pure web components build completed successfully!');
+      console.log('📦 Framework integrations available as separate packages:');
+      console.log('   - @nexcraft/forge-react');
+      console.log('   - @nexcraft/forge-vue');
+      console.log('   - @nexcraft/forge-angular');
+      console.log('   - @nexcraft/forge-rhf');
     }
   };
 }
@@ -123,7 +100,7 @@ export default defineConfig({
       }
     }
   },
-  plugins: [forgeIntegrationsPlugin()],
+  plugins: [forgeBuildPlugin()],
   server: {
     open: '/demo/index.html'
   }
