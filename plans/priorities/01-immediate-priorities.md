@@ -48,6 +48,18 @@
 **Current Status**: Develop CI workflow is now reliable ✅ 
 **Next Target**: Release and Beta workflows
 
+## 🛡️ Security Measures
+
+- [ ] **Automated Vulnerability Scanning**
+  - [ ] GitHub Security Advisories integration (Dependabot Alerts, Private Vulnerability Reporting, Secret Scanning)
+  - [x] npm audit automation in CI/CD (PR check, nightly job, release/beta gate)
+    - Workflows: `.github/workflows/security-audit-pr.yml`, `.github/workflows/security-audit-nightly.yml`
+    - Gates: added `security_audit_gate` job to `release.yml` and `beta-release.yml`
+    - Notifications: Discord routing via `DISCORD_WEBHOOK_URL`, optional `DISCORD_WEBHOOK_CRITICAL`/`DISCORD_WEBHOOK_OPS`
+    - Knobs: `SECURITY_ALERT_LEVEL` (default `critical`), `SECURITY_AUDIT_VERBOSE` (default `false`)
+  - [x] Dependency security monitoring (nightly audits with configurable verbosity and Discord summaries)
+  - [ ] Regular security dependency updates (enable and tune Dependabot/Renovate; auto-merge safe patches)
+
 ### 📝 **CI Noise Issues (Non-Blocking)**
 - [x] ✅ **Vue Integration Type Issues**: Fixed all 7 TypeScript errors (commit: c556314)
   - **Status**: Build compiles cleanly, no fallback needed ✅
@@ -171,6 +183,19 @@
 - [ ] Add build performance metrics
 
 **Expected Outcome**: Faster builds, better developer experience, working Vue integration
+
+### 9. Release Configuration (Changesets)
+**Priority**: HIGH | **Effort**: Low | **Impact**: High
+
+**Actions**:
+- [ ] Align Changesets base branch with release branch
+  - Set `.changeset/config.json` `baseBranch: "main"` (current CI releases from main)
+- [ ] Use `npx changeset publish` in CI
+  - Replace bespoke multi-package `npm publish` with Changesets publish to handle order and only-changed packages
+- [ ] Decide version policy for framework packages
+  - Independent (default) vs linked (e.g., link `@nexcraft/forge` + `@nexcraft/forge-angular`)
+
+**Expected Outcome**: Predictable multi-package releases with minimal maintenance overhead
 
 ### 8. Event Naming Audit (ADR‑008)
 **Priority**: MEDIUM | **Effort**: Low | **Impact**: Medium
