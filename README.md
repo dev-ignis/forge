@@ -185,6 +185,7 @@ Quick reference to all 26 components with HTML tag names:
 - **[⚡ Performance Dashboard Guide](./docs/guides/performance-dashboard-guide.md)** - Real-time performance monitoring and dashboard
 - **[⚡ Performance Dashboard API](./docs/performance-dashboard-api.md)** - Complete Performance Dashboard API
 - **[⚡ Performance Monitoring](./docs/performance-monitoring.md)** - Advanced performance monitoring system
+ - **[Figma → Forge Tokens](./docs/guides/figma-to-forge.md)** - Pull tokens from Figma via CLI/MCP (no plugin required)
 
 ### Architecture & Planning
 - **[Implementation Roadmap](./plans/implementation-roadmap.md)** - Complete development timeline with all differentiators
