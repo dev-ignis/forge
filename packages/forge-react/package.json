@@ -1,6 +1,6 @@
 {
   "name": "@nexcraft/forge-react",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "React integration for Nexcraft Forge web components",
   "type": "module",
   "main": "./dist/index.js",
@@ -49,7 +49,7 @@
   "author": "Nexcraft Team",
   "license": "MIT",
   "peerDependencies": {
-    "@nexcraft/forge": ">=0.8.0",
+    "@nexcraft/forge": ">=0.7.1",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
