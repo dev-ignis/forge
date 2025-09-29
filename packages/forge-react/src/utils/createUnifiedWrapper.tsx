@@ -90,7 +90,7 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
 
   // Client-side: Return full unified component
   const WrappedComponent = forwardRef<T, PropsWithChildren<P>>((props, forwardedRef: Ref<T>) => {
-    const elementRef = useRef<T>(null);
+    const elementRef = useRef<T | null>(null);
     const fallbackRef = useRef<HTMLElement>(null);
     const [isHydrated, setIsHydrated] = useState(false);
     const [isClient, setIsClient] = useState(false);
@@ -239,7 +239,7 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
         (webComponent as any)._forgeLinkedInputListeners = { wcToInput, inputToWc };
 
         // Keep refs pointing at the web component (interactive element)
-        elementRef.current = webComponent;
+        (elementRef as React.MutableRefObject<T>).current = webComponent;
         assignForwardedRef(webComponent);
         setIsHydrated(true);
         return;
@@ -247,7 +247,7 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
 
       // Default path: replace fallback with web component
       fallbackElement.parentNode.replaceChild(webComponent, fallbackElement);
-      elementRef.current = webComponent;
+      (elementRef as React.MutableRefObject<T>).current = webComponent;
       assignForwardedRef(webComponent);
       setIsHydrated(true);
     };
@@ -284,7 +284,7 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
 
       return React.createElement(options.tagName, {
         ref: (node: any) => {
-          elementRef.current = node;
+          (elementRef as React.MutableRefObject<T>).current = node;
           assignForwardedRef(node);
           if (node) {
             updateWebComponent(node as T, nonEventProps, eventHandlers, options);
