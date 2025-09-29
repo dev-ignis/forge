@@ -1,0 +1,25 @@
+{
+  "name": "@nexcraft/forge-tokens",
+  "version": "0.1.0",
+  "type": "module",
+  "private": false,
+  "description": "Forge Tokens CLI to pull tokens from Figma and generate CSS/themes.",
+  "bin": {
+    "forge-tokens": "bin/forge-tokens.mjs"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "README.md"
+  ],
+  "exports": {
+    ".": "./lib/figma.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "prepare": "true"
+  }
+}
+

@@ -1,0 +1,21 @@
+{
+  "name": "@nexcraft/forge-mcp-figma",
+  "version": "0.1.0",
+  "type": "module",
+  "private": false,
+  "description": "MCP server exposing Figma pull/apply tools for Forge tokens.",
+  "bin": {
+    "forge-mcp-figma": "bin/server.mjs"
+  },
+  "files": [
+    "bin",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "prepare": "true"
+  }
+}
+
