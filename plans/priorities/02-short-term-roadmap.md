@@ -10,12 +10,12 @@
 **Priority**: HIGH | **Effort**: Medium | **Impact**: High
 
 **New Features**:
-- [ ] **Forge Tokens CLI** (`@nexcraft/forge-tokens`)
+- [x] **Forge Tokens CLI** (`@nexcraft/forge-tokens`)
   - Zero-config: use `FIGMA_TOKEN` + `FIGMA_FILE_KEY`
   - `figma:pull` writes `tokens.json` (+ optional `themes/`)
   - `--apply` generates CSS vars/docs; `--pr` opens PR when diffs exist
   - Optional `forge.figmaconfig.json` for modes, filters, paths
-- [ ] **Forge MCP for Figma** (`@nexcraft/forge-mcp-figma`)
+- [x] **Forge MCP for Figma** (`@nexcraft/forge-mcp-figma`)
   - MCP tools: `figma.pull_tokens`, `figma.apply_tokens`, `figma.open_pr`
   - Uses same env; runs from IDE MCP client; no plugin/UI required
   - Returns diff summaries; integrates with existing CI notifications
