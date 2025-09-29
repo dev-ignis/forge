@@ -1,0 +1,46 @@
+version: 2
+updates:
+  # npm (workspace root)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "02:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 10
+    versioning-strategy: increase-if-necessary
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+      tooling:
+        patterns:
+          - "@types*"
+          - "eslint*"
+          - "vitest*"
+          - "storybook*"
+          - "vite*"
+          - "rollup*"
+    ignore:
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vue"
+        update-types: ["version-update:semver-major"]
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels: ["deps", "security"]
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "02:30"
+      timezone: "UTC"
+    groups:
+      actions-weekly:
+        patterns: ["*"]
+    labels: ["deps", "security"]
+
