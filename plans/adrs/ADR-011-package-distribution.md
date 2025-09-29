@@ -199,6 +199,17 @@ function App() {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@forge/ui/dist/styles/tokens.css">
 ```
 
+## Project-Specific Update (Monorepo)
+
+In @nexcraft/forge, we apply the above principles with npm workspaces and scoped packages:
+
+- Core Web Components and React wrappers are shipped from `@nexcraft/forge` (ESM-first, explicit `exports`).
+- Framework-specific integrations that bring heavy peer dependencies are split into dedicated packages to keep the core lightweight, e.g.:
+  - `@nexcraft/forge-rhf` (React Hook Form adapters)
+  - `@nexcraft/forge-angular` (Angular directives/forms; planned)
+
+Release automation (Changesets) publishes only changed packages in the correct order to satisfy peer dependencies. CI validates tarball contents (export resolution) and artifact integrity before publish.
+
 ## Alternatives Considered
 
 ### 1. Single Package with Everything
