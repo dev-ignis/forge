@@ -6,6 +6,7 @@
 [![WCAG 2.1 AA](https://img.shields.io/badge/WCAG%202.1-AA-blue.svg)](https://www.w3.org/WAI/WCAG21/quickref/)
 [![AI-Native](https://img.shields.io/badge/AI-Native-purple.svg)](./docs/ai-metadata-system.md)
 [![Performance Monitored](https://img.shields.io/badge/Performance-Monitored-orange.svg)](./docs/performance-monitoring.md)
+[![Figma Tokens](https://img.shields.io/badge/Figma%20Tokens-CLI%2FMCP-blue.svg)](./docs/guides/figma-to-forge.md)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 > **"Write Once, Use Forever"** - A future-proof UI component library built on web standards that will outlive framework trends.
