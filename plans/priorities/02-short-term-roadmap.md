@@ -10,10 +10,15 @@
 **Priority**: HIGH | **Effort**: Medium | **Impact**: High
 
 **New Features**:
-- [ ] **Figma Plugin Development**
-  - Direct Figma → Forge token sync
-  - Real-time design system updates
-  - Automated component generation from designs
+- [ ] **Forge Tokens CLI** (`@nexcraft/forge-tokens`)
+  - Zero-config: use `FIGMA_TOKEN` + `FIGMA_FILE_KEY`
+  - `figma:pull` writes `tokens.json` (+ optional `themes/`)
+  - `--apply` generates CSS vars/docs; `--pr` opens PR when diffs exist
+  - Optional `forge.figmaconfig.json` for modes, filters, paths
+- [ ] **Forge MCP for Figma** (`@nexcraft/forge-mcp-figma`)
+  - MCP tools: `figma.pull_tokens`, `figma.apply_tokens`, `figma.open_pr`
+  - Uses same env; runs from IDE MCP client; no plugin/UI required
+  - Returns diff summaries; integrates with existing CI notifications
 - [ ] **Additional Design System Support**
   - Ant Design token conversion
   - Chakra UI token bridge
@@ -149,6 +154,40 @@
   - Bundle analyzer
 
 **Expected Outcome**: Best-in-class developer experience
+
+## 🧱 **CI & Release Pipeline Optimization**
+
+**Priority**: HIGH | **Effort**: Medium | **Impact**: High
+
+**Goals**
+- Reduce redundant builds/jobs; accelerate feedback without sacrificing safety
+- Guarantee AI artifacts are populated and consumable in npm
+- Simplify multi-package publishing via Changesets
+
+**Work Items**
+- [ ] Artifact reuse across workflows
+  - Upload dist/, storybook-static/, ai-manifest.json in CI; download in release/deploy
+  - Fallback build only if artifacts are missing
+- [ ] Strong AI artifact gating (ADR-017)
+  - validate-ai-manifest fails if components.length < expected (e.g., ≥25) or custom-elements.json is missing
+  - Verify package exports resolve: ai-manifest.json, ai-index.json, ai-tools/*
+- [ ] Coverage surfaced in PRs (Codecov/Coveralls or summary comment)
+- [ ] Permissions hardening per job (CI: contents: read; release: write only)
+- [ ] Pin critical actions by SHA (supply-chain)
+- [ ] Beta release guardrails (restrict branches or release from temp branch)
+- [ ] Deploy reuses CI artifacts; builds only as fallback
+- [ ] Changesets configuration alignment
+  - Set `baseBranch: "main"` to match release branch
+  - Prefer `npx changeset publish` over bespoke publish scripts
+  - Consider version policy (linked vs independent) and document
+  - (Optional) Add richer changelogs via `@changesets/get-github-info`
+  - (Optional) Evaluate Changesets pre mode for pre-releases
+
+**Acceptance Criteria**
+- CI+release ≤ 4 jobs for main pushes; ≥ 60% fewer duplicate builds
+- npm tarball contains non-empty ai-manifest.json (components ≥ expected) and custom-elements.json
+- PRs show coverage; failed AI validation blocks publish
+- Changesets baseBranch matches release branch; publish uses Changesets and only publishes changed packages in correct order
 
 ### 8. Advanced Testing Framework
 **Priority**: MEDIUM | **Effort**: Medium | **Impact**: Medium
