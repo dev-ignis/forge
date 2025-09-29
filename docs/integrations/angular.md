@@ -1,10 +1,6 @@
-# Angular Integration
+# Angular Integration with @nexcraft/forge-angular
 
-Angular integration for Nexcraft Forge web components through the `@nexcraft/forge-angular` package.
-
-## Overview
-
-The `@nexcraft/forge-angular` package provides Angular-specific directives, services, and form integration for seamless use of Forge web components in Angular applications.
+This guide explains how to use Forge Web Components in Angular applications via the dedicated integration package `@nexcraft/forge-angular`.
 
 ## Installation
 
@@ -12,337 +8,137 @@ The `@nexcraft/forge-angular` package provides Angular-specific directives, serv
 npm install @nexcraft/forge @nexcraft/forge-angular
 ```
 
-## Quick Start
+Peer dependencies (not auto-installed):
+- `@angular/core` and `@angular/forms` (v17 or v18)
 
-### 1. Import the Module
+## Setup
 
-Add the `ForgeAngularModule` to your Angular module:
+Add `CUSTOM_ELEMENTS_SCHEMA` to your root module to allow custom elements, and import the Forge Angular module (example names shown — adjust to your package exports):
 
-```typescript
-import { NgModule } from '@angular/core';
+```ts
+// app.module.ts
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ForgeAngularModule } from '@nexcraft/forge-angular';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { AppComponent } from './app.component';
+// Forge Angular integration (example)
+import { ForgeModule } from '@nexcraft/forge-angular';
+
+import './polyfills'; // if needed for older browsers
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [/* your components */],
   imports: [
     BrowserModule,
-    ForgeAngularModule.forRoot()
+    FormsModule,
+    ReactiveFormsModule,
+    ForgeModule,
   ],
   providers: [],
-  bootstrap: [AppComponent],
-  schemas: ForgeAngularModule.getSchemas()
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  bootstrap: [/* root component */]
 })
-export class AppModule { }
+export class AppModule {}
 ```
 
-### 2. Use Components in Templates
+## Basic Usage
+
+Forge components are standard web components; use them directly in templates. The Angular integration provides helpers to bridge attributes/properties and events where useful.
 
 ```html
-<!-- Basic component usage -->
-<forge-button>Click me</forge-button>
+<!-- Button -->
+<forge-button (click)="onSubmit()" semantic-role="form-submit">
+  Submit
+</forge-button>
 
-<!-- With Angular directive for enhanced functionality -->
-<forge-input 
-  forgeComponent
-  placeholder="Enter text"
-  [(ngModel)]="inputValue">
-</forge-input>
-
-<!-- Modal with Angular directive -->
-<forge-modal forgeModal #modal="forgeModal">
-  <h2>Modal Title</h2>
-  <p>Modal content goes here</p>
-  <button (click)="modal.hide()">Close</button>
-</forge-modal>
+<!-- Input with two-way binding via a helper directive (example: forgeModel) -->
+<forge-input [value]="email" (input)="email = $event.detail?.value || $event.target?.value"
+             aria-label="Email address"></forge-input>
 ```
 
-## Reactive Forms Integration
+## Forms Integration (Reactive Forms)
 
-The Angular package provides seamless integration with Angular reactive forms:
+If the package exposes forms adapters (e.g., directives implementing ControlValueAccessor), use them to bind Forge inputs to Angular forms:
 
-```typescript
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+```html
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <!-- Example: forgeFormControl directive wiring to CVA adapter -->
+  <forge-input formControlName="email" aria-label="Email"></forge-input>
 
-@Component({
-  selector: 'app-form-example',
-  template: `
-    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-      <forge-input 
-        forgeComponent
-        formControlName="name"
-        placeholder="Full Name"
-        required>
-      </forge-input>
+  <forge-checkbox formControlName="newsletter">Subscribe</forge-checkbox>
 
-      <forge-input 
-        forgeComponent
-        formControlName="email"
-        type="email"
-        placeholder="Email Address"
-        required>
-      </forge-input>
+  <forge-button type="submit">Save</forge-button>
+</form>
+```
 
-      <forge-checkbox 
-        forgeComponent
-        formControlName="isActive">
-        Active User
-      </forge-checkbox>
+If adapters aren’t available, you can bind via `(input)` and `[value]`/`[checked]` manually as shown in Basic Usage.
 
-      <forge-select 
-        forgeComponent
-        formControlName="role">
-        <option value="user">User</option>
-        <option value="admin">Admin</option>
-      </forge-select>
+## Theme and Context
 
-      <forge-button type="submit" [disabled]="userForm.invalid">
-        Submit
-      </forge-button>
-    </form>
-  `
-})
-export class FormExampleComponent {
-  userForm: FormGroup;
+You can set global attributes (e.g., data-forge-theme) at the app root:
 
-  constructor(private fb: FormBuilder) {
-    this.userForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      isActive: [true],
-      role: ['user']
-    });
-  }
-
-  onSubmit() {
-    if (this.userForm.valid) {
-      console.log('Form submitted:', this.userForm.value);
-    }
+```ts
+// app.component.ts
+export class AppComponent {
+  theme: 'light' | 'dark' | 'auto' = 'auto';
+  setTheme(t: 'light' | 'dark' | 'auto') {
+    this.theme = t;
+    document.documentElement.setAttribute('data-forge-theme', t);
+    document.documentElement.style.setProperty('--forge-theme', t);
   }
 }
 ```
 
-## Data Table Integration
+```html
+<!-- app.component.html -->
+<div [attr.data-forge-theme]="theme">
+  <button (click)="setTheme('light')">Light</button>
+  <button (click)="setTheme('dark')">Dark</button>
+  <button (click)="setTheme('auto')">Auto</button>
 
-Use the data table directive for enhanced Angular integration:
+  <ng-content></ng-content>
+  <!-- Your Forge components here -->
+</div>
+```
 
-```typescript
-import { Component } from '@angular/core';
+## Events and AI Methods
 
-@Component({
-  selector: 'app-data-table-example',
-  template: `
-    <forge-data-table 
-      forgeDataTable
-      [tableData]="users"
-      (sort)="onSort($event)"
-      (filter)="onFilter($event)"
-      (select)="onSelect($event)"
-      (rowClick)="onRowClick($event)">
-    </forge-data-table>
-  `
-})
-export class DataTableExampleComponent {
-  users = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', active: true },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', active: false },
-    // ... more data
-  ];
+Forge components emit standard DOM/CustomEvents. You can handle them with Angular’s `(event)` bindings. For AI methods (inherited from BaseElement), you can access the element via `ViewChild` and call `explainState()`, `getPossibleActions()`, or read `aiState`:
 
-  onSort(event: any) {
-    console.log('Sort event:', event.detail);
-    // Handle sorting logic
-  }
+```ts
+import { ElementRef, ViewChild } from '@angular/core';
 
-  onFilter(event: any) {
-    console.log('Filter event:', event.detail);
-    // Handle filtering logic
-  }
+export class DemoComponent {
+  @ViewChild('btn', { static: true }) btnRef!: ElementRef<HTMLElement>;
 
-  onSelect(event: any) {
-    console.log('Selection changed:', event.detail.selected);
-    // Handle selection logic
-  }
-
-  onRowClick(event: any) {
-    console.log('Row clicked:', event.detail);
-    // Handle row click logic
+  ngAfterViewInit() {
+    const el = this.btnRef.nativeElement as any;
+    console.log(el.explainState?.());
+    console.log(el.getPossibleActions?.());
+    console.log(el.aiState);
   }
 }
 ```
 
-## Theme Management
-
-Use the theme service to manage application themes:
-
-```typescript
-import { Component } from '@angular/core';
-import { ForgeThemeService } from '@nexcraft/forge-angular';
-
-@Component({
-  selector: 'app-theme-toggle',
-  template: `
-    <forge-button (click)="toggleTheme()">
-      Toggle Theme ({{ currentTheme }})
-    </forge-button>
-    
-    <forge-button (click)="setTheme('light')">Light</forge-button>
-    <forge-button (click)="setTheme('dark')">Dark</forge-button>
-    <forge-button (click)="setTheme('auto')">Auto</forge-button>
-  `
-})
-export class ThemeToggleComponent {
-  constructor(public themeService: ForgeThemeService) {}
-
-  get currentTheme() {
-    return this.themeService.theme;
-  }
-
-  toggleTheme() {
-    this.themeService.toggleTheme();
-  }
-
-  setTheme(theme: 'light' | 'dark' | 'auto') {
-    this.themeService.setTheme(theme);
-  }
-}
-```
-
-## Notifications
-
-Display notifications using the component service:
-
-```typescript
-import { Component } from '@angular/core';
-import { ForgeComponentService } from '@nexcraft/forge-angular';
-
-@Component({
-  selector: 'app-notification-example',
-  template: `
-    <forge-button (click)="showSuccess()">Success</forge-button>
-    <forge-button (click)="showError()">Error</forge-button>
-    <forge-button (click)="showWarning()">Warning</forge-button>
-    <forge-button (click)="showInfo()">Info</forge-button>
-  `
-})
-export class NotificationExampleComponent {
-  constructor(private forgeService: ForgeComponentService) {}
-
-  showSuccess() {
-    this.forgeService.showNotification('Operation completed successfully!', 'success');
-  }
-
-  showError() {
-    this.forgeService.showNotification('An error occurred!', 'error');
-  }
-
-  showWarning() {
-    this.forgeService.showNotification('Warning: Please check your input.', 'warning');
-  }
-
-  showInfo() {
-    this.forgeService.showNotification('Information: Process started.', 'info');
-  }
-}
-```
-
-## API Reference
-
-### Services
-
-#### ForgeThemeService
-- `theme: string` - Get current theme
-- `setTheme(theme: 'light' | 'dark' | 'auto'): void` - Set application theme
-- `toggleTheme(): void` - Toggle between light and dark themes
-
-#### ForgeComponentService
-- `showModal(selector: string): void` - Show modal by CSS selector
-- `hideModal(selector: string): void` - Hide modal by CSS selector
-- `toggleTheme(): void` - Toggle application theme
-- `showNotification(message: string, type?: NotificationType): void` - Show notification
-
-### Directives
-
-#### forgeComponent
-Base directive providing theme and performance mode support:
 ```html
-<forge-input forgeComponent [forgeTheme]="'dark'" [performanceMode]="'high'">
+<forge-button #btn (click)="onClick()">Click</forge-button>
 ```
 
-#### forgeModal
-Modal management directive:
-```html
-<forge-modal forgeModal #modal="forgeModal" (modalOpen)="onOpen()" (modalClose)="onClose()">
-```
+## Migration Note
 
-#### forgeDataTable
-Data table integration directive:
-```html
-<forge-data-table forgeDataTable [tableData]="data" (sort)="onSort($event)">
-```
+Angular integration has moved to a separate package: `@nexcraft/forge-angular`.
 
-### Form Integration
-
-The package automatically provides `ControlValueAccessor` for:
-- `forge-input`
-- `forge-select` 
-- `forge-checkbox`
-
-These components work seamlessly with Angular reactive forms and template-driven forms.
-
-## TypeScript Support
-
-The package includes comprehensive TypeScript definitions for all directives, services, and event types:
-
-```typescript
-import { 
-  ForgeCustomEvent,
-  ForgeTableSortEvent,
-  ForgeTableFilterEvent,
-  ForgeTableSelectEvent,
-  NotificationType
-} from '@nexcraft/forge-angular';
-```
-
-## Migration from Main Package
-
-If you were previously using Angular integration from `@nexcraft/forge/integrations/angular`, migrate to the dedicated package:
-
-```typescript
-// Old (deprecated)
-import { ... } from '@nexcraft/forge/integrations/angular';
-
-// New (recommended)
-import { ... } from '@nexcraft/forge-angular';
-```
+- The `@nexcraft/forge/integrations/angular` subpath in the core package is deprecated and will be removed following the Phase 15 plan.
+- Please install and import from `@nexcraft/forge-angular` going forward.
 
 ## Troubleshooting
+- Ensure `CUSTOM_ELEMENTS_SCHEMA` is present in your module.
+- Confirm Angular peers are installed at compatible versions.
+- If SSR, render Forge tags as-is; they will upgrade on client. For complex SSR, consider platform-server hydration constraints.
 
-### Custom Elements Schema
+---
 
-If you encounter errors about unknown elements, ensure you're importing the schemas:
+For deeper architectural context, see:
+- ADR-007 Framework Integration
+- Phase 15: Framework Integration Package Split
 
-```typescript
-@NgModule({
-  // ...
-  schemas: ForgeAngularModule.getSchemas()
-})
-export class AppModule { }
-```
-
-### Peer Dependencies
-
-Ensure you have the required peer dependencies installed:
-
-```bash
-npm install @angular/core @angular/forms @nexcraft/forge
-```
-
-The package supports Angular versions 17, 18, and 19.
-
-## Contributing
-
-The Angular package is part of the Nexcraft Forge monorepo. See the main project's contributing guide for development setup and guidelines.
