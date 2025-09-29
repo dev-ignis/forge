@@ -16,6 +16,8 @@
   },
   "scripts": {
     "prepare": "true"
+  },
+  "dependencies": {
+    "@nexcraft/forge-tokens": "^0.1.0"
   }
 }
-
