@@ -555,6 +555,12 @@
   version "0.1.0"
   resolved "file:packages/forge-angular"
 
+"@nexcraft/forge-mcp-figma@file:/home/air_buster/rollg/ignis/apps/forge/packages/forge-mcp-figma":
+  version "0.1.0"
+  resolved "file:packages/forge-mcp-figma"
+  dependencies:
+    "@nexcraft/forge-tokens" "^0.1.0"
+
 "@nexcraft/forge-react@>=0.1.0", "@nexcraft/forge-react@file:/home/air_buster/rollg/ignis/apps/forge/packages/forge-react":
   version "0.1.0"
   resolved "file:packages/forge-react"
@@ -562,6 +568,10 @@
 "@nexcraft/forge-rhf@file:/home/air_buster/rollg/ignis/apps/forge/packages/forge-rhf":
   version "0.3.0"
   resolved "file:packages/forge-rhf"
+
+"@nexcraft/forge-tokens@^0.1.0", "@nexcraft/forge-tokens@file:/home/air_buster/rollg/ignis/apps/forge/packages/forge-tokens":
+  version "0.1.0"
+  resolved "file:packages/forge-tokens"
 
 "@nexcraft/forge-vue@file:/home/air_buster/rollg/ignis/apps/forge/packages/forge-vue":
   version "0.1.0"
