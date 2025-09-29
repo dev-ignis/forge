@@ -35,7 +35,7 @@
   - **Impact**: Cannot publish beta versions
   - **Fix**: Remove package-lock.json and `npm install --legacy-peer-deps` after version bump
 
-### 📊 **Progress Status: 2/4 Critical Issues RESOLVED** ✅
+### 📊 **Progress Status: 2/5 Critical Issues RESOLVED** ✅
 
 **Files Successfully Fixed**:
 
@@ -43,14 +43,65 @@
 - [x] ✅ `src/integrations/vue.ts` (FIXED - import path resolved)
 - [x] ✅ `.github/workflows/deploy.yml` (FIXED - added --legacy-peer-deps)
 
+**New Critical Issue Discovered**:
+
+- [ ] 🔥 **Package Lock Out of Sync**: Missing new Figma packages from lock file
+  - **Error**: `Missing: @nexcraft/forge-mcp-figma@0.1.0 from lock file`
+  - **Error**: `Missing: @nexcraft/forge-tokens@0.1.0 from lock file`
+  - **Impact**: All CI jobs failing at npm ci step
+  - **Fix**: Update package-lock.json to include new workspace packages
+
 **Files Still Requiring Changes**:
 
+- [ ] `package-lock.json` (UPDATE - regenerate to include new workspace packages) **🔥 URGENT**
 - [ ] `.github/workflows/beta-release.yml` (FIX - npm ci logic after version bump)
 - [ ] `packages/forge-rhf/package.json` (UPDATE - React peer dep to include ^19.0.0)
 - [ ] Workflow artifact handling (FIX - SHA mismatch resolution)
 
-**Current Status**: Develop CI workflow is now reliable ✅
-**Next Target**: Release and Beta workflows
+**Current Status**: Develop CI workflow FAILING due to package lock mismatch 🔴
+**Immediate Priority**: Fix package-lock.json sync issue
+
+## 🚀 **CI/CD Pipeline Optimization Strategy**
+
+**Priority**: HIGH | **Effort**: Low | **Impact**: CRITICAL
+
+### **PR-Only vs Push Strategy**
+
+- **Move to PR-Only**: Lint, TypeCheck, Tests
+  - Run comprehensive checks only on `pull_request` to develop
+  - Eliminate redundant runs when PR merges to develop
+  - 80% reduction in CI minutes
+
+- **Keep Lightweight Push**: Build & AI Validate only
+  - Single "smoke test" job on push to develop
+  - Skip coverage uploads and heavy artifacts
+  - Safety net for direct pushes
+
+### **Noise/Cost Reducers**
+
+- [ ] **Add Path Filters**
+  ```yaml
+  paths-ignore: ['docs/**', 'plans/**', '*.md', '.github/workflows/deploy.yml']
+  ```
+  - Skip entire workflow for docs-only changes
+  - Major cost savings for documentation updates
+
+- [ ] **Conditional Artifact Uploads**
+  - Upload coverage only for pull_request
+  - Skip artifact uploads for push events
+
+- [ ] **Collapse Jobs for Push**
+  - Keep 3 parallel jobs (lint/typecheck/test) for PRs
+  - Single smoke job for push events
+
+### **Expected Impact**
+
+- **80% reduction** in CI minutes for develop branch
+- **50% fewer** notification emails
+- **Same quality gates** where they matter (PRs)
+- **Faster release preparation** (develop stays clean)
+
+---
 
 ## 🛡️ Security Measures
 
