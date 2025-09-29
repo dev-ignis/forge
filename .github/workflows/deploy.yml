@@ -138,7 +138,7 @@ jobs:
       - name: Install Next.js example dependencies
         run: |
           cd examples/nextjs-app
-          npm ci
+          npm ci --legacy-peer-deps
 
       - name: Build Next.js example
         run: |
