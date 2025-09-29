@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Minimal MCP-like JSON-RPC over stdio
-import { parseFileKey, fetchVariablesAndModes, normalizeTokens, writeTokens, applyCss } from '../../forge-tokens/lib/figma.mjs';
+import { parseFileKey, fetchVariablesAndModes, normalizeTokens, writeTokens, applyCss } from '@nexcraft/forge-tokens';
 
 const methods = {
   async 'figma.pull_tokens'(params = {}) {
@@ -50,4 +50,3 @@ process.stdin.on('data', chunk => {
     }
   }
 });
-

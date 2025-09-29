@@ -101,7 +101,7 @@
     "release": "npx changeset",
     "auto-changeset": "node scripts/auto-changeset.js",
     "version-packages": "npx changeset version",
-    "publish-packages": "npm publish --access public && npm publish --workspace=packages/forge-rhf --access public",
+    "publish-packages": "npm publish --access public && npm publish --workspace=packages/forge-rhf --access public && npm publish --workspace=packages/forge-tokens --access public && npm publish --workspace=packages/forge-mcp-figma --access public",
     "prepare": "husky",
     "build:core": "vite build && npm run build:types && npm run bundle:types && npm run cleanup:types && npm run build:exports",
     "build:local": "npm run build:core && (npm run build:manifest || echo '⚠️ CEM generation failed, using existing custom-elements.json') && npm run build:ai && npm run validate:ai",
