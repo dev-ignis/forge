@@ -34,7 +34,7 @@
 
 ### 📈 **[02-short-term-roadmap.md](./priorities/02-short-term-roadmap.md)** (1-3 months)
 **Focus**: Feature enhancement and ecosystem growth
-- Enhanced Design Token Bridge with Figma plugin
+- Forge Tokens CLI and MCP for Figma (no plugin)
 - Advanced Performance Monitoring dashboard
 - AI-First Development Platform
 - Enhanced Framework Integrations
@@ -54,7 +54,7 @@
 - **Phase 12**: ✅ **COMPLETED** (RHF adapters split)
 - **Phases 13-14**: 🚧 **IN PROGRESS** (monorepo foundation established, automation partially complete)
 - **Current Focus**: 🚀 **[01-immediate-priorities.md](./priorities/01-immediate-priorities.md)** — Production readiness
-- **Next Milestone**: Complete monorepo automation and TypeScript warnings resolution
+- **Next Milestone**: Complete monorepo automation, TypeScript warnings resolution, and CI security hardening
 - **Strategic Direction**: **[02-short-term-roadmap.md](./priorities/02-short-term-roadmap.md)** — AI-first platform
 
 ### Recent Achievements 🎯
@@ -65,6 +65,8 @@
 - ✅ AI-powered patterns in docs and examples
 - ✅ All tests passing (see coverage in CI; vitest thresholds enforced)
 - ✅ Performance monitoring: components target <2ms render budget
+- ✅ Security: npm audit gates for PRs, nightly, and release/beta; Discord notifications [docs](../docs/SECURITY.md)
+- ✅ Figma → Forge: published CLI and MCP packages `@nexcraft/forge-tokens` and `@nexcraft/forge-mcp-figma` with guide [docs](../docs/guides/figma-to-forge.md)
 
 ## 🎯 Key Deliverables
 
@@ -114,9 +116,24 @@
 - [ ] **Quality Improvements**: Performance monitoring ✅, AI manifest enhancement ✅
 
 ### 📋 Planned
-- [ ] **[02-short-term-roadmap.md](./priorities/02-short-term-roadmap.md)**: AI-first platform, design token bridge, dev tools
+- [ ] **[02-short-term-roadmap.md](./priorities/02-short-term-roadmap.md)**: AI-first platform, design token bridge (CLI/MCP), dev tools
 - [ ] **[03-long-term-vision.md](./priorities/03-long-term-vision.md)**: Market leadership, industry standards, global ecosystem
+- [ ] **Security Advisories & Updates**: Enable Dependabot alerts/secret scanning; weekly dependency updates with auto-merge for safe patches
+- [ ] **Code Security Review**: XSS/CSP/input sanitization audit and guidance across components
 - [ ] **v1.0.0 Release**: Stable production release 🎉
+
+## 🔐 Security Measures (Roadmap Snapshot)
+
+Implemented
+- npm audit automation in CI/CD (PR check, nightly job, release/beta gate)
+- Discord notifications with channel routing and env knobs
+
+Planned
+- GitHub Security Advisories integration (Dependabot alerts, secret scanning)
+- Regular security dependency updates (Dependabot/Renovate)
+- Code security review: XSS prevention, CSP compliance, input sanitization, safe HTML rendering
+
+References: [Security Guide](../docs/SECURITY.md)
 
 ## 📝 Quick Reference
 
@@ -135,6 +152,6 @@
 - [Quick Start Guide](./quick-start-guide.md)
 - [Developmen---
 
-**Last Updated**: September 16, 2024  
+**Last Updated**: September 29, 2025  
 **Next Review**: Weekly (Immediate Priorities)  
 **Status**: Production-Ready Beta 🟢 (Strategic Priorities Established!)
