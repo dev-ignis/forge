@@ -20,6 +20,7 @@
 | **Phase 12: RHF Adapters Split** | Weeks TBD | ✅ **COMPLETED** | [→ View Details](./phases/phase-12-react-hook-form-adapters-split.md) |
 | **Phase 13: Monorepo Platform & Publishing** | Weeks TBD | 🚧 **IN PROGRESS** | [→ View Details](./phases/phase-13-monorepo-platform-and-publishing.md) |
 | **Phase 14: Release Automation & Versioning** | Weeks TBD | 🚧 **IN PROGRESS** | [→ View Details](./phases/phase-14-release-automation-and-versioning.md) |
+| **Phase 15: Framework Integration Package Split** | Weeks TBD | ✅ **COMPLETED** | [→ View Details](./phases/phase-15-framework-integration-package-split.md) |
 
 ## 🎯 **Current Strategic Priorities**
 
