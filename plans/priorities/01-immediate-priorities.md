@@ -262,10 +262,17 @@
 
 - [ ] Align Changesets base branch with release branch
   - Set `.changeset/config.json` `baseBranch: "main"` (current CI releases from main)
-- [ ] Use `npx changeset publish` in CI
-  - Replace bespoke multi-package `npm publish` with Changesets publish to handle order and only-changed packages
-- [ ] Decide version policy for framework packages
-  - Independent (default) vs linked (e.g., link `@nexcraft/forge` + `@nexcraft/forge-angular`)
+- [ ] Use native Changesets in CI
+  - In `release.yml`, set `version: npx changeset version` and `publish: npx changeset publish`
+  - Replace bespoke multi-package `npm publish` script to let Changesets publish only changed packages in order
+- [ ] Remove auto-changeset generation from release
+  - Delete the `Auto-generate Changesets from Commits` step in `release.yml` (changesets must be authored in PRs)
+- [ ] Simplify branch sync
+  - Drop or manualize the `sync-develop` job; rely on Changesets “Version Packages” PR flow
+- [ ] Add PR check for missing changesets
+  - Fail PRs that modify `packages/**` without a `.changeset/*.md` entry
+- [ ] Confirm version policy for framework packages
+  - Keep independent versioning or expand `linked` list intentionally; document policy
 
 **Expected Outcome**: Predictable multi-package releases with minimal maintenance overhead
 
