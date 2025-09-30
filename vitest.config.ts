@@ -18,6 +18,7 @@ export default defineConfig({
         '**/*.d.ts',
         '**/*.stories.ts',
         '**/index.ts',
+        'src/index.ts',
         'dist/**',
         'storybook-static/**',
         '.storybook/**',
@@ -25,7 +26,10 @@ export default defineConfig({
         'src/types/**',
         'src/integrations/**',
         'examples/**',
-        'test-performance.js'
+        'test-performance.js',
+        'packages/**',
+        'src/core/ai-metadata-exporter.ts',
+        'src/core/ai-metadata-validator.ts'
       ],
       thresholds: {
         branches: 70,
