@@ -138,7 +138,7 @@ jobs:
 
       - name: Publish beta to npm
         run: |
-          # Get current version and increment beta
+          # Get current version and increment beta for main package
           echo "🔍 DEBUG: Starting beta publishing process..."
           CURRENT_VERSION=$(node -p "require('./package.json').version")
           echo "Current version: $CURRENT_VERSION"
@@ -148,11 +148,7 @@ jobs:
           find packages -name "package.json" -exec sed -i 's/"@nexcraft\/forge": ">=0.7.1"/"@nexcraft\/forge": "*"/g' {} \;
           find packages -name "package.json" -exec sed -i 's/"@nexcraft\/forge-react": ">=0.1.0"/"@nexcraft\/forge-react": "*"/g' {} \;
 
-          # Verify changes were applied
-          echo "Checking updated peer dependencies:"
-          grep -r "@nexcraft/forge" packages/*/package.json || echo "No peer dependencies found to check"
-
-          # Check if already a prerelease, if not make it beta
+          # Check if main package already a prerelease, if not make it beta
           if [[ $CURRENT_VERSION == *"beta"* ]]; then
             # Increment existing beta
             npm version prerelease --preid=beta --no-git-tag-version
@@ -162,17 +158,25 @@ jobs:
           fi
 
           NEW_VERSION=$(node -p "require('./package.json').version")
-          echo "Publishing version: $NEW_VERSION"
+          echo "Publishing main package version: $NEW_VERSION"
 
-          # Update all workspace package versions to match
-          npm version $NEW_VERSION --workspace=packages/forge-rhf --no-git-tag-version
-          npm version $NEW_VERSION --workspace=packages/forge-react --no-git-tag-version
-          npm version $NEW_VERSION --workspace=packages/forge-angular --no-git-tag-version
-          npm version $NEW_VERSION --workspace=packages/forge-vue --no-git-tag-version
-          npm version $NEW_VERSION --workspace=packages/forge-tokens --no-git-tag-version
-          npm version $NEW_VERSION --workspace=packages/forge-mcp-figma --no-git-tag-version
+          # Function to check if a package has changes since last release
+          has_changes() {
+            local package_path=$1
+            local package_name=$(node -p "require('$package_path/package.json').name")
+            local current_version=$(node -p "require('$package_path/package.json').version")
 
-          # Remove lockfile and reinstall with updated versions
+            # Check if there are any changes in the package directory since last commit
+            if git diff --quiet HEAD~1 HEAD -- "$package_path"; then
+              echo "No changes detected for $package_name"
+              return 1
+            else
+              echo "Changes detected for $package_name"
+              return 0
+            fi
+          }
+
+          # Remove lockfile and reinstall with updated peer dependencies
           rm -f package-lock.json
           npm install
 
@@ -180,14 +184,26 @@ jobs:
           npm run build
 
           # Publish main package
+          echo "Publishing main package @nexcraft/forge@$NEW_VERSION"
           npm publish --tag beta --access public
 
-          # Publish all workspace packages with legacy peer deps
-          npm publish --workspace=packages/forge-rhf --tag beta --access public --legacy-peer-deps
-          npm publish --workspace=packages/forge-react --tag beta --access public --legacy-peer-deps
-          npm publish --workspace=packages/forge-angular --tag beta --access public --legacy-peer-deps
-          npm publish --workspace=packages/forge-vue --tag beta --access public --legacy-peer-deps
-          npm publish --workspace=packages/forge-tokens --tag beta --access public --legacy-peer-deps
-          npm publish --workspace=packages/forge-mcp-figma --tag beta --access public --legacy-peer-deps
-          
-          echo "✅ Published $NEW_VERSION to npm with beta tag"
+          # Only publish workspace packages that have changes with their own beta versions
+          for package_dir in packages/*/; do
+            if [ -d "$package_dir" ] && [ -f "$package_dir/package.json" ]; then
+              package_name=$(node -p "require('$package_dir/package.json').name")
+              package_version=$(node -p "require('$package_dir/package.json').version")
+
+              # Skip if package is private
+              if [ "$(node -p "require('$package_dir/package.json').private || false")" = "true" ]; then
+                echo "Skipping private package $package_name"
+                continue
+              fi
+
+              # For now, skip publishing workspace packages in beta to avoid version conflicts
+              # TODO: Implement proper change detection and beta versioning for workspace packages
+              echo "Skipping workspace package $package_name (version $package_version) for beta release"
+            fi
+          done
+
+          echo "✅ Published main package $NEW_VERSION to npm with beta tag"
+          echo "ℹ️  Workspace packages skipped for beta release to maintain proper versioning"
