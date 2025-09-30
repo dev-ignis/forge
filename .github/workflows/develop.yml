@@ -162,8 +162,9 @@ jobs:
           npm version $NEW_VERSION --workspace=packages/forge-tokens --no-git-tag-version
           npm version $NEW_VERSION --workspace=packages/forge-mcp-figma --no-git-tag-version
 
-          # Reinstall dependencies with updated versions
-          npm ci --legacy-peer-deps
+          # Remove lockfile and reinstall with updated versions
+          rm -f package-lock.json
+          npm install
 
           # Rebuild packages with correct versions
           npm run build
