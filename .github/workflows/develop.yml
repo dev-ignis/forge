@@ -119,7 +119,7 @@ jobs:
   publish:
     name: Publish Beta
     runs-on: ubuntu-latest
-    # needs: [smoke-test]  # Temporarily disabled for act testing
+    needs: [smoke-test]
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == true }}
     environment: npm-publish
     steps:
