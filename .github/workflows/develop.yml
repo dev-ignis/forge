@@ -172,7 +172,7 @@ jobs:
 
           # Remove lockfile and reinstall with updated versions
           rm -f package-lock.json
-          npm install --legacy-peer-deps
+          npm install
 
           # Rebuild packages with correct versions
           npm run build
