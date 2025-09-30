@@ -93,7 +93,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:local && npm run build --workspace=packages/forge-rhf",
+    "build": "npm run build:local",
     "test": "npm run test:local",
     "type-check": "npm run type-check:local && npm run type-check --workspace=packages/forge-rhf",
     "lint": "npm run lint:local && npm run lint --workspace=packages/forge-rhf",
@@ -210,6 +210,7 @@
     ]
   },
   "devDependencies": {
+    "@nexcraft/forge-react": "workspace:*",
     "@changesets/cli": "^2.29.7",
     "@changesets/get-github-info": "^0.6.0",
     "@chromatic-com/storybook": "^4.1.1",
