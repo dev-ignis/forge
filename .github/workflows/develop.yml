@@ -206,14 +206,15 @@ jobs:
                 continue
               fi
 
-              # Get the latest published version from npm (source of truth)
-              LATEST_PKG_VERSION=$(npm view $package_name versions --json | jq -r '.[-1]' 2>/dev/null)
+              # Get the latest stable version (not beta) from npm as base for beta versioning
+              LATEST_STABLE_VERSION=$(npm view $package_name version 2>/dev/null)
+              LATEST_PKG_VERSION=$LATEST_STABLE_VERSION
               if [ "$LATEST_PKG_VERSION" = "null" ] || [ -z "$LATEST_PKG_VERSION" ]; then
                 echo "Package $package_name not found on npm, skipping"
                 continue
               fi
 
-              echo "Processing workspace package $package_name (latest published: $LATEST_PKG_VERSION)"
+              echo "Processing workspace package $package_name (latest stable: $LATEST_PKG_VERSION)"
 
               # Set package to latest published version (only if different)
               cd "$package_dir"
@@ -223,14 +224,8 @@ jobs:
                 npm version $LATEST_PKG_VERSION --no-git-tag-version
               fi
 
-              # Create beta version
-              if [[ $LATEST_PKG_VERSION == *"beta"* ]]; then
-                # Increment existing beta
-                npm version prerelease --preid=beta --no-git-tag-version
-              else
-                # Create new beta prerelease
-                npm version prerelease --preid=beta --no-git-tag-version
-              fi
+              # Create beta version from stable base (never increment beta from beta)
+              npm version prerelease --preid=beta --no-git-tag-version
 
               # Get the new beta version
               NEW_PKG_VERSION=$(node -p "require('./package.json').version")
