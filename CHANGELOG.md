@@ -1,67 +1,25 @@
 # Changelog
 
-## 0.9.0
+## 0.8.0-beta.0
 
 ### Minor Changes
 
-- **Phase 15 Complete: Framework Integration Package Split**
-
-  **BREAKING CHANGES**: All framework integrations moved to separate packages
-
-  - **Angular**: `@nexcraft/forge-angular` - Complete Angular integration with pipes, directives, and reactive forms support
-  - **Vue**: `@nexcraft/forge-vue` - Comprehensive Vue 3 composables and component wrappers
-  - **React**: `@nexcraft/forge-react` - Full React integration with hooks and SSR support
-
-  **Migration**: Install the dedicated package for your framework:
-
-  ```bash
-  # Angular users
-  npm install @nexcraft/forge-angular
-
-  # Vue users
-  npm install @nexcraft/forge-vue
-
-  # React users
-  npm install @nexcraft/forge-react
-  ```
-
-  ```diff
-  - import { ForgeButton } from '@nexcraft/forge/integrations/react';
-  + import { ForgeButton } from '@nexcraft/forge-react';
-
-  - import { ForgeButton } from '@nexcraft/forge/integrations/vue';
-  + import { ForgeButton } from '@nexcraft/forge-vue';
-
-  - import { ForgeButton } from '@nexcraft/forge/integrations/angular';
-  + import { ForgeButton } from '@nexcraft/forge-angular';
-  ```
-
-  **Benefits**:
-  - Pure web components core package (truly framework-agnostic)
-  - Optional framework dependencies - install only what you need
-  - Better maintenance by framework experts
-  - Consistent modular architecture across all frameworks
-  - Smaller bundle sizes for framework-specific apps
+- **Phase 15.4: Complete React package extraction and framework separation**
+  - Extract React integration to separate @nexcraft/forge-react package
+  - Remove all framework integrations from core @nexcraft/forge package
+  - Update @nexcraft/forge-rhf to use new React package
+  - Achieve pure web components core architecture
+  - Set up linked package releases for coordinated versioning
 
 - **New Figma Design Tokens Integration**
-
   - **`@nexcraft/forge-tokens`**: CLI for pulling design tokens from Figma and generating CSS/themes
   - **`@nexcraft/forge-mcp-figma`**: MCP server for integrating Figma workflows with AI tools
 
-  ```bash
-  # Install the tokens CLI
-  npm install -g @nexcraft/forge-tokens
+### Package Updates
 
-  # Pull tokens from Figma
-  forge-tokens pull --file-key=your-figma-file-key
-  ```
-
-- **Enhanced Security & Release Infrastructure**
-
-  - Added comprehensive npm audit workflows with Discord notifications
-  - Implemented automated security gates for releases
-  - Enhanced CI/CD pipeline with performance monitoring
-  - Added automated dependency vulnerability scanning
+- **Framework packages use patch-level beta versioning**: All framework integration packages (`@nexcraft/forge-react`, `@nexcraft/forge-vue`, `@nexcraft/forge-angular`) receive patch-level updates (0.1.1-beta.0) to avoid premature major version bumps
+- **Coordinated beta releases**: All workspace packages are versioned and published together with proper dependency management
+- **Improved CI/CD**: Switched from manual versioning to Changesets-based automatic versioning for reliability and consistency
 
 ## 0.8.0
 
