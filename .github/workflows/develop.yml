@@ -163,11 +163,16 @@ jobs:
           npm version $NEW_VERSION --workspace=packages/forge-mcp-figma --no-git-tag-version
 
           # Update peer dependency ranges to accept beta versions
+          echo "Updating peer dependency ranges..."
           find packages -name "package.json" -exec sed -i 's/"@nexcraft\/forge": ">=0.7.1"/"@nexcraft\/forge": ">=0.7.1-0"/g' {} \;
+
+          # Verify changes were applied
+          echo "Checking updated peer dependencies:"
+          grep -r "@nexcraft/forge" packages/*/package.json | grep peerDependencies -A5
 
           # Remove lockfile and reinstall with updated versions
           rm -f package-lock.json
-          npm install
+          npm install --legacy-peer-deps
 
           # Rebuild packages with correct versions
           npm run build
