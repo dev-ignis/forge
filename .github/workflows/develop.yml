@@ -162,6 +162,9 @@ jobs:
           npm version $NEW_VERSION --workspace=packages/forge-tokens --no-git-tag-version
           npm version $NEW_VERSION --workspace=packages/forge-mcp-figma --no-git-tag-version
 
+          # Update peer dependency ranges to accept beta versions
+          find packages -name "package.json" -exec sed -i 's/"@nexcraft\/forge": ">=0.7.1"/"@nexcraft\/forge": ">=0.7.1-0"/g' {} \;
+
           # Remove lockfile and reinstall with updated versions
           rm -f package-lock.json
           npm install
