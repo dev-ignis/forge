@@ -88,7 +88,7 @@ export default function Home() {
   ];
 
   const columns = [
-    { key: 'avatar', title: '', render: (value: string, row: any) => <ForgeAvatar name={row.avatar} size="sm" /> },
+    { key: 'avatar', title: '', render: (value: string, row: any) => <ForgeAvatar initials={row.avatar} size="sm" /> },
     { key: 'name', title: 'Name' },
     { key: 'email', title: 'Email' },
     { key: 'role', title: 'Role' },
@@ -104,7 +104,7 @@ export default function Home() {
     {
       key: 'actions',
       title: 'Actions',
-      render: (_, row) => (
+      render: (_: any, row: any) => (
         <ForgeButton size="sm" variant="ghost" onClick={() => setShowModal(true)}>
           Edit
         </ForgeButton>
@@ -163,10 +163,10 @@ export default function Home() {
       <ForgeNavigationBar 
         brand="Forge Showcase"
         items={[
-          { label: 'Home', href: '/' },
-          { label: 'Components', href: '/components' },
-          { label: 'Forms', href: '/forms-demo' },
-          { label: 'Performance', href: '/performance' }
+          { id: 'home', label: 'Home', href: '/' },
+          { id: 'components', label: 'Components', href: '/components' },
+          { id: 'forms', label: 'Forms', href: '/forms-demo' },
+          { id: 'performance', label: 'Performance', href: '/performance' }
         ]}
         actions={[
           <ForgeSwitch 

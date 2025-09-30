@@ -43,6 +43,10 @@ We will provide **thin framework-specific wrapper utilities** that enhance the d
 - **Performance**: Minimal overhead from thin wrappers
 - **Documentation**: Framework-specific examples and guides
 
+### Monorepo and Package Split (Update)
+
+To keep the core package lightweight and avoid framework peer dependency noise, framework integrations that require heavy peers may be split into dedicated packages. For example, Angular integration can live in `@nexcraft/forge-angular`, while React wrappers remain in the core. This mirrors the existing `@nexcraft/forge-rhf` split and improves CI stability and consumer ergonomics.
+
 ### Negative Consequences
 - **Additional Packages**: Separate packages to maintain for each framework
 - **Version Synchronization**: Wrapper versions must align with core
