@@ -154,16 +154,26 @@ jobs:
           NEW_VERSION=$(node -p "require('./package.json').version")
           echo "Publishing version: $NEW_VERSION"
           
-          # Update workspace package version to match
+          # Update all workspace package versions to match
           npm version $NEW_VERSION --workspace=packages/forge-rhf --no-git-tag-version
-          
+          npm version $NEW_VERSION --workspace=packages/forge-react --no-git-tag-version
+          npm version $NEW_VERSION --workspace=packages/forge-angular --no-git-tag-version
+          npm version $NEW_VERSION --workspace=packages/forge-vue --no-git-tag-version
+          npm version $NEW_VERSION --workspace=packages/forge-tokens --no-git-tag-version
+          npm version $NEW_VERSION --workspace=packages/forge-mcp-figma --no-git-tag-version
+
           # Skip rebuild since packages were built in previous step
           # The version in package.json will be updated in the published tarball
-          
+
           # Publish main package
           npm publish --tag beta --access public
-          
-          # Publish forge-rhf package with legacy peer deps
+
+          # Publish all workspace packages with legacy peer deps
           npm publish --workspace=packages/forge-rhf --tag beta --access public --legacy-peer-deps
+          npm publish --workspace=packages/forge-react --tag beta --access public --legacy-peer-deps
+          npm publish --workspace=packages/forge-angular --tag beta --access public --legacy-peer-deps
+          npm publish --workspace=packages/forge-vue --tag beta --access public --legacy-peer-deps
+          npm publish --workspace=packages/forge-tokens --tag beta --access public --legacy-peer-deps
+          npm publish --workspace=packages/forge-mcp-figma --tag beta --access public --legacy-peer-deps
           
           echo "✅ Published $NEW_VERSION to npm with beta tag"
