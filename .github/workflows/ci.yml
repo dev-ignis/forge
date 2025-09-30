@@ -41,6 +41,11 @@ jobs:
       - name: Run linter
         run: npm run lint
 
+      - name: Build workspace packages
+        run: |
+          npm run build:types
+          npm run build --workspace=packages/forge-react
+
       - name: Type check
         run: npm run type-check
 

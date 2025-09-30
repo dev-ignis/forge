@@ -24,7 +24,8 @@
     "prepare": "husky"
   },
   "peerDependencies": {
-    "@nexcraft/forge": ">=0.7.0",
+    "@nexcraft/forge": ">=0.7.1",
+    "@nexcraft/forge-react": ">=0.1.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-hook-form": "^7.45.0"
   },

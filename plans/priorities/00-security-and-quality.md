@@ -11,10 +11,10 @@
 
 **Security Measures**:
 - [ ] **Automated Vulnerability Scanning**
-  - GitHub Security Advisories integration
-  - npm audit automation in CI/CD
-  - Dependency security monitoring
-  - Regular security dependency updates
+  - [ ] GitHub Security Advisories integration
+  - [x] npm audit automation in CI/CD
+  - [x] Dependency security monitoring
+  - [x] Regular security dependency updates
 - [ ] **Code Security Review**
   - XSS prevention in component rendering
   - CSP (Content Security Policy) compliance
@@ -36,6 +36,11 @@
   - Secure build pipeline
   - Secret management best practices
   - Audit trail for releases
+  - Least-privilege job permissions (CI: contents: read; release: write only)
+  - Pin GitHub Actions by SHA (or scheduled verification)
+  - Branch guardrails on release workflows (workflow_dispatch allowed only on main/develop)
+  - Job timeouts for long-running steps (build/storybook)
+  - Artifact reuse across workflows (avoid rebuild variability)
 
 **Expected Outcome**: Trusted and verifiable package distribution
 
@@ -100,6 +105,8 @@
   - Interactive examples
   - Troubleshooting guides
   - Video tutorials for complex features
+ - [ ] **Coverage Visibility**
+   - Surface coverage deltas in PRs (Codecov/Coveralls or summary comment)
 
 **Expected Outcome**: Best-in-class developer experience
 

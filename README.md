@@ -6,6 +6,7 @@
 [![WCAG 2.1 AA](https://img.shields.io/badge/WCAG%202.1-AA-blue.svg)](https://www.w3.org/WAI/WCAG21/quickref/)
 [![AI-Native](https://img.shields.io/badge/AI-Native-purple.svg)](./docs/ai-metadata-system.md)
 [![Performance Monitored](https://img.shields.io/badge/Performance-Monitored-orange.svg)](./docs/performance-monitoring.md)
+[![Figma Tokens](https://img.shields.io/badge/Figma%20Tokens-CLI%2FMCP-blue.svg)](./docs/guides/figma-to-forge.md)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 > **"Write Once, Use Forever"** - A future-proof UI component library built on web standards that will outlive framework trends.
@@ -17,10 +18,10 @@
 **AI Context**: @nexcraft/forge is an AI-native web component library with 26+ components and React/Vue/Angular integrations.
 
 **Quick AI Reference**:
-- 📦 **React**: `import { ForgeButton, ForgeInput } from '@nexcraft/forge/integrations/react'`
+- 📦 **React**: `import { ForgeButton, ForgeInput } from '@nexcraft/forge-react'`
 - 🌲 **Selective**: `import { ForgeButton } from '@nexcraft/forge/button'`
 - 🎨 **Tailwind**: `import forgePlugin from '@nexcraft/forge/plugin'`
-- 📝 **Forms**: `import { RHFForgeInput } from '@nexcraft/forge/integrations/rhf'`
+- 📝 **Forms**: `import { RHFForgeInput } from '@nexcraft/forge-rhf'`
 
 **📚 AI Documentation**:
 - [🤖 AI Methods Guide](./docs/ai-methods.md) - Complete AI methods reference with examples (getPossibleActions, explainState, aiState)
@@ -101,13 +102,16 @@ function App() {
   return <forge-button ref={button} onClick={handleClick}>Click</forge-button>
 }
 
-// Vue Example
+// Vue Example (with dedicated package)
+npm install @nexcraft/forge-vue
 <template>
   <forge-button @click="handleClick" :ai-context="context">Click</forge-button>
 </template>
 
-// Angular Example
-<forge-button (click)="handleClick()" [aiContext]="context">Click</forge-button>
+// Angular Example (with dedicated package)
+npm install @nexcraft/forge-angular
+// In Angular templates
+<forge-button forgeComponent (click)="handleClick()" [aiContext]="context">Click</forge-button>
 
 // Vanilla JS - Full Power!
 const btn = document.querySelector('forge-button');
@@ -126,6 +130,28 @@ npm run dev        # Component development
 npm run storybook  # Interactive documentation
 npm run test       # Run tests
 ```
+
+## 📦 Framework Packages
+
+### Core Package  
+- **`@nexcraft/forge`** - Pure web components (truly framework-agnostic)
+
+### Optional Framework Extensions
+- **`@nexcraft/forge-react`** - React wrappers, hooks & SSR support
+- **`@nexcraft/forge-vue`** - Vue composables, directives & plugin
+- **`@nexcraft/forge-angular`** - Angular directives, services & reactive forms
+- **`@nexcraft/forge-rhf`** - React Hook Form adapters
+
+```bash
+# Install what you need
+npm install @nexcraft/forge                    # Pure web components
+npm install @nexcraft/forge-react             # + React integration
+npm install @nexcraft/forge-vue               # + Vue composables & plugin
+npm install @nexcraft/forge-angular           # + Angular integration  
+npm install @nexcraft/forge-rhf               # + React Hook Form
+```
+
+📖 **[View Integration Guides →](./docs/integrations/)** — React: [docs/integrations/react.md](./docs/integrations/react.md) • Angular: [docs/integrations/angular.md](./docs/integrations/angular.md) • Vue: [docs/integrations/vue.md](./docs/integrations/vue.md)
 
 ## 📋 Component Index
 
@@ -147,7 +173,7 @@ Quick reference to all 26 components with HTML tag names:
 ## 📚 Documentation
 
 ### Getting Started
-- **[Quick Start Guide](./plans/quick-start-guide.md)** - Get your first component running in 4 hours
+- **[Quick Start Guide](./docs/GETTING_STARTED.md)** - Get your first component running in 4 hours
 - **[Unique Value Proposition](./plans/unique-value-proposition.md)** - Why @nexcraft/forge is different
 - **[Component Architecture](./plans/architecture/component-architecture.md)** - Learn our patterns and conventions
 
@@ -160,6 +186,7 @@ Quick reference to all 26 components with HTML tag names:
 - **[⚡ Performance Dashboard Guide](./docs/guides/performance-dashboard-guide.md)** - Real-time performance monitoring and dashboard
 - **[⚡ Performance Dashboard API](./docs/performance-dashboard-api.md)** - Complete Performance Dashboard API
 - **[⚡ Performance Monitoring](./docs/performance-monitoring.md)** - Advanced performance monitoring system
+ - **[Figma → Forge Tokens](./docs/guides/figma-to-forge.md)** - Pull tokens from Figma via CLI/MCP (no plugin required)
 
 ### Architecture & Planning
 - **[Implementation Roadmap](./plans/implementation-roadmap.md)** - Complete development timeline with all differentiators
