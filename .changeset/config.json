@@ -3,9 +3,7 @@
   "changelog": "@changesets/cli/changelog",
   "commit": false,
   "fixed": [],
-  "linked": [
-    ["@nexcraft/forge-react", "@nexcraft/forge-vue", "@nexcraft/forge-angular"]
-  ],
+  "linked": [],
   "access": "public",
   "baseBranch": "develop",
   "updateInternalDependencies": "patch",

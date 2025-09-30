@@ -138,105 +138,27 @@ jobs:
 
       - name: Publish beta to npm
         run: |
-          # Get current version and increment beta for main package
-          echo "🔍 DEBUG: Starting beta publishing process..."
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          echo "Current version: $CURRENT_VERSION"
+          echo "🔍 DEBUG: Starting Changesets beta publishing process..."
 
-          # Update peer dependency ranges to accept beta versions FIRST
-          echo "Updating peer dependency ranges before version updates..."
-          find packages -name "package.json" -exec sed -i 's/"@nexcraft\/forge": ">=0.7.1"/"@nexcraft\/forge": "*"/g' {} \;
-          find packages -name "package.json" -exec sed -i 's/"@nexcraft\/forge-react": ">=0.1.0"/"@nexcraft\/forge-react": "*"/g' {} \;
-
-          # Get the latest published version (including prereleases) from npm
-          LATEST_NPM_VERSION=$(npm view @nexcraft/forge versions --json | jq -r '.[-1]' 2>/dev/null || echo "$CURRENT_VERSION")
-          echo "Latest published version on npm: $LATEST_NPM_VERSION"
-
-          # If the latest published version is newer than local, start from there
-          if [[ "$LATEST_NPM_VERSION" != "$CURRENT_VERSION" ]]; then
-            echo "Setting package version to latest published version: $LATEST_NPM_VERSION"
-            npm version $LATEST_NPM_VERSION --no-git-tag-version
+          # Enter beta pre-release mode if not already in it
+          if [ ! -f .changeset/pre.json ]; then
+            echo "Entering beta pre-release mode..."
+            npx changeset pre enter beta
           fi
 
-          # Now increment to next beta version
-          npm version prerelease --preid=beta --no-git-tag-version
+          # Version packages using Changesets
+          echo "Versioning packages with Changesets..."
+          npx changeset version
 
-          NEW_VERSION=$(node -p "require('./package.json').version")
-          echo "Publishing main package version: $NEW_VERSION"
-
-          # Function to check if a package has changes since last release
-          has_changes() {
-            local package_path=$1
-            local package_name=$(node -p "require('$package_path/package.json').name")
-            local current_version=$(node -p "require('$package_path/package.json').version")
-
-            # Check if there are any changes in the package directory since last commit
-            if git diff --quiet HEAD~1 HEAD -- "$package_path"; then
-              echo "No changes detected for $package_name"
-              return 1
-            else
-              echo "Changes detected for $package_name"
-              return 0
-            fi
-          }
-
-          # Remove lockfile and reinstall with updated peer dependencies
+          # Remove lockfile and reinstall with updated versions
           rm -f package-lock.json
           npm install
 
           # Rebuild packages with correct versions
           npm run build
 
-          # Publish main package
-          echo "Publishing main package @nexcraft/forge@$NEW_VERSION"
-          npm publish --tag beta --access public
+          # Publish all packages using Changesets (pre-mode automatically uses beta tag)
+          echo "Publishing packages with beta tag..."
+          npx changeset publish
 
-          # Publish workspace packages with independent beta versioning
-          for package_dir in packages/*/; do
-            # Remove trailing slash for clean path
-            package_dir=${package_dir%/}
-            if [ -d "$package_dir" ] && [ -f "$package_dir/package.json" ]; then
-              # Use absolute path to get package name
-              package_json_path="$(pwd)/$package_dir/package.json"
-              package_name=$(node -p "require('$package_json_path').name")
-
-              # Skip if package is private
-              if [ "$(node -p "require('$package_json_path').private || false")" = "true" ]; then
-                echo "Skipping private package $package_name"
-                continue
-              fi
-
-              # Get the latest stable version (not beta) from npm as base for beta versioning
-              LATEST_STABLE_VERSION=$(npm view $package_name version 2>/dev/null)
-              LATEST_PKG_VERSION=$LATEST_STABLE_VERSION
-              if [ "$LATEST_PKG_VERSION" = "null" ] || [ -z "$LATEST_PKG_VERSION" ]; then
-                echo "Package $package_name not found on npm, skipping"
-                continue
-              fi
-
-              echo "Processing workspace package $package_name (latest stable: $LATEST_PKG_VERSION)"
-
-              # Set package to latest published version (only if different)
-              cd "$package_dir"
-              CURRENT_LOCAL_VERSION=$(node -p "require('./package.json').version")
-              if [[ "$LATEST_PKG_VERSION" != "$CURRENT_LOCAL_VERSION" ]]; then
-                echo "Updating local version from $CURRENT_LOCAL_VERSION to $LATEST_PKG_VERSION"
-                npm version $LATEST_PKG_VERSION --no-git-tag-version
-              fi
-
-              # Create beta version from stable base (never increment beta from beta)
-              npm version prerelease --preid=beta --no-git-tag-version
-
-              # Get the new beta version
-              NEW_PKG_VERSION=$(node -p "require('./package.json').version")
-              echo "Publishing $package_name@$NEW_PKG_VERSION"
-
-              # Publish the workspace package with beta tag
-              npm publish --tag beta --access public
-
-              cd - > /dev/null
-            fi
-          done
-
-          echo "✅ Published main package $NEW_VERSION to npm with beta tag"
-          echo "✅ Published all workspace packages with independent beta versions"
+          echo "✅ Published all packages with beta versions using Changesets"

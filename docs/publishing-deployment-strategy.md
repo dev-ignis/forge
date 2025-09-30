@@ -129,15 +129,48 @@ Following semantic versioning with conventional commits:
 - **Manual Mode**: Beta publishing with workspace package coordination
 - Fast feedback optimized for development
 
-**Beta Publishing Process:**
-1. Smoke test validation
-2. Version increment (0.7.1 → 0.7.2-beta.0)
-3. Update all 6 workspace package versions
-4. Fresh dependency install (`npm ci --legacy-peer-deps`)
-5. Rebuild with correct version relationships
-6. Publish main package + all workspace packages to npm
+**Beta Publishing Process (Changesets-based):**
+1. **Smoke test validation** - Quick build + AI validation
+2. **Changesets pre-release mode** - Enter beta mode if not already active
+3. **Automatic versioning** - Changesets handles all version bumping based on changeset files:
+   - Analyzes changeset files to determine version increments
+   - Updates all workspace packages with coordinated beta versions
+   - Automatically updates peer dependencies between packages
+   - Maintains proper semantic versioning relationships
+4. **Fresh dependency install** - Remove lockfile and reinstall with updated versions
+5. **Rebuild** - Build all packages with correct version relationships
+6. **Coordinated publish** - Changesets publishes all packages to npm with `beta` tag in dependency order
 
-**Current Status**: 🚧 Beta publishing workflow under active development
+**Current Status**: ✅ **Fully implemented and tested** (September 2024)
+
+### Manual Beta Publishing
+
+**Trigger Command:**
+```bash
+gh workflow run develop.yml --ref develop -f publish=true
+```
+
+**What happens (Changesets workflow):**
+- Smoke test validates build integrity (≈20s)
+- Changesets analyzes existing changeset files to determine version bumps
+- Automatically enters beta pre-release mode if needed
+- Versions all workspace packages with coordinated beta releases
+- Updates peer dependencies and rebuilds packages
+- Publishes all packages to npm with `beta` tag in dependency order
+- Total time: ~45-60s for complete workflow (faster due to automation)
+
+**Version Strategy (Changesets-based):**
+- **Automatic version detection**: Changesets analyzes changeset files to determine version bumps
+- **Patch-level beta versioning**: Framework packages use `patch` changes to avoid premature major version bumps
+  - `@nexcraft/forge-react: 0.1.0` → `0.1.1-beta.0` (not 1.0.0-beta.0)
+  - `@nexcraft/forge-vue: 0.1.0` → `0.1.1-beta.0`
+  - `@nexcraft/forge-angular: 0.1.0` → `0.1.1-beta.0`
+- **Core package minor versioning**: Main package follows standard semantic versioning
+  - `@nexcraft/forge: 0.7.1` → `0.8.0-beta.0`
+- **Coordinated releases**: All packages maintain proper dependency relationships
+- **Beta prerelease format**: All packages get `-beta.X` suffix with appropriate version increments
+
+**Note:** Each beta publishing run will increment versions automatically. No version conflicts occur as each run creates new versions (e.g., 0.7.2-beta.0, 0.7.2-beta.1, etc.)
 
 ### 3. Release Automation (`release.yml`)
 
