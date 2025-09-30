@@ -191,15 +191,14 @@ jobs:
           echo "Publishing main package @nexcraft/forge@$NEW_VERSION"
           npm publish --tag beta --access public
 
-          # Only publish workspace packages that have changes with their own beta versions
+          # Publish workspace packages with independent beta versioning
           for package_dir in packages/*/; do
             # Remove trailing slash for clean path
             package_dir=${package_dir%/}
             if [ -d "$package_dir" ] && [ -f "$package_dir/package.json" ]; then
-              # Use absolute path to avoid module resolution issues
+              # Use absolute path to get package name
               package_json_path="$(pwd)/$package_dir/package.json"
               package_name=$(node -p "require('$package_json_path').name")
-              package_version=$(node -p "require('$package_json_path').version")
 
               # Skip if package is private
               if [ "$(node -p "require('$package_json_path').private || false")" = "true" ]; then
@@ -207,11 +206,42 @@ jobs:
                 continue
               fi
 
-              # For now, skip publishing workspace packages in beta to avoid version conflicts
-              # TODO: Implement proper change detection and beta versioning for workspace packages
-              echo "Skipping workspace package $package_name (version $package_version) for beta release"
+              # Get the latest published version from npm (source of truth)
+              LATEST_PKG_VERSION=$(npm view $package_name versions --json | jq -r '.[-1]' 2>/dev/null)
+              if [ "$LATEST_PKG_VERSION" = "null" ] || [ -z "$LATEST_PKG_VERSION" ]; then
+                echo "Package $package_name not found on npm, skipping"
+                continue
+              fi
+
+              echo "Processing workspace package $package_name (latest published: $LATEST_PKG_VERSION)"
+
+              # Set package to latest published version (only if different)
+              cd "$package_dir"
+              CURRENT_LOCAL_VERSION=$(node -p "require('./package.json').version")
+              if [[ "$LATEST_PKG_VERSION" != "$CURRENT_LOCAL_VERSION" ]]; then
+                echo "Updating local version from $CURRENT_LOCAL_VERSION to $LATEST_PKG_VERSION"
+                npm version $LATEST_PKG_VERSION --no-git-tag-version
+              fi
+
+              # Create beta version
+              if [[ $LATEST_PKG_VERSION == *"beta"* ]]; then
+                # Increment existing beta
+                npm version prerelease --preid=beta --no-git-tag-version
+              else
+                # Create new beta prerelease
+                npm version prerelease --preid=beta --no-git-tag-version
+              fi
+
+              # Get the new beta version
+              NEW_PKG_VERSION=$(node -p "require('./package.json').version")
+              echo "Publishing $package_name@$NEW_PKG_VERSION"
+
+              # Publish the workspace package with beta tag
+              npm publish --tag beta --access public
+
+              cd - > /dev/null
             fi
           done
 
           echo "✅ Published main package $NEW_VERSION to npm with beta tag"
-          echo "ℹ️  Workspace packages skipped for beta release to maintain proper versioning"
+          echo "✅ Published all workspace packages with independent beta versions"
