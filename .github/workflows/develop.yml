@@ -46,7 +46,9 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Build workspace packages
-        run: npm run build --workspace=packages/forge-react
+        run: |
+          npm run build:types
+          npm run build --workspace=packages/forge-react
 
       - name: Type check
         run: npm run type-check
