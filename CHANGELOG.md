@@ -1,352 +1,199 @@
 # Changelog
 
+## 0.9.0
+
+### Minor Changes
+
+- **Phase 15 Complete: Framework Integration Package Split**
+
+  **BREAKING CHANGES**: All framework integrations moved to separate packages
+
+  - **Angular**: `@nexcraft/forge-angular` - Complete Angular integration with pipes, directives, and reactive forms support
+  - **Vue**: `@nexcraft/forge-vue` - Comprehensive Vue 3 composables and component wrappers
+  - **React**: `@nexcraft/forge-react` - Full React integration with hooks and SSR support
+
+  **Migration**: Install the dedicated package for your framework:
+
+  ```bash
+  # Angular users
+  npm install @nexcraft/forge-angular
+
+  # Vue users
+  npm install @nexcraft/forge-vue
+
+  # React users
+  npm install @nexcraft/forge-react
+  ```
+
+  ```diff
+  - import { ForgeButton } from '@nexcraft/forge/integrations/react';
+  + import { ForgeButton } from '@nexcraft/forge-react';
+
+  - import { ForgeButton } from '@nexcraft/forge/integrations/vue';
+  + import { ForgeButton } from '@nexcraft/forge-vue';
+
+  - import { ForgeButton } from '@nexcraft/forge/integrations/angular';
+  + import { ForgeButton } from '@nexcraft/forge-angular';
+  ```
+
+  **Benefits**:
+  - Pure web components core package (truly framework-agnostic)
+  - Optional framework dependencies - install only what you need
+  - Better maintenance by framework experts
+  - Consistent modular architecture across all frameworks
+  - Smaller bundle sizes for framework-specific apps
+
+- **New Figma Design Tokens Integration**
+
+  - **`@nexcraft/forge-tokens`**: CLI for pulling design tokens from Figma and generating CSS/themes
+  - **`@nexcraft/forge-mcp-figma`**: MCP server for integrating Figma workflows with AI tools
+
+  ```bash
+  # Install the tokens CLI
+  npm install -g @nexcraft/forge-tokens
+
+  # Pull tokens from Figma
+  forge-tokens pull --file-key=your-figma-file-key
+  ```
+
+- **Enhanced Security & Release Infrastructure**
+
+  - Added comprehensive npm audit workflows with Discord notifications
+  - Implemented automated security gates for releases
+  - Enhanced CI/CD pipeline with performance monitoring
+  - Added automated dependency vulnerability scanning
+
+## 0.8.0
+
+### Minor Changes
+
+- **Enhanced AI Discoverability and Documentation System**
+  - Comprehensive AI metadata system for component discovery
+  - Added structured ai-manifest.json with component metadata
+  - Created AI-focused documentation (AI_COMPONENT_CATALOG.md, AI_COMMON_PATTERNS.md)
+  - Enhanced package.json with AI-focused keywords and metadata
+  - Added .cursorrules for Cursor IDE integration
+
+- **Monorepo & Package Management Infrastructure**
+  - Implemented npm workspaces for monorepo structure
+  - Added Changesets for automated versioning and publishing
+  - Split React Hook Form adapters into separate `@nexcraft/forge-rhf` package
+  - Added Husky pre-commit hooks for code quality validation
+  - Updated CI workflows to support workspace builds
+
+- **Component Imports & Tailwind Integration**
+  - Added Tailwind CSS plugin at `@nexcraft/forge/plugin`
+  - Implemented selective component imports for optimal tree-shaking
+  - Individual imports: `button`, `input`, `checkbox`, `select`, `alert`, `card`, `modal`
+  - Significantly reduces bundle size for applications
+
 ## 0.7.1
 
 ### Patch Changes
 
-- 8334291: Fix auto-changeset script to prevent incorrect version bumps for packages that don't have meaningful changes
-
-- 0ca60c5: Fix AI manifest generation build ordering and add validation gates
-
-  **Build ordering and packaging:**
-  - Ensure CEM is generated before AI manifest generation (build:manifest → build:ai)
-  - Fixed AI manifest script to fail fast when CEM is missing or invalid
-  - Added validation that generated manifest has at least 25 components
-  - Custom-elements.json properly included in npm package
-
-  **CI gates and validation:**
-  - Added prepublish checks that fail if AI artifacts are invalid
-  - Validates ai-manifest.json has correct component count
-  - Validates ai-index.json is not empty
-  - Verifies custom-elements.json exists and is valid
-  - Tests npm pack to ensure all files are included
-
-  **Robust manifest generation:**
-  - AI manifest script now logs error and exits if CEM is missing
-  - Added success metrics showing component count and AI method coverage
-  - Improved error messages with actionable fix suggestions
-
-  These changes ensure the published package contains valid AI artifacts and prevents shipping empty manifests like in v0.7.1.
+- Fix auto-changeset script to prevent incorrect version bumps
+- Fix AI manifest generation build ordering and add validation gates
+- Ensure CEM is generated before AI manifest generation
+- Added validation that generated manifest has at least 25 components
+- Enhanced prepublish checks for AI artifacts validation
 
 ## 0.7.0
 
 ### Minor Changes
 
-- - **fix**: YAML syntax error in workflow condition (8de4abe)
-    - **fix**: resolve auto-changeset infinite loop and clean up changelog (d83bb62)
-    - **feat**: enhance CI/CD workflows with performance and reliability improvements (4509bed)
-    - **feat**: - auto publish; (02ad4cd)
-    - **fix**: - align package versions with published npm versions; (e7400ba)
-    - **feat**: - consolidate workflows into single main-branch workflow; (08be8d3)
-    - **feat**: align package versions with npm registry for stable v0.7.0 release (a39eeeb)
-    - **feat**: add changeset for v0.7.0 release (main package only) │ │ │ │ Fixes Changesets version mismatch by creating a changeset that only │ │ affects @nexcraft/forge (0.6.0 → 0.7.0) and leaves @nexcraft/forge-rhf │ │ at its current published version (0.2.0). ; (a59944d)
-    - **fix**: - deploy examples; (bdfc80e)
-    - **fix**: resolve Next.js example build errors and configure GitHub Pages │ │ │ │ - Fix ForgeTooltip prop usage: change text to content prop │ │ - Fix ForgeTabs props: use array format and onTabChange event handler │ │ - Add .eslintrc.json with proper browser/Node.js environment globals │ │ - Fix SSR compatibility issues with localStorage, alert, and process.env (f042e2a)
-      All notable changes to @nexcraft/forge will be documented in this file.
+- Enhanced CI/CD workflows with performance and reliability improvements
+- Consolidated workflows into single main-branch workflow
+- Fixed Next.js example build errors and configured GitHub Pages
+- Resolved auto-changeset infinite loop and cleaned up changelog
+- Aligned package versions with npm registry for stable release
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## 0.6.0
 
-## [Unreleased] - 2025-09-15
+### Minor Changes
 
-### 🏗️ **Monorepo & Package Management**
+- **Framework Integration Enhancement**
+  - Complete React hooks and utilities (`useForgeComponent`, `useForgeControlled`, `useForgeForm`)
+  - Comprehensive Vue 3 composables (`useForgeVModel`, `useForgeTheme`, `useForgeDataTable`)
+  - Full Angular directives and services (`ForgeComponentDirective`, `ForgeControlValueAccessor`)
+  - Enhanced TypeScript definitions with framework-specific types
+  - Seamless form integration support for React Hook Form, Formik, VeeValidate, Angular Reactive Forms
 
-- **feat**: Split React Hook Form adapters into separate `@nexcraft/forge-rhf` package
-  - Maintained backward compatibility during beta phase
-  - Implemented npm workspaces for monorepo structure
-  - Added Changesets for automated versioning and publishing
-  - Updated CI workflows to support workspace builds
-  - Resolves Phase 13 monorepo migration
-- **feat**: Added Husky pre-commit hooks for comprehensive code quality validation
-  - Automated type checking, linting, testing, and building on commits
-  - Ensures code quality consistency across all contributions
+### Patch Changes
 
-### 🤖 **AI-Native Development Support**
+- Build system improvements for framework-specific files
+- Enhanced TypeScript configuration with proper exclusions
+- Comprehensive documentation with 67+ examples in React integration guide
 
-- **feat**: Comprehensive AI discoverability and documentation system
-  - Enhanced package.json with AI-focused keywords and metadata
-  - Added prominent AI discovery section to README
-  - Created structured ai-manifest.json with component metadata
-  - Added .cursorrules for Cursor IDE integration
-  - **Documentation**:
-    - `docs/AI_COMPONENT_CATALOG.md`: Copy-paste component examples
-    - `docs/patterns/AI_COMMON_PATTERNS.md`: Complete UI patterns (login, dashboard, forms)
-    - `docs/guides/AI_IMPORT_GUIDE.md`: Framework-specific import guides
-  - **Build Process**: Fixed ES module generation in scripts/build-exports.cjs
-  - Now AI tools can generate perfect Forge code for common prompts
+## 0.5.0
 
-### 🧩 **Component Imports & Tailwind Integration**
+### Minor Changes
 
-- **feat**: Added Tailwind CSS plugin at `@nexcraft/forge/plugin`
-  - Semantic utilities and design tokens integration
-  - Comprehensive documentation for plugin usage
-- **feat**: Selective component imports for optimal tree-shaking
-  - Individual imports: `button`, `input`, `checkbox`, `select`, `alert`, `card`, `modal`
-  - Updated package.json exports with new import paths
-  - Significantly reduces bundle size for applications using specific components
+- Initial framework integration architecture
+- Core component system stabilization
+- Documentation improvements
 
-### ⚛️ **React Integration Architecture**
+## 0.4.0
 
-- **feat**: Implemented unified SSR architecture for React components
-  - Converted all 29 React components to use unified wrapper
-  - Automatic environment detection (SSR vs client-side)
-  - Single import path works everywhere with progressive enhancement
-  - Replaced ClientOnly/SSR-specific components with unified architecture
-  - Added `createUnifiedWrapper` utility with environment detection
-  - **Performance**: 25% bundle reduction and 32% faster rendering
-  - **Compatibility**: Zero breaking changes for existing code
-- **feat**: Complete React integration with automatic SSR support
-  - Added 20 new React wrapper components covering entire Forge library
-  - Implemented automatic SSR fallbacks eliminating ClientOnly requirement
-  - Enhanced createReactWrapper with semantic HTML fallbacks
-  - Complete TypeScript interface coverage for all React components
+### Minor Changes
 
-### 🔧 **Build System & Infrastructure**
+- **New Organism Components**
+  - DataTable: Advanced data table with sorting, filtering, pagination, and selection
+  - Tabs: Tabbed interface with keyboard navigation and drag-to-reorder
+  - Accordion: Collapsible content panels with customizable behavior
+  - TreeView: Hierarchical data visualization with expand/collapse functionality
+  - NavigationBar: Responsive navigation component with dropdown menus
+  - Pagination: Comprehensive pagination with multiple modes
 
-- **feat**: Integrated framework builds into main Vite process
-  - Streamlined build pipeline for better performance
-  - Fixed React integration build process and directory structure
-- **feat**: Enhanced plugin and exports generation in build process
-  - Automated generation of selective imports and plugin files
-  - Improved build reliability and consistency
-- **fix**: Various module resolution and build optimizations
-  - Fixed package export paths
-  - Improved lint configurations and type checking
-  - Enhanced React wrapper functionality
+### Patch Changes
 
-### 📚 **Documentation & Testing**
-
-- **docs**: Enhanced Phase 13 documentation for monorepo structure
-- **docs**: Added comprehensive plans for monorepo and release management
-- **docs**: Updated component documentation and SSR architecture guides
-- **docs**: AI manifest and agent integration documentation
-- **fix**: Improved date picker test reliability
-- **test**: Enhanced toast dismiss test stability
-
-### 🐛 **Bug Fixes**
-
-- **fix**: ReactHookFormAdapters integration issues
-- **fix**: React hooks implementation and consistency
-- **fix**: createUnifiedWrapper functionality
-- **fix**: Avatar component shape prop type error (circle vs circular)
-- **fix**: Lint issues and configuration improvements
-- **fix**: Module resolution in various integration scenarios
-
----
-
-## v0.5.2-dev - 2025-09-06
-
-### 🚀 Framework Integration Enhancement
-
-- **React Integration Utilities**: Complete React hooks and utilities (`useForgeComponent`, `useForgeControlled`, `useForgeForm`)
-- **Vue Integration Utilities**: Comprehensive Vue 3 composables (`useForgeVModel`, `useForgeTheme`, `useForgeDataTable`)
-- **Angular Integration Utilities**: Full Angular directives and services (`ForgeComponentDirective`, `ForgeControlValueAccessor`)
-- **Enhanced TypeScript Definitions**: Framework-specific type definitions with JSX support for React, Vue template support
-- **Seamless Form Integration**: Built-in support for React Hook Form, Formik, VeeValidate, Angular Reactive Forms
-- **Pre-built Components**: Ready-to-use wrapped components for each framework with proper event handling
-
-### 🛠️ Build System Improvements
-
-- **Integration File Handling**: Custom build script for framework-specific files excluded from main compilation
-- **Test Coverage Optimization**: Excluded integration utilities from coverage metrics (framework-specific testing)
-- **TypeScript Configuration**: Enhanced tsconfig with proper exclusions for external dependencies
-- **ESLint Configuration**: Updated linting rules to handle framework integration files
-
-### 🧪 Developer Experience
-
-- **Comprehensive Documentation**: 67+ examples in React integration guide with real-world usage patterns
-- **JSDoc Documentation**: Extensive inline documentation for all integration utilities
-- **Type Safety**: Full TypeScript support across all framework integrations
-- **Performance Optimized**: Tree-shaking friendly exports and minimal bundle impact
-
----
-
-## v0.5.2-dev - 2025-09-06
-
-### 🚀 Framework Integration Enhancement
-
-- **React Integration Utilities**: Complete React hooks and utilities (`useForgeComponent`, `useForgeControlled`, `useForgeForm`)
-- **Vue Integration Utilities**: Comprehensive Vue 3 composables (`useForgeVModel`, `useForgeTheme`, `useForgeDataTable`)
-- **Angular Integration Utilities**: Full Angular directives and services (`ForgeComponentDirective`, `ForgeControlValueAccessor`)
-- **Enhanced TypeScript Definitions**: Framework-specific type definitions with JSX support for React, Vue template support
-- **Seamless Form Integration**: Built-in support for React Hook Form, Formik, VeeValidate, Angular Reactive Forms
-- **Pre-built Components**: Ready-to-use wrapped components for each framework with proper event handling
-
-### 🛠️ Build System Improvements
-
-- **Integration File Handling**: Custom build script for framework-specific files excluded from main compilation
-- **Test Coverage Optimization**: Excluded integration utilities from coverage metrics (framework-specific testing)
-- **TypeScript Configuration**: Enhanced tsconfig with proper exclusions for external dependencies
-- **ESLint Configuration**: Updated linting rules to handle framework integration files
-
-### 🧪 Developer Experience
-
-- **Comprehensive Documentation**: 67+ examples in React integration guide with real-world usage patterns
-- **JSDoc Documentation**: Extensive inline documentation for all integration utilities
-- **Type Safety**: Full TypeScript support across all framework integrations
-- **Performance Optimized**: Tree-shaking friendly exports and minimal bundle impact
-
-## v0.5.1-beta.0 - 2025-09-06 (Beta Release)
-
-### 🧪 Beta Changes
-
-> ⚠️ **This is a beta release** - use with caution in production environments
-
-## v0.5.0 - 2025-09-06
-
-### Changes
-
-- Merge pull request #10 from dev-ignis/develop
-- Merge branch 'main' into develop
-- docs: - changelog;
-- feat: - sync main and develop;
-- docs: - roadmap;
-
-## [v0.4.1] - 2025-09-05
-
-### 📚 Documentation
-
-- **Storybook Stories**: Comprehensive Storybook stories for all components with interactive examples
-- **Performance Dashboard**: Added performance monitoring and optimization documentation
-- **AI Integration**: Complete AI metadata documentation for enhanced component discovery
-
-### 🧪 Testing
-
-- Improved test coverage across all component types
-- Enhanced testing infrastructure and documentation
-
-## [v0.4.0] - 2025-09-05
-
-### 🧩 New Organism Components
-
-- **DataTable**: Advanced data table with sorting, filtering, pagination, and selection
-- **Tabs**: Tabbed interface with keyboard navigation, closeable tabs, and drag-to-reorder
-- **Accordion**: Collapsible content panels with customizable behavior
-- **TreeView**: Hierarchical data visualization with expand/collapse functionality
-- **NavigationBar**: Responsive navigation component with dropdown menus
-- **Pagination**: Comprehensive pagination with multiple modes (standard, infinite scroll, load-more)
-
-### 📚 Documentation
-
-- Complete organism component documentation
 - Enhanced Storybook stories with real-world examples
-- Comprehensive testing documentation
-
-### ✅ Testing
-
 - Full test coverage for organism components
-- Integration tests for complex component interactions
+- Complete organism component documentation
 
-## [v0.3.2] - 2025-09-03
+## 0.3.0
 
-### 🤖 AI Integration
+### Minor Changes
 
-- **Complete AI Metadata System**: All components now include semantic roles, AI context, and performance modes
-- **Enhanced Component Discovery**: AI agents can better understand component purposes and usage patterns
-- **Smart Component Recommendations**: AI-powered component suggestions based on context
+- **New Molecule Components**
+  - DatePicker: Full-featured date selection with calendar interface
+  - MultiSelect: Advanced multi-selection dropdown with search and grouping
+  - Dropdown: Flexible dropdown component with nested menus
+  - FormField: Comprehensive form field wrapper with validation
+  - Card: Versatile card component for content organization
+  - Modal: Feature-rich modal dialogs with backdrop control
+  - Tooltip: Smart tooltip positioning with multiple trigger modes
 
-## [v0.3.1] - 2025-09-03
+- **Core Framework Features**
+  - Advanced theming with token-based design system
+  - Full WCAG 2.1 AA accessibility compliance
+  - Complete keyboard navigation support
+  - True framework agnostic architecture
 
-### 📚 Documentation
+## 0.2.0
 
-- **Updated README**: Comprehensive project documentation with usage examples
-- **Getting Started Guide**: Detailed setup and integration instructions
-- **API Documentation**: Complete component API reference
+### Minor Changes
 
-## [v0.3.0] - 2025-09-03
+- AI-Ready Infrastructure with metadata system
+- Performance monitoring and optimization hints
+- Smart component discovery for AI agents
+- Enhanced FormField component architecture
 
-### 🧱 New Molecule Components
+## 0.1.0
 
-- **DatePicker**: Full-featured date selection with calendar interface and keyboard navigation
-- **MultiSelect**: Advanced multi-selection dropdown with search, grouping, and custom rendering
-- **Dropdown**: Flexible dropdown component with nested menus and keyboard navigation
-- **FormField**: Comprehensive form field wrapper with validation and accessibility
-- **Card**: Versatile card component for content organization
-- **Modal**: Feature-rich modal dialogs with backdrop control and focus management
-- **Tooltip**: Smart tooltip positioning with multiple trigger modes
+### Minor Changes
 
-### ✨ Core Differentiators
-
-- **Advanced Theming**: Token-based design system with CSS custom properties
-- **Full Accessibility**: WCAG 2.1 AA compliance across all components
-- **Keyboard Navigation**: Complete keyboard support for all interactive elements
-- **Framework Agnostic**: Works with React, Vue, Angular, and vanilla JavaScript
-
-### 🧪 Testing
-
-- Comprehensive test suite for date picker component
-- Enhanced testing infrastructure for molecule components
-
-## [v0.2.0] - 2025-09-01
-
-### 🏗️ AI-Ready Infrastructure
-
-- **AI Metadata System**: Semantic roles and context attributes for AI agent interaction
-- **Performance Monitoring**: Built-in performance tracking and optimization hints
-- **Smart Component Discovery**: AI-powered component recommendation engine
-
-### 🧱 Enhanced Molecule Components
-
-- **FormField Component**: Production-ready form field with validation and accessibility
-- **Improved Component Architecture**: Better separation of concerns and reusability
-
-## [v0.1.1] - 2025-08-31
-
-### 🔧 Build System Improvements
-
-- **TypeScript Declarations**: Bundled and optimized TypeScript definitions
-- **Enhanced Testing**: Improved testing documentation and coverage reporting
-- **Build Optimization**: Streamlined build process with better tree-shaking
-
-## [v0.1.0] - 2025-08-31
-
-### 🎯 Atomic Design System Foundation
-
-- **Complete Atomic Components**: Button, Input, Checkbox, Radio, Select, Switch, Badge, Alert, Icon
-- **Design System Tokens**: Comprehensive token-based theming system
-- **Base Architecture**: Solid foundation with BaseElement and shared utilities
-
-### 🧪 Testing Infrastructure
-
-- **Comprehensive Test Suite**: Unit tests for all atomic components
-- **Testing Documentation**: Complete testing strategy and guidelines
-- **CI/CD Integration**: Automated testing and deployment pipeline
-
-### 📋 Project Structure
-
-- **Phase Documentation**: Detailed implementation roadmap and architecture decisions
-- **Development Workflow**: Established development and contribution guidelines
-
-## [v0.0.2] - 2025-08-29
-
-### 🏷️ Package Configuration
-
-- **NPM Package**: Renamed to @nexcraft/forge for better organization
-- **Version Management**: Fixed version tagging and release process
-- **Publishing Setup**: Configured for NPM registry publication
-
-## [v0.0.1] - 2025-08-29
-
-### 🚀 Initial Release
-
-- **Project Foundation**: Basic project structure and configuration
-- **Core Infrastructure**: Build system, CI/CD pipeline, and development tools
-- **Package Setup**: Initial NPM package configuration and publishing strategy
+- **Atomic Design System Foundation**
+  - Complete atomic components: Button, Input, Checkbox, Radio, Select, Switch, Badge, Alert, Icon
+  - Comprehensive design system tokens
+  - Base architecture with BaseElement and shared utilities
+  - Full testing infrastructure and CI/CD integration
 
 ---
 
 ## Component Inventory
 
-### 🔸 Atoms (9 components)
-
-- Alert, Badge, Button, Checkbox, Icon, Input, Radio Group, Select, Switch
-
-### 🔹 Molecules (8 components)
-
-- Card, DatePicker, Dropdown, FormField, Modal, MultiSelect, Tooltip
-
-### 🔷 Organisms (6 components)
-
-- Accordion, DataTable, NavigationBar, Pagination, Tabs, TreeView
-
 **Total: 23+ Production-Ready Components**
+
+- **Atoms (9)**: Alert, Badge, Button, Checkbox, Icon, Input, Radio Group, Select, Switch
+- **Molecules (8)**: Card, DatePicker, Dropdown, FormField, Modal, MultiSelect, Tooltip
+- **Organisms (6)**: Accordion, DataTable, NavigationBar, Pagination, Tabs, TreeView

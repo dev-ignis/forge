@@ -35,18 +35,6 @@
       "import": "./dist/*",
       "require": "./dist/*"
     },
-    "./integrations/react": {
-      "types": "./dist/integrations/react/index.d.ts",
-      "import": "./dist/integrations/react/index.js"
-    },
-    "./integrations/vue": {
-      "types": "./dist/integrations/vue.d.ts",
-      "import": "./dist/integrations/vue.js"
-    },
-    "./integrations/angular": {
-      "types": "./dist/integrations/angular.d.ts",
-      "import": "./dist/integrations/angular.js"
-    },
     "./plugin": {
       "types": "./dist/plugin/index.d.ts",
       "import": "./dist/plugin/index.js"
@@ -105,15 +93,15 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:local && npm run build --workspace=packages/forge-rhf",
+    "build": "npm run build:local",
     "test": "npm run test:local",
     "type-check": "npm run type-check:local && npm run type-check --workspace=packages/forge-rhf",
     "lint": "npm run lint:local && npm run lint --workspace=packages/forge-rhf",
-    "clean": "rm -rf dist && npm run clean --workspace=packages/forge-rhf",
+    "clean": "rm -rf dist && npm run clean --workspace=packages/forge-rhf && npm run clean --workspace=packages/forge-angular",
     "release": "npx changeset",
     "auto-changeset": "node scripts/auto-changeset.js",
     "version-packages": "npx changeset version",
-    "publish-packages": "npm publish --access public && npm publish --workspace=packages/forge-rhf --access public",
+    "publish-packages": "npm publish --access public && npm publish --workspace=packages/forge-rhf --access public && npm publish --workspace=packages/forge-tokens --access public && npm publish --workspace=packages/forge-mcp-figma --access public",
     "prepare": "husky",
     "build:core": "vite build && npm run build:types && npm run bundle:types && npm run cleanup:types && npm run build:exports",
     "build:local": "npm run build:core && (npm run build:manifest || echo '⚠️ CEM generation failed, using existing custom-elements.json') && npm run build:ai && npm run validate:ai",
@@ -222,6 +210,7 @@
     ]
   },
   "devDependencies": {
+    "@nexcraft/forge-react": "workspace:*",
     "@changesets/cli": "^2.29.7",
     "@changesets/get-github-info": "^0.6.0",
     "@chromatic-com/storybook": "^4.1.1",

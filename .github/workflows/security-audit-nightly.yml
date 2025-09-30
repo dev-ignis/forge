@@ -1,0 +1,36 @@
+name: Security Audit (Nightly)
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # 02:00 UTC daily
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  nightly-audit:
+    name: npm audit (Nightly report)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run audit and notify (no-fail)
+        run: node scripts/security/audit-and-notify.mjs --scope=all --ci-mode=nightly --no-fail
+        env:
+          # Nightly can still respect repo-level knobs
+          SECURITY_ALERT_LEVEL: ${{ vars.SECURITY_ALERT_LEVEL || 'critical' }}
+          SECURITY_AUDIT_VERBOSE: ${{ vars.SECURITY_AUDIT_VERBOSE || 'false' }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_CRITICAL: ${{ secrets.DISCORD_WEBHOOK_CRITICAL }}
+          DISCORD_WEBHOOK_OPS: ${{ secrets.DISCORD_WEBHOOK_OPS }}

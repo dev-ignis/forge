@@ -1,0 +1,46 @@
+name: Security Audit (PR)
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '**/package.json'
+      - '**/package-lock.json'
+      - 'src/**'
+      - '.github/workflows/security-audit-pr.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    name: npm audit (Critical gate)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run audit and notify
+        run: node scripts/security/audit-and-notify.mjs --scope=prod --ci-mode=pr
+        env:
+          # Knobs (can be overridden via repository variables)
+          SECURITY_ALERT_LEVEL: ${{ vars.SECURITY_ALERT_LEVEL || 'critical' }}
+          SECURITY_AUDIT_VERBOSE: ${{ vars.SECURITY_AUDIT_VERBOSE || 'false' }}
+          # Webhooks routing
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_CRITICAL: ${{ secrets.DISCORD_WEBHOOK_CRITICAL }}
+          DISCORD_WEBHOOK_OPS: ${{ secrets.DISCORD_WEBHOOK_OPS }}

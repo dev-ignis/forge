@@ -28,6 +28,10 @@ Poor versioning practices lead to:
 ## Decision
 We will follow **Semantic Versioning 2.0.0** strictly, with automated release processes and clear communication channels.
 
+### Monorepo Considerations (Update)
+
+For multi-package publishing (e.g., `@nexcraft/forge`, `@nexcraft/forge-rhf`, `@nexcraft/forge-angular`), we use npm workspaces and Changesets. Packages may be versioned independently, with publish order enforced by CI to satisfy peer dependencies. Where appropriate, related packages may be linked or follow a version policy to reduce confusion.
+
 ### Versioning Strategy:
 1. **Semantic Versioning**: MAJOR.MINOR.PATCH format
 2. **Automated Releases**: Conventional commits trigger releases

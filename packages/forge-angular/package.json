@@ -1,0 +1,54 @@
+{
+  "name": "@nexcraft/forge-angular",
+  "version": "0.1.0",
+  "description": "Angular integration for Nexcraft Forge web components",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./forms": {
+      "types": "./dist/forms/index.d.ts",
+      "import": "./dist/forms/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "@nexcraft/forge": ">=0.7.1",
+    "@angular/core": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "@angular/forms": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "angular",
+    "web-components",
+    "forge",
+    "ui-components",
+    "custom-elements"
+  ],
+  "author": "Nexcraft",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dev-ignis/forge.git",
+    "directory": "packages/forge-angular"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

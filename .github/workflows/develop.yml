@@ -3,8 +3,10 @@ name: Develop CI
 on:
   push:
     branches: [develop]
+    paths-ignore: ['docs/**', 'plans/**', '*.md', '.github/workflows/deploy.yml']
   pull_request:
     branches: [develop]
+    paths-ignore: ['docs/**', 'plans/**', '*.md', '.github/workflows/deploy.yml']
   workflow_dispatch:
     inputs:
       publish:
@@ -21,14 +23,15 @@ permissions:
   contents: read
 
 jobs:
-  # Fast feedback jobs (run in parallel)
+  # Comprehensive validation for PRs
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Setup Node & Install
         uses: ./.github/actions/setup-node
 
@@ -38,12 +41,18 @@ jobs:
   typecheck:
     name: Type Check
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Setup Node & Install
         uses: ./.github/actions/setup-node
+
+      - name: Build workspace packages
+        run: |
+          npm run build:types
+          npm run build --workspace=packages/forge-react
 
       - name: Type check
         run: npm run type-check
@@ -51,10 +60,11 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Setup Node & Install
         uses: ./.github/actions/setup-node
 
@@ -68,15 +78,34 @@ jobs:
           path: coverage/
           retention-days: 3
 
-  # Build job (runs after lint/typecheck/test pass)
+  # Lightweight smoke test for pushes to develop
+  smoke-test:
+    name: Smoke Test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node & Install
+        uses: ./.github/actions/setup-node
+
+      - name: Quick build validation
+        run: npm run build
+
+      - name: Basic AI validation
+        run: npm run validate:ai
+
+  # Build job (runs after quality gates pass for PRs)
   build:
     name: Build & Validate
     runs-on: ubuntu-latest
     needs: [lint, typecheck, test]
+    if: github.event_name == 'pull_request'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Setup Node & Install
         uses: ./.github/actions/setup-node
 
@@ -90,7 +119,7 @@ jobs:
   publish:
     name: Publish Beta
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [smoke-test]
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == true }}
     environment: npm-publish
     steps:
