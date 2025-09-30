@@ -196,11 +196,13 @@ jobs:
             # Remove trailing slash for clean path
             package_dir=${package_dir%/}
             if [ -d "$package_dir" ] && [ -f "$package_dir/package.json" ]; then
-              package_name=$(node -p "require('$package_dir/package.json').name")
-              package_version=$(node -p "require('$package_dir/package.json').version")
+              # Use absolute path to avoid module resolution issues
+              package_json_path="$(pwd)/$package_dir/package.json"
+              package_name=$(node -p "require('$package_json_path').name")
+              package_version=$(node -p "require('$package_json_path').version")
 
               # Skip if package is private
-              if [ "$(node -p "require('$package_dir/package.json').private || false")" = "true" ]; then
+              if [ "$(node -p "require('$package_json_path').private || false")" = "true" ]; then
                 echo "Skipping private package $package_name"
                 continue
               fi
