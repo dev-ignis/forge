@@ -160,16 +160,22 @@ export default function Home() {
   return (
     <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50'}`}>
       {/* Navigation */}
-      <ForgeNavigationBar
-        title="Forge Showcase"
+      <ForgeNavigationBar 
+        brand="Forge Showcase"
         items={[
           { id: 'home', label: 'Home', href: '/' },
           { id: 'components', label: 'Components', href: '/components' },
           { id: 'forms', label: 'Forms', href: '/forms-demo' },
           { id: 'performance', label: 'Performance', href: '/performance' }
         ]}
-        showThemeToggle={true}
-        onThemeChange={() => setIsDarkMode(!isDarkMode)}
+        actions={[
+          <ForgeSwitch 
+            key="theme"
+            checked={isDarkMode}
+            onCheckedChange={setIsDarkMode}
+            label="Dark Mode"
+          />
+        ]}
       />
 
       <main className="container mx-auto px-4 py-8">
