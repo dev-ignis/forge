@@ -160,7 +160,7 @@ export default function Home() {
   return (
     <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50'}`}>
       {/* Navigation */}
-      <ForgeNavigationBar 
+      <ForgeNavigationBar
         brand="Forge Showcase"
         items={[
           { id: 'home', label: 'Home', href: '/' },
@@ -168,15 +168,16 @@ export default function Home() {
           { id: 'forms', label: 'Forms', href: '/forms-demo' },
           { id: 'performance', label: 'Performance', href: '/performance' }
         ]}
-        actions={[
-          <ForgeSwitch 
-            key="theme"
-            checked={isDarkMode}
-            onCheckedChange={setIsDarkMode}
-            label="Dark Mode"
-          />
-        ]}
       />
+
+      {/* Theme toggle - standalone since ForgeNavigationBar doesn't support custom actions */}
+      <div style={{ position: 'fixed', top: '16px', right: '16px', zIndex: 1000 }}>
+        <ForgeSwitch
+          checked={isDarkMode}
+          onCheckedChange={setIsDarkMode}
+          label="Dark Mode"
+        />
+      </div>
 
       <main className="container mx-auto px-4 py-8">
         {/* Hero Section */}
