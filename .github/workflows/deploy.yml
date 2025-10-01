@@ -38,10 +38,10 @@ jobs:
     
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20'
           cache: 'npm'
@@ -52,7 +52,7 @@ jobs:
       - name: Try to download cached build artifacts
         id: download-build
         continue-on-error: true
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build-${{ github.sha }}-20.x
           path: .
@@ -64,7 +64,7 @@ jobs:
       - name: Try to download cached Storybook artifacts
         id: download-storybook
         continue-on-error: true
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: storybook-${{ github.sha }}
           path: storybook-static/
@@ -74,7 +74,7 @@ jobs:
         run: npm run build-storybook
 
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
 
       - name: Create docs site structure
         run: |
@@ -203,7 +203,7 @@ jobs:
           EOF
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./_site
 
