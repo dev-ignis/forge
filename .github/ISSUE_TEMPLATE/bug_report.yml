@@ -1,0 +1,144 @@
+name: Bug Report
+description: Report a bug or unexpected behavior in Forge
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the information below to help us resolve the issue.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of what the bug is.
+      placeholder: What happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Import component '...'
+        2. Set property '...'
+        3. Observe behavior '...'
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: What actually happened?
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Forge Version
+      description: Which version of @nexcraft/forge are you using?
+      placeholder: e.g., 0.7.1
+    validations:
+      required: true
+
+  - type: dropdown
+    id: framework
+    attributes:
+      label: Framework
+      description: Which framework are you using?
+      options:
+        - Vanilla JavaScript
+        - React
+        - Vue
+        - Angular
+        - Svelte
+        - Solid
+        - Next.js
+        - Nuxt
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: framework-version
+    attributes:
+      label: Framework Version
+      description: What version of the framework are you using?
+      placeholder: e.g., React 18.2.0
+
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: Browser
+      description: Which browser(s) are affected?
+      multiple: true
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Opera
+        - Other
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Additional environment details
+      placeholder: |
+        - OS: [e.g., macOS 14.0, Windows 11]
+        - Node version: [e.g., 20.10.0]
+        - Package manager: [e.g., npm 10.2.0]
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Console Errors / Logs
+      description: Please copy and paste any relevant console errors or logs
+      render: shell
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Code Example
+      description: Minimal code example that reproduces the issue
+      render: typescript
+      placeholder: |
+        import { ForgeButton } from '@nexcraft/forge';
+
+        // Your code here
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context, screenshots, or information about the problem
+      placeholder: Add any other context or screenshots
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched for existing issues that describe this bug
+          required: true
+        - label: I have tested this with the latest version of Forge
+          required: true
+        - label: I have provided a minimal reproduction example
+          required: false
