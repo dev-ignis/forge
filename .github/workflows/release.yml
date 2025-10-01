@@ -63,10 +63,13 @@ jobs:
         run: npm ci
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v5
+        uses: dawidd6/action-download-artifact@v6
         with:
+          workflow: ci.yml
+          workflow_conclusion: success
           name: build-${{ github.event.workflow_run.head_sha }}-20.x
           path: .
+          github_token: ${{ github.token }}
 
       - name: Auto-generate Changesets from Commits
         if: "!contains(github.event.workflow_run.head_commit.message, 'chore: release')"
