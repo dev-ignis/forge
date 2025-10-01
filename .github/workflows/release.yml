@@ -17,10 +17,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
+<<<<<<< HEAD
         uses: actions/checkout@v5
 
       - name: Setup Node.js
         uses: actions/setup-node@v5
+=======
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+>>>>>>> origin/main
         with:
           node-version: '22.x'
           cache: 'npm'

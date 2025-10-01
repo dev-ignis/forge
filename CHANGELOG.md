@@ -63,6 +63,12 @@
   - Enhanced CI/CD pipeline with performance monitoring
   - Added automated dependency vulnerability scanning
 
+- **Beta Publishing Infrastructure (develop branch)**
+  - Implemented independent beta versioning for workspace packages
+  - Added Changesets-based beta publishing workflow
+  - Framework packages use coordinated beta releases
+  - Automated version bumping based on changeset files
+
 ## 0.8.0
 
 ### Minor Changes

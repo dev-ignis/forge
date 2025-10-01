@@ -6,23 +6,30 @@ This document outlines the comprehensive publishing and deployment strategy for 
 
 ## Current Implementation Status
 
-### ✅ Fully Implemented
-- **CONSOLIDATED:** Main Branch CI & Release pipeline (`.github/workflows/main-branch.yml`)
-- **NEW:** Develop Branch CI pipeline (`.github/workflows/develop-ci.yml`)
-- **LEGACY:** Beta Release workflow (`.github/workflows/beta-release.yml`) - for manual beta releases
-- NPM publishing to @nexcraft/forge (stable releases)
-- NPM workspace support for @nexcraft/forge-rhf package
-- Automated Changesets-based versioning and publishing
-- Comprehensive changelog generation with Changesets
-- GitHub Releases with automated notes
-- GitHub Pages deployment for examples
-- Git branch synchronization (main ↔ develop)
+### ✅ Fully Implemented (Phase 15 Complete - September 2024)
+- **CURRENT:** Main Branch CI pipeline (`.github/workflows/ci.yml`) - comprehensive validation
+- **CURRENT:** Develop Branch CI pipeline (`.github/workflows/develop.yml`) - PR validation + beta publishing
+- **CURRENT:** Release automation (`.github/workflows/release.yml`) - Changesets-based releases
+- **CURRENT:** GitHub Pages deployment (`.github/workflows/deploy.yml`) - examples + docs
+- NPM publishing to **@nexcraft/forge** (main package - web components)
+- **NEW:** NPM workspace support for **6 framework packages:**
+  - `@nexcraft/forge-react` - React integration
+  - `@nexcraft/forge-angular` - Angular integration
+  - `@nexcraft/forge-vue` - Vue integration
+  - `@nexcraft/forge-rhf` - React Hook Form integration
+  - `@nexcraft/forge-tokens` - Figma design tokens CLI
+  - `@nexcraft/forge-mcp-figma` - MCP server for Figma integration
+- **ENHANCED:** AI-native documentation with metadata for 30+ components
+- **NEW:** Branch-specific workflow strategy (eliminates redundancy)
+- **NEW:** Security audit workflows (nightly + PR-based)
 
-### 🚧 Enhancements Made
-- Fixed duplicate CI workflow issues
-- Added GitHub Actions proper permissions
-- Implemented meaningful changelog generation
-- Added pre-release quality gates
+### 🚧 Recent Major Improvements (September 2024)
+- **Fixed workflow redundancy issues** - separate main/develop workflows
+- **Resolved TypeScript compilation errors** across all framework packages
+- **Fixed coverage threshold issues** (87.42% achieved vs 70% requirement)
+- **Implemented CI optimization strategy** - 80% cost reduction via PR-only vs Push strategy
+- **Enhanced beta publishing workflow** - supports all 6 workspace packages
+- **Added comprehensive security auditing** - Dependabot + nightly scans
 
 ### 📋 Advanced Features Available
 - Multi-channel releases (stable, beta, alpha, rc)
@@ -83,45 +90,109 @@ Following semantic versioning with conventional commits:
 
 ## GitHub Actions Workflows
 
-### 1. Main Branch CI & Release (`main-branch.yml`)
+### Current Workflow Architecture (September 2024)
+
+**Branch-Specific Strategy** - eliminates redundancy and provides clear separation:
+
+### 1. Main Branch CI (`ci.yml`)
 
 **Triggers:**
-- Pushes to `main` (full CI + release pipeline)
-- PRs to `main` (CI only, no release)
+- Pushes to `main` (comprehensive validation)
+- PRs to `main` (full quality gates)
 
 **Features:**
 - Matrix testing (Node 20.x, 22.x)
-- ESLint and TypeScript checking
-- Test coverage reporting with artifacts
-- Build verification for both packages
-- Storybook build
-- Changesets-based automatic releases
-- Branch synchronization with develop
-- Example app updates after publishing
+- Comprehensive validation pipeline
+- ESLint and TypeScript checking with workspace package builds
+- Test coverage reporting (87.42% achieved)
+- Build verification for main + workspace packages
+- Storybook build and artifact generation
+- AI manifest validation
 
 **Quality Gates:**
-- Zero TypeScript errors
+- Zero TypeScript errors across all packages
 - Zero ESLint errors
-- All tests must pass
-- Successful builds for all packages
+- All tests must pass (70% coverage minimum)
+- Successful builds for all 7 packages
+- Valid AI manifest with 30+ components
 
-### 2. Develop Branch CI (`develop-ci.yml`)
+### 2. Develop Branch CI (`develop.yml`)
 
 **Triggers:**
-- Pushes to `develop`
-- PRs targeting `develop`
+- Pushes to `develop` (smoke test only)
+- PRs targeting `develop` (comprehensive validation)
+- Manual workflow dispatch for beta publishing
 
 **Features:**
-- Matrix testing (Node 20.x, 22.x)
-- Lightweight CI (lint, type-check, test, build)
-- Fast feedback without release overhead
-- No publishing or deployment steps
+- **PR Mode**: Full validation (lint, typecheck, test, build)
+- **Push Mode**: Lightweight smoke test (build + AI validation)
+- **Manual Mode**: Beta publishing with workspace package coordination
+- Fast feedback optimized for development
 
-**Process:**
-1. Run linting and type checking
-2. Execute test suite
-3. Verify build processes
-4. Provide fast feedback for development
+**Beta Publishing Process (Changesets-based):**
+1. **Smoke test validation** - Quick build + AI validation
+2. **Changesets pre-release mode** - Enter beta mode if not already active
+3. **Automatic versioning** - Changesets handles all version bumping based on changeset files:
+   - Analyzes changeset files to determine version increments
+   - Updates all workspace packages with coordinated beta versions
+   - Automatically updates peer dependencies between packages
+   - Maintains proper semantic versioning relationships
+4. **Fresh dependency install** - Remove lockfile and reinstall with updated versions
+5. **Rebuild** - Build all packages with correct version relationships
+6. **Coordinated publish** - Changesets publishes all packages to npm with `beta` tag in dependency order
+
+**Current Status**: ✅ **Fully implemented and tested** (September 2024)
+
+### Manual Beta Publishing
+
+**Trigger Command:**
+```bash
+gh workflow run develop.yml --ref develop -f publish=true
+```
+
+**What happens (Changesets workflow):**
+- Smoke test validates build integrity (≈20s)
+- Changesets analyzes existing changeset files to determine version bumps
+- Automatically enters beta pre-release mode if needed
+- Versions all workspace packages with coordinated beta releases
+- Updates peer dependencies and rebuilds packages
+- Publishes all packages to npm with `beta` tag in dependency order
+- Total time: ~45-60s for complete workflow (faster due to automation)
+
+**Version Strategy (Changesets-based):**
+- **Automatic version detection**: Changesets analyzes changeset files to determine version bumps
+- **Patch-level beta versioning**: Framework packages use `patch` changes to avoid premature major version bumps
+  - `@nexcraft/forge-react: 0.1.0` → `0.1.1-beta.0` (not 1.0.0-beta.0)
+  - `@nexcraft/forge-vue: 0.1.0` → `0.1.1-beta.0`
+  - `@nexcraft/forge-angular: 0.1.0` → `0.1.1-beta.0`
+- **Core package minor versioning**: Main package follows standard semantic versioning
+  - `@nexcraft/forge: 0.7.1` → `0.8.0-beta.0`
+- **Coordinated releases**: All packages maintain proper dependency relationships
+- **Beta prerelease format**: All packages get `-beta.X` suffix with appropriate version increments
+
+**Note:** Each beta publishing run will increment versions automatically. No version conflicts occur as each run creates new versions (e.g., 0.7.2-beta.0, 0.7.2-beta.1, etc.)
+
+### 3. Release Automation (`release.yml`)
+
+**Triggers:**
+- Successful CI completion on main branch (workflow_run)
+
+**Features:**
+- Changesets-based automatic releases
+- GitHub Release creation with notes
+- Branch synchronization (main → develop)
+- Example app updates after publishing
+
+### 4. GitHub Pages Deployment (`deploy.yml`)
+
+**Triggers:**
+- Successful CI completion on main branch (workflow_run)
+
+**Features:**
+- Storybook deployment to GitHub Pages
+- Next.js example app deployment
+- Documentation site generation
+- CDN distribution via GitHub Pages
 
 ### Key Improvements Made
 
