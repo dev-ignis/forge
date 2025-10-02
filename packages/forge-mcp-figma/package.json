@@ -1,6 +1,6 @@
 {
   "name": "@nexcraft/forge-mcp-figma",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "private": false,
   "description": "MCP server exposing Figma pull/apply tools for Forge tokens.",
@@ -18,6 +18,6 @@
     "prepare": "true"
   },
   "dependencies": {
-    "@nexcraft/forge-tokens": "^0.1.0"
+    "@nexcraft/forge-tokens": "^0.2.0"
   }
 }
