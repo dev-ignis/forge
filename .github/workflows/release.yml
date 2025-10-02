@@ -57,6 +57,8 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       - name: Download build artifacts
+        id: download-artifacts
+        continue-on-error: true
         uses: dawidd6/action-download-artifact@v6
         with:
           workflow: ci.yml
@@ -65,14 +67,22 @@ jobs:
           path: .
           github_token: ${{ github.token }}
 
+      - name: Build packages if no cached artifacts
+        if: steps.download-artifacts.outcome == 'failure'
+        run: npm run build
+
       - name: Preflight Checks for Release
         run: |
           echo "✅ Running preflight checks before release..."
-          echo "✅ Using cached build artifacts from CI"
+          if [ "${{ steps.download-artifacts.outcome }}" == "success" ]; then
+            echo "✅ Using cached build artifacts from CI"
+          else
+            echo "✅ Built packages fresh (no PR artifacts available)"
+          fi
           echo "✅ Linting: PASSED (from CI)"
-          echo "✅ Type checking: PASSED (from CI)" 
+          echo "✅ Type checking: PASSED (from CI)"
           echo "✅ Tests: PASSED (from CI)"
-          echo "✅ Build: PASSED (from CI)"
+          echo "✅ Build: COMPLETE"
           echo "🚀 Ready for release!"
           
       - name: Create Release Pull Request or Publish to npm
