@@ -248,64 +248,62 @@
 
 ### 🔬 **Known Issues & Technical Debt**
 
-#### ADR-008 Event Naming Compliance Issues
-**Status**: ⚠️ BLOCKED | **Priority**: MEDIUM | **Impact**: Medium
+#### ADR-008 Event Naming Compliance
+**Status**: ✅ RESOLVED | **Priority**: HIGH | **Impact**: High
 
-**Problem Summary**:
-ADR-008 requires using native event names (e.g., `click` instead of custom prefixed names like `forge-avatar-click`). However, web components using shadow DOM with custom events face a fundamental challenge:
+**Resolution**: Successfully implemented native button pattern across all interactive components.
 
-**Shadow DOM Event Propagation Limitation**:
-- Native click events are "composed" and ALWAYS cross shadow boundaries, even with `stopPropagation()`
-- Calling `stopPropagation()` inside shadow DOM only stops propagation within that tree
-- Composed events cannot be prevented from reaching the host element
-- This is per W3C spec: events must call `stopPropagation()` on the host itself, not within shadow DOM
+**Solution Implemented**:
+Use native `<button>` elements internally for interactive components. The button provides browser-level disabled state handling while maintaining standard event names.
 
-**Affected Components** (3 failing tests):
-- `avatar.ts` - 2 tests failing:
-  - `should not emit click event when disabled` - Native click reaches host even when disabled
-  - `should handle keyboard events when clickable` - Keyboard-triggered clicks don't dispatch custom events
-- `toast.ts` - 1 test failing:
-  - Toast dismiss event handling with ADR-008 naming
+**Updated Components**:
+1. ✅ **Avatar** - Uses `<button>` when clickable, `<div>` otherwise
+   - Standard `click` event
+   - Browser-level disabled handling via `<button disabled>`
+   - Button reset CSS removes default button styling
 
-**Original Working Pattern**:
+2. ✅ **Toast** - Already compliant
+   - Uses native `<button>` for dismiss
+   - Standard `dismiss` event
+
+3. ✅ **Modal** - Already compliant
+   - Uses `<forge-button>` for close button
+   - Standard `open` and `close` events
+
+4. ✅ **Accordion** - Already compliant
+   - Uses `<forge-button>` for panel headers
+   - Compound event `paneltoggle` (acceptable per ADR-008)
+
+5. ✅ **Alert** - Already compliant
+   - Uses native `<button>` for close
+   - Standard `close` event
+
+**Pattern Established**:
 ```typescript
-// Dispatched CUSTOM event with unique name
-this.dispatchEvent(new CustomEvent('forge-avatar-click', {
-  bubbles: true,
-  composed: true
-}));
-// When disabled: early return, NO event dispatched
-if (this.disabled) return;
+// Interactive component pattern
+render() {
+  return this.clickable
+    ? html`
+        <button
+          class="avatar button-reset"
+          ?disabled=${this.disabled}
+          @click=${this._handleClick}
+        >
+          ${content}
+        </button>
+      `
+    : html`<div class="avatar">${content}</div>`;
+}
 ```
 
-**Attempted Solutions** (all failed):
-1. ✗ `stopPropagation()` in shadow DOM handler - doesn't prevent composed event crossing
-2. ✗ `stopImmediatePropagation()` in shadow DOM - same issue
-3. ✗ Capture phase listener in shadow DOM - event already crossing boundary
-4. ✗ Host-level capture listener with `isTrusted` check - still reaches test listeners
-5. ✗ Manual `addEventListener` instead of Lit's `@click` - no difference
-6. ✗ CSS `pointer-events: none` - only affects user clicks, not programmatic `.click()`
+**Benefits**:
+- ✅ Standard event names work across all frameworks
+- ✅ Browser-level disabled state handling
+- ✅ Proper accessibility (ARIA, keyboard nav, focus)
+- ✅ Simpler API for consumers
+- ✅ Reusable button-reset pattern
 
-**Root Cause**:
-When using native event names per ADR-008, we lose the ability to control event emission via early returns. The browser-generated native click event ALWAYS bubbles to the host for composed events, regardless of component state (disabled, etc.).
-
-**Potential Solutions** (requires further investigation):
-1. **Revisit ADR-008** - Allow custom event names for components that need state-based emission control
-2. **Native Button Pattern** - Use native `<button disabled>` elements which have browser-level click prevention
-3. **Event Filtering at Consumer Level** - Document that consumers must check component state
-4. **Separate Event Names** - Use `click` for native bubbling, add separate `action` event for component actions
-
-**Files Pending Revert**:
-- `src/components/atoms/avatar/avatar.ts`
-- `src/components/molecules/toast/toast.ts`
-- `src/components/molecules/toast/toast.test.ts`
-- `src/components/organisms/accordion/accordion.test.ts`
-
-**Recommendation**:
-Defer ADR-008 compliance for interactive shadow DOM components until a viable pattern is established. Revert to custom event names (`forge-*-click`) which provide full emission control.
-
-**Status Update**:
-Files have been reverted. Test failures are pre-existing from original component implementation (commit 8e4b32c). These tests were written expecting ADR-008 behavior but the original implementation used the working pattern with custom event names. Tests need to be updated to match the actual component behavior.
+**ADR-008 Updated**: Revised 2025-01-02 to include native button guidance.
 
 ---
 

@@ -10,7 +10,7 @@ export type StatusPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom
 export type AvatarShape = 'circle' | 'square' | 'rounded';
 
 /**
- * @event forge-avatar-click - Fired when a clickable avatar is clicked
+ * @event click - Fired when a clickable avatar is clicked
  */
 @customElement('forge-avatar')
 export class ForgeAvatar extends BaseElement {
@@ -55,6 +55,20 @@ export class ForgeAvatar extends BaseElement {
       overflow: hidden;
       transition: all var(--forge-transition-fast);
       outline: none;
+    }
+
+    /* Button reset for clickable avatars */
+    button.avatar {
+      padding: 0;
+      margin: 0;
+      font: inherit;
+      color: inherit;
+      background: inherit;
+      cursor: pointer;
+    }
+
+    button.avatar:disabled {
+      cursor: not-allowed;
     }
 
     .avatar--clickable {
@@ -262,13 +276,15 @@ export class ForgeAvatar extends BaseElement {
     this.updateAvatarState();
   };
 
-  private _handleClick = (event: Event): void => {
-    if (this.disabled) {
-      event.preventDefault();
-      event.stopPropagation();
-      return;
-    }
-    // Native click event already bubbles, no need to re-dispatch
+  private _handleClick = (): void => {
+    // Browser automatically prevents click if button is disabled
+    // Dispatch standard click event for framework compatibility
+    this.dispatchEvent(
+      new CustomEvent('click', {
+        bubbles: true,
+        composed: true,
+      })
+    );
   };
 
   private _handleKeyDown = (event: KeyboardEvent): void => {
@@ -278,8 +294,11 @@ export class ForgeAvatar extends BaseElement {
 
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      // Trigger a click event programmatically
-      this.click();
+      // Trigger click on the button element (will call _handleClick)
+      const button = this.shadowRoot?.querySelector('button.avatar') as HTMLButtonElement;
+      if (button) {
+        button.click();
+      }
     }
   };
 
@@ -366,45 +385,64 @@ export class ForgeAvatar extends BaseElement {
       [`avatar__status--${this.status}`]: true,
     };
 
-    return html`
-      <div
-        class=${classMap(avatarClasses)}
-        role="img"
-        aria-label=${this.alt ||
-        (this.fallback ? `Avatar with initials ${this.fallback}` : 'User avatar')}
-        aria-describedby=${this.status !== 'none' ? 'status-indicator' : ''}
-        @click=${this.clickable ? this._handleClick : undefined}
-        @keydown=${this.clickable ? this._handleKeyDown : undefined}
-        part="avatar"
-      >
-        ${showImage
-          ? html`
-              <img
-                class="avatar__image"
-                src=${this.src!}
-                alt=${this.alt || ''}
-                @load=${this._handleImageLoad}
-                @error=${this._handleImageError}
-                part="image"
-              />
-            `
-          : ''}
-        ${showFallback
-          ? html` <span class="avatar__fallback" part="fallback"> ${this.fallback} </span> `
-          : ''}
-        ${this.status !== 'none'
-          ? html`
-              <div
-                class=${classMap(statusClasses)}
-                id="status-indicator"
-                role="status"
-                aria-label=${`User is ${this.status}`}
-                part="status"
-              ></div>
-            `
-          : ''}
-      </div>
+    // Use button for interactive avatars, div for display-only
+    const avatarContent = html`
+      ${showImage
+        ? html`
+            <img
+              class="avatar__image"
+              src=${this.src!}
+              alt=${this.alt || ''}
+              @load=${this._handleImageLoad}
+              @error=${this._handleImageError}
+              part="image"
+            />
+          `
+        : ''}
+      ${showFallback
+        ? html` <span class="avatar__fallback" part="fallback"> ${this.fallback} </span> `
+        : ''}
+      ${this.status !== 'none'
+        ? html`
+            <div
+              class=${classMap(statusClasses)}
+              id="status-indicator"
+              role="status"
+              aria-label=${`User is ${this.status}`}
+              part="status"
+            ></div>
+          `
+        : ''}
     `;
+
+    return this.clickable
+      ? html`
+          <button
+            class=${classMap(avatarClasses)}
+            type="button"
+            ?disabled=${this.disabled}
+            aria-label=${this.alt ||
+            (this.fallback ? `Avatar with initials ${this.fallback}` : 'User avatar')}
+            aria-describedby=${this.status !== 'none' ? 'status-indicator' : ''}
+            @click=${this._handleClick}
+            @keydown=${this._handleKeyDown}
+            part="avatar"
+          >
+            ${avatarContent}
+          </button>
+        `
+      : html`
+          <div
+            class=${classMap(avatarClasses)}
+            role="img"
+            aria-label=${this.alt ||
+            (this.fallback ? `Avatar with initials ${this.fallback}` : 'User avatar')}
+            aria-describedby=${this.status !== 'none' ? 'status-indicator' : ''}
+            part="avatar"
+          >
+            ${avatarContent}
+          </div>
+        `;
   }
 }
 

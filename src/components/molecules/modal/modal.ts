@@ -12,10 +12,8 @@ export type ModalScrollBehavior = 'body' | 'entire';
  * @slot - Default slot for main modal content
  * @slot footer - Footer content like action buttons
  * @slot header - Custom header content (overrides title prop)
- * @event open - Fired when the modal is opened (ADR-008 compliant)
- * @event close - Fired when the modal is closed (ADR-008 compliant)
- * @event modalopen - Deprecated alias for 'open' (backward compatibility)
- * @event modalclose - Deprecated alias for 'close' (backward compatibility)
+ * @event open - Fired when the modal is opened
+ * @event close - Fired when the modal is closed
  */
 @customElement('forge-modal')
 export class ForgeModal extends BaseElement {
@@ -469,41 +467,31 @@ export class ForgeModal extends BaseElement {
   }
 
   public close(): void {
-    const event = new CustomEvent('modalclose', { 
-      bubbles: true, 
-      composed: true, 
-      cancelable: true 
-    });
-    this.dispatchEvent(event);
-    if (!event.defaultPrevented) {
-      this.open = false;
-    }
-    // ADR-008: emit standard 'close' event as well
-    const std = new CustomEvent('close', {
+    // ADR-008: Standard event name
+    const closeEvent = new CustomEvent('close', {
       bubbles: true,
       composed: true,
       cancelable: true
     });
-    this.dispatchEvent(std);
+    this.dispatchEvent(closeEvent);
+
+    if (!closeEvent.defaultPrevented) {
+      this.open = false;
+    }
   }
 
   public show(): void {
-    const event = new CustomEvent('modalopen', { 
-      bubbles: true, 
-      composed: true, 
-      cancelable: true 
-    });
-    this.dispatchEvent(event);
-    if (!event.defaultPrevented) {
-      this.open = true;
-    }
-    // ADR-008: emit standard 'open' event as well
-    const std = new CustomEvent('open', {
+    // ADR-008: Standard event name
+    const openEvent = new CustomEvent('open', {
       bubbles: true,
       composed: true,
       cancelable: true
     });
-    this.dispatchEvent(std);
+    this.dispatchEvent(openEvent);
+
+    if (!openEvent.defaultPrevented) {
+      this.open = true;
+    }
   }
 
   protected render() {
