@@ -25,7 +25,7 @@ export default defineConfig({
         'scripts/**',
         'src/types/**',
         'src/integrations/**',
-        'examples/**',
+        'demos/**',
         'test-performance.js',
         'packages/**',
         'src/core/ai-metadata-exporter.ts',

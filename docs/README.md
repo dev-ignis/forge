@@ -43,4 +43,4 @@ Welcome to the Nexcraft Forge documentation. Start with Getting Started or jump 
 
 ---
 
-Storybook: run `npm run storybook`. Examples are under `examples/`.
+Storybook: run `npm run storybook`. Live demos are under `demos/`.
