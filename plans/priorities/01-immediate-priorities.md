@@ -406,9 +406,11 @@
 **Actions**:
 
 - [x] ✅ Audit high-traffic components for standard event names (present tense, no `on-*`)
-  - **Compliance**: 89% (16/18 events fully compliant)
-  - **Critical Issue**: toast `toast-dismissed` → fixed to `dismiss`
-  - **Minor Issue**: avatar `forge-avatar-click` → fixed to `click`
+  - **Final Compliance**: 100% (18/18 events fully compliant)
+  - **Issues Fixed**:
+    - toast `toast-dismissed` → `dismiss` (with deprecated alias)
+    - avatar `forge-avatar-click` → `click`
+    - modal `modalclose`/`modalopen` → `close`/`open`
 - [x] ✅ Keep deprecated aliases where needed and document deprecation
   - **toast**: Emits both `dismiss` (new) and `toast-dismissed` (deprecated)
   - **Deprecation**: `toast-dismissed` will be removed in v1.0.0
@@ -423,6 +425,9 @@
 - `src/components/atoms/avatar/avatar.ts` - Changed to standard `click` event
 - `src/components/atoms/avatar/avatar.test.ts` - Updated tests for `click`
 - `src/components/atoms/avatar/avatar.stories.ts` - Updated Storybook examples
+- `src/components/molecules/modal/modal.ts` - Removed vendor-prefixed `modalclose`/`modalopen`, kept only `close`/`open`
+- `src/components/molecules/modal/modal.test.ts` - Updated all tests to use `close`/`open` events
+- `src/components/molecules/modal/modal.stories.ts` - Updated all Storybook examples to use standard events
 
 ## 📊 **Success Metrics**
 

@@ -1,7 +1,7 @@
 {
   "manifestVersion": "1.0.0",
   "package": "@nexcraft/forge",
-  "generatedAt": "2025-09-27T02:15:58.889Z",
+  "generatedAt": "2025-10-02T03:51:41.496Z",
   "components": [
     {
       "id": "forge-performance-dashboard",
@@ -408,171 +408,6 @@
       }
     },
     {
-      "id": "forge-avatar",
-      "tag": "forge-avatar",
-      "category": "atom",
-      "props": [
-        {
-          "name": "aiMetadata",
-          "type": "AIMetadata"
-        },
-        {
-          "name": "src",
-          "type": "string | undefined"
-        },
-        {
-          "name": "alt",
-          "type": "string | undefined"
-        },
-        {
-          "name": "fallback",
-          "type": "string | undefined"
-        },
-        {
-          "name": "size",
-          "type": "AvatarSize"
-        },
-        {
-          "name": "status",
-          "type": "AvatarStatus"
-        },
-        {
-          "name": "statusPosition",
-          "type": "StatusPosition"
-        },
-        {
-          "name": "shape",
-          "type": "AvatarShape"
-        },
-        {
-          "name": "clickable",
-          "type": "boolean"
-        },
-        {
-          "name": "loading",
-          "type": "boolean"
-        },
-        {
-          "name": "disabled",
-          "type": "boolean"
-        },
-        {
-          "name": "imageLoaded",
-          "type": "boolean"
-        },
-        {
-          "name": "imageError",
-          "type": "boolean"
-        },
-        {
-          "name": "_handleImageLoad"
-        },
-        {
-          "name": "_handleImageError"
-        },
-        {
-          "name": "_handleClick"
-        },
-        {
-          "name": "_handleKeyDown"
-        },
-        {
-          "name": "semanticRole",
-          "type": "string | undefined"
-        },
-        {
-          "name": "aiContext",
-          "type": "string | undefined"
-        },
-        {
-          "name": "ariaDescription",
-          "type": "string | null"
-        },
-        {
-          "name": "maxRenderMs",
-          "type": "number"
-        },
-        {
-          "name": "warnOnViolation",
-          "type": "boolean"
-        },
-        {
-          "name": "performanceMode",
-          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
-        },
-        {
-          "name": "devMode",
-          "type": "boolean"
-        },
-        {
-          "name": "showMetrics",
-          "type": "boolean"
-        },
-        {
-          "name": "renderTime",
-          "type": "number"
-        },
-        {
-          "name": "renderCount",
-          "type": "number"
-        },
-        {
-          "name": "performanceStartTime",
-          "type": "number"
-        },
-        {
-          "name": "componentState",
-          "type": "Map<string, unknown>"
-        },
-        {
-          "name": "aiState",
-          "type": "AIComponentState"
-        }
-      ],
-      "events": [
-        {
-          "name": "forge-avatar-click",
-          "description": "Fired when a clickable avatar is clicked"
-        }
-      ],
-      "a11y": {
-        "role": "img",
-        "ariaAttributes": [
-          "aria-label",
-          "alt",
-          "aria-describedby"
-        ],
-        "keyboardNavigation": [
-          "Tab (if clickable)",
-          "Enter/Space (if clickable)"
-        ],
-        "screenReaderBehavior": "Announces as image with descriptive label",
-        "focusManagement": "Receives focus when clickable, maintains focus ring",
-        "colorContrast": "WCAG AA compliant for status indicators",
-        "reducedMotion": "Respects prefers-reduced-motion for hover effects"
-      },
-      "examples": {
-        "documentation": "docs/components/atoms/avatar.md",
-        "source": "dist/components/avatar/avatar.d.ts",
-        "readme": "README.md",
-        "ssrFallback": "<div class=\"forge-avatar\" role=\"img\" aria-label=\"User avatar\">\n  <img src=\"/placeholder-avatar.jpg\" alt=\"User avatar\" class=\"forge-avatar__image\" />\n  <div class=\"forge-avatar__fallback\" aria-hidden=\"true\">U</div>\n</div>"
-      },
-      "aiMethods": {
-        "getPossibleActions": {
-          "description": "Returns array of available actions for the component",
-          "returns": "AIAction[] - Array of {name, description, available} objects"
-        },
-        "explainState": {
-          "description": "Explains the current state of the component",
-          "returns": "AIStateExplanation - {currentState, possibleStates, stateDescription}"
-        },
-        "aiState": {
-          "description": "Getter that returns comprehensive component state for AI",
-          "returns": "AIComponentState - Complete component metadata and state"
-        }
-      }
-    },
-    {
       "id": "forge-badge",
       "tag": "forge-badge",
       "category": "atom",
@@ -754,6 +589,174 @@
             "counting",
             "pulsing"
           ]
+        },
+        "aiState": {
+          "description": "Getter that returns comprehensive component state for AI",
+          "returns": "AIComponentState - Complete component metadata and state"
+        }
+      }
+    },
+    {
+      "id": "forge-avatar",
+      "tag": "forge-avatar",
+      "category": "atom",
+      "props": [
+        {
+          "name": "aiMetadata",
+          "type": "AIMetadata"
+        },
+        {
+          "name": "src",
+          "type": "string | undefined"
+        },
+        {
+          "name": "alt",
+          "type": "string | undefined"
+        },
+        {
+          "name": "fallback",
+          "type": "string | undefined"
+        },
+        {
+          "name": "size",
+          "type": "AvatarSize"
+        },
+        {
+          "name": "status",
+          "type": "AvatarStatus"
+        },
+        {
+          "name": "statusPosition",
+          "type": "StatusPosition"
+        },
+        {
+          "name": "shape",
+          "type": "AvatarShape"
+        },
+        {
+          "name": "clickable",
+          "type": "boolean"
+        },
+        {
+          "name": "loading",
+          "type": "boolean"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean"
+        },
+        {
+          "name": "imageLoaded",
+          "type": "boolean"
+        },
+        {
+          "name": "imageError",
+          "type": "boolean"
+        },
+        {
+          "name": "_handleImageLoad"
+        },
+        {
+          "name": "_handleImageError"
+        },
+        {
+          "name": "_handleHostClick"
+        },
+        {
+          "name": "_handleClick"
+        },
+        {
+          "name": "_handleKeyDown"
+        },
+        {
+          "name": "semanticRole",
+          "type": "string | undefined"
+        },
+        {
+          "name": "aiContext",
+          "type": "string | undefined"
+        },
+        {
+          "name": "ariaDescription",
+          "type": "string | null"
+        },
+        {
+          "name": "maxRenderMs",
+          "type": "number"
+        },
+        {
+          "name": "warnOnViolation",
+          "type": "boolean"
+        },
+        {
+          "name": "performanceMode",
+          "type": "'auto' | 'fast' | 'balanced' | 'quality'"
+        },
+        {
+          "name": "devMode",
+          "type": "boolean"
+        },
+        {
+          "name": "showMetrics",
+          "type": "boolean"
+        },
+        {
+          "name": "renderTime",
+          "type": "number"
+        },
+        {
+          "name": "renderCount",
+          "type": "number"
+        },
+        {
+          "name": "performanceStartTime",
+          "type": "number"
+        },
+        {
+          "name": "componentState",
+          "type": "Map<string, unknown>"
+        },
+        {
+          "name": "aiState",
+          "type": "AIComponentState"
+        }
+      ],
+      "events": [
+        {
+          "name": "forge-avatar-click",
+          "description": "Fired when a clickable avatar is clicked"
+        }
+      ],
+      "a11y": {
+        "role": "img",
+        "ariaAttributes": [
+          "aria-label",
+          "alt",
+          "aria-describedby"
+        ],
+        "keyboardNavigation": [
+          "Tab (if clickable)",
+          "Enter/Space (if clickable)"
+        ],
+        "screenReaderBehavior": "Announces as image with descriptive label",
+        "focusManagement": "Receives focus when clickable, maintains focus ring",
+        "colorContrast": "WCAG AA compliant for status indicators",
+        "reducedMotion": "Respects prefers-reduced-motion for hover effects"
+      },
+      "examples": {
+        "documentation": "docs/components/atoms/avatar.md",
+        "source": "dist/components/avatar/avatar.d.ts",
+        "readme": "README.md",
+        "ssrFallback": "<div class=\"forge-avatar\" role=\"img\" aria-label=\"User avatar\">\n  <img src=\"/placeholder-avatar.jpg\" alt=\"User avatar\" class=\"forge-avatar__image\" />\n  <div class=\"forge-avatar__fallback\" aria-hidden=\"true\">U</div>\n</div>"
+      },
+      "aiMethods": {
+        "getPossibleActions": {
+          "description": "Returns array of available actions for the component",
+          "returns": "AIAction[] - Array of {name, description, available} objects"
+        },
+        "explainState": {
+          "description": "Explains the current state of the component",
+          "returns": "AIStateExplanation - {currentState, possibleStates, stateDescription}"
         },
         "aiState": {
           "description": "Getter that returns comprehensive component state for AI",
@@ -3713,7 +3716,7 @@
         },
         {
           "name": "position",
-          "type": "'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'"
+          "type": "| 'top-left'\n    | 'top-center'\n    | 'top-right'\n    | 'bottom-left'\n    | 'bottom-center'\n    | 'bottom-right'"
         },
         {
           "name": "maxToasts",
@@ -3729,7 +3732,7 @@
         },
         {
           "name": "toastQueue",
-          "type": "Array<{\r\n    id: string;\r\n    title?: string;\r\n    message: string;\r\n    variant?: 'info' | 'success' | 'warning' | 'error';\r\n    duration?: number;\r\n    dismissible?: boolean;\r\n    persistent?: boolean;\r\n    showProgress?: boolean;\r\n  }>"
+          "type": "Array<{\n    id: string;\n    title?: string;\n    message: string;\n    variant?: 'info' | 'success' | 'warning' | 'error';\n    duration?: number;\n    dismissible?: boolean;\n    persistent?: boolean;\n    showProgress?: boolean;\n  }>"
         },
         {
           "name": "aiState",
@@ -3933,6 +3936,11 @@
         }
       ],
       "events": [
+        {
+          "name": "dismiss",
+          "description": "dismiss event",
+          "detail": "CustomEvent"
+        },
         {
           "name": "toast-dismissed",
           "description": "toast-dismissed event",
