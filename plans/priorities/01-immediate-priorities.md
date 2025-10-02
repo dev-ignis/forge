@@ -80,9 +80,11 @@
 ### **Noise/Cost Reducers**
 
 - [ ] **Add Path Filters**
+
   ```yaml
   paths-ignore: ['docs/**', 'plans/**', '*.md', '.github/workflows/deploy.yml']
   ```
+
   - Skip entire workflow for docs-only changes
   - Major cost savings for documentation updates
 
@@ -267,6 +269,7 @@
 **Priority**: MEDIUM | **Effort**: Low-Medium | **Impact**: High
 
 **Current Situation**:
+
 - AI methods (`getPossibleActions`, `explainState`, `aiState`) add ~100 lines per component
 - Total overhead: ~2,700 lines across 27 components (~81-135KB minified)
 - Methods are shipped to all users but rarely called in production
@@ -276,6 +279,7 @@
 **Strategy**: Combine reframing (Option 1) + optional tree-shaking (Option 2)
 
 **Phase 1: Reframe Marketing (Week 1) - Low Effort**
+
 - [ ] Update README.md to emphasize "Runtime Introspection" over "AI-native"
 - [ ] Reposition as developer debugging/testing tools first, AI capability second
 - [ ] Update docs/ai/metadata-reference.md to add "Developer Introspection" section
@@ -283,21 +287,25 @@
 - [ ] Add practical debugging examples to documentation
 
 **Phase 2: Measure & Analyze (Week 2) - Low Effort**
+
 - [ ] Measure actual bundle impact of AI methods (use bundle analyzer)
 - [ ] Document size of getPossibleActions/explainState/aiState per component
 - [ ] Identify which methods are most/least valuable
 - [ ] Calculate potential savings from tree-shaking
 
 **Phase 3: Make Tree-Shakeable (Week 3-4) - Medium Effort**
+
 - [ ] Design optional import pattern:
+
   ```typescript
   // Default: Lean components (no AI methods)
-  import { ForgeButton } from '@nexcraft/forge'
+  import { ForgeButton } from '@nexcraft/forge';
 
   // Opt-in: Full introspection API
-  import '@nexcraft/forge/introspection'
+  import '@nexcraft/forge/introspection';
   // OR per-component: import '@nexcraft/forge/button/introspection'
   ```
+
 - [ ] Move AI methods to separate module that extends BaseElement prototypes
 - [ ] Update vite.config.ts for proper tree-shaking
 - [ ] Add new package.json exports for introspection modules
@@ -305,6 +313,7 @@
 - [ ] Update TypeScript definitions for conditional types
 
 **Phase 4: Prove Value with Tooling (Week 4+) - Medium Effort**
+
 - [ ] Build ONE concrete developer tool that uses these methods:
   - **Option A**: Forge DevTools Chrome Extension (inspect component state visually)
   - **Option B**: Enhanced console wrapper (`window.forge.inspect(element)`)
@@ -314,6 +323,7 @@
 - [ ] Gather user feedback on introspection API usefulness
 
 **Expected Outcomes**:
+
 - **Bundle size**: 5-10% reduction for users who don't opt-in to introspection
 - **Marketing clarity**: More honest positioning as "introspection-enabled, AI-ready"
 - **Validation**: Real tool proves methods earn their bytes
@@ -321,6 +331,7 @@
 - **Future-proof**: Infrastructure ready when AI tools start consuming metadata
 
 **Files to Update**:
+
 - `README.md` - Reframe "AI-native" messaging (Phase 1)
 - `docs/ai/metadata-reference.md` - Add developer introspection guide (Phase 1)
 - `src/core/BaseElement.ts` - Prepare for conditional method loading (Phase 3)
@@ -330,6 +341,7 @@
 - `examples/` - Add introspection usage examples (Phase 4)
 
 **Success Criteria**:
+
 - [ ] Bundle size measured and documented
 - [ ] README messaging reframed to emphasize developer tools
 - [ ] Tree-shaking implementation complete with zero breaking changes
@@ -338,6 +350,7 @@
 - [ ] User feedback collected and positive
 
 **Related Items**:
+
 - Supports #6 (Bundle Size Optimization)
 - Supports #5 (Documentation Updates)
 - Supports #1 (TypeScript Type Safety - smaller API surface)
@@ -358,36 +371,58 @@
 
 ### 9. Release Configuration (Changesets)
 
-**Priority**: HIGH | **Effort**: Low | **Impact**: High
+**Priority**: HIGH | **Effort**: Low | **Impact**: High | **Status**: ✅ **MOSTLY COMPLETED** (4/6 done)
 
 **Actions**:
 
-- [ ] Align Changesets base branch with release branch
-  - Set `.changeset/config.json` `baseBranch: "main"` (current CI releases from main)
-- [ ] Use native Changesets in CI
-  - In `release.yml`, set `version: npx changeset version` and `publish: npx changeset publish`
-  - Replace bespoke multi-package `npm publish` script to let Changesets publish only changed packages in order
-- [ ] Remove auto-changeset generation from release
-  - Delete the `Auto-generate Changesets from Commits` step in `release.yml` (changesets must be authored in PRs)
-- [ ] Simplify branch sync
-  - Drop or manualize the `sync-develop` job; rely on Changesets “Version Packages” PR flow
-- [ ] Add PR check for missing changesets
-  - Fail PRs that modify `packages/**` without a `.changeset/*.md` entry
-- [ ] Confirm version policy for framework packages
-  - Keep independent versioning or expand `linked` list intentionally; document policy
+- [x] ✅ Align Changesets base branch with release branch
+  - Set `.changeset/config.json` `baseBranch: "main"` (current CI releases from main) → **COMPLETED**
+- [x] ✅ Use native Changesets in CI
+  - In `release.yml`, set `version: npx changeset version` and `publish: npx changeset publish` → **COMPLETED**
+  - Replace bespoke multi-package `npm publish` script to let Changesets publish only changed packages in order → **COMPLETED**
+- [x] ✅ Remove auto-changeset generation from release
+  - Delete the `Auto-generate Changesets from Commits` step in `release.yml` (changesets must be authored in PRs) → **COMPLETED**
+- [x] ~~🟡 Simplify branch sync~~ **OBSOLETE**
+  - ~~Drop or manualize the `sync-develop` job; rely on Changesets "Version Packages" PR flow~~
+  - **Decision**: Remove `sync-develop` job entirely - creates git noise (2 commits/release), duplicates Changesets workflow, requires manual intervention on conflicts anyway
+- [x] ✅ Add PR check for missing changesets
+  - Fail PRs that modify `packages/**` without a `.changeset/*.md` entry → **COMPLETED**
+  - **Implementation**: Added `changeset-check` job to `.github/workflows/ci.yml`
+  - **Behavior**: Fails CI if package files modified without changeset, provides helpful error message
+- [x] ✅ Confirm version policy for framework packages
+  - Keep independent versioning or expand `linked` list intentionally; document policy → **COMPLETED**
+  - **Policy**: Framework packages linked: `@nexcraft/forge-react`, `@nexcraft/forge-vue`, `@nexcraft/forge-angular`
 
-**Expected Outcome**: Predictable multi-package releases with minimal maintenance overhead
+**Expected Outcome**: Predictable multi-package releases with minimal maintenance overhead → **ACHIEVED** ✅
+
+**Verification**: Successfully published 7 packages to npm (forge@0.8.0, forge-react@0.3.0, forge-rhf@0.4.0, etc.)
+
+**Completion**: ✅ **FULLY COMPLETED** (5/5 actionable items done, 1 marked OBSOLETE)
 
 ### 8. Event Naming Audit (ADR‑008)
 
-**Priority**: MEDIUM | **Effort**: Low | **Impact**: Medium
+**Priority**: MEDIUM | **Effort**: Low | **Impact**: Medium | **Status**: ✅ **COMPLETED**
 
 **Actions**:
 
-- [ ] Audit high-traffic components for standard event names (present tense, no `on-*`)
-- [ ] Keep deprecated aliases where needed and document deprecation
+- [x] ✅ Audit high-traffic components for standard event names (present tense, no `on-*`)
+  - **Compliance**: 89% (16/18 events fully compliant)
+  - **Critical Issue**: toast `toast-dismissed` → fixed to `dismiss`
+  - **Minor Issue**: avatar `forge-avatar-click` → fixed to `click`
+- [x] ✅ Keep deprecated aliases where needed and document deprecation
+  - **toast**: Emits both `dismiss` (new) and `toast-dismissed` (deprecated)
+  - **Deprecation**: `toast-dismissed` will be removed in v1.0.0
 
-**Expected Outcome**: Consistent event APIs per ADR‑008; improved DX in frameworks
+**Expected Outcome**: Consistent event APIs per ADR‑008; improved DX in frameworks → **ACHIEVED** ✅
+
+**Fixes Implemented**:
+
+- `src/components/molecules/toast/toast.ts` - Added `dismiss` event with deprecated `toast-dismissed` alias
+- `src/components/molecules/toast/toast-container.ts` - Updated to listen for `dismiss`
+- `src/components/molecules/toast/toast.test.ts` - Updated tests for new event
+- `src/components/atoms/avatar/avatar.ts` - Changed to standard `click` event
+- `src/components/atoms/avatar/avatar.test.ts` - Updated tests for `click`
+- `src/components/atoms/avatar/avatar.stories.ts` - Updated Storybook examples
 
 ## 📊 **Success Metrics**
 

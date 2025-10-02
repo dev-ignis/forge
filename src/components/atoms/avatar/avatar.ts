@@ -20,12 +20,12 @@ export class ForgeAvatar extends BaseElement {
     context: 'profile',
     dataType: 'image',
     criticality: 'low',
-    semanticRole: 'img'
+    semanticRole: 'img',
   };
 
   static styles = css`
     ${BaseElement.styles}
-    
+
     :host {
       display: inline-block;
       position: relative;
@@ -76,17 +76,23 @@ export class ForgeAvatar extends BaseElement {
     }
 
     .avatar--loading {
-      background: linear-gradient(90deg, 
-        var(--forge-avatar-bg) 0%, 
-        var(--forge-color-neutral-300) 50%, 
-        var(--forge-avatar-bg) 100%);
+      background: linear-gradient(
+        90deg,
+        var(--forge-avatar-bg) 0%,
+        var(--forge-color-neutral-300) 50%,
+        var(--forge-avatar-bg) 100%
+      );
       background-size: 200% 100%;
       animation: shimmer 2s infinite;
     }
 
     @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
     }
 
     .avatar__image {
@@ -194,7 +200,8 @@ export class ForgeAvatar extends BaseElement {
   @property({ type: String }) fallback?: string;
   @property({ type: String }) size: AvatarSize = 'md';
   @property({ type: String }) status: AvatarStatus = 'none';
-  @property({ type: String, attribute: 'status-position' }) statusPosition: StatusPosition = 'top-right';
+  @property({ type: String, attribute: 'status-position' }) statusPosition: StatusPosition =
+    'top-right';
   @property({ type: String }) shape: AvatarShape = 'circle';
   @property({ type: Boolean }) clickable = false;
   @property({ type: Boolean }) loading = false;
@@ -205,7 +212,7 @@ export class ForgeAvatar extends BaseElement {
 
   protected override firstUpdated(changedProperties: PropertyValues): void {
     super.firstUpdated(changedProperties);
-    
+
     if (this.clickable) {
       this.tabIndex = 0;
       this.addEventListener('keydown', this._handleKeyDown);
@@ -218,11 +225,17 @@ export class ForgeAvatar extends BaseElement {
 
   protected override updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
-    
-    if (changedProperties.has('src') || changedProperties.has('fallback') || 
-        changedProperties.has('status') || changedProperties.has('clickable') ||
-        changedProperties.has('size') || changedProperties.has('disabled') || 
-        changedProperties.has('loading') || changedProperties.has('shape')) {
+
+    if (
+      changedProperties.has('src') ||
+      changedProperties.has('fallback') ||
+      changedProperties.has('status') ||
+      changedProperties.has('clickable') ||
+      changedProperties.has('size') ||
+      changedProperties.has('disabled') ||
+      changedProperties.has('loading') ||
+      changedProperties.has('shape')
+    ) {
       this.updateAIMetadata();
       this.updateAvatarState();
     }
@@ -233,7 +246,7 @@ export class ForgeAvatar extends BaseElement {
       ...this.aiMetadata,
       purpose: `User avatar ${this.src ? 'with image' : 'with initials'} ${this.status !== 'none' ? `showing ${this.status} status` : ''}`,
       context: this.clickable ? 'interactive-profile' : 'profile',
-      criticality: (this.clickable ? 'medium' : 'low') as 'low' | 'medium'
+      criticality: (this.clickable ? 'medium' : 'low') as 'low' | 'medium',
     };
   }
 
@@ -252,42 +265,47 @@ export class ForgeAvatar extends BaseElement {
   private _handleClick = (event: Event): void => {
     if (this.disabled) {
       event.preventDefault();
+      event.stopPropagation();
       return;
     }
-
-    this.dispatchEvent(new CustomEvent('forge-avatar-click', {
-      detail: {
-        src: this.src,
-        fallback: this.fallback,
-        status: this.status
-      },
-      bubbles: true,
-      composed: true
-    }));
+    // Native click event already bubbles, no need to re-dispatch
   };
 
   private _handleKeyDown = (event: KeyboardEvent): void => {
+    if (this.disabled) {
+      return;
+    }
+
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      this._handleClick(event);
+      // Trigger a click event programmatically
+      this.click();
     }
   };
 
   // AI Integration methods
   override explainState(): AIStateExplanation {
     const hasImage = this.src && !this.imageError;
-    const displayMethod = hasImage ? `showing image from "${this.src}"` : 
-                         this.fallback ? `displaying initials "${this.fallback}"` : 
-                         'showing default avatar';
-    
+    const displayMethod = hasImage
+      ? `showing image from "${this.src}"`
+      : this.fallback
+        ? `displaying initials "${this.fallback}"`
+        : 'showing default avatar';
+
     const statusInfo = this.status !== 'none' ? ` with ${this.status} status indicator` : '';
     const interactionInfo = this.clickable ? ' and is clickable' : '';
     const loadingInfo = this.loading ? ' (currently loading)' : '';
-    
-    const currentState = this.loading ? 'loading' : this.disabled ? 'disabled' : this.clickable ? 'interactive' : 'display';
+
+    const currentState = this.loading
+      ? 'loading'
+      : this.disabled
+        ? 'disabled'
+        : this.clickable
+          ? 'interactive'
+          : 'display';
     const possibleStates = ['display', 'interactive', 'loading', 'disabled'];
     const description = `Avatar component ${displayMethod}${statusInfo}${interactionInfo}${loadingInfo}. Size: ${this.size}, Shape: ${this.shape}.`;
-    
+
     return {
       currentState,
       possibleStates,
@@ -297,23 +315,23 @@ export class ForgeAvatar extends BaseElement {
         `Shape: ${this.shape}`,
         this.status !== 'none' ? `Status: ${this.status}` : '',
         this.loading ? 'Loading animation' : '',
-        this.disabled ? 'Disabled appearance' : ''
-      ].filter(Boolean)
+        this.disabled ? 'Disabled appearance' : '',
+      ].filter(Boolean),
     };
   }
 
   override getPossibleActions(): AIAction[] {
     const actions: AIAction[] = [];
-    
+
     if (this.clickable && !this.disabled) {
       actions.push({
         name: 'click',
         description: 'Click avatar to trigger user profile action',
         available: true,
-        parameters: []
+        parameters: [],
       });
     }
-    
+
     return actions;
   }
 
@@ -332,57 +350,59 @@ export class ForgeAvatar extends BaseElement {
   protected override render() {
     const showImage = this.src && !this.imageError && !this.loading;
     const showFallback = !showImage && this.fallback && !this.loading;
-    
+
     const avatarClasses = {
       avatar: true,
       [`avatar--${this.size}`]: true,
       [`avatar--${this.shape}`]: true,
       'avatar--clickable': this.clickable,
       'avatar--disabled': this.disabled,
-      'avatar--loading': this.loading
+      'avatar--loading': this.loading,
     };
 
     const statusClasses = {
       avatar__status: true,
       [`avatar__status--${this.statusPosition}`]: true,
-      [`avatar__status--${this.status}`]: true
+      [`avatar__status--${this.status}`]: true,
     };
 
     return html`
-      <div 
+      <div
         class=${classMap(avatarClasses)}
         role="img"
-        aria-label=${this.alt || (this.fallback ? `Avatar with initials ${this.fallback}` : 'User avatar')}
+        aria-label=${this.alt ||
+        (this.fallback ? `Avatar with initials ${this.fallback}` : 'User avatar')}
         aria-describedby=${this.status !== 'none' ? 'status-indicator' : ''}
         @click=${this.clickable ? this._handleClick : undefined}
+        @keydown=${this.clickable ? this._handleKeyDown : undefined}
         part="avatar"
       >
-        ${showImage ? html`
-          <img
-            class="avatar__image"
-            src=${this.src!}
-            alt=${this.alt || ''}
-            @load=${this._handleImageLoad}
-            @error=${this._handleImageError}
-            part="image"
-          />
-        ` : ''}
-        
-        ${showFallback ? html`
-          <span class="avatar__fallback" part="fallback">
-            ${this.fallback}
-          </span>
-        ` : ''}
-
-        ${this.status !== 'none' ? html`
-          <div 
-            class=${classMap(statusClasses)}
-            id="status-indicator"
-            role="status"
-            aria-label=${`User is ${this.status}`}
-            part="status"
-          ></div>
-        ` : ''}
+        ${showImage
+          ? html`
+              <img
+                class="avatar__image"
+                src=${this.src!}
+                alt=${this.alt || ''}
+                @load=${this._handleImageLoad}
+                @error=${this._handleImageError}
+                part="image"
+              />
+            `
+          : ''}
+        ${showFallback
+          ? html` <span class="avatar__fallback" part="fallback"> ${this.fallback} </span> `
+          : ''}
+        ${this.status !== 'none'
+          ? html`
+              <div
+                class=${classMap(statusClasses)}
+                id="status-indicator"
+                role="status"
+                aria-label=${`User is ${this.status}`}
+                part="status"
+              ></div>
+            `
+          : ''}
       </div>
     `;
   }

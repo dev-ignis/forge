@@ -26,6 +26,41 @@ permissions:
 
 jobs:
   # Comprehensive validation for PRs
+  changeset-check:
+    name: Changeset Required
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Check for changeset when packages modified
+        run: |
+          # Get list of changed files in packages/
+          PACKAGE_CHANGES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '^packages/' || true)
+
+          # Get list of changeset files (excluding README)
+          CHANGESETS=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '^\.changeset/.*\.md$' | grep -v 'README.md' || true)
+
+          if [ -n "$PACKAGE_CHANGES" ] && [ -z "$CHANGESETS" ]; then
+            echo "❌ Package files changed without a changeset:"
+            echo "$PACKAGE_CHANGES"
+            echo ""
+            echo "📝 Please add a changeset by running: npx changeset"
+            echo ""
+            echo "This ensures proper versioning and release notes."
+            exit 1
+          fi
+
+          if [ -n "$CHANGESETS" ]; then
+            echo "✅ Changeset found:"
+            echo "$CHANGESETS"
+          else
+            echo "✅ No package changes detected, changeset not required"
+          fi
+
   lint:
     name: Lint (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest

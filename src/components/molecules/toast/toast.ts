@@ -6,13 +6,13 @@ import { BaseElement } from '../../../core/BaseElement';
 /**
  * A toast notification component for displaying temporary messages to users.
  * Supports auto-dismiss, action buttons, and various notification types.
- * 
+ *
  * @element forge-toast
- * 
+ *
  * @slot - Default content for the toast message
  * @slot icon - Icon slot for custom toast icons
  * @slot action - Action button slot
- * 
+ *
  * @csspart container - The toast container element
  * @csspart header - The toast header area
  * @csspart icon - The toast icon area
@@ -21,7 +21,7 @@ import { BaseElement } from '../../../core/BaseElement';
  * @csspart message - The toast message element
  * @csspart actions - The action buttons area
  * @csspart dismiss - The dismiss button
- * 
+ *
  * @cssprop --forge-toast-width - Width of the toast
  * @cssprop --forge-toast-shadow - Shadow of the toast
  * @cssprop --forge-toast-radius - Border radius of the toast
@@ -35,7 +35,7 @@ export class ForgeToast extends BaseElement {
     context: 'notification',
     dataType: 'text' as const,
     criticality: 'medium' as const,
-    semanticRole: 'alert'
+    semanticRole: 'alert',
   };
 
   static styles = css`
@@ -124,35 +124,35 @@ export class ForgeToast extends BaseElement {
     }
 
     /* Variant styles */
-    :host([variant="success"]) .toast-container {
+    :host([variant='success']) .toast-container {
       border-left: 4px solid var(--forge-color-success-500, #10b981);
     }
 
-    :host([variant="success"]) .toast-icon {
+    :host([variant='success']) .toast-icon {
       color: var(--forge-color-success-500, #10b981);
     }
 
-    :host([variant="warning"]) .toast-container {
+    :host([variant='warning']) .toast-container {
       border-left: 4px solid var(--forge-color-warning-500, #f59e0b);
     }
 
-    :host([variant="warning"]) .toast-icon {
+    :host([variant='warning']) .toast-icon {
       color: var(--forge-color-warning-500, #f59e0b);
     }
 
-    :host([variant="error"]) .toast-container {
+    :host([variant='error']) .toast-container {
       border-left: 4px solid var(--forge-color-danger-500, #ef4444);
     }
 
-    :host([variant="error"]) .toast-icon {
+    :host([variant='error']) .toast-icon {
       color: var(--forge-color-danger-500, #ef4444);
     }
 
-    :host([variant="info"]) .toast-container {
+    :host([variant='info']) .toast-container {
       border-left: 4px solid var(--forge-color-primary-500, #3b82f6);
     }
 
-    :host([variant="info"]) .toast-icon {
+    :host([variant='info']) .toast-icon {
       color: var(--forge-color-primary-500, #3b82f6);
     }
 
@@ -198,15 +198,15 @@ export class ForgeToast extends BaseElement {
       border-radius: 0 0 var(--forge-toast-radius) var(--forge-toast-radius);
     }
 
-    :host([variant="success"]) .progress-bar {
+    :host([variant='success']) .progress-bar {
       background: var(--forge-color-success-500, #10b981);
     }
 
-    :host([variant="warning"]) .progress-bar {
+    :host([variant='warning']) .progress-bar {
       background: var(--forge-color-warning-500, #f59e0b);
     }
 
-    :host([variant="error"]) .progress-bar {
+    :host([variant='error']) .progress-bar {
       background: var(--forge-color-danger-500, #ef4444);
     }
 
@@ -216,7 +216,7 @@ export class ForgeToast extends BaseElement {
       :host([data-exiting]) {
         animation: none;
       }
-      
+
       .progress-bar {
         transition: none;
       }
@@ -294,11 +294,11 @@ export class ForgeToast extends BaseElement {
 
   protected firstUpdated(changedProperties: PropertyValues): void {
     super.firstUpdated(changedProperties);
-    
+
     // Set up accessibility attributes
     this.setAttribute('role', this.variant === 'error' ? 'alert' : 'status');
     this.setAttribute('aria-live', this.variant === 'error' ? 'assertive' : 'polite');
-    
+
     // Start auto-dismiss if enabled
     if (this.shouldAutoDismiss()) {
       this.startAutoDismiss();
@@ -306,7 +306,7 @@ export class ForgeToast extends BaseElement {
 
     // Trigger enter animation
     this.setAttribute('data-entering', '');
-    
+
     // Remove entering state after animation
     setTimeout(() => {
       this.removeAttribute('data-entering');
@@ -315,12 +315,12 @@ export class ForgeToast extends BaseElement {
 
   protected updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
-    
+
     if (changedProperties.has('variant')) {
       this.setAttribute('role', this.variant === 'error' ? 'alert' : 'status');
       this.setAttribute('aria-live', this.variant === 'error' ? 'assertive' : 'polite');
     }
-    
+
     if (changedProperties.has('duration') || changedProperties.has('persistent')) {
       if (this.shouldAutoDismiss()) {
         this.startAutoDismiss();
@@ -344,7 +344,7 @@ export class ForgeToast extends BaseElement {
 
   private startAutoDismiss(): void {
     this.clearAutoDismiss();
-    
+
     if (this.showProgress) {
       this.startProgressAnimation();
     }
@@ -374,7 +374,7 @@ export class ForgeToast extends BaseElement {
       const elapsed = Date.now() - startTime;
       const remaining = Math.max(0, (duration - elapsed) / duration);
       this.progressWidth = remaining * 100;
-      
+
       if (remaining === 0) {
         this.clearAutoDismiss();
       }
@@ -382,37 +382,55 @@ export class ForgeToast extends BaseElement {
   }
 
   /**
+   * Emits dismiss events (ADR-008 compliant + deprecated alias)
+   * @private
+   */
+  private emitDismiss(): void {
+    // NEW: ADR-008 compliant event (present tense, no prefix)
+    this.dispatchEvent(
+      new CustomEvent('dismiss', {
+        detail: { toastId: this.toastId },
+        bubbles: true,
+        composed: true,
+      }),
+    );
+
+    // DEPRECATED: Keep for backward compatibility (will be removed in v1.0.0)
+    this.dispatchEvent(
+      new CustomEvent('toast-dismissed', {
+        detail: { toastId: this.toastId },
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  }
+
+  /**
    * Dismisses the toast with animation
    */
   dismiss(): void {
     if (!this.isVisible) return;
-    
+
     this.isVisible = false;
     this.clearAutoDismiss();
-    
+
     // Add exit animation
     this.setAttribute('data-exiting', '');
-    
+
     // Set up animation end handler
     this.animationEndHandler = (event: AnimationEvent) => {
       if (event.animationName === 'slide-out') {
-        this.dispatchEvent(new CustomEvent('toast-dismissed', {
-          detail: { toastId: this.toastId },
-          bubbles: true
-        }));
+        this.emitDismiss();
         this.remove();
       }
     };
-    
+
     this.addEventListener('animationend', this.animationEndHandler, { once: true });
-    
+
     // Fallback removal in case animation doesn't fire
     setTimeout(() => {
       if (this.parentNode) {
-        this.dispatchEvent(new CustomEvent('toast-dismissed', {
-          detail: { toastId: this.toastId },
-          bubbles: true
-        }));
+        this.emitDismiss();
         this.remove();
       }
     }, 300);
@@ -451,23 +469,21 @@ export class ForgeToast extends BaseElement {
       info: '🔵',
       success: '✅',
       warning: '⚠️',
-      error: '❌'
+      error: '❌',
     };
     return icons[this.variant] || icons.info;
   }
 
   protected render() {
     const containerClasses = {
-      'toast-container': true
+      'toast-container': true,
     };
 
-    const progressStyle = this.showProgress 
-      ? `width: ${this.progressWidth}%` 
-      : 'display: none';
+    const progressStyle = this.showProgress ? `width: ${this.progressWidth}%` : 'display: none';
 
     return html`
-      <div 
-        class=${classMap(containerClasses)} 
+      <div
+        class=${classMap(containerClasses)}
         part="container"
         @mouseenter=${this.handleMouseEnter}
         @mouseleave=${this.handleMouseLeave}
@@ -476,33 +492,31 @@ export class ForgeToast extends BaseElement {
           <div class="toast-icon" part="icon">
             <slot name="icon">${this.getDefaultIcon()}</slot>
           </div>
-          
+
           <div class="toast-content" part="content">
-            ${this.title ? html`
-              <h4 class="toast-title" part="title">${this.title}</h4>
-            ` : ''}
-            
-            <div class="toast-message" part="message">
-              ${this.message || html`<slot></slot>`}
-            </div>
+            ${this.title ? html` <h4 class="toast-title" part="title">${this.title}</h4> ` : ''}
+
+            <div class="toast-message" part="message">${this.message || html`<slot></slot>`}</div>
           </div>
-          
-          ${this.dismissible ? html`
-            <button 
-              class="dismiss-button" 
-              part="dismiss"
-              @click=${this.handleDismissClick}
-              aria-label="Dismiss notification"
-            >
-              ✕
-            </button>
-          ` : ''}
+
+          ${this.dismissible
+            ? html`
+                <button
+                  class="dismiss-button"
+                  part="dismiss"
+                  @click=${this.handleDismissClick}
+                  aria-label="Dismiss notification"
+                >
+                  ✕
+                </button>
+              `
+            : ''}
         </div>
-        
+
         <div class="toast-actions" part="actions">
           <slot name="action"></slot>
         </div>
-        
+
         <div class="progress-bar" style=${progressStyle}></div>
       </div>
     `;
@@ -515,51 +529,54 @@ export class ForgeToast extends BaseElement {
     else if (this.persistent) states.push('persistent');
     else if (this.duration > 0) states.push('timed');
     else states.push('manual');
-    
+
     const currentState = states.join('-') || 'visible';
-    
+
     return {
       currentState,
       possibleStates: ['visible', 'timed', 'persistent', 'dismissed'],
-      stateDescription: this.getStateDescription(currentState)
+      stateDescription: this.getStateDescription(currentState),
     };
   }
 
   private getStateDescription(state: string): string {
     const descriptions: Record<string, string> = {
-      'visible': `${this.variant} toast notification visible and active`,
-      'timed': `${this.variant} toast with ${this.duration}ms auto-dismiss timer`,
-      'persistent': `${this.variant} toast that persists until manually dismissed`,
-      'dismissed': `${this.variant} toast has been dismissed and will be removed`
+      visible: `${this.variant} toast notification visible and active`,
+      timed: `${this.variant} toast with ${this.duration}ms auto-dismiss timer`,
+      persistent: `${this.variant} toast that persists until manually dismissed`,
+      dismissed: `${this.variant} toast has been dismissed and will be removed`,
     };
-    
-    return descriptions[state] || `Toast in ${state} state. Type: ${this.variant}, Title: ${this.title || 'none'}`;
+
+    return (
+      descriptions[state] ||
+      `Toast in ${state} state. Type: ${this.variant}, Title: ${this.title || 'none'}`
+    );
   }
 
   override getPossibleActions() {
     const actions = [];
-    
+
     if (this.isVisible && this.dismissible) {
       actions.push({
         name: 'dismiss',
         description: 'Dismiss the toast notification',
-        available: true
+        available: true,
       });
     }
-    
+
     if (this.shouldAutoDismiss()) {
       actions.push({
         name: 'pause',
         description: 'Pause auto-dismiss timer',
-        available: true
+        available: true,
       });
       actions.push({
         name: 'resume',
         description: 'Resume auto-dismiss timer',
-        available: true
+        available: true,
       });
     }
-    
+
     return actions;
   }
 
@@ -575,7 +592,7 @@ export class ForgeToast extends BaseElement {
       visible: this.isVisible,
       showProgress: this.showProgress,
       toastId: this.toastId,
-      timeRemaining: this.dismissTimer ? this.duration : 0
+      timeRemaining: this.dismissTimer ? this.duration : 0,
     };
   }
 }
