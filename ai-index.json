@@ -1,7 +1,7 @@
 {
   "indexVersion": "1.0.0",
   "package": "@nexcraft/forge",
-  "generatedAt": "2025-10-02T03:51:41.550Z",
+  "generatedAt": "2025-10-02T14:44:46.895Z",
   "summary": {
     "totalComponents": 31,
     "categories": {
@@ -70,6 +70,19 @@
       "examples": true
     },
     {
+      "tag": "forge-avatar",
+      "id": "forge-avatar",
+      "category": "atom",
+      "description": "avatar component",
+      "props": 29,
+      "events": 1,
+      "slots": false,
+      "hasAiMethods": true,
+      "a11yRole": "img",
+      "keyboardSupport": true,
+      "examples": true
+    },
+    {
       "tag": "forge-badge",
       "id": "forge-badge",
       "category": "atom",
@@ -79,19 +92,6 @@
       "slots": true,
       "hasAiMethods": true,
       "a11yRole": "status",
-      "keyboardSupport": true,
-      "examples": true
-    },
-    {
-      "tag": "forge-avatar",
-      "id": "forge-avatar",
-      "category": "atom",
-      "description": "avatar component",
-      "props": 31,
-      "events": 1,
-      "slots": false,
-      "hasAiMethods": true,
-      "a11yRole": "img",
       "keyboardSupport": true,
       "examples": true
     },
@@ -283,7 +283,7 @@
       "category": "atom",
       "description": "modal component",
       "props": 34,
-      "events": 4,
+      "events": 2,
       "slots": true,
       "hasAiMethods": true,
       "a11yRole": "dialog",

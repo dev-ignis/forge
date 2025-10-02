@@ -227,11 +227,6 @@ export class ForgeAvatar extends BaseElement {
   protected override firstUpdated(changedProperties: PropertyValues): void {
     super.firstUpdated(changedProperties);
 
-    if (this.clickable) {
-      this.tabIndex = 0;
-      this.addEventListener('keydown', this._handleKeyDown);
-    }
-
     // Update AI metadata and state based on properties
     this.updateAIMetadata();
     this.updateAvatarState();
@@ -277,7 +272,12 @@ export class ForgeAvatar extends BaseElement {
   };
 
   private _handleClick = (): void => {
-    // Browser automatically prevents click if button is disabled
+    // Browser prevents click on disabled buttons for user interactions,
+    // but programmatic .click() calls still fire the handler, so we check here
+    if (this.disabled) {
+      return;
+    }
+
     // Dispatch standard click event for framework compatibility
     this.dispatchEvent(
       new CustomEvent('click', {
@@ -285,21 +285,6 @@ export class ForgeAvatar extends BaseElement {
         composed: true,
       })
     );
-  };
-
-  private _handleKeyDown = (event: KeyboardEvent): void => {
-    if (this.disabled) {
-      return;
-    }
-
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      // Trigger click on the button element (will call _handleClick)
-      const button = this.shadowRoot?.querySelector('button.avatar') as HTMLButtonElement;
-      if (button) {
-        button.click();
-      }
-    }
   };
 
   // AI Integration methods
@@ -425,7 +410,6 @@ export class ForgeAvatar extends BaseElement {
             (this.fallback ? `Avatar with initials ${this.fallback}` : 'User avatar')}
             aria-describedby=${this.status !== 'none' ? 'status-indicator' : ''}
             @click=${this._handleClick}
-            @keydown=${this._handleKeyDown}
             part="avatar"
           >
             ${avatarContent}
