@@ -25,29 +25,39 @@ permissions:
 jobs:
   # Comprehensive validation for PRs
   lint:
-    name: Lint
+    name: Lint (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node & Install
         uses: ./.github/actions/setup-node
+        with:
+          node-version: ${{ matrix.node-version }}
 
       - name: Run linter
         run: npm run lint
 
   typecheck:
-    name: Type Check
+    name: Type Check (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node & Install
         uses: ./.github/actions/setup-node
+        with:
+          node-version: ${{ matrix.node-version }}
 
       - name: Build workspace packages
         run: |
@@ -58,21 +68,27 @@ jobs:
         run: npm run type-check
 
   test:
-    name: Test
+    name: Test (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node & Install
         uses: ./.github/actions/setup-node
+        with:
+          node-version: ${{ matrix.node-version }}
 
       - name: Run tests with coverage
         run: npm run test:coverage
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
+        if: matrix.node-version == '20.x'
         with:
           name: coverage-develop
           path: coverage/
@@ -85,10 +101,18 @@ jobs:
     if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish == true)
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node & Install
         uses: ./.github/actions/setup-node
+
+      - name: Security audit
+        run: |
+          npm audit --audit-level=moderate || {
+            echo "⚠️ Security vulnerabilities detected"
+            npm audit
+            exit 1
+          }
 
       - name: Quick build validation
         run: npm run build
@@ -104,7 +128,7 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node & Install
         uses: ./.github/actions/setup-node
@@ -124,7 +148,7 @@ jobs:
     environment: npm-publish
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         
       - name: Setup Node & Install
         uses: ./.github/actions/setup-node
@@ -150,9 +174,9 @@ jobs:
           echo "Versioning packages with Changesets..."
           npx changeset version
 
-          # Remove lockfile and reinstall with updated versions
-          rm -f package-lock.json
-          npm install
+          # Update lockfile with new versions (preserve lock file integrity)
+          echo "Updating package-lock.json with new versions..."
+          npm install --package-lock-only
 
           # Rebuild packages with correct versions
           npm run build
