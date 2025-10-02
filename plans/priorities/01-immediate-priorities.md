@@ -262,6 +262,86 @@
 
 **Expected Outcome**: Smaller bundle sizes, better performance
 
+### 10. AI Methods Optimization & Reframing
+
+**Priority**: MEDIUM | **Effort**: Low-Medium | **Impact**: High
+
+**Current Situation**:
+- AI methods (`getPossibleActions`, `explainState`, `aiState`) add ~100 lines per component
+- Total overhead: ~2,700 lines across 27 components (~81-135KB minified)
+- Methods are shipped to all users but rarely called in production
+- Marketing emphasizes "AI-native" but no AI tools currently consume these methods
+- Claims are technically accurate but positioning may be premature
+
+**Strategy**: Combine reframing (Option 1) + optional tree-shaking (Option 2)
+
+**Phase 1: Reframe Marketing (Week 1) - Low Effort**
+- [ ] Update README.md to emphasize "Runtime Introspection" over "AI-native"
+- [ ] Reposition as developer debugging/testing tools first, AI capability second
+- [ ] Update docs/ai/metadata-reference.md to add "Developer Introspection" section
+- [ ] Keep AI integration as documented capability, not primary selling point
+- [ ] Add practical debugging examples to documentation
+
+**Phase 2: Measure & Analyze (Week 2) - Low Effort**
+- [ ] Measure actual bundle impact of AI methods (use bundle analyzer)
+- [ ] Document size of getPossibleActions/explainState/aiState per component
+- [ ] Identify which methods are most/least valuable
+- [ ] Calculate potential savings from tree-shaking
+
+**Phase 3: Make Tree-Shakeable (Week 3-4) - Medium Effort**
+- [ ] Design optional import pattern:
+  ```typescript
+  // Default: Lean components (no AI methods)
+  import { ForgeButton } from '@nexcraft/forge'
+
+  // Opt-in: Full introspection API
+  import '@nexcraft/forge/introspection'
+  // OR per-component: import '@nexcraft/forge/button/introspection'
+  ```
+- [ ] Move AI methods to separate module that extends BaseElement prototypes
+- [ ] Update vite.config.ts for proper tree-shaking
+- [ ] Add new package.json exports for introspection modules
+- [ ] Ensure zero breaking changes for existing users
+- [ ] Update TypeScript definitions for conditional types
+
+**Phase 4: Prove Value with Tooling (Week 4+) - Medium Effort**
+- [ ] Build ONE concrete developer tool that uses these methods:
+  - **Option A**: Forge DevTools Chrome Extension (inspect component state visually)
+  - **Option B**: Enhanced console wrapper (`window.forge.inspect(element)`)
+  - **Option C**: Test helper library (`@nexcraft/forge-testing`)
+- [ ] Create video/GIF demonstrating practical debugging workflow
+- [ ] Add tool demo to README as proof of introspection value
+- [ ] Gather user feedback on introspection API usefulness
+
+**Expected Outcomes**:
+- **Bundle size**: 5-10% reduction for users who don't opt-in to introspection
+- **Marketing clarity**: More honest positioning as "introspection-enabled, AI-ready"
+- **Validation**: Real tool proves methods earn their bytes
+- **Flexibility**: Developers choose lean (default) or feature-rich (opt-in)
+- **Future-proof**: Infrastructure ready when AI tools start consuming metadata
+
+**Files to Update**:
+- `README.md` - Reframe "AI-native" messaging (Phase 1)
+- `docs/ai/metadata-reference.md` - Add developer introspection guide (Phase 1)
+- `src/core/BaseElement.ts` - Prepare for conditional method loading (Phase 3)
+- `src/core/ai-introspection.ts` - New module with AI methods (Phase 3)
+- `vite.config.ts` - Configure tree-shaking for introspection (Phase 3)
+- `package.json` - Add exports for introspection modules (Phase 3)
+- `examples/` - Add introspection usage examples (Phase 4)
+
+**Success Criteria**:
+- [ ] Bundle size measured and documented
+- [ ] README messaging reframed to emphasize developer tools
+- [ ] Tree-shaking implementation complete with zero breaking changes
+- [ ] At least one working tool demonstrates introspection value
+- [ ] Documentation updated with opt-in patterns
+- [ ] User feedback collected and positive
+
+**Related Items**:
+- Supports #6 (Bundle Size Optimization)
+- Supports #5 (Documentation Updates)
+- Supports #1 (TypeScript Type Safety - smaller API surface)
+
 ### 7. Build Process Improvements
 
 **Priority**: MEDIUM | **Effort**: Low | **Impact**: Medium
