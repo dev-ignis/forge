@@ -25,9 +25,111 @@ permissions:
   contents: read
 
 jobs:
-  ci:
-    name: CI
+  # Comprehensive validation for PRs
+  lint:
+    name: Lint (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node & Install
+        uses: ./.github/actions/setup-node
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Run linter
+        run: npm run lint
+
+  typecheck:
+    name: Type Check (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node & Install
+        uses: ./.github/actions/setup-node
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Build workspace packages
+        run: |
+          npm run build:types
+          npm run build --workspace=packages/forge-react
+
+      - name: Type check
+        run: npm run type-check
+
+  test:
+    name: Test (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node & Install
+        uses: ./.github/actions/setup-node
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        if: matrix.node-version == '20.x'
+        with:
+          name: coverage-main-pr
+          path: coverage/
+          retention-days: 7
+
+  # Lightweight smoke test for pushes to main
+  smoke-test:
+    name: Smoke Test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node & Install
+        uses: ./.github/actions/setup-node
+
+      - name: Security audit
+        run: |
+          npm audit --audit-level=moderate || {
+            echo "⚠️ Security vulnerabilities detected"
+            npm audit
+            exit 1
+          }
+
+      - name: Quick build validation
+        run: npm run build
+
+      - name: Validate AI Manifest
+        run: npm run validate:ai
+
+  # Build job with artifacts (runs after quality gates pass for PRs)
+  build:
+    name: Build & Upload Artifacts (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, test]
+    if: github.event_name == 'pull_request'
     strategy:
       matrix:
         node-version: [20.x, 22.x]
@@ -39,35 +141,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v5
+      - name: Setup Node & Install
+        uses: ./.github/actions/setup-node
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run linter
-        run: npm run lint
-
-      - name: Build workspace packages
-        run: |
-          npm run build:types
-          npm run build --workspace=packages/forge-react
-
-      - name: Type check
-        run: npm run type-check
-
-      - name: Run tests with coverage
-        run: npm run test:coverage
-
-      - name: Upload coverage reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-${{ matrix.node-version }}
-          path: coverage/
-          retention-days: 7
 
       - name: Build packages
         run: npm run build
