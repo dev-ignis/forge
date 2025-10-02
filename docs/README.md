@@ -14,15 +14,14 @@ Welcome to the Nexcraft Forge documentation. Start with Getting Started or jump 
 - Next.js: `./integrations/nextjs-integration.md`
 
 ## Theming & Tokens
-- Token Bridge Guide: `./theming/token-bridge-guide.md`
-- Token Bridge API: `./theming/token-bridge-api.md`
+- Theming Overview: `./guides/theming-overview.md`
+- Token Bridge Reference: `./theming/token-bridge.md`
 - Token Migration: `./theming/token-migration-guide.md`
 - Tailwind Plugin: `./guides/tailwind-plugin.md`
 
 ## AI‑Native
-- Overview: `./ai-metadata-system.md`
-- Methods API: `./ai-methods.md`
-- Integration Examples: `./ai-integration-examples.md`
+- Metadata Reference: `./ai/metadata-reference.md`
+- Integration Guide: `./ai/integration-guide.md`
 - Manifest: `./ai-manifest.md`
 
 ## Performance

@@ -164,5 +164,6 @@ All Forge components support:
 
 - [AI-Native Development Guide](../guides/ai-native-development.md)
 - [AI Import Guide](../guides/AI_IMPORT_GUIDE.md)
-- [Common UI Patterns](../patterns/AI_COMMON_PATTERNS.md)
+- [AI Metadata Reference](../ai/metadata-reference.md)
+- [AI Integration Guide](../ai/integration-guide.md)
 - [AI Styling Guide](../guides/AI_STYLING_GUIDE.md)

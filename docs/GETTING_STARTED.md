@@ -90,10 +90,11 @@ export class AppModule {}
 
 ## Theming Quick Tip
 
-Use CSS custom properties or the Token Bridge utilities. See `docs/theming/token-bridge-guide.md`.
+Use CSS custom properties or the Token Bridge utilities. See `docs/theming/token-bridge.md` or `docs/guides/theming-overview.md`.
 
 ## Next Steps
 
 - Integrations: `docs/integrations/`
-- AI methods: `docs/ai-methods.md`
+- AI Metadata Reference: `docs/ai/metadata-reference.md`
+- AI Integration Guide: `docs/ai/integration-guide.md`
 - Performance: `docs/performance-monitoring.md`

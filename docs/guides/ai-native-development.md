@@ -653,7 +653,8 @@ window.forgeAIDebug = {
 
 ## Related Documentation
 
-- [AI Metadata System](../ai-metadata-system.md)
+- [AI Metadata Reference](../ai/metadata-reference.md)
+- [AI Integration Guide](../ai/integration-guide.md)
 - [Phase 9: AI-Native Development Strategy](../../plans/phases/phase-9-ai-native-development.md)
 - [Performance Monitoring](../performance-monitoring.md)
 - [Component Architecture](../../plans/architecture/component-architecture.md)

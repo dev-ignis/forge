@@ -269,7 +269,7 @@ If AI artifacts look empty or tools can’t find metadata:
   - `custom-elements.json` should be present in the package
   - Exports resolve: `require.resolve('@nexcraft/forge/ai-manifest.json')`
 - See also:
-  - Docs: `docs/ai-manifest.md`, `docs/ai-methods.md`
+  - Docs: `docs/ai-manifest.md`, `docs/ai/metadata-reference.md`, `docs/ai/integration-guide.md`
 
 ## Pre-commit Hooks
 

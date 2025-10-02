@@ -541,6 +541,7 @@ Remember: **Semantic HTML is not optional** - it's essential for building inclus
 
 ## Related Documentation
 
-- [AI Metadata Developer Guide](./ai-metadata-developer-guide.md)
+- [AI Metadata Reference](./ai/metadata-reference.md)
+- [AI Integration Guide](./ai/integration-guide.md)
 - [Component Annotation Guidelines](./component-annotation-guidelines.md)
 - [Accessibility Testing Guide](./accessibility-testing-guide.md)
