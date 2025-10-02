@@ -4,7 +4,7 @@
 [![Bundle Size](https://img.shields.io/badge/bundle%20size-<10KB-brightgreen.svg)](https://bundlephobia.com/package/@nexcraft/forge)
 [![Test Coverage](https://img.shields.io/badge/coverage-86.4%25-brightgreen.svg)](./coverage)
 [![WCAG 2.1 AA](https://img.shields.io/badge/WCAG%202.1-AA-blue.svg)](https://www.w3.org/WAI/WCAG21/quickref/)
-[![AI-Native](https://img.shields.io/badge/AI-Native-purple.svg)](./docs/ai-metadata-system.md)
+[![AI-Native](https://img.shields.io/badge/AI-Native-purple.svg)](./docs/ai/metadata-reference.md)
 [![Performance Monitored](https://img.shields.io/badge/Performance-Monitored-orange.svg)](./docs/performance-monitoring.md)
 [![Figma Tokens](https://img.shields.io/badge/Figma%20Tokens-CLI%2FMCP-blue.svg)](./docs/guides/figma-to-forge.md)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
@@ -24,8 +24,8 @@
 - 📝 **Forms**: `import { RHFForgeInput } from '@nexcraft/forge-rhf'`
 
 **📚 AI Documentation**:
-- [🤖 AI Methods Guide](./docs/ai-methods.md) - Complete AI methods reference with examples (getPossibleActions, explainState, aiState)
-- [🎨 Common Patterns](./docs/patterns/AI_COMMON_PATTERNS.md) - Login, dashboard, form patterns  
+- [🤖 AI Metadata Reference](./docs/ai/metadata-reference.md) - Complete AI metadata system guide (interfaces, methods, implementation)
+- [🤖 AI Integration Guide](./docs/ai/integration-guide.md) - ChatGPT, Claude, Copilot integration examples & common patterns
 - [🎨 Styling Guide](./docs/guides/AI_STYLING_GUIDE.md) - Complete styling reference (variants, CSS, Tailwind)
 - [📦 Import Guide](./docs/guides/AI_IMPORT_GUIDE.md) - All import methods & framework examples
 - [🤖 AI Manifest](./ai-manifest.json) - Structured component metadata
@@ -174,25 +174,25 @@ Quick reference to all 26 components with HTML tag names:
 
 ### Getting Started
 - **[Quick Start Guide](./docs/GETTING_STARTED.md)** - Get your first component running in 4 hours
-- **[Unique Value Proposition](./plans/unique-value-proposition.md)** - Why @nexcraft/forge is different
-- **[Component Architecture](./plans/architecture/component-architecture.md)** - Learn our patterns and conventions
+- **[Component Architecture](./plans/adrs/ADR-015-atomic-composition-pattern.md)** - Atomic design patterns & composition
+- **[Component API Design](./plans/adrs/ADR-008-component-api-design.md)** - API standards & conventions
 
 ### Core Features
-- **[🤖 AI Metadata System](./docs/ai-metadata-system.md)** - Complete AI-native component documentation
-- **[🤖 AI-Native Development Guide](./docs/guides/ai-native-development.md)** - Building with AI coding assistants
-- **[🎨 Token Bridge Complete Guide](./docs/theming/token-bridge-guide.md)** - Import design tokens from any system
-- **[🎨 Token Bridge API Reference](./docs/theming/token-bridge-api.md)** - Complete API documentation
-- **[🔄 Token Bridge Migration Guide](./docs/theming/token-migration-guide.md)** - Migrate from existing token systems
-- **[⚡ Performance Dashboard Guide](./docs/guides/performance-dashboard-guide.md)** - Real-time performance monitoring and dashboard
-- **[⚡ Performance Dashboard API](./docs/performance-dashboard-api.md)** - Complete Performance Dashboard API
+- **[🤖 AI Metadata Reference](./docs/ai/metadata-reference.md)** - Complete AI metadata system guide (architecture, API, implementation)
+- **[🤖 AI Integration Guide](./docs/ai/integration-guide.md)** - ChatGPT, Claude, Copilot examples & common patterns
+- **[🤖 AI-Native Development](./docs/guides/ai-native-development.md)** - Building with AI coding assistants
+- **[🎨 Theming Overview](./docs/guides/theming-overview.md)** - Core theming concepts and strategies
+- **[🎨 Token Bridge Reference](./docs/theming/token-bridge.md)** - Complete guide and API for design token conversion
+- **[🔄 Token Migration Guide](./docs/theming/token-migration-guide.md)** - Migrate from existing token systems
+- **[⚡ Performance Dashboard Guide](./docs/guides/performance-dashboard-guide.md)** - Real-time performance monitoring
 - **[⚡ Performance Monitoring](./docs/performance-monitoring.md)** - Advanced performance monitoring system
- - **[Figma → Forge Tokens](./docs/guides/figma-to-forge.md)** - Pull tokens from Figma via CLI/MCP (no plugin required)
+- **[Figma → Forge Tokens](./docs/guides/figma-to-forge.md)** - Pull tokens from Figma via CLI/MCP (no plugin required)
 
 ### Architecture & Planning
 - **[Implementation Roadmap](./plans/implementation-roadmap.md)** - Complete development timeline with all differentiators
 - **[🚀 Phase 9: AI-Native Development](./plans/phases/phase-9-ai-native-development.md)** - Strategic pivot to AI-first component library
-- **[Architecture Decision Records](./plans/adrs/)** - 17 key technical decisions including AI-native components
-- **[Technology Stack](./plans/architecture/technology-stack.md)** - Core technology choices
+- **[Architecture Decision Records](./plans/adrs/)** - 18 key technical decisions including AI-native components
+- **[Build Tooling Strategy](./plans/adrs/ADR-005-build-tooling.md)** - Vite, Lit, TypeScript stack decisions
 
 ## ✨ The "Shiny" Stuff - What Makes Us Special
 

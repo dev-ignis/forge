@@ -7,7 +7,7 @@
     ["@nexcraft/forge-react", "@nexcraft/forge-vue", "@nexcraft/forge-angular"]
   ],
   "access": "public",
-  "baseBranch": "develop",
+  "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": []
 }

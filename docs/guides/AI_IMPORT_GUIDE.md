@@ -577,8 +577,8 @@ import { ForgeButton, ForgeInput } from '@nexcraft/forge/integrations/react'
 
 ## 📚 Related Documentation
 
-- [AI Methods Guide](../ai-methods.md) - Complete AI methods reference with examples
-- [Common Patterns](../patterns/AI_COMMON_PATTERNS.md) - Complete UI patterns  
+- [AI Metadata Reference](../ai/metadata-reference.md) - Complete technical reference for AI metadata
+- [AI Integration Guide](../ai/integration-guide.md) - Real-world examples and patterns
 - [Tailwind Plugin Guide](./tailwind-plugin.md) - Styling integration
 - [Selective Imports Guide](./selective-imports.md) - Tree-shaking details
 

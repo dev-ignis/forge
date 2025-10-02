@@ -1,10 +1,24 @@
-# Token Bridge Complete Guide
+# Token Bridge Reference
+
+Complete guide and API reference for the Token Bridge system in @nexcraft/forge.
 
 > **Industry-First Feature**: @nexcraft/forge is the ONLY component library with built-in design token conversion from any design system. Import tokens from Figma, Tailwind CSS, Material Design, and more - all with zero configuration.
 
-## 🎯 Why Token Bridge Is Revolutionary
+## Table of Contents
+
+- [Overview & Quick Start](#overview--quick-start)
+- [Supported Design Systems](#supported-design-systems)
+- [Output Formats](#output-formats)
+- [Complete API Reference](#complete-api-reference)
+- [Advanced Usage](#advanced-usage)
+- [Performance & Optimization](#performance--optimization)
+- [Integration Patterns](#integration-patterns)
+- [Best Practices](#best-practices)
+
+## Overview & Quick Start
 
 ### The Problem Every Team Faces
+
 ```javascript
 // The old way: Manual token management nightmare
 :root {
@@ -19,6 +33,7 @@ const spacing = '16px';          // Should be 1rem
 ```
 
 ### The @nexcraft/forge Solution
+
 ```javascript
 // The new way: Automatic sync with your design system
 import { TokenBridge } from '@nexcraft/forge/utils';
@@ -30,9 +45,10 @@ const css = bridge.toCSSProperties();
 // Always in sync, always correct, always type-safe
 ```
 
-## 🚀 Quick Start (2 Minutes!)
+### Quick Start (2 Minutes!)
 
-### Step 1: Import Your Design Tokens
+#### Step 1: Import Your Design Tokens
+
 ```javascript
 import { TokenBridge } from '@nexcraft/forge/utils';
 
@@ -48,7 +64,8 @@ const figmaTokens = {
 const bridge = TokenBridge.fromFigma(figmaTokens);
 ```
 
-### Step 2: Generate CSS for Your Components
+#### Step 2: Generate CSS for Your Components
+
 ```javascript
 // Automatic CSS generation
 const css = bridge.toCSSProperties();
@@ -58,7 +75,8 @@ document.adoptedStyleSheets = [new CSSStyleSheet()];
 document.adoptedStyleSheets[0].insertRule(css);
 ```
 
-### Step 3: Use With Any Forge Component
+#### Step 3: Use With Any Forge Component
+
 ```html
 <!-- Tokens automatically available -->
 <forge-button style="--forge-button-bg: var(--forge-brand-primary-blue-500)">
@@ -66,7 +84,7 @@ document.adoptedStyleSheets[0].insertRule(css);
 </forge-button>
 ```
 
-## 🎨 Supported Design Systems
+## Supported Design Systems
 
 ### 1. Figma Design Tokens (Most Popular)
 
@@ -81,18 +99,18 @@ const figmaTokens = {
     description: 'Primary brand color for buttons and links'
   },
   'Brand/Primary/Blue/600': {
-    value: '#2563eb', 
+    value: '#2563eb',
     type: 'color',
     description: 'Darker shade for hover states'
   },
-  
+
   // Spacing
   'Layout/Spacing/Component/Padding/Small': {
     value: '8px',
     type: 'dimension',
     description: 'Small component padding'
   },
-  
+
   // Typography
   'Typography/Heading/Large': {
     value: '2rem',
@@ -124,7 +142,7 @@ const tailwindConfig = {
     colors: {
       blue: {
         50: '#eff6ff',
-        100: '#dbeafe', 
+        100: '#dbeafe',
         500: '#3b82f6',
         600: '#2563eb',
         900: '#1e3a8a'
@@ -186,7 +204,7 @@ const materialTokens = {
     palette: {
       primary: {
         0: '#000000',
-        10: '#21005d', 
+        10: '#21005d',
         20: '#381e72',
         40: '#6750a4',
         90: '#eaddff',
@@ -209,9 +227,10 @@ const bridge = TokenBridge.fromMaterial(materialTokens);
 }
 ```
 
-## 🔄 Output Formats
+## Output Formats
 
 ### CSS Custom Properties (Default)
+
 Perfect for web applications:
 
 ```javascript
@@ -226,6 +245,7 @@ const css = bridge.toCSSProperties();
 ```
 
 ### Sass/SCSS Variables
+
 For Sass-based workflows:
 
 ```javascript
@@ -238,6 +258,7 @@ $forge-spacing-4: 1rem;
 ```
 
 ### JavaScript Object
+
 For programmatic access:
 
 ```javascript
@@ -256,6 +277,7 @@ const jsTokens = bridge.toJSObject();
 ```
 
 ### JSON Export
+
 For external tools and documentation:
 
 ```javascript
@@ -265,7 +287,7 @@ const tokenCollection = bridge.toJSON();
 ```json
 {
   "name": "Converted Design Tokens",
-  "version": "1.0.0", 
+  "version": "1.0.0",
   "tokens": [
     {
       "name": "primary.500",
@@ -281,7 +303,352 @@ const tokenCollection = bridge.toJSON();
 }
 ```
 
-## 🏗️ Advanced Usage
+## Complete API Reference
+
+### TokenBridge Class
+
+Main class for managing design tokens.
+
+#### Constructor
+
+```typescript
+new TokenBridge()
+```
+
+#### Static Methods
+
+##### `fromFigma(figmaTokens: any): TokenBridge`
+
+Import tokens from Figma design tokens format.
+
+```typescript
+const figmaTokens = {
+  'Brand/Primary/Blue/500': {
+    value: '#3b82f6',
+    type: 'color',
+    description: 'Primary brand color'
+  }
+};
+
+const bridge = TokenBridge.fromFigma(figmaTokens);
+```
+
+**Parameters:**
+- `figmaTokens` - Object containing Figma token definitions
+
+**Returns:** New TokenBridge instance with imported tokens
+
+**Throws:** Error if invalid Figma tokens format
+
+---
+
+##### `fromTailwind(tailwindConfig: any): TokenBridge`
+
+Import tokens from Tailwind CSS configuration.
+
+```typescript
+const tailwindConfig = {
+  theme: {
+    colors: {
+      blue: { 500: '#3b82f6' }
+    },
+    spacing: {
+      '4': '1rem'
+    }
+  }
+};
+
+const bridge = TokenBridge.fromTailwind(tailwindConfig);
+```
+
+**Parameters:**
+- `tailwindConfig` - Tailwind configuration object with theme property
+
+**Returns:** New TokenBridge instance with imported tokens
+
+**Throws:** Error if missing theme property
+
+---
+
+##### `fromMaterial(materialTokens: any): TokenBridge`
+
+Import tokens from Material Design token format.
+
+```typescript
+const materialTokens = {
+  sys: {
+    color: {
+      primary: '#6750a4'
+    }
+  }
+};
+
+const bridge = TokenBridge.fromMaterial(materialTokens);
+```
+
+**Parameters:**
+- `materialTokens` - Material Design token object
+
+**Returns:** New TokenBridge instance with imported tokens
+
+---
+
+#### Instance Methods
+
+##### `addToken(token: DesignToken): void`
+
+Add a design token to the collection.
+
+```typescript
+bridge.addToken({
+  name: 'brand.primary',
+  value: '#3b82f6',
+  type: 'color',
+  category: 'brand',
+  description: 'Primary brand color'
+});
+```
+
+**Parameters:**
+- `token` - DesignToken object to add
+
+---
+
+##### `getTokens(): DesignToken[]`
+
+Get all tokens in the collection.
+
+```typescript
+const allTokens = bridge.getTokens();
+```
+
+**Returns:** Array of all DesignToken objects
+
+---
+
+##### `getTokensByCategory(category: string): DesignToken[]`
+
+Get tokens filtered by category.
+
+```typescript
+const brandTokens = bridge.getTokensByCategory('brand');
+```
+
+**Parameters:**
+- `category` - Category name to filter by
+
+**Returns:** Array of tokens in the specified category
+
+---
+
+##### `getTokensByType(type: TokenType): DesignToken[]`
+
+Get tokens filtered by type.
+
+```typescript
+const colorTokens = bridge.getTokensByType('color');
+```
+
+**Parameters:**
+- `type` - Token type to filter by
+
+**Returns:** Array of tokens of the specified type
+
+---
+
+##### `toCSSProperties(): string`
+
+Generate CSS custom properties from tokens.
+
+```typescript
+const css = bridge.toCSSProperties();
+// Output: ":root { --forge-brand-primary: #3b82f6; }"
+```
+
+**Returns:** CSS string with custom properties
+
+---
+
+##### `toSassVariables(): string`
+
+Generate Sass variables from tokens.
+
+```typescript
+const sass = bridge.toSassVariables();
+// Output: "$forge-brand-primary: #3b82f6;"
+```
+
+**Returns:** Sass string with variable definitions
+
+---
+
+##### `toJSObject(): Record<string, any>`
+
+Generate JavaScript object from tokens.
+
+```typescript
+const jsTokens = bridge.toJSObject();
+// Output: { brand: { primary: '#3b82f6' } }
+```
+
+**Returns:** JavaScript object with nested token structure
+
+---
+
+##### `toJSON(): TokenCollection`
+
+Export as standardized JSON format.
+
+```typescript
+const collection = bridge.toJSON();
+```
+
+**Returns:** TokenCollection object with metadata
+
+---
+
+### ColorConverter Class
+
+Utility class for color space conversions.
+
+#### Static Methods
+
+##### `hexToRgb(hex: string): { r: number; g: number; b: number } | null`
+
+Convert hex color to RGB.
+
+```typescript
+const rgb = ColorConverter.hexToRgb('#3b82f6');
+// { r: 59, g: 130, b: 246 }
+```
+
+**Parameters:**
+- `hex` - Hex color string (e.g., '#3b82f6')
+
+**Returns:** RGB object or null if invalid
+
+---
+
+##### `rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: number }`
+
+Convert RGB to HSL.
+
+```typescript
+const hsl = ColorConverter.rgbToHsl(59, 130, 246);
+// { h: 217, s: 91, l: 60 }
+```
+
+**Parameters:**
+- `r` - Red component (0-255)
+- `g` - Green component (0-255)
+- `b` - Blue component (0-255)
+
+**Returns:** HSL object
+
+---
+
+##### `hexToHsl(hex: string): { h: number; s: number; l: number } | null`
+
+Convert hex color to HSL.
+
+```typescript
+const hsl = ColorConverter.hexToHsl('#3b82f6');
+// { h: 217, s: 91, l: 60 }
+```
+
+**Parameters:**
+- `hex` - Hex color string
+
+**Returns:** HSL object or null if invalid
+
+---
+
+### Type Definitions
+
+#### DesignToken
+
+```typescript
+interface DesignToken {
+  name: string;                    // Token name (e.g., 'brand.primary')
+  value: string | number;          // Token value (e.g., '#3b82f6', 16)
+  type: TokenType;                 // Token type
+  category?: string;               // Token category (e.g., 'brand')
+  description?: string;            // Human-readable description
+  metadata?: Record<string, any>;  // Additional metadata
+}
+```
+
+#### TokenType
+
+```typescript
+type TokenType =
+  | 'color'      // Color values
+  | 'spacing'    // Spacing/dimension values
+  | 'typography' // Font-related values
+  | 'border'     // Border-related values
+  | 'shadow'     // Shadow values
+  | 'gradient'   // Gradient values
+  | 'opacity'    // Opacity values
+  | 'animation'; // Animation values
+```
+
+#### ColorToken
+
+```typescript
+interface ColorToken extends DesignToken {
+  type: 'color';
+  value: string;
+  formats?: {
+    hex?: string;
+    rgb?: string;
+    hsl?: string;
+    oklch?: string;
+  };
+}
+```
+
+#### SpacingToken
+
+```typescript
+interface SpacingToken extends DesignToken {
+  type: 'spacing';
+  value: string;
+  units: 'px' | 'rem' | 'em' | '%' | 'vw' | 'vh';
+  pxValue?: number;  // Computed pixel value
+}
+```
+
+#### TypographyToken
+
+```typescript
+interface TypographyToken extends DesignToken {
+  type: 'typography';
+  value: {
+    fontSize: string;
+    fontWeight?: string | number;
+    lineHeight?: string | number;
+    fontFamily?: string;
+    letterSpacing?: string;
+  };
+}
+```
+
+#### TokenCollection
+
+```typescript
+interface TokenCollection {
+  name: string;           // Collection name
+  version?: string;       // Version identifier
+  tokens: DesignToken[];  // Array of tokens
+  metadata?: {
+    source: string;       // Source identifier
+    generatedAt: string;  // ISO timestamp
+    converter: string;    // Converter identifier
+  };
+}
+```
+
+## Advanced Usage
 
 ### Combining Multiple Sources
 
@@ -291,7 +658,7 @@ Real teams use multiple design systems. Combine them effortlessly:
 // Brand colors from Figma
 const brandTokens = TokenBridge.fromFigma(figmaTokens);
 
-// Layout system from Tailwind 
+// Layout system from Tailwind
 const layoutTokens = TokenBridge.fromTailwind(tailwindSpacing);
 
 // Material Design components
@@ -301,7 +668,7 @@ const materialTokens = TokenBridge.fromMaterial(materialSystem);
 const masterBridge = new TokenBridge();
 
 brandTokens.getTokens().forEach(token => masterBridge.addToken(token));
-layoutTokens.getTokens().forEach(token => masterBridge.addToken(token)); 
+layoutTokens.getTokens().forEach(token => masterBridge.addToken(token));
 materialTokens.getTokens().forEach(token => masterBridge.addToken(token));
 
 // Add custom tokens
@@ -336,7 +703,7 @@ customBridge.addToken({
 customBridge.addToken({
   name: 'semantic.success',
   value: '#10b981',
-  type: 'color', 
+  type: 'color',
   category: 'semantic',
   description: 'Success state color'
 });
@@ -359,17 +726,17 @@ Organize large token systems:
 const colorTokens = bridge.getTokensByType('color');
 const spacingTokens = bridge.getTokensByType('spacing');
 
-// Filter by category  
+// Filter by category
 const brandTokens = bridge.getTokensByCategory('brand');
 const componentTokens = bridge.getTokensByCategory('component');
 
 // Combine filters
-const brandColors = bridge.getTokens().filter(token => 
+const brandColors = bridge.getTokens().filter(token =>
   token.type === 'color' && token.category === 'brand'
 );
 ```
 
-## ⚡ Performance & Optimization
+## Performance & Optimization
 
 ### Intelligent Caching System
 
@@ -379,7 +746,7 @@ Token Bridge includes built-in performance optimizations:
 // First generation - processes and caches
 const css1 = bridge.toCSSProperties(); // ~50ms for 1000 tokens
 
-// Subsequent generations - returns cached result  
+// Subsequent generations - returns cached result
 const css2 = bridge.toCSSProperties(); // ~0.1ms (500x faster!)
 
 // Cache automatically invalidates when tokens change
@@ -392,7 +759,7 @@ const css3 = bridge.toCSSProperties(); // Regenerates only what changed
 ```javascript
 // Minimal memory footprint
 console.log('Memory per 100 tokens: ~1KB');
-console.log('Memory per 1000 tokens: ~10KB'); 
+console.log('Memory per 1000 tokens: ~10KB');
 console.log('Memory per 10000 tokens: ~100KB');
 
 // Automatic cleanup
@@ -411,7 +778,24 @@ console.log('JavaScript generation: ~5ms');
 console.log('JSON export: ~15ms');
 ```
 
-## 🎯 Integration Patterns
+### Performance Characteristics
+
+#### Time Complexity
+- Token import: O(n) where n is number of tokens
+- Token query: O(n) for filtering, O(1) for direct access
+- Output generation: O(n) with automatic caching
+
+#### Memory Usage
+- ~10 bytes per token for basic storage
+- ~100 bytes per token with full metadata
+- Automatic cache cleanup prevents memory leaks
+
+#### Caching Behavior
+- Output generation is cached until tokens change
+- Cache is automatically invalidated when tokens are added/modified
+- Manual cache clearing available via internal methods
+
+## Integration Patterns
 
 ### React Integration
 
@@ -421,18 +805,18 @@ import { useEffect, useState } from 'react';
 
 function ThemeProvider({ figmaTokens, children }) {
   const [css, setCss] = useState('');
-  
+
   useEffect(() => {
     const bridge = TokenBridge.fromFigma(figmaTokens);
     const generatedCSS = bridge.toCSSProperties();
     setCss(generatedCSS);
-    
+
     // Inject CSS
     const styleSheet = new CSSStyleSheet();
     styleSheet.replaceSync(generatedCSS);
     document.adoptedStyleSheets = [styleSheet];
   }, [figmaTokens]);
-  
+
   return <div className="themed-app">{children}</div>;
 }
 
@@ -465,7 +849,7 @@ const props = defineProps(['figmaTokens']);
 const buttonStyles = computed(() => {
   const bridge = TokenBridge.fromFigma(props.figmaTokens);
   const jsTokens = bridge.toJSObject();
-  
+
   return {
     '--forge-button-bg': jsTokens.brand?.primary?.['500'],
     '--forge-button-text': jsTokens.brand?.text?.primary
@@ -475,7 +859,7 @@ const buttonStyles = computed(() => {
 onMounted(() => {
   const bridge = TokenBridge.fromFigma(props.figmaTokens);
   const css = bridge.toCSSProperties();
-  
+
   const styleSheet = new CSSStyleSheet();
   styleSheet.replaceSync(css);
   document.adoptedStyleSheets = [styleSheet];
@@ -493,21 +877,21 @@ import { TokenBridge } from '@nexcraft/forge/utils';
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private bridge?: TokenBridge;
-  
+
   loadFigmaTokens(tokens: any) {
     this.bridge = TokenBridge.fromFigma(tokens);
     this.applyTheme();
   }
-  
+
   private applyTheme() {
     if (!this.bridge) return;
-    
+
     const css = this.bridge.toCSSProperties();
     const styleSheet = new CSSStyleSheet();
     styleSheet.replaceSync(css);
     document.adoptedStyleSheets = [styleSheet];
   }
-  
+
   getTokens() {
     return this.bridge?.toJSObject() || {};
   }
@@ -532,233 +916,17 @@ const tailwindBridge = TokenBridge.fromTailwind(tailwindConfig);
 // Export different formats
 fs.writeFileSync('./dist/tokens.css', figmaBridge.toCSSProperties());
 fs.writeFileSync('./dist/tokens.scss', figmaBridge.toSassVariables());
-fs.writeFileSync('./dist/tokens.js', 
+fs.writeFileSync('./dist/tokens.js',
   `export default ${JSON.stringify(figmaBridge.toJSObject())};`
 );
 
 console.log('✅ Design tokens generated successfully!');
 ```
 
-## 🔄 Real-World Migration Examples
-
-### From Manual CSS Variables
-
-```css
-/* Before: Manual maintenance nightmare */
-:root {
-  --primary-color: #3b82f6;     /* Who chose this? */
-  --primary-hover: #2563eb;      /* Is this still correct? */
-  --success-color: #10b981;      /* Different from design */
-  --spacing-sm: 8px;             /* Should be rem? */
-  --spacing-md: 16px;            /* Inconsistent units */
-}
-```
-
-```javascript
-// After: Automatic sync with Figma
-const bridge = TokenBridge.fromFigma(designSystemTokens);
-const css = bridge.toCSSProperties();
-// ✅ Always in sync with design system
-// ✅ Consistent naming
-// ✅ Proper units
-// ✅ Complete documentation
-```
-
-### From Sass Variables
-
-```scss
-// Before: Sass variables scattered across files
-$primary-blue: #3b82f6;
-$primary-blue-dark: #2563eb;
-$spacing-small: 0.5rem;
-$spacing-medium: 1rem;
-
-// Problems:
-// - Hard to maintain
-// - No single source of truth  
-// - Easy to get out of sync
-```
-
-```javascript
-// After: Centralized token management
-const bridge = TokenBridge.fromTailwind(tailwindConfig);
-const sass = bridge.toSassVariables();
-
-// ✅ Single source of truth
-// ✅ Automatic generation 
-// ✅ Consistent naming
-// ✅ Type-safe access
-```
-
-### From Multiple Design Systems
-
-```javascript
-// Before: Inconsistent token systems
-const reactTokens = { primary: '#1976d2' };        // Material
-const vueTokens = { primaryColor: '#3b82f6' };     // Tailwind  
-const angularTokens = { 'primary-500': '#6366f1' }; // Custom
-
-// After: Unified token system
-const masterBridge = new TokenBridge();
-
-// Import from different sources
-const materialBridge = TokenBridge.fromMaterial(materialTokens);
-const tailwindBridge = TokenBridge.fromTailwind(tailwindConfig);
-const figmaBridge = TokenBridge.fromFigma(figmaTokens);
-
-// Combine into unified system
-materialBridge.getTokens().forEach(token => masterBridge.addToken(token));
-tailwindBridge.getTokens().forEach(token => masterBridge.addToken(token));
-figmaBridge.getTokens().forEach(token => masterBridge.addToken(token));
-
-// Single output for all frameworks
-const unifiedCSS = masterBridge.toCSSProperties();
-```
-
-## 🛠️ Development Workflow
-
-### Design-to-Code Pipeline
-
-```bash
-# 1. Export tokens from Figma
-curl -H "X-Figma-Token: $FIGMA_TOKEN" \
-     "https://api.figma.com/v1/files/$FILE_ID/variables/local" > figma-tokens.json
-
-# 2. Generate CSS automatically  
-node build-tokens.js
-
-# 3. Components automatically use new tokens
-npm run dev
-```
-
-### Continuous Integration
-
-```yaml
-# .github/workflows/tokens.yml
-name: Update Design Tokens
-on:
-  schedule:
-    - cron: '0 9 * * *'  # Daily at 9am
-  
-jobs:
-  update-tokens:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Fetch Figma tokens
-        run: |
-          curl -H "X-Figma-Token: ${{ secrets.FIGMA_TOKEN }}" \
-               "${{ secrets.FIGMA_API_URL }}" > figma-tokens.json
-      
-      - name: Generate CSS
-        run: |
-          npm install @nexcraft/forge
-          node scripts/build-tokens.js
-      
-      - name: Create PR if tokens changed
-        uses: peter-evans/create-pull-request@v4
-        with:
-          title: 'Update design tokens from Figma'
-          body: 'Automated token sync from design system'
-```
-
-### Local Development
-
-```javascript
-// scripts/watch-tokens.js - Watch for token changes
-const chokidar = require('chokidar');
-const { TokenBridge } = require('@nexcraft/forge/utils');
-
-chokidar.watch('./tokens/*.json').on('change', () => {
-  console.log('🎨 Design tokens changed - rebuilding...');
-  
-  const tokens = JSON.parse(fs.readFileSync('./tokens/figma.json'));
-  const bridge = TokenBridge.fromFigma(tokens);
-  
-  fs.writeFileSync('./src/tokens.css', bridge.toCSSProperties());
-  console.log('✅ Tokens updated!');
-});
-```
-
-## 🔍 Debugging & Troubleshooting
-
-### Common Issues & Solutions
-
-#### Issue: Token Names Don't Match
-```javascript
-// Problem: Figma token "Brand/Primary/Blue/500" becomes "brand.primary.blue.500"
-const tokens = bridge.getTokens();
-console.log(tokens.map(t => t.name));
-// ["brand.primary.blue.500"]
-
-// Solution: Understand the normalization
-console.log('Original Figma name: "Brand/Primary/Blue/500"');
-console.log('Normalized name: "brand.primary.blue.500"');  
-console.log('CSS variable: "--forge-brand-primary-blue-500"');
-```
-
-#### Issue: Colors Not Appearing
-```javascript
-// Problem: CSS not being applied
-const css = bridge.toCSSProperties();
-console.log(css); // Verify CSS is generated
-
-// Solution: Ensure CSS is injected
-const styleSheet = new CSSStyleSheet();
-styleSheet.replaceSync(css);
-document.adoptedStyleSheets = [styleSheet];
-```
-
-#### Issue: Performance Slow
-```javascript
-// Problem: Regenerating tokens too often
-const bridge = TokenBridge.fromFigma(tokens);
-
-// ❌ Slow - regenerates every time
-const css1 = bridge.toCSSProperties();
-const css2 = bridge.toCSSProperties();
-
-// ✅ Fast - uses cache
-const css = bridge.toCSSProperties(); // Generate once
-// All subsequent calls use cache automatically
-```
-
-### Debug Utilities
-
-```javascript
-// Built-in debugging
-const bridge = TokenBridge.fromFigma(figmaTokens);
-
-// Inspect tokens
-console.log('Total tokens:', bridge.getTokens().length);
-console.log('Color tokens:', bridge.getTokensByType('color').length);
-console.log('Spacing tokens:', bridge.getTokensByType('spacing').length);
-
-// Inspect categories
-console.log('Brand tokens:', bridge.getTokensByCategory('brand').length);
-console.log('Component tokens:', bridge.getTokensByCategory('component').length);
-
-// Export for inspection
-const collection = bridge.toJSON();
-console.log('Full token collection:', collection);
-```
-
-## 📊 Token Bridge vs. Alternatives
-
-| Feature | @nexcraft/forge | Style Dictionary | Theo | Diez |
-|---------|-----------------|------------------|------|------|
-| **Figma Integration** | ✅ Built-in | ⚠️ Requires plugin | ❌ Manual | ⚠️ Complex setup |
-| **Tailwind Import** | ✅ Direct import | ❌ Not supported | ❌ Not supported | ❌ Not supported |
-| **Material Design** | ✅ Built-in | ⚠️ Custom transforms | ⚠️ Custom config | ❌ Not supported |
-| **Zero Configuration** | ✅ Works instantly | ❌ Complex config | ❌ Config required | ❌ Config required |
-| **TypeScript Support** | ✅ Full type safety | ⚠️ Basic types | ❌ No types | ⚠️ Limited types |
-| **Performance** | ✅ Built-in caching | ⚠️ Manual optimization | ⚠️ No caching | ⚠️ No caching |
-| **Runtime Usage** | ✅ Browser + Node | ❌ Build-time only | ❌ Build-time only | ❌ Build-time only |
-| **Multi-source** | ✅ Combine any sources | ⚠️ Limited | ⚠️ Limited | ❌ Single source |
-
-## 🎯 Best Practices
+## Best Practices
 
 ### 1. Token Organization
+
 ```javascript
 // ✅ Good: Organized by purpose
 const tokens = {
@@ -778,6 +946,7 @@ const badTokens = {
 ```
 
 ### 2. Naming Conventions
+
 ```javascript
 // ✅ Good: Descriptive hierarchy
 'Brand/Primary/Blue/500'      // Clear purpose and scale
@@ -791,6 +960,7 @@ const badTokens = {
 ```
 
 ### 3. Type Safety
+
 ```javascript
 // ✅ Good: Use TypeScript interfaces
 import type { ColorToken, SpacingToken } from '@nexcraft/forge/utils';
@@ -804,6 +974,7 @@ const primaryColor: string = jsTokens.brand?.primary?.['500'] || '#3b82f6';
 ```
 
 ### 4. Performance Optimization
+
 ```javascript
 // ✅ Good: Generate once, use everywhere
 const bridge = TokenBridge.fromFigma(figmaTokens);
@@ -818,100 +989,13 @@ const bridge1 = TokenBridge.fromFigma(tokens); // Unnecessary
 const bridge2 = TokenBridge.fromFigma(tokens); // Duplicate work
 ```
 
-## 🚀 Advanced Features
-
-### Color Space Conversion
-```javascript
-import { ColorConverter } from '@nexcraft/forge/utils';
-
-// Convert colors between formats
-const rgb = ColorConverter.hexToRgb('#3b82f6');
-// { r: 59, g: 130, b: 246 }
-
-const hsl = ColorConverter.rgbToHsl(59, 130, 246);
-// { h: 217, s: 91, l: 60 }
-
-const hsl2 = ColorConverter.hexToHsl('#3b82f6');
-// { h: 217, s: 91, l: 60 }
-```
-
-### Token Metadata
-```javascript
-// Rich token information
-const token = bridge.getTokens()[0];
-console.log({
-  name: token.name,                    // "brand.primary.500"
-  value: token.value,                  // "#3b82f6"
-  type: token.type,                    // "color"
-  category: token.category,            // "brand"
-  description: token.description,      // "Primary brand color"
-  metadata: token.metadata            // { source: "figma", ... }
-});
-```
-
-### Custom Transform Functions
-```javascript
-// Extend TokenBridge with custom logic
-class CustomTokenBridge extends TokenBridge {
-  
-  // Custom color transformation
-  addColorVariants(baseColor: string, name: string) {
-    // Generate light/dark variants
-    const lightColor = this.lighten(baseColor, 20);
-    const darkColor = this.darken(baseColor, 20);
-    
-    this.addToken({ name: `${name}.light`, value: lightColor, type: 'color' });
-    this.addToken({ name: `${name}.dark`, value: darkColor, type: 'color' });
-  }
-  
-  // Custom spacing scale
-  generateSpacingScale(baseSize: number) {
-    const scale = [0.25, 0.5, 1, 1.5, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64];
-    
-    scale.forEach((multiplier, index) => {
-      this.addToken({
-        name: `spacing.${index}`,
-        value: `${baseSize * multiplier}rem`,
-        type: 'spacing'
-      });
-    });
-  }
-}
-```
-
-## 🎉 Success Stories
-
-### Case Study: E-commerce Platform
-> "We migrated from manually maintained CSS variables to Token Bridge. Design-to-code time went from 2 days to 2 minutes. Our design system is now always in sync across 12 micro-frontends."
-> 
-> — Sarah Chen, Frontend Architect at ShopFlow
-
-**Results:**
-- 🎯 100% design system consistency
-- ⚡ 99% faster token updates  
-- 🛠️ 75% less maintenance overhead
-- 🎨 Automatic design system sync
-
-### Case Study: SaaS Application
-> "Token Bridge eliminated our biggest pain point - keeping design tokens synchronized between Figma and code. Now our designers can update colors and see changes live in minutes."
->
-> — Michael Rodriguez, Design Systems Lead at DataViz Pro
-
-**Results:**
-- 🎨 Real-time design-to-code sync
-- 🚀 50% faster feature development
-- ✅ Zero design inconsistencies
-- 👥 Better designer-developer collaboration
-
 ---
 
-## 🔗 Additional Resources
+## Additional Resources
 
-- **[Token Bridge API Reference](./token-bridge-api.md)** - Complete API documentation
-- **[Design System Integration Guide](./design-system-integration.md)** - Platform-specific guides
-- **[Migration Guide](./token-migration-guide.md)** - Step-by-step migration from other systems
-- **[Performance Guide](./token-performance.md)** - Optimization techniques
-- **[Examples Repository](../../examples/)** - Complete working examples
+- **[Migration Guide](./migration-guide.md)** - Step-by-step migration from other systems
+- **[Theming Overview](../guides/theming-overview.md)** - Core theming concepts and strategies
+- **[Figma Token Integration](../guides/figma-to-forge.md)** - Pull tokens from Figma via CLI/MCP
 
 ---
 

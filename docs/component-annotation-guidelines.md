@@ -582,7 +582,8 @@ Following these guidelines ensures your Forge components are truly intelligent, 
 
 ## Related Documentation
 
-- [AI Metadata Developer Guide](./ai-metadata-developer-guide.md)
+- [AI Metadata Reference](./ai/metadata-reference.md)
+- [AI Integration Guide](./ai/integration-guide.md)
 - [Semantic HTML Best Practices](./semantic-html-best-practices.md)
 - [Performance Monitoring Guide](./performance-monitoring-guide.md)
 - [Accessibility Testing Guide](./accessibility-testing-guide.md)

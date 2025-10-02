@@ -1,13 +1,19 @@
 name: 'Setup Node.js with Cache'
-description: 'Setup Node.js 20.x with npm cache and install dependencies'
+description: 'Setup Node.js with npm cache and install dependencies'
+
+inputs:
+  node-version:
+    description: 'Node.js version to use'
+    required: false
+    default: '20.x'
 
 runs:
   using: 'composite'
   steps:
-    - name: Setup Node.js 20.x
-      uses: actions/setup-node@v4
+    - name: Setup Node.js ${{ inputs.node-version }}
+      uses: actions/setup-node@v5
       with:
-        node-version: 20.x
+        node-version: ${{ inputs.node-version }}
 
     - name: Cache node_modules
       uses: actions/cache@v4

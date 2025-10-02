@@ -14,7 +14,13 @@ Beta releases are pre-production versions that contain:
 
 ## Publishing Beta Releases
 
-### 🚀 Quick Start
+### 🚀 Two Publishing Methods
+
+There are two ways to publish beta releases, depending on your use case:
+
+#### **Method 1: Dedicated Beta Release Workflow** (Recommended)
+
+Best for: Quick beta releases with custom versioning
 
 1. **Navigate to GitHub Actions**
    - Go to your repository → Actions tab
@@ -29,9 +35,29 @@ Beta releases are pre-production versions that contain:
    ```
 
 3. **Wait for Publication**
-   - Workflow runs quality checks
+   - Security audit runs first (blocks on critical vulnerabilities)
+   - Workflow runs quality checks (lint, typecheck, tests, build)
    - Publishes to NPM with beta tag
-   - Creates GitHub pre-release
+   - Creates GitHub pre-release automatically
+
+#### **Method 2: Develop Branch Workflow** (Changesets-based)
+
+Best for: Beta releases as part of development cycle
+
+1. **Navigate to GitHub Actions**
+   - Go to your repository → Actions tab
+   - Select "Develop CI" workflow
+   - Click "Run workflow"
+
+2. **Enable Beta Publishing**
+   - Toggle "Publish beta version to npm" → `true`
+   - Click "Run workflow"
+
+3. **Automated Process**
+   - Enters Changesets pre-release mode
+   - Versions packages using existing changesets
+   - Publishes with beta tag
+   - Preserves package-lock.json integrity
 
 ### 📋 Release Types Explained
 
@@ -45,10 +71,10 @@ Beta releases are pre-production versions that contain:
 
 | Bump Type | Description | Example |
 |-----------|-------------|---------|
-| **prerelease** | Increment beta number | `0.5.0-beta.1` → `0.5.0-beta.2` |
-| **prepatch** | New patch with beta | `0.5.0` → `0.5.1-beta.0` |
-| **preminor** | New minor with beta | `0.5.0` → `0.6.0-beta.0` |
-| **premajor** | New major with beta | `0.5.0` → `1.0.0-beta.0` |
+| **prerelease** | Increment beta number | `0.7.1-beta.1` → `0.7.1-beta.2` |
+| **prepatch** | New patch with beta | `0.7.1` → `0.7.2-beta.0` |
+| **preminor** | New minor with beta | `0.7.1` → `0.8.0-beta.0` |
+| **premajor** | New major with beta | `0.7.1` → `1.0.0-beta.0` |
 
 ## Installing Beta Versions
 
@@ -124,14 +150,40 @@ graph LR
 
 ## Quality Assurance
 
+### 🔒 Security Auditing (Critical Gate)
+
+All beta releases undergo mandatory security auditing before publication:
+
+**Security Audit Process:**
+1. **Production Dependencies Scan**
+   - Runs `npm audit` on production dependencies only
+   - Checks for known vulnerabilities in runtime packages
+   - Development dependencies excluded from gate
+
+2. **Severity Thresholds**
+   - **Critical**: Blocks release immediately
+   - **High**: Configurable via `SECURITY_ALERT_LEVEL` variable
+   - **Moderate/Low**: Logged but doesn't block
+
+3. **Notification System**
+   - Critical vulnerabilities trigger Discord alerts
+   - Security team notified via dedicated webhook
+   - Operations team receives summary reports
+
+4. **Automated Blocking**
+   - Beta release workflow stops if critical vulnerabilities found
+   - Manual override requires security team approval
+   - Ensures no vulnerable code reaches npm registry
+
 ### 🧪 Automatic Quality Gates
 
 Beta releases include all production quality checks:
-- ✅ ESLint validation
-- ✅ TypeScript type checking
-- ✅ Unit test suite (90%+ coverage)
-- ✅ Build verification
-- ✅ Bundle size limits
+- ✅ **Security audit** (critical vulnerabilities block release)
+- ✅ **ESLint validation** (code quality standards)
+- ✅ **TypeScript type checking** (type safety verification)
+- ✅ **Unit test suite** (76%+ coverage maintained)
+- ✅ **Build verification** (ensures clean compilation)
+- ✅ **AI manifest validation** (component metadata integrity)
 
 ### 🐛 Reporting Issues
 
@@ -162,15 +214,28 @@ node -p "require('@nexcraft/forge/package.json').version"
 | **Alpha** | `alpha` | 🔴 Experimental | Daily |
 | **RC** | `rc` | 🟢 Pre-Production | As Needed |
 
+### 🔐 Dependency Integrity
+
+**Safe package-lock.json Handling:**
+- Beta releases preserve `package-lock.json` integrity
+- Uses `npm install --package-lock-only` after version bumps
+- Prevents dependency drift between beta and production
+- Ensures reproducible builds across environments
+
+**Why This Matters:**
+- Beta versions have identical dependencies to what will be in production
+- No surprises when promoting beta → stable
+- Consistent testing environment
+
 ### 🏷️ Version Naming Convention
 
 ```
 {major}.{minor}.{patch}-{channel}.{increment}
 
 Examples:
-0.5.0          (stable release)
-0.5.1-beta.0   (first beta for next patch)
-0.6.0-alpha.1  (first alpha for next minor)
+0.7.1          (stable release)
+0.7.2-beta.0   (first beta for next patch)
+0.8.0-alpha.1  (first alpha for next minor)
 1.0.0-rc.1     (first release candidate for v1)
 ```
 
