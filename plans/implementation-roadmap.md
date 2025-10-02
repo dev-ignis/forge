@@ -83,13 +83,6 @@
 
 ### Architecture & Planning
 - [Architecture Decision Records](./adrs/)
-- [Component Architecture](./architecture/component-architecture.md)
-- [Technology Stack](./architecture/technology-stack.md)
-
-### Metrics & Team
-- [Success Metrics](./metrics/success-metrics.md)
-- [Risk Mitigation](./metrics/risk-mitigation.md)
-- [Team Structure](./team/team-structure.md)
 
 ## 📊 High-Level Metrics
 
