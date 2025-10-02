@@ -1,7 +1,7 @@
 # ADR-008: Component API Design Standards
 
 ## Status
-**Accepted**
+**Accepted** - Revised 2025-01-02
 
 ## Context
 A consistent, intuitive API design is crucial for developer adoption and satisfaction. The API is the contract between the component library and its consumers, affecting:
@@ -108,6 +108,7 @@ class MyComponent extends LitElement {
     this.dispatchEvent(new CustomEvent('input'));       // NOT 'on-input', 'value-change'
     this.dispatchEvent(new CustomEvent('close'));       // NOT 'on-close', 'closed'
     this.dispatchEvent(new CustomEvent('select'));      // NOT 'on-select', 'selected'
+    this.dispatchEvent(new CustomEvent('click'));       // NOT 'on-click', 'clicked'
   }
 }
 
@@ -116,8 +117,84 @@ interface Props {
   onChange?: (event: CustomEvent) => void;  // Framework adds 'on' prefix
   onClose?: (event: CustomEvent) => void;
   onSelect?: (event: CustomEvent) => void;
+  onClick?: (event: CustomEvent) => void;
 }
 ```
+
+### Interactive Components: Use Native `<button>` Elements
+
+**For components with clickable/interactive behavior**, use native `<button>` elements internally to get proper disabled state handling and accessibility:
+
+```typescript
+// CORRECT: Use <button> for interactive elements
+class ForgeAvatar extends LitElement {
+  @property({ type: Boolean }) disabled = false;
+  @property({ type: Boolean }) clickable = false;
+
+  render() {
+    // Use button when interactive, div otherwise
+    const tag = this.clickable ? 'button' : 'div';
+
+    return html`
+      <${tag}
+        class="avatar ${this.clickable ? 'button-reset' : ''}"
+        type=${this.clickable ? 'button' : nothing}
+        ?disabled=${this.disabled}
+        @click=${this.clickable ? this._handleClick : nothing}
+      >
+        <!-- avatar content -->
+      </${tag}>
+    `;
+  }
+
+  private _handleClick() {
+    // Browser automatically prevents click if disabled
+    // No need for manual checks
+    this.dispatchEvent(new CustomEvent('click', {
+      bubbles: true,
+      composed: true
+    }));
+  }
+}
+```
+
+**Benefits of Native `<button>`**:
+- ✅ Browser-level disabled state handling (no event leakage)
+- ✅ Proper keyboard navigation (Space/Enter)
+- ✅ Built-in accessibility (role, ARIA)
+- ✅ Focus management
+- ✅ Standard event names work correctly
+
+**Button Reset Styling**:
+```css
+.button-reset {
+  /* Remove default button styling */
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-reset:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+```
+
+**When to Use Native `<button>`**:
+1. Component has `disabled` or similar state that should prevent interaction
+2. Component is clickable/tappable by users
+3. Component represents an action (not just decoration)
+4. Need proper keyboard accessibility
+
+**Shadow DOM Semantics**:
+Using `<button>` inside shadow DOM is an **implementation detail** - consumers see the component's semantic meaning (e.g., `<forge-avatar>`), not the internal structure. The button provides correct interaction behavior while the component maintains its semantic identity.
 
 ### Event Detail Structure
 ```typescript
@@ -312,5 +389,26 @@ Each component must document:
 ## References
 - [HTML Living Standard](https://html.spec.whatwg.org/)
 - [Web Components Best Practices](https://www.webcomponents.org/community/best-practices)
+- [Shadow DOM Event Composition](https://www.w3.org/TR/shadow-dom/#event-dispatch)
 - Component architecture plan: `/plans/component-architecture.md`
 - Related: ADR-001 (Web Components), ADR-007 (Framework Integration)
+
+---
+
+## Revision History
+
+### 2025-01-02: Native Button Pattern for Interactive Components
+
+**Revision**: Added guidance to use native `<button>` elements for interactive components.
+
+**Rationale**:
+Shadow DOM composed events (like `click`) always cross shadow boundaries per W3C spec, making it impossible to prevent events when a component is disabled using divs/spans. Native `<button disabled>` provides browser-level event prevention, proper accessibility, and keyboard navigation while maintaining standard event names.
+
+**Impact**:
+- Interactive components (Avatar when clickable, custom buttons) use `<button>` internally
+- Standard event names (`click`, `dismiss`, `close`) work correctly
+- No need for custom namespaced events (`forge-*-click`)
+- Simpler API, better accessibility, familiar developer experience
+
+**Migration**:
+Components using custom interactive elements (divs with click handlers) should be refactored to use native `<button>` elements with CSS resets. This is a breaking change but improves correctness and accessibility.
