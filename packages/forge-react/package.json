@@ -1,6 +1,6 @@
 {
   "name": "@nexcraft/forge-react",
-  "version": "1.0.0",
+  "version": "0.3.0",
   "description": "React integration for Nexcraft Forge web components",
   "type": "module",
   "main": "./dist/index.js",

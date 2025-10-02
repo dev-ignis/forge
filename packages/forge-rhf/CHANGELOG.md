@@ -1,6 +1,6 @@
 # @nexcraft/forge-rhf
 
-## 1.0.0
+## 0.4.0
 
 ### Minor Changes
 
@@ -20,7 +20,7 @@
 
 - Updated dependencies [842b2e4]
 - Updated dependencies [6515991]
-  - @nexcraft/forge-react@1.0.0
+  - @nexcraft/forge-react@0.3.0
   - @nexcraft/forge@0.8.0
 
 ## 2.0.0
