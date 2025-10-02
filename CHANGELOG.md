@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.0
+
+### Minor Changes
+
+- 6515991: Phase 15.4: Complete React package extraction and framework separation
+  - Extract React integration to separate @nexcraft/forge-react package
+  - Remove all framework integrations from core @nexcraft/forge package
+  - Update @nexcraft/forge-rhf to use new React package
+  - Achieve pure web components core architecture
+  - Set up linked package releases for coordinated versioning
+
 ## 0.9.0
 
 ### Minor Changes
@@ -7,7 +18,6 @@
 - **Phase 15 Complete: Framework Integration Package Split**
 
   **BREAKING CHANGES**: All framework integrations moved to separate packages
-
   - **Angular**: `@nexcraft/forge-angular` - Complete Angular integration with pipes, directives, and reactive forms support
   - **Vue**: `@nexcraft/forge-vue` - Comprehensive Vue 3 composables and component wrappers
   - **React**: `@nexcraft/forge-react` - Full React integration with hooks and SSR support
@@ -44,7 +54,6 @@
   - Smaller bundle sizes for framework-specific apps
 
 - **New Figma Design Tokens Integration**
-
   - **`@nexcraft/forge-tokens`**: CLI for pulling design tokens from Figma and generating CSS/themes
   - **`@nexcraft/forge-mcp-figma`**: MCP server for integrating Figma workflows with AI tools
 
@@ -57,7 +66,6 @@
   ```
 
 - **Enhanced Security & Release Infrastructure**
-
   - Added comprehensive npm audit workflows with Discord notifications
   - Implemented automated security gates for releases
   - Enhanced CI/CD pipeline with performance monitoring
