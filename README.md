@@ -174,8 +174,8 @@ Quick reference to all 26 components with HTML tag names:
 
 ### Getting Started
 - **[Quick Start Guide](./docs/GETTING_STARTED.md)** - Get your first component running in 4 hours
-- **[Unique Value Proposition](./plans/unique-value-proposition.md)** - Why @nexcraft/forge is different
-- **[Component Architecture](./plans/architecture/component-architecture.md)** - Learn our patterns and conventions
+- **[Component Architecture](./plans/adrs/ADR-015-atomic-composition-pattern.md)** - Atomic design patterns & composition
+- **[Component API Design](./plans/adrs/ADR-008-component-api-design.md)** - API standards & conventions
 
 ### Core Features
 - **[🤖 AI Metadata Reference](./docs/ai/metadata-reference.md)** - Complete AI metadata system guide (architecture, API, implementation)
@@ -191,8 +191,8 @@ Quick reference to all 26 components with HTML tag names:
 ### Architecture & Planning
 - **[Implementation Roadmap](./plans/implementation-roadmap.md)** - Complete development timeline with all differentiators
 - **[🚀 Phase 9: AI-Native Development](./plans/phases/phase-9-ai-native-development.md)** - Strategic pivot to AI-first component library
-- **[Architecture Decision Records](./plans/adrs/)** - 17 key technical decisions including AI-native components
-- **[Technology Stack](./plans/architecture/technology-stack.md)** - Core technology choices
+- **[Architecture Decision Records](./plans/adrs/)** - 18 key technical decisions including AI-native components
+- **[Build Tooling Strategy](./plans/adrs/ADR-005-build-tooling.md)** - Vite, Lit, TypeScript stack decisions
 
 ## ✨ The "Shiny" Stuff - What Makes Us Special
 
