@@ -174,7 +174,7 @@ export default function Home() {
       <div style={{ position: 'fixed', top: '16px', right: '16px', zIndex: 1000 }}>
         <ForgeSwitch
           checked={isDarkMode}
-          onCheckedChange={setIsDarkMode}
+          onChange={(checked) => setIsDarkMode(checked)}
           label="Dark Mode"
         />
       </div>
