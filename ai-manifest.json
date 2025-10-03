@@ -1,7 +1,7 @@
 {
   "manifestVersion": "1.0.0",
   "package": "@nexcraft/forge",
-  "generatedAt": "2025-10-02T14:53:50.825Z",
+  "generatedAt": "2025-10-03T02:24:21.196Z",
   "components": [
     {
       "id": "forge-performance-dashboard",
