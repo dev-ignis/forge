@@ -229,6 +229,12 @@
 **Priority**: MEDIUM | **Effort**: Medium | **Impact**: Medium
 
 **Features**:
+- [ ] **Test Organization Refactoring** (Future Enhancement)
+  - Move accessibility tests to `src/__tests__/a11y/` directory
+  - Create separate vitest config for a11y tests (`vitest.a11y.config.ts`)
+  - Benefits: cleaner file structure, easier maintenance, explicit separation
+  - Current solution (test name filtering) works well for now
+  - Consider when: test suite grows significantly or team prefers directory-based organization
 - [ ] **Visual Regression Testing**
   - Automated screenshot comparison
   - Cross-browser testing
