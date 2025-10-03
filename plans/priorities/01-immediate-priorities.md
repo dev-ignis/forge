@@ -355,6 +355,136 @@
 - Supports #5 (Documentation Updates)
 - Supports #1 (TypeScript Type Safety - smaller API surface)
 
+### 11. Source Directory Cleanup ✅
+
+**Priority**: MEDIUM | **Effort**: Low | **Impact**: Low | **Status**: ✅ **COMPLETED**
+
+**Issues to Fix**:
+
+- [x] ✅ Remove build artifacts from `src/` directory
+  - Cleaned up 120 build artifacts (`.js`, `.d.ts`, `.js.map`, `.d.ts.map` files)
+  - Verified all build output goes to `dist/` only
+  - `.gitignore` already has patterns to prevent future commits (lines 79-83)
+- [x] ✅ Verify CI/CD workflows use `dist/` for artifacts
+  - All workflows correctly reference `dist/` for build artifacts
+  - No references to `src/` build artifacts in any workflows
+- [x] ✅ Update documentation if needed
+  - Documentation already references `dist/` correctly
+  - No updates needed
+
+**Files Cleaned**:
+
+- Removed 120 compiled files from `src/`:
+  - `src/index.js`, `src/index.d.ts`, `src/index.js.map`, `src/index.d.ts.map`
+  - `src/core/BaseElement.js`, `src/core/BaseElement.d.ts`, etc.
+  - `src/core/ai-metadata.types.js`, `src/core/ai-metadata.types.d.ts`, etc.
+  - All compiled files in `src/components/`, `src/types/`, `src/utils/`
+
+**Outcome**: ✅ Clean source tree with only `.ts` files - build artifacts were never tracked by git (already ignored)
+
+### 12. Design Token System Enhancement
+
+**Priority**: MEDIUM | **Effort**: Medium | **Impact**: Medium
+
+**Current State**:
+
+- Single `tokens/base.css` file with limited token coverage
+- No structured token system for theming
+- Hard-coded values scattered across components
+
+**Improvements**:
+
+- [ ] Create comprehensive token files:
+  - `tokens/colors.ts` - Semantic color system
+  - `tokens/spacing.ts` - Spacing scale (4px base)
+  - `tokens/typography.ts` - Font family, sizes, weights
+  - `tokens/shadows.ts` - Elevation system
+  - `tokens/radii.ts` - Border radius scale
+  - `tokens/z-index.ts` - Layering system
+- [ ] Implement token export system:
+  - Export as CSS custom properties
+  - Export as JavaScript objects
+  - Export as JSON for tooling
+- [ ] Add token documentation
+- [ ] Create theming guide with token usage examples
+
+**Files to Create**:
+
+- `src/tokens/colors.ts`
+- `src/tokens/spacing.ts`
+- `src/tokens/typography.ts`
+- `src/tokens/shadows.ts`
+- `src/tokens/radii.ts`
+- `src/tokens/z-index.ts`
+- `src/tokens/index.ts` (central export)
+- `docs/design-tokens.md`
+
+**Expected Outcome**: Comprehensive design token system enabling consistent theming and better DX
+
+**Related Items**:
+
+- Supports #6 (Bundle Size Optimization - tree-shakeable tokens)
+- Supports #5 (Documentation Updates - theming guide)
+
+### 13. Utilities Directory Reorganization
+
+**Priority**: LOW | **Effort**: Low | **Impact**: Low
+
+**Current State**:
+
+```
+utils/
+├── debounce.ts
+├── performance-dashboard.ts
+├── token-bridge.ts
+└── virtual-scroller.ts
+```
+
+**Proposed Structure**:
+
+```
+utils/
+├── performance/
+│   ├── dashboard.ts
+│   └── virtual-scroller.ts
+├── timing/
+│   ├── debounce.ts
+│   └── throttle.ts (if exists)
+├── theming/
+│   └── token-bridge.ts
+├── dom/
+│   └── [future DOM utilities]
+└── index.ts (barrel export)
+```
+
+**Actions**:
+
+- [ ] Create subdirectory structure in `utils/`
+- [ ] Move files to appropriate categories
+- [ ] Update import paths across codebase
+- [ ] Create barrel exports (`index.ts` per category)
+- [ ] Update main `utils/index.ts` for re-exports
+- [ ] Verify all tests still pass
+- [ ] Update documentation
+
+**Files to Update**:
+
+- Move `src/utils/debounce.ts` → `src/utils/timing/debounce.ts`
+- Move `src/utils/performance-dashboard.ts` → `src/utils/performance/dashboard.ts`
+- Move `src/utils/virtual-scroller.ts` → `src/utils/performance/virtual-scroller.ts`
+- Move `src/utils/token-bridge.ts` → `src/utils/theming/token-bridge.ts`
+- Create `src/utils/performance/index.ts`
+- Create `src/utils/timing/index.ts`
+- Create `src/utils/theming/index.ts`
+- Update `src/utils/index.ts`
+
+**Expected Outcome**: Better organized utilities with clear categories, easier to discover and maintain
+
+**Related Items**:
+
+- Supports #5 (Documentation Updates - clearer utility organization)
+- Supports #1 (TypeScript Type Safety - clearer module boundaries)
+
 ### 7. Build Process Improvements
 
 **Priority**: MEDIUM | **Effort**: Low | **Impact**: Medium
