@@ -137,24 +137,6 @@ describe('ForgeAvatar', () => {
     expect(eventFired).to.be.true;
   });
 
-  it.skip('should not emit click event when disabled', async () => {
-    const el = await fixture<ForgeAvatar>(html`
-      <forge-avatar fallback="JD" clickable disabled></forge-avatar>
-    `);
-
-    await el.updateComplete;
-
-    let eventFired = false;
-    el.addEventListener('click', () => {
-      eventFired = true;
-    });
-
-    const avatar = el.shadowRoot!.querySelector('[part="avatar"]') as HTMLElement;
-    avatar.click();
-
-    expect(eventFired).to.be.false;
-  });
-
   it('should handle keyboard events when clickable', async () => {
     const el = await fixture<ForgeAvatar>(html`
       <forge-avatar fallback="JD" clickable></forge-avatar>

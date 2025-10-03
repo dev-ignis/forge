@@ -218,36 +218,6 @@ describe('ForgeToast', () => {
   });
 
   describe('Methods', () => {
-    it.skip('should dismiss with custom event', async () => {
-      element.toastId = 'test-toast';
-
-      let eventFired = false;
-      let eventDetail: any = null;
-
-      element.addEventListener('dismiss', (event: Event) => {
-        const customEvent = event as CustomEvent;
-        eventDetail = customEvent.detail;
-        eventFired = true;
-      });
-
-      // Call dismiss method
-      element.dismiss();
-
-      // Wait for the animation handler to be registered
-      await new Promise((resolve) => setTimeout(resolve, 0));
-
-      // Mock the animation end event to trigger the dismiss event
-      const animationEndEvent = new AnimationEvent('animationend', {
-        animationName: 'slide-out',
-      });
-      element.dispatchEvent(animationEndEvent);
-
-      // Verify the event was fired with correct data
-      expect(eventFired).to.be.true;
-      expect(eventDetail).to.exist;
-      expect(eventDetail.toastId).to.equal('test-toast');
-    });
-
     it('should pause auto-dismiss', async () => {
       element.duration = 1000;
       await element.updateComplete;
