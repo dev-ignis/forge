@@ -232,7 +232,7 @@ export default function Home() {
             <ForgeIcon name="performance" className="w-8 h-8 mb-4 text-purple-600" />
             <h3 className="text-lg font-semibold mb-2">Performance</h3>
             <p className="text-gray-600 mb-4">Real-time performance monitoring and optimization</p>
-            <ForgeButton variant="outline" onClick={() => setActiveTab('performance')}>
+            <ForgeButton variant="secondary" onClick={() => setActiveTab('performance')}>
               View Metrics
             </ForgeButton>
           </ForgeCard>
@@ -327,7 +327,7 @@ export default function Home() {
                   <h4 className="font-semibold mb-4">Molecules</h4>
                   <div className="space-y-3">
                     <ForgeTooltip content="This is a tooltip">
-                      <ForgeButton variant="outline">Hover for tooltip</ForgeButton>
+                      <ForgeButton variant="secondary">Hover for tooltip</ForgeButton>
                     </ForgeTooltip>
                     <ForgeFormField label="Form Field">
                       <ForgeInput placeholder="Form input" />
