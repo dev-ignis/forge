@@ -71,6 +71,15 @@ jobs:
         if: steps.download-artifacts.outcome == 'failure'
         run: npm run build
 
+      - name: Build workspace packages
+        run: |
+          echo "Building workspace packages for release..."
+          npm run build --workspace=packages/forge-react
+          npm run build --workspace=packages/forge-vue
+          npm run build --workspace=packages/forge-angular
+          npm run build --workspace=packages/forge-rhf
+          echo "✅ All workspace packages built successfully"
+
       - name: Preflight Checks for Release
         run: |
           echo "✅ Running preflight checks before release..."
@@ -82,7 +91,7 @@ jobs:
           echo "✅ Linting: PASSED (from CI)"
           echo "✅ Type checking: PASSED (from CI)"
           echo "✅ Tests: PASSED (from CI)"
-          echo "✅ Build: COMPLETE"
+          echo "✅ Build: COMPLETE (main + workspace packages)"
           echo "🚀 Ready for release!"
           
       - name: Create Release Pull Request or Publish to npm
