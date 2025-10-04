@@ -1,5 +1,18 @@
 # @nexcraft/forge-rhf
 
+## 1.0.0
+
+### Patch Changes
+
+- d04ae04: fix: support React 19 in peer dependencies
+  - Update peer dependency to accept React 18 or 19
+  - Fixes compatibility with Next.js 15 and React 19
+
+- Updated dependencies [7a38d60]
+- Updated dependencies [7a38d60]
+  - @nexcraft/forge@0.9.0
+  - @nexcraft/forge-react@1.0.0
+
 ## 0.4.0
 
 ### Minor Changes
