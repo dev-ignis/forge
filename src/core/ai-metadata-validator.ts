@@ -1,15 +1,15 @@
 /**
  * AI Metadata Validation System - ADR-017
- * 
+ *
  * Comprehensive validation system for AI-native development metadata
  * ensuring quality and completeness of AI training data.
  */
 
-import type { 
-  AIComponentMetadata, 
-  AIComplianceResult, 
+import type {
+  AIComponentMetadata,
+  AIComplianceResult,
   AIComplianceIssue,
-  AITrainingDataset
+  AITrainingDataset,
 } from './ai-metadata.types';
 
 export class AIMetadataValidator {
@@ -23,21 +23,21 @@ export class AIMetadataValidator {
 
     // Required fields validation
     this.validateRequiredFields(metadata, errors);
-    
+
     // Content quality validation
     this.validateContentQuality(metadata, warnings, suggestions);
-    
+
     // Framework examples validation
     this.validateFrameworkExamples(metadata, errors, warnings);
-    
+
     // Accessibility validation
     this.validateAccessibilityMetadata(metadata, warnings, suggestions);
-    
+
     // Performance metadata validation
     this.validatePerformanceMetadata(metadata, suggestions);
 
     const score = this.calculateMetadataScore(metadata, errors, warnings);
-    
+
     return {
       valid: errors.length === 0,
       score,
@@ -45,7 +45,7 @@ export class AIMetadataValidator {
       errors,
       warnings,
       suggestions,
-      completeness: this.calculateCompleteness(metadata)
+      completeness: this.calculateCompleteness(metadata),
     };
   }
 
@@ -53,8 +53,8 @@ export class AIMetadataValidator {
    * Validate AI component implementation against its metadata
    */
   static validateComponentImplementation(
-    element: Element, 
-    metadata: AIComponentMetadata
+    element: Element,
+    metadata: AIComponentMetadata,
   ): AIComplianceResult {
     const issues: AIComplianceIssue[] = [];
     const strengths: string[] = [];
@@ -62,24 +62,24 @@ export class AIMetadataValidator {
 
     // Semantic role validation
     this.validateSemanticRole(element, metadata, issues, strengths);
-    
+
     // Accessibility implementation validation
     this.validateAccessibilityImplementation(element, metadata, issues, suggestions);
-    
+
     // ARIA patterns validation
     this.validateAriaPatterns(element, metadata, issues, strengths);
-    
+
     // Performance implementation validation
     this.validatePerformanceImplementation(element, metadata, suggestions);
 
     const score = this.calculateComplianceScore(issues, metadata);
-    
+
     return {
       score,
       status: this.determineComplianceStatus(score),
       issues,
       suggestions,
-      strengths
+      strengths,
     };
   }
 
@@ -104,7 +104,7 @@ export class AIMetadataValidator {
 
     // Framework guidance validation
     this.validateFrameworkGuidance(dataset, warnings, suggestions);
-    
+
     // Example quality validation
     this.validateExampleQuality(dataset, warnings, suggestions);
 
@@ -116,16 +116,14 @@ export class AIMetadataValidator {
       frameworkCoverage: Object.keys(dataset.frameworkGuidance).length,
       errors,
       warnings,
-      suggestions
+      suggestions,
     };
   }
 
   /**
    * Generate AI metadata quality report
    */
-  static generateQualityReport(
-    components: Map<string, AIComponentMetadata>
-  ): AIQualityReport {
+  static generateQualityReport(components: Map<string, AIComponentMetadata>): AIQualityReport {
     const componentReports: ComponentQualityReport[] = [];
     let totalScore = 0;
     let totalErrors = 0;
@@ -136,7 +134,7 @@ export class AIMetadataValidator {
       componentReports.push({
         tagName,
         validation,
-        recommendedImprovements: this.getRecommendedImprovements(validation)
+        recommendedImprovements: this.getRecommendedImprovements(validation),
       });
 
       totalScore += validation.score;
@@ -145,7 +143,7 @@ export class AIMetadataValidator {
     });
 
     const averageScore = components.size > 0 ? totalScore / components.size : 0;
-    
+
     return {
       overallScore: averageScore,
       overallQuality: this.determineQuality(averageScore),
@@ -154,7 +152,7 @@ export class AIMetadataValidator {
       totalWarnings,
       components: componentReports,
       recommendations: this.generateGlobalRecommendations(componentReports),
-      readinessForAI: this.assessAIReadiness(averageScore, totalErrors)
+      readinessForAI: this.assessAIReadiness(averageScore, totalErrors),
     };
   }
 
@@ -162,23 +160,29 @@ export class AIMetadataValidator {
 
   private static validateRequiredFields(metadata: AIComponentMetadata, errors: string[]): void {
     const requiredFields: Array<keyof AIComponentMetadata> = [
-      'purpose', 'semanticRole', 'category', 'usagePatterns', 'antiPatterns', 
-      'contextualRules', 'aiPrompts', 'codeExamples'
+      'purpose',
+      'semanticRole',
+      'category',
+      'usagePatterns',
+      'antiPatterns',
+      'contextualRules',
+      'aiPrompts',
+      'codeExamples',
     ];
 
-    requiredFields.forEach(field => {
+    requiredFields.forEach((field) => {
       if (!metadata[field]) {
         errors.push(`Missing required field: ${field}`);
-      } else if (Array.isArray(metadata[field]) && (metadata[field] as any[]).length === 0) {
+      } else if (Array.isArray(metadata[field]) && (metadata[field] as unknown[]).length === 0) {
         errors.push(`Empty required array field: ${field}`);
       }
     });
   }
 
   private static validateContentQuality(
-    metadata: AIComponentMetadata, 
-    warnings: string[], 
-    suggestions: string[]
+    metadata: AIComponentMetadata,
+    warnings: string[],
+    suggestions: string[],
   ): void {
     // Purpose quality
     if (metadata.purpose && metadata.purpose.length < 10) {
@@ -204,11 +208,11 @@ export class AIMetadataValidator {
   private static validateFrameworkExamples(
     metadata: AIComponentMetadata,
     errors: string[],
-    warnings: string[]
+    warnings: string[],
   ): void {
     const requiredFrameworks = ['react', 'vue', 'angular', 'vanilla'];
-    
-    requiredFrameworks.forEach(framework => {
+
+    requiredFrameworks.forEach((framework) => {
       if (!metadata.codeExamples[framework]) {
         warnings.push(`Missing code example for ${framework} framework`);
       } else if (metadata.codeExamples[framework].length < 20) {
@@ -220,7 +224,7 @@ export class AIMetadataValidator {
   private static validateAccessibilityMetadata(
     metadata: AIComponentMetadata,
     warnings: string[],
-    suggestions: string[]
+    suggestions: string[],
   ): void {
     if (metadata.a11yGuidelines.length === 0) {
       warnings.push('No accessibility guidelines specified');
@@ -237,7 +241,7 @@ export class AIMetadataValidator {
 
   private static validatePerformanceMetadata(
     metadata: AIComponentMetadata,
-    suggestions: string[]
+    suggestions: string[],
   ): void {
     if (metadata.performanceHints.length < 2) {
       suggestions.push('Consider adding more performance optimization hints');
@@ -252,7 +256,7 @@ export class AIMetadataValidator {
     element: Element,
     metadata: AIComponentMetadata,
     issues: AIComplianceIssue[],
-    strengths: string[]
+    strengths: string[],
   ): void {
     const actualRole = element.getAttribute('role');
     const expectedRole = metadata.semanticRole;
@@ -263,7 +267,7 @@ export class AIMetadataValidator {
         severity: 'warning',
         description: 'Missing semantic role attribute',
         fix: `Add role="${expectedRole}" attribute`,
-        example: `<${element.tagName.toLowerCase()} role="${expectedRole}">...</${element.tagName.toLowerCase()}>`
+        example: `<${element.tagName.toLowerCase()} role="${expectedRole}">...</${element.tagName.toLowerCase()}>`,
       });
     } else if (actualRole === expectedRole) {
       strengths.push('Correct semantic role implementation');
@@ -273,7 +277,7 @@ export class AIMetadataValidator {
         severity: 'error',
         description: `Incorrect semantic role: expected "${expectedRole}", got "${actualRole}"`,
         fix: `Change role to "${expectedRole}"`,
-        example: `<${element.tagName.toLowerCase()} role="${expectedRole}">...</${element.tagName.toLowerCase()}>`
+        example: `<${element.tagName.toLowerCase()} role="${expectedRole}">...</${element.tagName.toLowerCase()}>`,
       });
     }
   }
@@ -282,17 +286,17 @@ export class AIMetadataValidator {
     element: Element,
     metadata: AIComponentMetadata,
     issues: AIComplianceIssue[],
-    suggestions: string[]
+    suggestions: string[],
   ): void {
     // Check for aria-label if specified in patterns
-    if (metadata.ariaPatterns.some(pattern => pattern.includes('aria-label'))) {
+    if (metadata.ariaPatterns.some((pattern) => pattern.includes('aria-label'))) {
       if (!element.getAttribute('aria-label') && !element.getAttribute('aria-labelledby')) {
         issues.push({
           category: 'accessibility',
           severity: 'warning',
           description: 'Missing aria-label or aria-labelledby',
           fix: 'Add appropriate ARIA labeling',
-          example: '<element aria-label="Descriptive label">...</element>'
+          example: '<element aria-label="Descriptive label">...</element>',
         });
       }
     }
@@ -310,16 +314,16 @@ export class AIMetadataValidator {
     element: Element,
     metadata: AIComponentMetadata,
     issues: AIComplianceIssue[],
-    strengths: string[]
+    strengths: string[],
   ): void {
-    metadata.ariaPatterns.forEach(pattern => {
+    metadata.ariaPatterns.forEach((pattern) => {
       if (pattern.includes('aria-expanded')) {
         const ariaExpanded = element.getAttribute('aria-expanded');
         if (ariaExpanded) {
           strengths.push('Proper aria-expanded implementation');
         }
       }
-      
+
       if (pattern.includes('aria-controls')) {
         const ariaControls = element.getAttribute('aria-controls');
         if (ariaControls) {
@@ -332,13 +336,13 @@ export class AIMetadataValidator {
   private static validatePerformanceImplementation(
     element: Element,
     metadata: AIComponentMetadata,
-    suggestions: string[]
+    suggestions: string[],
   ): void {
-    metadata.performanceHints.forEach(hint => {
+    metadata.performanceHints.forEach((hint) => {
       if (hint.includes('lazy load') && !element.hasAttribute('loading')) {
         suggestions.push('Consider implementing lazy loading for performance');
       }
-      
+
       if (hint.includes('debounce') && element.tagName === 'FORGE-BUTTON') {
         suggestions.push('Ensure click event debouncing is implemented');
       }
@@ -348,12 +352,12 @@ export class AIMetadataValidator {
   private static validateFrameworkGuidance(
     dataset: AITrainingDataset,
     warnings: string[],
-    suggestions: string[]
+    suggestions: string[],
   ): void {
     const requiredFrameworks = ['react', 'vue', 'angular'];
     const availableFrameworks = Object.keys(dataset.frameworkGuidance);
 
-    requiredFrameworks.forEach(framework => {
+    requiredFrameworks.forEach((framework) => {
       if (!availableFrameworks.includes(framework)) {
         warnings.push(`Missing framework guidance for ${framework}`);
       } else {
@@ -371,12 +375,14 @@ export class AIMetadataValidator {
   private static validateExampleQuality(
     dataset: AITrainingDataset,
     warnings: string[],
-    suggestions: string[]
+    suggestions: string[],
   ): void {
-    const componentsWithFewExamples = dataset.components.filter(c => c.examples.length < 3);
-    
+    const componentsWithFewExamples = dataset.components.filter((c) => c.examples.length < 3);
+
     if (componentsWithFewExamples.length > 0) {
-      warnings.push(`${componentsWithFewExamples.length} components have fewer than 3 training examples`);
+      warnings.push(
+        `${componentsWithFewExamples.length} components have fewer than 3 training examples`,
+      );
     }
 
     const totalAntiExamples = dataset.components.reduce((sum, c) => sum + c.antiExamples.length, 0);
@@ -388,18 +394,18 @@ export class AIMetadataValidator {
   private static calculateMetadataScore(
     metadata: AIComponentMetadata,
     errors: string[],
-    warnings: string[]
+    warnings: string[],
   ): number {
     let score = 100;
-    
+
     // Deduct points for errors and warnings
     score -= errors.length * 15;
     score -= warnings.length * 5;
-    
+
     // Add points for completeness
     const completeness = this.calculateCompleteness(metadata);
     score = Math.min(score, completeness);
-    
+
     return Math.max(0, score);
   }
 
@@ -409,14 +415,19 @@ export class AIMetadataValidator {
 
     // Count completed fields
     const fields = [
-      metadata.purpose, metadata.semanticRole, metadata.category,
-      metadata.usagePatterns?.length, metadata.antiPatterns?.length,
-      metadata.contextualRules?.length, metadata.aiPrompts,
-      metadata.codeExamples, metadata.a11yGuidelines?.length,
-      metadata.performanceHints?.length
+      metadata.purpose,
+      metadata.semanticRole,
+      metadata.category,
+      metadata.usagePatterns?.length,
+      metadata.antiPatterns?.length,
+      metadata.contextualRules?.length,
+      metadata.aiPrompts,
+      metadata.codeExamples,
+      metadata.a11yGuidelines?.length,
+      metadata.performanceHints?.length,
     ];
 
-    fields.forEach(field => {
+    fields.forEach((field) => {
       total++;
       if (field) completed++;
     });
@@ -426,11 +437,11 @@ export class AIMetadataValidator {
 
   private static calculateComplianceScore(
     issues: AIComplianceIssue[],
-    _metadata: AIComponentMetadata
+    _metadata: AIComponentMetadata,
   ): number {
     let score = 100;
-    
-    issues.forEach(issue => {
+
+    issues.forEach((issue) => {
       switch (issue.severity) {
         case 'error':
           score -= 20;
@@ -453,7 +464,9 @@ export class AIMetadataValidator {
     return 'low';
   }
 
-  private static determineComplianceStatus(score: number): 'compliant' | 'partial' | 'non-compliant' {
+  private static determineComplianceStatus(
+    score: number,
+  ): 'compliant' | 'partial' | 'non-compliant' {
     if (score >= 90) return 'compliant';
     if (score >= 70) return 'partial';
     return 'non-compliant';
@@ -461,16 +474,16 @@ export class AIMetadataValidator {
 
   private static getRecommendedImprovements(validation: AIMetadataValidationResult): string[] {
     const improvements: string[] = [];
-    
+
     if (validation.score < 70) {
       improvements.push('Critical: Address all errors before AI training');
     }
-    
+
     if (validation.completeness < 80) {
       improvements.push('Improve metadata completeness (target 80%+)');
     }
 
-    validation.suggestions.forEach(suggestion => {
+    validation.suggestions.forEach((suggestion) => {
       improvements.push(suggestion);
     });
 
@@ -479,8 +492,8 @@ export class AIMetadataValidator {
 
   private static generateGlobalRecommendations(reports: ComponentQualityReport[]): string[] {
     const recommendations: string[] = [];
-    
-    const lowQualityComponents = reports.filter(r => r.validation.quality === 'low').length;
+
+    const lowQualityComponents = reports.filter((r) => r.validation.quality === 'low').length;
     if (lowQualityComponents > 0) {
       recommendations.push(`${lowQualityComponents} components need quality improvements`);
     }
@@ -541,4 +554,8 @@ export interface AIQualityReport {
   readinessForAI: AIReadinessLevel;
 }
 
-export type AIReadinessLevel = 'production-ready' | 'development-ready' | 'needs-improvement' | 'not-ready';
+export type AIReadinessLevel =
+  | 'production-ready'
+  | 'development-ready'
+  | 'needs-improvement'
+  | 'not-ready';

@@ -7,14 +7,14 @@
  * Custom event interface for Forge components
  * Used across all framework integrations for type-safe event handling
  */
-export interface ForgeCustomEvent<T = any> extends CustomEvent {
+export interface ForgeCustomEvent<T = unknown> extends CustomEvent {
   detail: T;
 }
 
 /**
  * Base component event handler types
  */
-export type ForgeEventHandler<T = any> = (event: ForgeCustomEvent<T>) => void;
+export type ForgeEventHandler<T = unknown> = (event: ForgeCustomEvent<T>) => void;
 
 /**
  * Framework integration configuration
@@ -34,11 +34,11 @@ export interface ForgeIntegrationConfig {
  */
 export interface ForgeComponentProps {
   /** Component ref for direct DOM access */
-  ref?: any;
+  ref?: unknown;
   /** CSS class names */
   className?: string;
   /** Inline styles */
-  style?: Record<string, any>;
+  style?: Record<string, string | number>;
   /** Data attributes */
   'data-*'?: string;
 }
