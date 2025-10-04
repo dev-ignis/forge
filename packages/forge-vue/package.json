@@ -1,6 +1,6 @@
 {
   "name": "@nexcraft/forge-vue",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Vue integration for Nexcraft Forge web components",
   "type": "module",
   "sideEffects": false,
@@ -31,7 +31,7 @@
     "clean": "rm -rf dist"
   },
   "peerDependencies": {
-    "@nexcraft/forge": ">=0.8.0",
+    "@nexcraft/forge": ">=0.9.0",
     "vue": "^3.0.0"
   },
   "devDependencies": {
