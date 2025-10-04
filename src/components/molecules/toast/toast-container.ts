@@ -7,12 +7,12 @@ import type { ForgeToast } from './toast';
 /**
  * A toast container component that manages positioning and queuing of toast notifications.
  * Provides global toast management with stacking and positioning controls.
- * 
+ *
  * @element forge-toast-container
- * 
+ *
  * @csspart container - The toast container element
  * @csspart stack - The toast stack area
- * 
+ *
  * @cssprop --forge-toast-container-z-index - Z-index for the toast container
  * @cssprop --forge-toast-stack-gap - Gap between stacked toasts
  */
@@ -24,7 +24,7 @@ export class ForgeToastContainer extends BaseElement {
     context: 'notification-system',
     dataType: 'text' as const,
     criticality: 'medium' as const,
-    semanticRole: 'region'
+    semanticRole: 'region',
   };
 
   static styles = css`
@@ -47,40 +47,40 @@ export class ForgeToastContainer extends BaseElement {
     }
 
     /* Position variants */
-    :host([position="top-left"]) {
+    :host([position='top-left']) {
       top: var(--forge-spacing-lg, 24px);
       left: var(--forge-spacing-lg, 24px);
     }
 
-    :host([position="top-center"]) {
+    :host([position='top-center']) {
       top: var(--forge-spacing-lg, 24px);
       left: 50%;
       transform: translateX(-50%);
     }
 
-    :host([position="top-right"]) {
+    :host([position='top-right']) {
       top: var(--forge-spacing-lg, 24px);
       right: var(--forge-spacing-lg, 24px);
     }
 
-    :host([position="bottom-left"]) {
+    :host([position='bottom-left']) {
       bottom: var(--forge-spacing-lg, 24px);
       left: var(--forge-spacing-lg, 24px);
     }
 
-    :host([position="bottom-center"]) {
+    :host([position='bottom-center']) {
       bottom: var(--forge-spacing-lg, 24px);
       left: 50%;
       transform: translateX(-50%);
     }
 
-    :host([position="bottom-right"]) {
+    :host([position='bottom-right']) {
       bottom: var(--forge-spacing-lg, 24px);
       right: var(--forge-spacing-lg, 24px);
     }
 
     /* Stack ordering for bottom positions */
-    :host([position^="bottom"]) .toast-container {
+    :host([position^='bottom']) .toast-container {
       flex-direction: column-reverse;
     }
 
@@ -92,8 +92,8 @@ export class ForgeToastContainer extends BaseElement {
         transform: none !important;
       }
 
-      :host([position="top-center"]),
-      :host([position="bottom-center"]) {
+      :host([position='top-center']),
+      :host([position='bottom-center']) {
         left: var(--forge-spacing-md, 16px);
         right: var(--forge-spacing-md, 16px);
       }
@@ -108,7 +108,13 @@ export class ForgeToastContainer extends BaseElement {
    * Position of the toast container on screen
    */
   @property({ reflect: true })
-  position: 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' = 'top-right';
+  position:
+    | 'top-left'
+    | 'top-center'
+    | 'top-right'
+    | 'bottom-left'
+    | 'bottom-center'
+    | 'bottom-right' = 'top-right';
 
   /**
    * Maximum number of toasts to show simultaneously
@@ -138,15 +144,15 @@ export class ForgeToastContainer extends BaseElement {
 
   protected firstUpdated(changedProperties: PropertyValues): void {
     super.firstUpdated(changedProperties);
-    
+
     // Set up accessibility attributes
     this.setAttribute('role', 'region');
     this.setAttribute('aria-label', 'Notifications');
     this.setAttribute('aria-live', 'polite');
-    
-    // Listen for toast dismissals
-    this.addEventListener('toast-dismissed', this.handleToastDismissed.bind(this) as EventListener);
-    
+
+    // Listen for toast dismissals (ADR-008 compliant event)
+    this.addEventListener('dismiss', this.handleToastDismissed.bind(this) as EventListener);
+
     // Make this container the global toast manager if none exists
     if (!document.querySelector('forge-toast-container[data-global="true"]')) {
       this.setAttribute('data-global', 'true');
@@ -182,7 +188,7 @@ export class ForgeToastContainer extends BaseElement {
     showProgress?: boolean;
   }): string {
     const id = options.id || this.generateToastId();
-    
+
     const toastData = {
       id,
       title: options.title,
@@ -191,7 +197,7 @@ export class ForgeToastContainer extends BaseElement {
       duration: options.duration ?? 5000,
       dismissible: options.dismissible ?? true,
       persistent: options.persistent ?? false,
-      showProgress: options.showProgress ?? false
+      showProgress: options.showProgress ?? false,
     };
 
     if (this.toasts.length >= this.maxToasts) {
@@ -208,19 +214,19 @@ export class ForgeToastContainer extends BaseElement {
    * Remove a specific toast by ID
    */
   removeToast(id: string): boolean {
-    const toast = this.toasts.find(t => t.toastId === id);
+    const toast = this.toasts.find((t) => t.toastId === id);
     if (toast) {
       toast.dismiss();
       return true;
     }
-    
+
     // Remove from queue if it's there
-    const queueIndex = this.toastQueue.findIndex(t => t.id === id);
+    const queueIndex = this.toastQueue.findIndex((t) => t.id === id);
     if (queueIndex >= 0) {
       this.toastQueue.splice(queueIndex, 1);
       return true;
     }
-    
+
     return false;
   }
 
@@ -228,7 +234,7 @@ export class ForgeToastContainer extends BaseElement {
    * Remove all toasts
    */
   clearAll(): void {
-    this.toasts.forEach(toast => toast.dismiss());
+    this.toasts.forEach((toast) => toast.dismiss());
     this.toastQueue = [];
   }
 
@@ -246,7 +252,7 @@ export class ForgeToastContainer extends BaseElement {
     return {
       active: this.toasts.length,
       queued: this.toastQueue.length,
-      total: this.toasts.length + this.toastQueue.length
+      total: this.toasts.length + this.toastQueue.length,
     };
   }
 
@@ -283,7 +289,7 @@ export class ForgeToastContainer extends BaseElement {
 
   private processQueue(): void {
     // Remove dismissed toasts from tracking
-    this.toasts = this.toasts.filter(toast => toast.parentNode);
+    this.toasts = this.toasts.filter((toast) => toast.parentNode);
 
     // Process queue if we have space
     while (this.toasts.length < this.maxToasts && this.toastQueue.length > 0) {
@@ -314,58 +320,58 @@ export class ForgeToastContainer extends BaseElement {
   override explainState() {
     const states = [];
     const count = this.getToastCount();
-    
+
     if (count.total === 0) states.push('empty');
     else if (count.queued > 0) states.push('queued');
     else if (count.active === this.maxToasts) states.push('full');
     else states.push('active');
-    
+
     const currentState = states.join('-') || 'empty';
-    
+
     return {
       currentState,
       possibleStates: ['empty', 'active', 'full', 'queued'],
-      stateDescription: this.getStateDescription(currentState)
+      stateDescription: this.getStateDescription(currentState),
     };
   }
 
   private getStateDescription(state: string): string {
     const count = this.getToastCount();
     const descriptions: Record<string, string> = {
-      'empty': 'Toast container has no active or queued notifications',
-      'active': `Toast container showing ${count.active} of ${this.maxToasts} notifications`,
-      'full': `Toast container at capacity with ${count.active} active notifications`,
-      'queued': `Toast container full with ${count.active} active and ${count.queued} queued notifications`
+      empty: 'Toast container has no active or queued notifications',
+      active: `Toast container showing ${count.active} of ${this.maxToasts} notifications`,
+      full: `Toast container at capacity with ${count.active} active notifications`,
+      queued: `Toast container full with ${count.active} active and ${count.queued} queued notifications`,
     };
-    
+
     return descriptions[state] || `Toast container in ${state} state. Position: ${this.position}`;
   }
 
   override getPossibleActions() {
     const count = this.getToastCount();
-    
+
     return [
       {
         name: 'addToast',
         description: 'Add a new toast notification',
-        available: true
+        available: true,
       },
       {
         name: 'clearAll',
         description: 'Remove all toast notifications',
-        available: count.total > 0
+        available: count.total > 0,
       },
       {
         name: 'removeToast',
         description: 'Remove a specific toast by ID',
-        available: count.active > 0
-      }
+        available: count.active > 0,
+      },
     ];
   }
 
   override get aiState() {
     const count = this.getToastCount();
-    
+
     return {
       ...super.aiState,
       position: this.position,
@@ -374,7 +380,7 @@ export class ForgeToastContainer extends BaseElement {
       activeToasts: count.active,
       queuedToasts: count.queued,
       totalToasts: count.total,
-      toastIds: this.toasts.map(t => t.toastId)
+      toastIds: this.toasts.map((t) => t.toastId),
     };
   }
 }
@@ -404,14 +410,14 @@ export function showToast(options: {
   showProgress?: boolean;
 }): string {
   let container = window.forgeToastContainer;
-  
+
   if (!container) {
     container = document.createElement('forge-toast-container');
     container.setAttribute('data-global', 'true');
     document.body.appendChild(container);
     window.forgeToastContainer = container;
   }
-  
+
   return container.addToast(options);
 }
 
@@ -422,7 +428,8 @@ export const toast = {
   info: (message: string, title?: string) => showToast({ message, title, variant: 'info' }),
   success: (message: string, title?: string) => showToast({ message, title, variant: 'success' }),
   warning: (message: string, title?: string) => showToast({ message, title, variant: 'warning' }),
-  error: (message: string, title?: string) => showToast({ message, title, variant: 'error', persistent: true }),
+  error: (message: string, title?: string) =>
+    showToast({ message, title, variant: 'error', persistent: true }),
   dismiss: (id: string) => window.forgeToastContainer?.removeToast(id),
-  clear: () => window.forgeToastContainer?.clearAll()
+  clear: () => window.forgeToastContainer?.clearAll(),
 };

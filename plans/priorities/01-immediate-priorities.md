@@ -80,9 +80,11 @@
 ### **Noise/Cost Reducers**
 
 - [ ] **Add Path Filters**
+
   ```yaml
   paths-ignore: ['docs/**', 'plans/**', '*.md', '.github/workflows/deploy.yml']
   ```
+
   - Skip entire workflow for docs-only changes
   - Major cost savings for documentation updates
 
@@ -267,6 +269,7 @@
 **Priority**: MEDIUM | **Effort**: Low-Medium | **Impact**: High
 
 **Current Situation**:
+
 - AI methods (`getPossibleActions`, `explainState`, `aiState`) add ~100 lines per component
 - Total overhead: ~2,700 lines across 27 components (~81-135KB minified)
 - Methods are shipped to all users but rarely called in production
@@ -276,6 +279,7 @@
 **Strategy**: Combine reframing (Option 1) + optional tree-shaking (Option 2)
 
 **Phase 1: Reframe Marketing (Week 1) - Low Effort**
+
 - [ ] Update README.md to emphasize "Runtime Introspection" over "AI-native"
 - [ ] Reposition as developer debugging/testing tools first, AI capability second
 - [ ] Update docs/ai/metadata-reference.md to add "Developer Introspection" section
@@ -283,21 +287,25 @@
 - [ ] Add practical debugging examples to documentation
 
 **Phase 2: Measure & Analyze (Week 2) - Low Effort**
+
 - [ ] Measure actual bundle impact of AI methods (use bundle analyzer)
 - [ ] Document size of getPossibleActions/explainState/aiState per component
 - [ ] Identify which methods are most/least valuable
 - [ ] Calculate potential savings from tree-shaking
 
 **Phase 3: Make Tree-Shakeable (Week 3-4) - Medium Effort**
+
 - [ ] Design optional import pattern:
+
   ```typescript
   // Default: Lean components (no AI methods)
-  import { ForgeButton } from '@nexcraft/forge'
+  import { ForgeButton } from '@nexcraft/forge';
 
   // Opt-in: Full introspection API
-  import '@nexcraft/forge/introspection'
+  import '@nexcraft/forge/introspection';
   // OR per-component: import '@nexcraft/forge/button/introspection'
   ```
+
 - [ ] Move AI methods to separate module that extends BaseElement prototypes
 - [ ] Update vite.config.ts for proper tree-shaking
 - [ ] Add new package.json exports for introspection modules
@@ -305,6 +313,7 @@
 - [ ] Update TypeScript definitions for conditional types
 
 **Phase 4: Prove Value with Tooling (Week 4+) - Medium Effort**
+
 - [ ] Build ONE concrete developer tool that uses these methods:
   - **Option A**: Forge DevTools Chrome Extension (inspect component state visually)
   - **Option B**: Enhanced console wrapper (`window.forge.inspect(element)`)
@@ -314,6 +323,7 @@
 - [ ] Gather user feedback on introspection API usefulness
 
 **Expected Outcomes**:
+
 - **Bundle size**: 5-10% reduction for users who don't opt-in to introspection
 - **Marketing clarity**: More honest positioning as "introspection-enabled, AI-ready"
 - **Validation**: Real tool proves methods earn their bytes
@@ -321,6 +331,7 @@
 - **Future-proof**: Infrastructure ready when AI tools start consuming metadata
 
 **Files to Update**:
+
 - `README.md` - Reframe "AI-native" messaging (Phase 1)
 - `docs/ai/metadata-reference.md` - Add developer introspection guide (Phase 1)
 - `src/core/BaseElement.ts` - Prepare for conditional method loading (Phase 3)
@@ -330,6 +341,7 @@
 - `examples/` - Add introspection usage examples (Phase 4)
 
 **Success Criteria**:
+
 - [ ] Bundle size measured and documented
 - [ ] README messaging reframed to emphasize developer tools
 - [ ] Tree-shaking implementation complete with zero breaking changes
@@ -338,9 +350,140 @@
 - [ ] User feedback collected and positive
 
 **Related Items**:
+
 - Supports #6 (Bundle Size Optimization)
 - Supports #5 (Documentation Updates)
 - Supports #1 (TypeScript Type Safety - smaller API surface)
+
+### 11. Source Directory Cleanup ✅
+
+**Priority**: MEDIUM | **Effort**: Low | **Impact**: Low | **Status**: ✅ **COMPLETED**
+
+**Issues to Fix**:
+
+- [x] ✅ Remove build artifacts from `src/` directory
+  - Cleaned up 120 build artifacts (`.js`, `.d.ts`, `.js.map`, `.d.ts.map` files)
+  - Verified all build output goes to `dist/` only
+  - `.gitignore` already has patterns to prevent future commits (lines 79-83)
+- [x] ✅ Verify CI/CD workflows use `dist/` for artifacts
+  - All workflows correctly reference `dist/` for build artifacts
+  - No references to `src/` build artifacts in any workflows
+- [x] ✅ Update documentation if needed
+  - Documentation already references `dist/` correctly
+  - No updates needed
+
+**Files Cleaned**:
+
+- Removed 120 compiled files from `src/`:
+  - `src/index.js`, `src/index.d.ts`, `src/index.js.map`, `src/index.d.ts.map`
+  - `src/core/BaseElement.js`, `src/core/BaseElement.d.ts`, etc.
+  - `src/core/ai-metadata.types.js`, `src/core/ai-metadata.types.d.ts`, etc.
+  - All compiled files in `src/components/`, `src/types/`, `src/utils/`
+
+**Outcome**: ✅ Clean source tree with only `.ts` files - build artifacts were never tracked by git (already ignored)
+
+### 12. Design Token System Enhancement
+
+**Priority**: MEDIUM | **Effort**: Medium | **Impact**: Medium
+
+**Current State**:
+
+- Single `tokens/base.css` file with limited token coverage
+- No structured token system for theming
+- Hard-coded values scattered across components
+
+**Improvements**:
+
+- [ ] Create comprehensive token files:
+  - `tokens/colors.ts` - Semantic color system
+  - `tokens/spacing.ts` - Spacing scale (4px base)
+  - `tokens/typography.ts` - Font family, sizes, weights
+  - `tokens/shadows.ts` - Elevation system
+  - `tokens/radii.ts` - Border radius scale
+  - `tokens/z-index.ts` - Layering system
+- [ ] Implement token export system:
+  - Export as CSS custom properties
+  - Export as JavaScript objects
+  - Export as JSON for tooling
+- [ ] Add token documentation
+- [ ] Create theming guide with token usage examples
+
+**Files to Create**:
+
+- `src/tokens/colors.ts`
+- `src/tokens/spacing.ts`
+- `src/tokens/typography.ts`
+- `src/tokens/shadows.ts`
+- `src/tokens/radii.ts`
+- `src/tokens/z-index.ts`
+- `src/tokens/index.ts` (central export)
+- `docs/design-tokens.md`
+
+**Expected Outcome**: Comprehensive design token system enabling consistent theming and better DX
+
+**Related Items**:
+
+- Supports #6 (Bundle Size Optimization - tree-shakeable tokens)
+- Supports #5 (Documentation Updates - theming guide)
+
+### 13. Utilities Directory Reorganization
+
+**Priority**: LOW | **Effort**: Low | **Impact**: Low
+
+**Current State**:
+
+```
+utils/
+├── debounce.ts
+├── performance-dashboard.ts
+├── token-bridge.ts
+└── virtual-scroller.ts
+```
+
+**Proposed Structure**:
+
+```
+utils/
+├── performance/
+│   ├── dashboard.ts
+│   └── virtual-scroller.ts
+├── timing/
+│   ├── debounce.ts
+│   └── throttle.ts (if exists)
+├── theming/
+│   └── token-bridge.ts
+├── dom/
+│   └── [future DOM utilities]
+└── index.ts (barrel export)
+```
+
+**Actions**:
+
+- [ ] Create subdirectory structure in `utils/`
+- [ ] Move files to appropriate categories
+- [ ] Update import paths across codebase
+- [ ] Create barrel exports (`index.ts` per category)
+- [ ] Update main `utils/index.ts` for re-exports
+- [ ] Verify all tests still pass
+- [ ] Update documentation
+
+**Files to Update**:
+
+- Move `src/utils/debounce.ts` → `src/utils/timing/debounce.ts`
+- Move `src/utils/performance-dashboard.ts` → `src/utils/performance/dashboard.ts`
+- Move `src/utils/virtual-scroller.ts` → `src/utils/performance/virtual-scroller.ts`
+- Move `src/utils/token-bridge.ts` → `src/utils/theming/token-bridge.ts`
+- Create `src/utils/performance/index.ts`
+- Create `src/utils/timing/index.ts`
+- Create `src/utils/theming/index.ts`
+- Update `src/utils/index.ts`
+
+**Expected Outcome**: Better organized utilities with clear categories, easier to discover and maintain
+
+**Related Items**:
+
+- Supports #5 (Documentation Updates - clearer utility organization)
+- Supports #1 (TypeScript Type Safety - clearer module boundaries)
 
 ### 7. Build Process Improvements
 
@@ -358,36 +501,63 @@
 
 ### 9. Release Configuration (Changesets)
 
-**Priority**: HIGH | **Effort**: Low | **Impact**: High
+**Priority**: HIGH | **Effort**: Low | **Impact**: High | **Status**: ✅ **MOSTLY COMPLETED** (4/6 done)
 
 **Actions**:
 
-- [ ] Align Changesets base branch with release branch
-  - Set `.changeset/config.json` `baseBranch: "main"` (current CI releases from main)
-- [ ] Use native Changesets in CI
-  - In `release.yml`, set `version: npx changeset version` and `publish: npx changeset publish`
-  - Replace bespoke multi-package `npm publish` script to let Changesets publish only changed packages in order
-- [ ] Remove auto-changeset generation from release
-  - Delete the `Auto-generate Changesets from Commits` step in `release.yml` (changesets must be authored in PRs)
-- [ ] Simplify branch sync
-  - Drop or manualize the `sync-develop` job; rely on Changesets “Version Packages” PR flow
-- [ ] Add PR check for missing changesets
-  - Fail PRs that modify `packages/**` without a `.changeset/*.md` entry
-- [ ] Confirm version policy for framework packages
-  - Keep independent versioning or expand `linked` list intentionally; document policy
+- [x] ✅ Align Changesets base branch with release branch
+  - Set `.changeset/config.json` `baseBranch: "main"` (current CI releases from main) → **COMPLETED**
+- [x] ✅ Use native Changesets in CI
+  - In `release.yml`, set `version: npx changeset version` and `publish: npx changeset publish` → **COMPLETED**
+  - Replace bespoke multi-package `npm publish` script to let Changesets publish only changed packages in order → **COMPLETED**
+- [x] ✅ Remove auto-changeset generation from release
+  - Delete the `Auto-generate Changesets from Commits` step in `release.yml` (changesets must be authored in PRs) → **COMPLETED**
+- [x] ~~🟡 Simplify branch sync~~ **OBSOLETE**
+  - ~~Drop or manualize the `sync-develop` job; rely on Changesets "Version Packages" PR flow~~
+  - **Decision**: Remove `sync-develop` job entirely - creates git noise (2 commits/release), duplicates Changesets workflow, requires manual intervention on conflicts anyway
+- [x] ✅ Add PR check for missing changesets
+  - Fail PRs that modify `packages/**` without a `.changeset/*.md` entry → **COMPLETED**
+  - **Implementation**: Added `changeset-check` job to `.github/workflows/ci.yml`
+  - **Behavior**: Fails CI if package files modified without changeset, provides helpful error message
+- [x] ✅ Confirm version policy for framework packages
+  - Keep independent versioning or expand `linked` list intentionally; document policy → **COMPLETED**
+  - **Policy**: Framework packages linked: `@nexcraft/forge-react`, `@nexcraft/forge-vue`, `@nexcraft/forge-angular`
 
-**Expected Outcome**: Predictable multi-package releases with minimal maintenance overhead
+**Expected Outcome**: Predictable multi-package releases with minimal maintenance overhead → **ACHIEVED** ✅
+
+**Verification**: Successfully published 7 packages to npm (forge@0.8.0, forge-react@0.3.0, forge-rhf@0.4.0, etc.)
+
+**Completion**: ✅ **FULLY COMPLETED** (5/5 actionable items done, 1 marked OBSOLETE)
 
 ### 8. Event Naming Audit (ADR‑008)
 
-**Priority**: MEDIUM | **Effort**: Low | **Impact**: Medium
+**Priority**: MEDIUM | **Effort**: Low | **Impact**: Medium | **Status**: ✅ **COMPLETED**
 
 **Actions**:
 
-- [ ] Audit high-traffic components for standard event names (present tense, no `on-*`)
-- [ ] Keep deprecated aliases where needed and document deprecation
+- [x] ✅ Audit high-traffic components for standard event names (present tense, no `on-*`)
+  - **Final Compliance**: 100% (18/18 events fully compliant)
+  - **Issues Fixed**:
+    - toast `toast-dismissed` → `dismiss` (with deprecated alias)
+    - avatar `forge-avatar-click` → `click`
+    - modal `modalclose`/`modalopen` → `close`/`open`
+- [x] ✅ Keep deprecated aliases where needed and document deprecation
+  - **toast**: Emits both `dismiss` (new) and `toast-dismissed` (deprecated)
+  - **Deprecation**: `toast-dismissed` will be removed in v1.0.0
 
-**Expected Outcome**: Consistent event APIs per ADR‑008; improved DX in frameworks
+**Expected Outcome**: Consistent event APIs per ADR‑008; improved DX in frameworks → **ACHIEVED** ✅
+
+**Fixes Implemented**:
+
+- `src/components/molecules/toast/toast.ts` - Added `dismiss` event with deprecated `toast-dismissed` alias
+- `src/components/molecules/toast/toast-container.ts` - Updated to listen for `dismiss`
+- `src/components/molecules/toast/toast.test.ts` - Updated tests for new event
+- `src/components/atoms/avatar/avatar.ts` - Changed to standard `click` event
+- `src/components/atoms/avatar/avatar.test.ts` - Updated tests for `click`
+- `src/components/atoms/avatar/avatar.stories.ts` - Updated Storybook examples
+- `src/components/molecules/modal/modal.ts` - Removed vendor-prefixed `modalclose`/`modalopen`, kept only `close`/`open`
+- `src/components/molecules/modal/modal.test.ts` - Updated all tests to use `close`/`open` events
+- `src/components/molecules/modal/modal.stories.ts` - Updated all Storybook examples to use standard events
 
 ## 📊 **Success Metrics**
 

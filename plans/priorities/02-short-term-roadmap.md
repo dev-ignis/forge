@@ -229,6 +229,12 @@
 **Priority**: MEDIUM | **Effort**: Medium | **Impact**: Medium
 
 **Features**:
+- [ ] **Test Organization Refactoring** (Future Enhancement)
+  - Move accessibility tests to `src/__tests__/a11y/` directory
+  - Create separate vitest config for a11y tests (`vitest.a11y.config.ts`)
+  - Benefits: cleaner file structure, easier maintenance, explicit separation
+  - Current solution (test name filtering) works well for now
+  - Consider when: test suite grows significantly or team prefers directory-based organization
 - [ ] **Visual Regression Testing**
   - Automated screenshot comparison
   - Cross-browser testing
@@ -243,6 +249,69 @@
   - Memory leak detection
 
 **Expected Outcome**: Comprehensive testing coverage
+
+---
+
+### 🔬 **Known Issues & Technical Debt**
+
+#### ADR-008 Event Naming Compliance
+**Status**: ✅ RESOLVED | **Priority**: HIGH | **Impact**: High
+
+**Resolution**: Successfully implemented native button pattern across all interactive components.
+
+**Solution Implemented**:
+Use native `<button>` elements internally for interactive components. The button provides browser-level disabled state handling while maintaining standard event names.
+
+**Updated Components**:
+1. ✅ **Avatar** - Uses `<button>` when clickable, `<div>` otherwise
+   - Standard `click` event
+   - Browser-level disabled handling via `<button disabled>`
+   - Button reset CSS removes default button styling
+
+2. ✅ **Toast** - Already compliant
+   - Uses native `<button>` for dismiss
+   - Standard `dismiss` event
+
+3. ✅ **Modal** - Already compliant
+   - Uses `<forge-button>` for close button
+   - Standard `open` and `close` events
+
+4. ✅ **Accordion** - Already compliant
+   - Uses `<forge-button>` for panel headers
+   - Compound event `paneltoggle` (acceptable per ADR-008)
+
+5. ✅ **Alert** - Already compliant
+   - Uses native `<button>` for close
+   - Standard `close` event
+
+**Pattern Established**:
+```typescript
+// Interactive component pattern
+render() {
+  return this.clickable
+    ? html`
+        <button
+          class="avatar button-reset"
+          ?disabled=${this.disabled}
+          @click=${this._handleClick}
+        >
+          ${content}
+        </button>
+      `
+    : html`<div class="avatar">${content}</div>`;
+}
+```
+
+**Benefits**:
+- ✅ Standard event names work across all frameworks
+- ✅ Browser-level disabled state handling
+- ✅ Proper accessibility (ARIA, keyboard nav, focus)
+- ✅ Simpler API for consumers
+- ✅ Reusable button-reset pattern
+
+**ADR-008 Updated**: Revised 2025-01-02 to include native button guidance.
+
+---
 
 ## 🌐 **Framework Integrations**
 

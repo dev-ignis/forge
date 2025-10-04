@@ -1,12 +1,10 @@
-import { expect, fixture, html, elementUpdated, waitUntil } from '@open-wc/testing';
+import { expect, fixture, html, elementUpdated } from '@open-wc/testing';
 import './modal'; // Register the element
 import { ForgeModal } from './modal';
 
 describe('ForgeModal', () => {
   it('should render with default properties', async () => {
-    const el = await fixture<ForgeModal>(html`
-      <forge-modal>Modal content</forge-modal>
-    `);
+    const el = await fixture<ForgeModal>(html` <forge-modal>Modal content</forge-modal> `);
 
     expect(el).to.exist;
     expect(el.open).to.be.false;
@@ -17,16 +15,14 @@ describe('ForgeModal', () => {
   });
 
   it('should open and close modal', async () => {
-    const el = await fixture<ForgeModal>(html`
-      <forge-modal>Content</forge-modal>
-    `);
+    const el = await fixture<ForgeModal>(html` <forge-modal>Content</forge-modal> `);
 
     expect(el.open).to.be.false;
-    
+
     el.show();
     await elementUpdated(el);
     expect(el.open).to.be.true;
-    
+
     el.close();
     await elementUpdated(el);
     expect(el.open).to.be.false;
@@ -51,9 +47,7 @@ describe('ForgeModal', () => {
   });
 
   it('should show close button by default', async () => {
-    const el = await fixture<ForgeModal>(html`
-      <forge-modal open>Content</forge-modal>
-    `);
+    const el = await fixture<ForgeModal>(html` <forge-modal open>Content</forge-modal> `);
 
     const closeButton = el.shadowRoot!.querySelector('.modal__close');
     expect(closeButton).to.exist;
@@ -69,9 +63,7 @@ describe('ForgeModal', () => {
   });
 
   it('should emit modaltoggle event when opened', async () => {
-    const el = await fixture<ForgeModal>(html`
-      <forge-modal>Content</forge-modal>
-    `);
+    const el = await fixture<ForgeModal>(html` <forge-modal>Content</forge-modal> `);
 
     let toggleEvent: CustomEvent | null = null;
     el.addEventListener('modaltoggle', (e: Event) => {
@@ -85,42 +77,38 @@ describe('ForgeModal', () => {
     expect(toggleEvent!.detail.open).to.be.true;
   });
 
-  it('should emit modalclose event when close is called', async () => {
-    const el = await fixture<ForgeModal>(html`
-      <forge-modal open>Content</forge-modal>
-    `);
+  it('should emit close event when close is called (ADR-008)', async () => {
+    const el = await fixture<ForgeModal>(html` <forge-modal open>Content</forge-modal> `);
 
     let closeEvent: CustomEvent | null = null;
-    el.addEventListener('modalclose', (e: Event) => {
+    el.addEventListener('close', (e: Event) => {
       closeEvent = e as CustomEvent;
     });
 
     el.close();
+    await el.updateComplete;
     await elementUpdated(el);
 
     expect(closeEvent).to.exist;
   });
 
-  it('should emit modalopen event when show is called', async () => {
-    const el = await fixture<ForgeModal>(html`
-      <forge-modal>Content</forge-modal>
-    `);
+  it('should emit open event when show is called (ADR-008)', async () => {
+    const el = await fixture<ForgeModal>(html` <forge-modal>Content</forge-modal> `);
 
     let openEvent: CustomEvent | null = null;
-    el.addEventListener('modalopen', (e: Event) => {
+    el.addEventListener('open', (e: Event) => {
       openEvent = e as CustomEvent;
     });
 
     el.show();
+    await el.updateComplete;
     await elementUpdated(el);
 
     expect(openEvent).to.exist;
   });
 
   it('should close when close button is clicked', async () => {
-    const el = await fixture<ForgeModal>(html`
-      <forge-modal open>Content</forge-modal>
-    `);
+    const el = await fixture<ForgeModal>(html` <forge-modal open>Content</forge-modal> `);
 
     const closeButton = el.shadowRoot!.querySelector('.modal__close') as HTMLButtonElement;
     closeButton.click();
@@ -164,31 +152,29 @@ describe('ForgeModal', () => {
     expect(el.open).to.be.false;
   });
 
-  it('should prevent event if modalclose is cancelled', async () => {
-    const el = await fixture<ForgeModal>(html`
-      <forge-modal open>Content</forge-modal>
-    `);
+  it('should prevent close if event is cancelled (ADR-008)', async () => {
+    const el = await fixture<ForgeModal>(html` <forge-modal open>Content</forge-modal> `);
 
-    el.addEventListener('modalclose', (e: Event) => {
+    el.addEventListener('close', (e: Event) => {
       e.preventDefault();
     });
 
     el.close();
+    await el.updateComplete;
     await elementUpdated(el);
 
     expect(el.open).to.be.true;
   });
 
-  it('should prevent event if modalopen is cancelled', async () => {
-    const el = await fixture<ForgeModal>(html`
-      <forge-modal>Content</forge-modal>
-    `);
+  it('should prevent open if event is cancelled (ADR-008)', async () => {
+    const el = await fixture<ForgeModal>(html` <forge-modal>Content</forge-modal> `);
 
-    el.addEventListener('modalopen', (e: Event) => {
+    el.addEventListener('open', (e: Event) => {
       e.preventDefault();
     });
 
     el.show();
+    await el.updateComplete;
     await elementUpdated(el);
 
     expect(el.open).to.be.false;
@@ -204,7 +190,7 @@ describe('ForgeModal', () => {
 
     const headerSlot = el.shadowRoot!.querySelector('slot[name="header"]') as HTMLSlotElement;
     expect(headerSlot).to.exist;
-    
+
     const slottedHeader = el.querySelector('[slot="header"]');
     expect(slottedHeader).to.exist;
     expect(slottedHeader?.textContent).to.equal('Custom Header');
@@ -220,7 +206,7 @@ describe('ForgeModal', () => {
 
     const footerSlot = el.shadowRoot!.querySelector('slot[name="footer"]') as HTMLSlotElement;
     expect(footerSlot).to.exist;
-    
+
     const slottedFooter = el.querySelector('[slot="footer"]');
     expect(slottedFooter).to.exist;
     expect(slottedFooter?.textContent).to.equal('Footer content');
@@ -294,9 +280,7 @@ describe('ForgeModal', () => {
   });
 
   it('should have correct AI metadata', async () => {
-    const el = await fixture<ForgeModal>(html`
-      <forge-modal>Content</forge-modal>
-    `);
+    const el = await fixture<ForgeModal>(html` <forge-modal>Content</forge-modal> `);
 
     const aiState = el.aiState;
     expect(aiState.metadata.purpose).to.equal('Modal dialog for focused content or interactions');
@@ -305,22 +289,20 @@ describe('ForgeModal', () => {
   });
 
   it('should have correct AI actions', async () => {
-    const el = await fixture<ForgeModal>(html`
-      <forge-modal>Content</forge-modal>
-    `);
+    const el = await fixture<ForgeModal>(html` <forge-modal>Content</forge-modal> `);
 
     const actions = el.getPossibleActions();
     expect(actions).to.have.lengthOf.at.least(3);
-    
-    const openAction = actions.find(a => a.name === 'open');
+
+    const openAction = actions.find((a) => a.name === 'open');
     expect(openAction).to.exist;
     expect(openAction!.available).to.be.true;
-    
+
     el.open = true;
     await elementUpdated(el);
-    
+
     const updatedActions = el.getPossibleActions();
-    const closeAction = updatedActions.find(a => a.name === 'close');
+    const closeAction = updatedActions.find((a) => a.name === 'close');
     expect(closeAction).to.exist;
     expect(closeAction!.available).to.be.true;
   });

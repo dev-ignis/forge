@@ -1,7 +1,7 @@
 {
   "manifestVersion": "1.0.0",
   "package": "@nexcraft/forge",
-  "generatedAt": "2025-09-27T02:15:58.889Z",
+  "generatedAt": "2025-10-04T02:13:54.240Z",
   "components": [
     {
       "id": "forge-performance-dashboard",
@@ -51,12 +51,8 @@
       "events": [],
       "a11y": {
         "role": "generic",
-        "ariaAttributes": [
-          "aria-label"
-        ],
-        "keyboardNavigation": [
-          "Standard keyboard navigation"
-        ],
+        "ariaAttributes": ["aria-label"],
+        "keyboardNavigation": ["Standard keyboard navigation"],
         "screenReaderBehavior": "Announces component content",
         "focusManagement": "Standard focus management",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum)",
@@ -205,16 +201,8 @@
       ],
       "a11y": {
         "role": "alert",
-        "ariaAttributes": [
-          "aria-live",
-          "aria-atomic",
-          "aria-label",
-          "aria-describedby"
-        ],
-        "keyboardNavigation": [
-          "Escape (if closable)",
-          "Tab"
-        ],
+        "ariaAttributes": ["aria-live", "aria-atomic", "aria-label", "aria-describedby"],
+        "keyboardNavigation": ["Escape (if closable)", "Tab"],
         "screenReaderBehavior": "Automatically announced when displayed due to alert role",
         "focusManagement": "Can receive focus if closable, maintains focus ring",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all severity variants",
@@ -251,11 +239,7 @@
         "explainState": {
           "description": "Explains the current state of the component",
           "returns": "AIStateExplanation - {currentState, possibleStates, stateDescription}",
-          "possibleStates": [
-            "default",
-            "closing",
-            "auto-dismissing"
-          ]
+          "possibleStates": ["default", "closing", "auto-dismissing"]
         },
         "aiState": {
           "description": "Getter that returns comprehensive component state for AI",
@@ -358,12 +342,8 @@
       ],
       "a11y": {
         "role": "none",
-        "ariaAttributes": [
-          "aria-label (inherited by content)"
-        ],
-        "keyboardNavigation": [
-          "Inherits from slotted content"
-        ],
+        "ariaAttributes": ["aria-label (inherited by content)"],
+        "keyboardNavigation": ["Inherits from slotted content"],
         "screenReaderBehavior": "Transparent to screen readers, passes through content semantics",
         "focusManagement": "Focus management handled by slotted content",
         "colorContrast": "Neutral component, contrast managed by content",
@@ -474,9 +454,6 @@
           "name": "_handleClick"
         },
         {
-          "name": "_handleKeyDown"
-        },
-        {
           "name": "semanticRole",
           "type": "string | undefined"
         },
@@ -531,21 +508,14 @@
       ],
       "events": [
         {
-          "name": "forge-avatar-click",
+          "name": "click",
           "description": "Fired when a clickable avatar is clicked"
         }
       ],
       "a11y": {
         "role": "img",
-        "ariaAttributes": [
-          "aria-label",
-          "alt",
-          "aria-describedby"
-        ],
-        "keyboardNavigation": [
-          "Tab (if clickable)",
-          "Enter/Space (if clickable)"
-        ],
+        "ariaAttributes": ["aria-label", "alt", "aria-describedby"],
+        "keyboardNavigation": ["Tab (if clickable)", "Enter/Space (if clickable)"],
         "screenReaderBehavior": "Announces as image with descriptive label",
         "focusManagement": "Receives focus when clickable, maintains focus ring",
         "colorContrast": "WCAG AA compliant for status indicators",
@@ -687,15 +657,8 @@
       ],
       "a11y": {
         "role": "status",
-        "ariaAttributes": [
-          "aria-label",
-          "aria-live",
-          "aria-atomic"
-        ],
-        "keyboardNavigation": [
-          "Tab",
-          "Not interactive by default"
-        ],
+        "ariaAttributes": ["aria-label", "aria-live", "aria-atomic"],
+        "keyboardNavigation": ["Tab", "Not interactive by default"],
         "screenReaderBehavior": "Announces count changes via aria-live",
         "focusManagement": "Generally not focusable unless interactive",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all variants",
@@ -747,13 +710,7 @@
         "explainState": {
           "description": "Explains the current state of the component",
           "returns": "AIStateExplanation - {currentState, possibleStates, stateDescription}",
-          "possibleStates": [
-            "visible",
-            "hidden",
-            "dot-indicator",
-            "counting",
-            "pulsing"
-          ]
+          "possibleStates": ["visible", "hidden", "dot-indicator", "counting", "pulsing"]
         },
         "aiState": {
           "description": "Getter that returns comprehensive component state for AI",
@@ -907,11 +864,7 @@
           "aria-describedby",
           "aria-expanded"
         ],
-        "keyboardNavigation": [
-          "Tab",
-          "Enter",
-          "Space"
-        ],
+        "keyboardNavigation": ["Tab", "Enter", "Space"],
         "screenReaderBehavior": "Announces button purpose, state, and content clearly",
         "focusManagement": "Receives focus via tab navigation, maintains visible focus ring",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all variants",
@@ -1062,10 +1015,7 @@
           "aria-describedby",
           "aria-invalid"
         ],
-        "keyboardNavigation": [
-          "Tab",
-          "Space"
-        ],
+        "keyboardNavigation": ["Tab", "Space"],
         "screenReaderBehavior": "Announces label, state (checked/unchecked/mixed), and validation",
         "focusManagement": "Receives focus via tab navigation, maintains focus ring",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) including focus states",
@@ -1122,13 +1072,7 @@
         "explainState": {
           "description": "Explains the current state of the component",
           "returns": "AIStateExplanation - {currentState, possibleStates, stateDescription}",
-          "possibleStates": [
-            "unchecked",
-            "checked",
-            "indeterminate",
-            "disabled",
-            "error"
-          ]
+          "possibleStates": ["unchecked", "checked", "indeterminate", "disabled", "error"]
         },
         "aiState": {
           "description": "Getter that returns comprehensive component state for AI",
@@ -1243,14 +1187,8 @@
       "events": [],
       "a11y": {
         "role": "img",
-        "ariaAttributes": [
-          "aria-label",
-          "aria-hidden",
-          "role"
-        ],
-        "keyboardNavigation": [
-          "Generally not interactive"
-        ],
+        "ariaAttributes": ["aria-label", "aria-hidden", "role"],
+        "keyboardNavigation": ["Generally not interactive"],
         "screenReaderBehavior": "Hidden from screen readers when decorative, labeled when semantic",
         "focusManagement": "Not focusable unless interactive",
         "colorContrast": "WCAG AA compliant when used as interactive elements",
@@ -1307,14 +1245,7 @@
         "explainState": {
           "description": "Explains the current state of the component",
           "returns": "AIStateExplanation - {currentState, possibleStates, stateDescription}",
-          "possibleStates": [
-            "idle",
-            "loading",
-            "loaded",
-            "error",
-            "spinning",
-            "pulsing"
-          ]
+          "possibleStates": ["idle", "loading", "loaded", "error", "spinning", "pulsing"]
         },
         "aiState": {
           "description": "Getter that returns comprehensive component state for AI",
@@ -1500,11 +1431,7 @@
           "aria-invalid",
           "aria-autocomplete"
         ],
-        "keyboardNavigation": [
-          "Tab",
-          "Text input",
-          "Escape (clear if clearable)"
-        ],
+        "keyboardNavigation": ["Tab", "Text input", "Escape (clear if clearable)"],
         "screenReaderBehavior": "Announces label, value, validation state, and helper text",
         "focusManagement": "Receives focus via tab navigation, maintains focus ring",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for text and borders",
@@ -1652,9 +1579,7 @@
           "aria-label",
           "aria-describedby"
         ],
-        "keyboardNavigation": [
-          "Not interactive"
-        ],
+        "keyboardNavigation": ["Not interactive"],
         "screenReaderBehavior": "Announces progress value and description",
         "focusManagement": "Not focusable",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for progress indicator",
@@ -1782,9 +1707,7 @@
           "aria-label",
           "aria-describedby"
         ],
-        "keyboardNavigation": [
-          "Not interactive"
-        ],
+        "keyboardNavigation": ["Not interactive"],
         "screenReaderBehavior": "Announces progress value and description",
         "focusManagement": "Not focusable",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for progress indicator",
@@ -1821,12 +1744,7 @@
         "explainState": {
           "description": "Explains the current state of the component",
           "returns": "AIStateExplanation - {currentState, possibleStates, stateDescription}",
-          "possibleStates": [
-            "indeterminate",
-            "not-started",
-            "complete",
-            "in-progress"
-          ]
+          "possibleStates": ["indeterminate", "not-started", "complete", "in-progress"]
         },
         "aiState": {
           "description": "Getter that returns comprehensive component state for AI",
@@ -1958,17 +1876,8 @@
       "events": [],
       "a11y": {
         "role": "radiogroup",
-        "ariaAttributes": [
-          "aria-label",
-          "aria-describedby",
-          "aria-required",
-          "aria-invalid"
-        ],
-        "keyboardNavigation": [
-          "Tab (to group)",
-          "Arrow keys (between options)",
-          "Space"
-        ],
+        "ariaAttributes": ["aria-label", "aria-describedby", "aria-required", "aria-invalid"],
+        "keyboardNavigation": ["Tab (to group)", "Arrow keys (between options)", "Space"],
         "screenReaderBehavior": "Announces group label, selected option, and validation state",
         "focusManagement": "Group receives tab focus, arrow keys navigate options",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all states",
@@ -2330,13 +2239,8 @@
       "events": [],
       "a11y": {
         "role": "status",
-        "ariaAttributes": [
-          "aria-label",
-          "aria-live"
-        ],
-        "keyboardNavigation": [
-          "Not interactive"
-        ],
+        "ariaAttributes": ["aria-label", "aria-live"],
+        "keyboardNavigation": ["Not interactive"],
         "screenReaderBehavior": "Announces loading state to indicate content is loading",
         "focusManagement": "Not focusable",
         "colorContrast": "WCAG AA compliant for skeleton appearance",
@@ -2368,10 +2272,7 @@
         "explainState": {
           "description": "Explains the current state of the component",
           "returns": "AIStateExplanation - {currentState, possibleStates, stateDescription}",
-          "possibleStates": [
-            "static",
-            "animated"
-          ]
+          "possibleStates": ["static", "animated"]
         },
         "aiState": {
           "description": "Getter that returns comprehensive component state for AI",
@@ -2500,17 +2401,8 @@
       "events": [],
       "a11y": {
         "role": "switch",
-        "ariaAttributes": [
-          "aria-checked",
-          "aria-disabled",
-          "aria-label",
-          "aria-describedby"
-        ],
-        "keyboardNavigation": [
-          "Tab",
-          "Space",
-          "Enter"
-        ],
+        "ariaAttributes": ["aria-checked", "aria-disabled", "aria-label", "aria-describedby"],
+        "keyboardNavigation": ["Tab", "Space", "Enter"],
         "screenReaderBehavior": "Announces switch purpose and state (on/off)",
         "focusManagement": "Receives focus via tab navigation, maintains focus ring",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all states",
@@ -2704,15 +2596,8 @@
       ],
       "a11y": {
         "role": "article",
-        "ariaAttributes": [
-          "aria-label",
-          "aria-describedby",
-          "role"
-        ],
-        "keyboardNavigation": [
-          "Tab (if clickable)",
-          "Enter (if clickable)"
-        ],
+        "ariaAttributes": ["aria-label", "aria-describedby", "role"],
+        "keyboardNavigation": ["Tab (if clickable)", "Enter (if clickable)"],
         "screenReaderBehavior": "Announces as article/card with title and content structure",
         "focusManagement": "Receives focus when interactive, maintains focus ring",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for text and borders",
@@ -3277,14 +3162,8 @@
       "events": [],
       "a11y": {
         "role": "group",
-        "ariaAttributes": [
-          "aria-labelledby",
-          "aria-describedby",
-          "aria-invalid"
-        ],
-        "keyboardNavigation": [
-          "Tab through form controls"
-        ],
+        "ariaAttributes": ["aria-labelledby", "aria-describedby", "aria-invalid"],
+        "keyboardNavigation": ["Tab through form controls"],
         "screenReaderBehavior": "Groups related form controls with shared label and description",
         "focusManagement": "Focus management handled by contained form controls",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for labels and text",
@@ -3456,19 +3335,11 @@
       "events": [
         {
           "name": "open",
-          "description": "Fired when the modal is opened (ADR-008 compliant)"
+          "description": "Fired when the modal is opened"
         },
         {
           "name": "close",
-          "description": "Fired when the modal is closed (ADR-008 compliant)"
-        },
-        {
-          "name": "modalopen",
-          "description": "Deprecated alias for 'open' (backward compatibility)"
-        },
-        {
-          "name": "modalclose",
-          "description": "Deprecated alias for 'close' (backward compatibility)"
+          "description": "Fired when the modal is closed"
         }
       ],
       "slots": [
@@ -3487,17 +3358,8 @@
       ],
       "a11y": {
         "role": "dialog",
-        "ariaAttributes": [
-          "aria-modal",
-          "aria-labelledby",
-          "aria-describedby",
-          "aria-hidden"
-        ],
-        "keyboardNavigation": [
-          "Tab (within modal)",
-          "Escape (close)",
-          "Focus trap enabled"
-        ],
+        "ariaAttributes": ["aria-modal", "aria-labelledby", "aria-describedby", "aria-hidden"],
+        "keyboardNavigation": ["Tab (within modal)", "Escape (close)", "Focus trap enabled"],
         "screenReaderBehavior": "Announces as modal dialog, focuses first interactive element",
         "focusManagement": "Traps focus within modal, returns focus on close",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for content",
@@ -3670,12 +3532,7 @@
           "aria-describedby",
           "aria-required"
         ],
-        "keyboardNavigation": [
-          "Tab",
-          "Enter/Space (toggle)",
-          "Arrow keys",
-          "Ctrl+A (select all)"
-        ],
+        "keyboardNavigation": ["Tab", "Enter/Space (toggle)", "Arrow keys", "Ctrl+A (select all)"],
         "screenReaderBehavior": "Announces selected items count and individual selections",
         "focusManagement": "Manages focus within multi-select dropdown",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all states",
@@ -3713,7 +3570,7 @@
         },
         {
           "name": "position",
-          "type": "'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'"
+          "type": "| 'top-left'\r\n    | 'top-center'\r\n    | 'top-right'\r\n    | 'bottom-left'\r\n    | 'bottom-center'\r\n    | 'bottom-right'"
         },
         {
           "name": "maxToasts",
@@ -3787,13 +3644,8 @@
       "events": [],
       "a11y": {
         "role": "region",
-        "ariaAttributes": [
-          "aria-label",
-          "aria-live"
-        ],
-        "keyboardNavigation": [
-          "Tab (through contained toasts)"
-        ],
+        "ariaAttributes": ["aria-label", "aria-live"],
+        "keyboardNavigation": ["Tab (through contained toasts)"],
         "screenReaderBehavior": "Container for toast notifications, manages aria-live announcements",
         "focusManagement": "Focus management handled by contained toasts",
         "colorContrast": "Neutral container, contrast managed by toast content",
@@ -3934,6 +3786,11 @@
       ],
       "events": [
         {
+          "name": "dismiss",
+          "description": "dismiss event",
+          "detail": "CustomEvent"
+        },
+        {
           "name": "toast-dismissed",
           "description": "toast-dismissed event",
           "detail": "CustomEvent"
@@ -3955,16 +3812,8 @@
       ],
       "a11y": {
         "role": "status",
-        "ariaAttributes": [
-          "aria-live",
-          "aria-atomic",
-          "aria-label",
-          "aria-describedby"
-        ],
-        "keyboardNavigation": [
-          "Tab (to action buttons)",
-          "Escape (dismiss)"
-        ],
+        "ariaAttributes": ["aria-live", "aria-atomic", "aria-label", "aria-describedby"],
+        "keyboardNavigation": ["Tab (to action buttons)", "Escape (dismiss)"],
         "screenReaderBehavior": "Automatically announced when displayed via aria-live",
         "focusManagement": "Can receive focus if containing interactive elements",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all variants",
@@ -3984,12 +3833,7 @@
         "explainState": {
           "description": "Explains the current state of the component",
           "returns": "AIStateExplanation - {currentState, possibleStates, stateDescription}",
-          "possibleStates": [
-            "dismissed",
-            "persistent",
-            "timed",
-            "manual"
-          ]
+          "possibleStates": ["dismissed", "persistent", "timed", "manual"]
         },
         "aiState": {
           "description": "Getter that returns comprehensive component state for AI",
@@ -4130,14 +3974,8 @@
       ],
       "a11y": {
         "role": "tooltip",
-        "ariaAttributes": [
-          "aria-describedby",
-          "aria-hidden"
-        ],
-        "keyboardNavigation": [
-          "Escape (close)",
-          "Focus trigger to show"
-        ],
+        "ariaAttributes": ["aria-describedby", "aria-hidden"],
+        "keyboardNavigation": ["Escape (close)", "Focus trigger to show"],
         "screenReaderBehavior": "Associated with trigger element via aria-describedby",
         "focusManagement": "Not focusable, shown/hidden based on trigger focus",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for tooltip content",
@@ -4247,11 +4085,7 @@
       ],
       "a11y": {
         "role": "region",
-        "ariaAttributes": [
-          "aria-expanded",
-          "aria-controls",
-          "aria-labelledby"
-        ],
+        "ariaAttributes": ["aria-expanded", "aria-controls", "aria-labelledby"],
         "keyboardNavigation": [
           "Tab (to headers)",
           "Enter/Space (toggle)",
@@ -4510,18 +4344,8 @@
       ],
       "a11y": {
         "role": "grid",
-        "ariaAttributes": [
-          "aria-rowcount",
-          "aria-colcount",
-          "aria-label",
-          "aria-describedby"
-        ],
-        "keyboardNavigation": [
-          "Tab",
-          "Arrow keys (navigate cells)",
-          "Home/End",
-          "Page Up/Down"
-        ],
+        "ariaAttributes": ["aria-rowcount", "aria-colcount", "aria-label", "aria-describedby"],
+        "keyboardNavigation": ["Tab", "Arrow keys (navigate cells)", "Home/End", "Page Up/Down"],
         "screenReaderBehavior": "Announces grid structure, headers, and cell content",
         "focusManagement": "Manages focus within grid cells using arrow key navigation",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for all grid elements",
@@ -4771,16 +4595,8 @@
       ],
       "a11y": {
         "role": "table",
-        "ariaAttributes": [
-          "aria-label",
-          "aria-describedby",
-          "aria-rowcount",
-          "aria-colcount"
-        ],
-        "keyboardNavigation": [
-          "Tab (through interactive elements)",
-          "Arrow keys (if interactive)"
-        ],
+        "ariaAttributes": ["aria-label", "aria-describedby", "aria-rowcount", "aria-colcount"],
+        "keyboardNavigation": ["Tab (through interactive elements)", "Arrow keys (if interactive)"],
         "screenReaderBehavior": "Announces table structure with proper headers and data relationships",
         "focusManagement": "Focus managed by interactive elements within table",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for table content",
@@ -4939,14 +4755,8 @@
       ],
       "a11y": {
         "role": "navigation",
-        "ariaAttributes": [
-          "aria-label",
-          "aria-current"
-        ],
-        "keyboardNavigation": [
-          "Tab (through nav items)",
-          "Enter/Space (activate)"
-        ],
+        "ariaAttributes": ["aria-label", "aria-current"],
+        "keyboardNavigation": ["Tab (through nav items)", "Enter/Space (activate)"],
         "screenReaderBehavior": "Announces as navigation with current page indication",
         "focusManagement": "Focus moves through navigation items",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for navigation links",
@@ -5106,15 +4916,8 @@
       ],
       "a11y": {
         "role": "navigation",
-        "ariaAttributes": [
-          "aria-label",
-          "aria-current",
-          "aria-describedby"
-        ],
-        "keyboardNavigation": [
-          "Tab (through page links)",
-          "Enter/Space (navigate)"
-        ],
+        "ariaAttributes": ["aria-label", "aria-current", "aria-describedby"],
+        "keyboardNavigation": ["Tab (through page links)", "Enter/Space (navigate)"],
         "screenReaderBehavior": "Announces pagination controls and current page",
         "focusManagement": "Focus moves through pagination controls",
         "colorContrast": "WCAG AA compliant (4.5:1 minimum) for pagination controls",
@@ -5267,12 +5070,7 @@
       ],
       "a11y": {
         "role": "tablist",
-        "ariaAttributes": [
-          "aria-orientation",
-          "aria-label",
-          "aria-selected",
-          "aria-controls"
-        ],
+        "ariaAttributes": ["aria-orientation", "aria-label", "aria-selected", "aria-controls"],
         "keyboardNavigation": [
           "Tab (to tab list)",
           "Arrow keys (between tabs)",

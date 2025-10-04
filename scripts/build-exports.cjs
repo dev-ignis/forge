@@ -69,16 +69,36 @@ export { forgePlugin, forgeTokens as forgeTheme, forgeUtilities };
 
 fs.writeFileSync('dist/plugin/index.js', pluginContent.trim());
 
-// Create individual component exports  
-const components = [
-  { name: 'button', component: 'ForgeButton', path: '../nexcraft-forge.es.js' },
-  { name: 'input', component: 'ForgeInput', path: '../nexcraft-forge.es.js' },
-  { name: 'checkbox', component: 'ForgeCheckbox', path: '../nexcraft-forge.es.js' },
-  { name: 'select', component: 'ForgeSelect', path: '../nexcraft-forge.es.js' },
-  { name: 'alert', component: 'ForgeAlert', path: '../nexcraft-forge.es.js' },
-  { name: 'card', component: 'ForgeCard', path: '../nexcraft-forge.es.js' },
-  { name: 'modal', component: 'ForgeModal', path: '../nexcraft-forge.es.js' }
-];
+// Auto-discover all components from src/components
+const glob = require('glob');
+
+// Convert kebab-case to PascalCase (e.g., 'date-picker' -> 'ForgeDatePicker')
+function toPascalCase(str) {
+  return 'Forge' + str.split('-').map(word =>
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join('');
+}
+
+// Find all component directories (exclude test files and type files)
+const componentPaths = glob.sync('src/components/**/*.ts', {
+  ignore: ['**/*.test.ts', '**/*.types.ts']
+});
+
+// Extract unique component names from paths
+const componentNames = new Set();
+componentPaths.forEach(filePath => {
+  const match = filePath.match(/src\/components\/(?:atoms|molecules|organisms)\/([^\/]+)\//);
+  if (match) {
+    componentNames.add(match[1]);
+  }
+});
+
+// Generate component export configurations
+const components = Array.from(componentNames).map(name => ({
+  name,
+  component: toPascalCase(name),
+  path: '../nexcraft-forge.es.js'
+}));
 
 components.forEach(({ name, component }) => {
   const exportContent = `
