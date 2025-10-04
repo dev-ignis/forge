@@ -30,6 +30,105 @@
 - [📦 Import Guide](./docs/guides/AI_IMPORT_GUIDE.md) - All import methods & framework examples
 - [🤖 AI Manifest](./ai-manifest.json) - Structured component metadata
 
+### 🤖 **AI Manifest Files** - Machine-Readable Component Metadata
+
+Forge provides comprehensive, machine-readable metadata files that AI assistants and build tools can consume programmatically:
+
+#### **📋 Available Files**
+
+**1. `ai-index.json`** - Fast component discovery (465 lines)
+- Quick component lookup by tag/description
+- Framework usage examples (React, Vue, Angular, vanilla)
+- Component metrics (props count, events, slots, a11y)
+- Navigation to detailed resources
+
+**2. `ai-manifest.json`** - Complete API reference (2000+ lines)
+- Full component metadata (props, events, slots with types)
+- Accessibility details (ARIA, keyboard nav, screen reader behavior)
+- AI method documentation (`getPossibleActions`, `explainState`, `aiState`)
+- SSR fallback HTML templates
+- Framework-specific examples
+
+**3. `ai-manifest.schema.json`** - Schema validation
+- JSON Schema for validating manifest structure
+- Use in CI/CD pipelines to ensure quality
+
+#### **💻 Programmatic Access**
+
+```javascript
+// Import manifest files directly from the package
+import aiIndex from '@nexcraft/forge/ai-index.json';
+import aiManifest from '@nexcraft/forge/ai-manifest.json';
+
+// Quick discovery: Find components by capability
+const selectComponents = aiIndex.components.filter(c =>
+  c.tag.includes('select')
+);
+// [{ tag: 'forge-select', props: 39, ... },
+//  { tag: 'forge-multi-select', props: 32, ... }]
+
+// Detailed API: Get full component metadata
+const buttonMeta = aiManifest.components.find(c =>
+  c.tag === 'forge-button'
+);
+console.log(buttonMeta.props);     // All props with types
+console.log(buttonMeta.a11y);      // Accessibility requirements
+console.log(buttonMeta.aiMethods); // AI integration methods
+```
+
+#### **🤖 AI Agent Usage Examples**
+
+AI assistants use these files to provide accurate code generation:
+
+**Scenario 1: Component Discovery**
+```
+User: "I need a component for notifications"
+AI: [Reads ai-index.json] → Finds forge-toast and forge-alert
+AI: "Use forge-toast for temporary notifications or forge-alert for persistent messages"
+```
+
+**Scenario 2: Code Generation**
+```
+User: "Create a primary button that's disabled"
+AI: [Reads ai-manifest.json] → Gets forge-button props
+AI: Generates: <forge-button variant="primary" disabled>Submit</forge-button>
+```
+
+**Scenario 3: Accessibility Verification**
+```
+User: "Is my table accessible?"
+AI: [Reads ai-manifest.json] → Checks forge-data-table a11y requirements
+AI: "Add aria-label: <forge-data-table aria-label='User accounts'>..."
+```
+
+#### **🛠️ Build Tool Integration**
+
+```javascript
+// Use in build scripts, documentation generators, or testing tools
+import { components } from '@nexcraft/forge/ai-index.json';
+
+// Generate component documentation
+components.forEach(comp => {
+  generateDocs(comp.tag, comp.description, comp.examples);
+});
+
+// Validate component usage
+function validateComponent(tagName, props) {
+  const manifest = getComponentFromManifest(tagName);
+  const validProps = manifest.props.map(p => p.name);
+  const invalidProps = Object.keys(props).filter(p => !validProps.includes(p));
+  if (invalidProps.length) {
+    throw new Error(`Invalid props: ${invalidProps.join(', ')}`);
+  }
+}
+```
+
+#### **📖 Learn More**
+
+- **[Component Index](./ai-index.json)** - Browse all 31 components with quick metrics
+- **[Full API Reference](./ai-manifest.json)** - Complete component specifications
+- **[AI Integration Guide](./docs/ai/integration-guide.md)** - How to use AI features in your app
+
 ## 🎯 Why Choose @nexcraft/forge?
 
 ### ✨ **What Makes @nexcraft/forge Special:**

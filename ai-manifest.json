@@ -1,7 +1,7 @@
 {
   "manifestVersion": "1.0.0",
   "package": "@nexcraft/forge",
-  "generatedAt": "2025-10-04T02:31:36.410Z",
+  "generatedAt": "2025-10-04T03:27:52.403Z",
   "components": [
     {
       "id": "forge-performance-dashboard",
@@ -1208,37 +1208,37 @@
             {
               "name": "reload",
               "description": "Reload icon from source",
-              "availableCondition": "this.error && (!!this.name || !!this.src)"
+              "availableCondition": "this.error && (!!this.name || !!this.src),"
             },
             {
               "name": "clearCache",
               "description": "Clear icon from cache",
-              "availableCondition": "!!this.name && ForgeIcon.iconRegistry.has(this.name)"
+              "availableCondition": "!!this.name && ForgeIcon.iconRegistry.has(this.name),"
             },
             {
               "name": "startSpin",
               "description": "Start spinning animation",
-              "availableCondition": "!this.spin && !this.loading"
+              "availableCondition": "!this.spin && !this.loading,"
             },
             {
               "name": "stopSpin",
               "description": "Stop spinning animation",
-              "availableCondition": "this.spin"
+              "availableCondition": "this.spin,"
             },
             {
               "name": "startPulse",
               "description": "Start pulse animation",
-              "availableCondition": "!this.pulse && !this.loading"
+              "availableCondition": "!this.pulse && !this.loading,"
             },
             {
               "name": "stopPulse",
               "description": "Stop pulse animation",
-              "availableCondition": "this.pulse"
+              "availableCondition": "this.pulse,"
             },
             {
               "name": "focus",
               "description": "Focus the icon",
-              "availableCondition": "true"
+              "availableCondition": "true,"
             }
           ]
         },

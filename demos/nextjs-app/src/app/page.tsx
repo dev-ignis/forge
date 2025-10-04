@@ -248,25 +248,26 @@ export default function Home() {
         </motion.div>
 
         {/* Interactive Demo Section */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mb-12"
         >
-          <ForgeTabs 
-            value={activeTab}
-            onValueChange={setActiveTab}
+          <ForgeTabs
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            tabs={[
+              { id: 'overview', label: 'Overview' },
+              { id: 'components', label: 'Components' },
+              { id: 'forms', label: 'Forms' },
+              { id: 'performance', label: 'Performance' }
+            ]}
             className="w-full"
-          >
-            <ForgeTabs.List className="grid w-full grid-cols-4">
-              <ForgeTabs.Trigger value="overview">Overview</ForgeTabs.Trigger>
-              <ForgeTabs.Trigger value="components">Components</ForgeTabs.Trigger>
-              <ForgeTabs.Trigger value="forms">Forms</ForgeTabs.Trigger>
-              <ForgeTabs.Trigger value="performance">Performance</ForgeTabs.Trigger>
-            </ForgeTabs.List>
+          />
 
-            <ForgeTabs.Content value="overview" className="mt-6">
+          <div className="mt-6">
+            {activeTab === 'overview' && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Data Table Demo */}
                 <ForgeCard className="p-6">
@@ -305,9 +306,9 @@ export default function Home() {
                   </div>
                 </ForgeCard>
               </div>
-            </ForgeTabs.Content>
+            )}
 
-            <ForgeTabs.Content value="components" className="mt-6">
+            {activeTab === 'components' && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Atoms */}
                 <ForgeCard className="p-6">
@@ -369,9 +370,9 @@ export default function Home() {
                   </div>
                 </ForgeCard>
               </div>
-            </ForgeTabs.Content>
+            )}
 
-            <ForgeTabs.Content value="forms" className="mt-6">
+            {activeTab === 'forms' && (
               <ForgeCard className="p-6 max-w-2xl mx-auto">
                 <h3 className="text-xl font-semibold mb-6">React Hook Form Integration</h3>
                 <form onSubmit={handleSubmit((data) => console.log(data))} className="space-y-6">
@@ -411,9 +412,9 @@ export default function Home() {
                   </ForgeButton>
                 </form>
               </ForgeCard>
-            </ForgeTabs.Content>
+            )}
 
-            <ForgeTabs.Content value="performance" className="mt-6">
+            {activeTab === 'performance' && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <ForgeCard className="p-6">
                   <h3 className="text-xl font-semibold mb-4">Performance Metrics</h3>
@@ -451,8 +452,8 @@ export default function Home() {
                   </div>
                 </ForgeCard>
               </div>
-            </ForgeTabs.Content>
-          </ForgeTabs>
+            )}
+          </div>
         </motion.div>
 
         {/* Modal Demo */}

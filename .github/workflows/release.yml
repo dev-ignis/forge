@@ -2,7 +2,7 @@ name: Release
 
 on:
   workflow_run:
-    workflows: ["CI"]
+    workflows: ['CI']
     types: [completed]
     branches: [main]
 
@@ -93,7 +93,7 @@ jobs:
           echo "✅ Tests: PASSED (from CI)"
           echo "✅ Build: COMPLETE (main + workspace packages)"
           echo "🚀 Ready for release!"
-          
+
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
@@ -140,14 +140,14 @@ jobs:
           git pull origin main
           git checkout develop
           git pull origin develop
-          
+
           # Get the current version from main branch
           git checkout main
           MAIN_VERSION=$(node -p "require('./package.json').version")
-          
+
           # Switch back to develop and update version
           git checkout develop
-          
+
           # Update package.json version to match main
           node -e "
             const fs = require('fs');
@@ -155,14 +155,14 @@ jobs:
             pkg.version = '$MAIN_VERSION';
             fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
           "
-          
+
           # Commit version sync if there are changes
           if ! git diff --quiet package.json; then
             git add package.json
             git commit -m "sync: update version to match main ($MAIN_VERSION)"
             git push origin develop
           fi
-          
+
           # Try to merge main into develop
           if git merge main --no-ff -m "sync: merge main into develop"; then
             git push origin develop
@@ -174,7 +174,7 @@ jobs:
           fi
 
   update-examples:
-    name: Update Examples
+    name: Update Demos
     runs-on: ubuntu-latest
     needs: release
     if: needs.release.outputs.published == 'true'
@@ -188,20 +188,20 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Update example dependencies
+      - name: Update demo dependencies
         run: |
-          # Update Next.js example to use latest version
-          cd examples/nextjs-app
+          # Update Next.js demo to use latest version
+          cd demos/nextjs-app
           npm update @nexcraft/forge @nexcraft/forge-rhf
-          
-          # Update vanilla example to use latest version
+
+          # Update vanilla demo to use latest version
           cd ../vanilla-app
           npm update @nexcraft/forge
-          
+
           # Commit changes if any
           cd ../..
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add examples/*/package*.json
-          git diff --staged --quiet || git commit -m "chore: update examples to latest version"
+          git add demos/*/package*.json
+          git diff --staged --quiet || git commit -m "chore: update demos to latest version"
           git push origin main || true

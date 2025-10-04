@@ -224,7 +224,7 @@ export class TokenBridge {
   toCSSProperties(): string {
     const cacheKey = 'css-properties';
     if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey);
+      return this.cache.get(cacheKey) as string;
     }
 
     const css = [':root {'];
@@ -280,7 +280,7 @@ export class TokenBridge {
   toSassVariables(): string {
     const cacheKey = 'sass-variables';
     if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey);
+      return this.cache.get(cacheKey) as string;
     }
 
     const sass: string[] = [];
@@ -398,7 +398,7 @@ export class TokenBridge {
 
   private processTailwindFontSize(fontSize: Record<string, unknown>): void {
     Object.entries(fontSize).forEach(([key, value]) => {
-      let typographyValue: TypographyToken['value'];
+      let typographyValue: TypographyToken['value'] = { fontSize: '' };
 
       if (typeof value === 'string') {
         typographyValue = { fontSize: value };
@@ -420,6 +420,8 @@ export class TokenBridge {
           fontFamily: v.fontFamily,
           letterSpacing: v.letterSpacing,
         };
+      } else {
+        typographyValue = { fontSize: String(value) };
       }
 
       const token: TypographyToken = {
