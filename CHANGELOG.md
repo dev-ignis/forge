@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.9.0
+
+### Minor Changes
+
+- 7a38d60: Add selective imports for all 28 components
+  - Previously only 7 components had selective imports (button, input, checkbox, select, alert, card, modal)
+  - Now all 28 components support selective imports for optimal tree-shaking
+  - Auto-discovery system ensures new components automatically get exports
+  - Fixes customer issue where ForgeProgress, ForgeBadge, ForgeAvatar, ForgeDropdown were missing
+
+  **New selective imports available:**
+  - ForgeAccordion, ForgeAspectRatio, ForgeAvatar, ForgeBadge
+  - ForgeDataGrid, ForgeDataTable, ForgeDatePicker, ForgeDropdown
+  - ForgeFormField, ForgeIcon, ForgeMultiSelect, ForgeNavigationBar
+  - ForgePagination, ForgeProgress, ForgeRadioGroup, ForgeSkeleton
+  - ForgeSwitch, ForgeTabs, ForgeToast, ForgeTooltip, ForgeTreeView
+
+  **Usage:**
+
+  ```typescript
+  import { ForgeProgress } from '@nexcraft/forge/progress';
+  import { ForgeBadge } from '@nexcraft/forge/badge';
+  import { ForgeAvatar } from '@nexcraft/forge/avatar';
+  ```
+
+### Patch Changes
+
+- 7a38d60: Refactor test suite to prevent resource contention and timeouts
+  - Split tests into fast unit tests (1147 tests) and slow accessibility tests (35 tests)
+  - Add `test:unit` and `test:a11y` npm scripts for separate execution
+  - Update `test:coverage` to run both suites sequentially
+  - Accessibility tests now run in single-fork mode to prevent timeouts
+  - Coverage maintained at 87% (above 70% threshold)
+  - All 1182 tests now pass reliably in CI without timeouts
+
+  **Benefits:**
+  - Faster test execution (unit ~13s, a11y ~3s vs previous 30s+ with timeouts)
+  - No more flaky accessibility test failures due to resource contention
+  - Better test organization for future maintenance
+
 ## 0.8.0
 
 ### Minor Changes
