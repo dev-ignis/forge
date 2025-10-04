@@ -118,7 +118,8 @@ describe('ForgeAvatar', () => {
 
     const avatar = el.shadowRoot!.querySelector('.avatar');
     expect(avatar).to.have.class('avatar--clickable');
-    expect(el.tabIndex).to.equal(0);
+    // With native button pattern, the button element manages tabindex, not the host
+    expect(avatar?.tagName.toLowerCase()).to.equal('button');
   });
 
   it('should emit click event when clicked and clickable', async () => {
