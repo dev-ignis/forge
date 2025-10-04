@@ -39,33 +39,117 @@
       "types": "./dist/plugin/index.d.ts",
       "import": "./dist/plugin/index.js"
     },
-    "./button": {
-      "types": "./dist/exports/button.d.ts",
-      "import": "./dist/exports/button.js"
+    "./tree-view": {
+      "types": "./dist/exports/tree-view.d.ts",
+      "import": "./dist/exports/tree-view.js"
     },
-    "./input": {
-      "types": "./dist/exports/input.d.ts",
-      "import": "./dist/exports/input.js"
+    "./tooltip": {
+      "types": "./dist/exports/tooltip.d.ts",
+      "import": "./dist/exports/tooltip.js"
     },
-    "./checkbox": {
-      "types": "./dist/exports/checkbox.d.ts",
-      "import": "./dist/exports/checkbox.js"
+    "./toast": {
+      "types": "./dist/exports/toast.d.ts",
+      "import": "./dist/exports/toast.js"
+    },
+    "./tabs": {
+      "types": "./dist/exports/tabs.d.ts",
+      "import": "./dist/exports/tabs.js"
+    },
+    "./switch": {
+      "types": "./dist/exports/switch.d.ts",
+      "import": "./dist/exports/switch.js"
+    },
+    "./skeleton": {
+      "types": "./dist/exports/skeleton.d.ts",
+      "import": "./dist/exports/skeleton.js"
     },
     "./select": {
       "types": "./dist/exports/select.d.ts",
       "import": "./dist/exports/select.js"
     },
-    "./alert": {
-      "types": "./dist/exports/alert.d.ts",
-      "import": "./dist/exports/alert.js"
+    "./radio-group": {
+      "types": "./dist/exports/radio-group.d.ts",
+      "import": "./dist/exports/radio-group.js"
+    },
+    "./progress": {
+      "types": "./dist/exports/progress.d.ts",
+      "import": "./dist/exports/progress.js"
+    },
+    "./pagination": {
+      "types": "./dist/exports/pagination.d.ts",
+      "import": "./dist/exports/pagination.js"
+    },
+    "./navigation-bar": {
+      "types": "./dist/exports/navigation-bar.d.ts",
+      "import": "./dist/exports/navigation-bar.js"
+    },
+    "./multi-select": {
+      "types": "./dist/exports/multi-select.d.ts",
+      "import": "./dist/exports/multi-select.js"
+    },
+    "./modal": {
+      "types": "./dist/exports/modal.d.ts",
+      "import": "./dist/exports/modal.js"
+    },
+    "./input": {
+      "types": "./dist/exports/input.d.ts",
+      "import": "./dist/exports/input.js"
+    },
+    "./icon": {
+      "types": "./dist/exports/icon.d.ts",
+      "import": "./dist/exports/icon.js"
+    },
+    "./form-field": {
+      "types": "./dist/exports/form-field.d.ts",
+      "import": "./dist/exports/form-field.js"
+    },
+    "./dropdown": {
+      "types": "./dist/exports/dropdown.d.ts",
+      "import": "./dist/exports/dropdown.js"
+    },
+    "./date-picker": {
+      "types": "./dist/exports/date-picker.d.ts",
+      "import": "./dist/exports/date-picker.js"
+    },
+    "./data-table": {
+      "types": "./dist/exports/data-table.d.ts",
+      "import": "./dist/exports/data-table.js"
+    },
+    "./data-grid": {
+      "types": "./dist/exports/data-grid.d.ts",
+      "import": "./dist/exports/data-grid.js"
+    },
+    "./checkbox": {
+      "types": "./dist/exports/checkbox.d.ts",
+      "import": "./dist/exports/checkbox.js"
     },
     "./card": {
       "types": "./dist/exports/card.d.ts",
       "import": "./dist/exports/card.js"
     },
-    "./modal": {
-      "types": "./dist/exports/modal.d.ts",
-      "import": "./dist/exports/modal.js"
+    "./button": {
+      "types": "./dist/exports/button.d.ts",
+      "import": "./dist/exports/button.js"
+    },
+    "./badge": {
+      "types": "./dist/exports/badge.d.ts",
+      "import": "./dist/exports/badge.js"
+    },
+    "./avatar": {
+      "types": "./dist/exports/avatar.d.ts",
+      "import": "./dist/exports/avatar.js"
+    },
+    "./aspect-ratio": {
+      "types": "./dist/exports/aspect-ratio.d.ts",
+      "import": "./dist/exports/aspect-ratio.js"
+    },
+    "./alert": {
+      "types": "./dist/exports/alert.d.ts",
+      "import": "./dist/exports/alert.js"
+    },
+    "./accordion": {
+      "types": "./dist/exports/accordion.d.ts",
+      "import": "./dist/exports/accordion.js"
     },
     "./types/framework-integration": {
       "types": "./dist/types/framework-integration.d.ts"
