@@ -9,9 +9,10 @@ This guide provides comprehensive information for developers who want to contrib
 3. [Component Development](#component-development)
 4. [AI-Ready Architecture](#ai-ready-architecture)
 5. [Performance Monitoring](#performance-monitoring)
-6. [Testing Guidelines](#testing-guidelines)
-7. [Documentation Standards](#documentation-standards)
-8. [Accessibility Requirements](#accessibility-requirements)
+6. [Debugging and Error Handling](#debugging-and-error-handling)
+7. [Testing Guidelines](#testing-guidelines)
+8. [Documentation Standards](#documentation-standards)
+9. [Accessibility Requirements](#accessibility-requirements)
 
 ## Development Environment Setup
 
@@ -142,6 +143,7 @@ npm run generate:component MyComponent atoms
 ```
 
 This creates:
+
 - Component implementation file
 - Test file with basic test cases
 - Storybook stories
@@ -174,26 +176,26 @@ export class ForgeMyComponent extends BaseElement {
       --my-component-bg: var(--forge-color-surface);
       --my-component-color: var(--forge-color-text);
     }
-    
+
     .my-component {
       background: var(--my-component-bg);
       color: var(--my-component-color);
       padding: var(--forge-spacing-md);
       border-radius: var(--forge-border-radius-md);
     }
-    
+
     /* Variants */
-    :host([variant="primary"]) {
+    :host([variant='primary']) {
       --my-component-bg: var(--forge-color-primary-500);
       --my-component-color: white;
     }
-    
+
     /* States */
     :host([disabled]) {
       opacity: 0.5;
       pointer-events: none;
     }
-    
+
     /* Responsive styles */
     @media (max-width: 768px) {
       .my-component {
@@ -203,23 +205,23 @@ export class ForgeMyComponent extends BaseElement {
   `;
 
   // Public properties (reflected to attributes)
-  @property({ type: String, reflect: true }) 
+  @property({ type: String, reflect: true })
   variant: 'default' | 'primary' | 'secondary' = 'default';
-  
-  @property({ type: String }) 
+
+  @property({ type: String })
   size: 'sm' | 'md' | 'lg' = 'md';
-  
-  @property({ type: Boolean, reflect: true }) 
+
+  @property({ type: Boolean, reflect: true })
   disabled = false;
-  
-  @property({ type: String }) 
+
+  @property({ type: String })
   value = '';
 
   // Internal state (not reflected)
-  @state() 
+  @state()
   private _focused = false;
-  
-  @state() 
+
+  @state()
   private _loading = false;
 
   render() {
@@ -228,11 +230,11 @@ export class ForgeMyComponent extends BaseElement {
       [`my-component--${this.variant}`]: true,
       [`my-component--${this.size}`]: true,
       'my-component--focused': this._focused,
-      'my-component--loading': this._loading
+      'my-component--loading': this._loading,
     };
 
     return html`
-      <div 
+      <div
         class=${classMap(classes)}
         part="container"
         role="widget"
@@ -264,18 +266,18 @@ export class ForgeMyComponent extends BaseElement {
   // Lifecycle methods
   protected firstUpdated(changedProperties: PropertyValues) {
     super.firstUpdated(changedProperties);
-    
+
     // Setup initial state
     this.tabIndex = this.disabled ? -1 : 0;
   }
 
   protected updated(changedProperties: PropertyValues) {
     super.updated(changedProperties);
-    
+
     // React to property changes
     if (changedProperties.has('disabled')) {
       this.tabIndex = this.disabled ? -1 : 0;
-      
+
       if (this.disabled && this._focused) {
         this.blur();
       }
@@ -288,7 +290,7 @@ export class ForgeMyComponent extends BaseElement {
       super.focus(options);
     }
   }
-  
+
   public blur() {
     super.blur();
   }
@@ -357,11 +359,11 @@ Every component extends BaseElement which includes AI metadata:
 
 ```typescript
 export interface AIMetadata {
-  purpose: string;              // Component's primary purpose
-  context?: string;             // Usage context
-  dataType?: string;            // Type of data handled
+  purpose: string; // Component's primary purpose
+  context?: string; // Usage context
+  dataType?: string; // Type of data handled
   criticality?: 'low' | 'medium' | 'high' | 'critical';
-  semanticRole?: string;        // ARIA-like semantic role
+  semanticRole?: string; // ARIA-like semantic role
 }
 ```
 
@@ -379,7 +381,7 @@ export class ForgeMyComponent extends BaseElement {
       purpose: 'Interactive control for user input',
       dataType: 'string',
       criticality: 'medium',
-      semanticRole: 'input'
+      semanticRole: 'input',
     };
   }
 
@@ -393,18 +395,18 @@ export class ForgeMyComponent extends BaseElement {
       {
         name: 'setValue',
         description: 'Set the input value',
-        available: !this.disabled
+        available: !this.disabled,
       },
       {
         name: 'clear',
         description: 'Clear the input',
-        available: !this.disabled && !!this.value
+        available: !this.disabled && !!this.value,
       },
       {
         name: 'focus',
         description: 'Focus the input',
-        available: true
-      }
+        available: true,
+      },
     ];
   }
 
@@ -412,7 +414,7 @@ export class ForgeMyComponent extends BaseElement {
     return {
       currentState: this.disabled ? 'disabled' : this.value ? 'filled' : 'empty',
       possibleStates: ['empty', 'filled', 'disabled', 'error'],
-      stateDescription: this.getStateDescription()
+      stateDescription: this.getStateDescription(),
     };
   }
 }
@@ -472,14 +474,12 @@ Components track their render time and warn when exceeding budgets:
 export class ForgeMyComponent extends BaseElement {
   protected render() {
     const startTime = performance.now();
-    
-    const content = html`
-      <!-- Component template -->
-    `;
-    
+
+    const content = html` <!-- Component template --> `;
+
     // Check performance after render
     this.checkPerformance(startTime);
-    
+
     return content;
   }
 }
@@ -509,12 +509,12 @@ Components automatically degrade under poor performance:
 protected applyPerformanceDegradation(): void {
   // Disable animations
   this.style.setProperty('--transition-duration', '0ms');
-  
+
   // Reduce visual effects
   this.shadowRoot?.querySelectorAll('.animated').forEach(el => {
     el.classList.add('no-animation');
   });
-  
+
   // Simplify rendering
   this.performanceMode = 'fast';
 }
@@ -554,7 +554,7 @@ describe('Performance', () => {
     element.renderTime = 100;
     element.maxRenderMs = 16;
     element['checkPerformance'](0);
-    
+
     expect(element.performanceMode).to.equal('fast');
   });
 
@@ -562,11 +562,79 @@ describe('Performance', () => {
     const initialCount = element.renderCount;
     element.value = 'new value';
     await element.updateComplete;
-    
+
     expect(element.renderCount).to.equal(initialCount + 1);
   });
 });
 ```
+
+## Debugging and Error Handling
+
+Forge provides comprehensive debugging utilities and error handling mechanisms to help developers build and troubleshoot components efficiently.
+
+### Quick Start
+
+```typescript
+import { enableGlobalDebug, debugComponent } from '@nexcraft/forge/utils';
+
+// Enable debug mode for all components
+enableGlobalDebug();
+
+// Or debug a specific component
+const button = document.querySelector('forge-button');
+debugComponent(button);
+```
+
+In the browser console:
+
+```javascript
+// Access global debug utilities
+window.__FORGE_DEBUG__.enableGlobalDebug();
+window.__FORGE_DEBUG__.debugComponent(document.querySelector('forge-button'));
+```
+
+### Debug Utilities
+
+Forge includes powerful debugging tools:
+
+- **Component Inspection**: `debugComponent(element)` - View state, properties, and performance
+- **Property Watching**: `watchComponent(element, props)` - Monitor changes in real-time
+- **Performance Profiling**: `profileComponent(element)` - Measure render performance
+- **AI Capabilities**: `getAICapabilities(element)` - Explore AI actions and state
+- **Performance Reports**: `generatePerformanceReport()` - Overview of all components
+
+### Error Handling
+
+Use contextual error utilities for better developer experience:
+
+```typescript
+import {
+  throwValidationError,
+  throwRequiredPropertyError,
+  assertOneOf,
+  warnDeprecated,
+} from '@nexcraft/forge/utils';
+
+// Validate properties
+assertOneOf(variant, ['primary', 'secondary', 'ghost'], 'ForgeButton', 'variant');
+
+// Warn about deprecations
+warnDeprecated('ForgeButton', 'color', 'variant', '1.0.0');
+```
+
+All errors include:
+
+- Component name context
+- Clear error messages
+- Expected vs. received values
+- Actionable suggestions
+- Documentation links (when applicable)
+
+### Detailed Guide
+
+For comprehensive documentation on all debugging features and error handling utilities, see:
+
+- [Debugging and Error Handling Guide](./guides/debugging-and-error-handling.md)
 
 ## Testing Guidelines
 
@@ -614,9 +682,7 @@ describe('ForgeMyComponent', () => {
     });
 
     it('updates properties programmatically', async () => {
-      const el = await fixture<ForgeMyComponent>(html`
-        <forge-my-component></forge-my-component>
-      `);
+      const el = await fixture<ForgeMyComponent>(html` <forge-my-component></forge-my-component> `);
 
       el.variant = 'secondary';
       el.disabled = true;
@@ -629,10 +695,8 @@ describe('ForgeMyComponent', () => {
 
   describe('Events', () => {
     it('emits events on interaction', async () => {
-      const el = await fixture<ForgeMyComponent>(html`
-        <forge-my-component></forge-my-component>
-      `);
-      
+      const el = await fixture<ForgeMyComponent>(html` <forge-my-component></forge-my-component> `);
+
       const eventSpy = sinon.spy();
       el.addEventListener('forge-my-component-focus', eventSpy);
 
@@ -659,7 +723,7 @@ describe('ForgeMyComponent', () => {
 
       el.focus();
       await sendKeys({ press: 'Tab' });
-      
+
       // Test keyboard interactions
     });
   });
@@ -671,10 +735,10 @@ describe('ForgeMyComponent', () => {
       `);
 
       expect(el.tabIndex).to.equal(-1);
-      
+
       const eventSpy = sinon.spy();
       el.addEventListener('forge-my-component-focus', eventSpy);
-      
+
       el.focus();
       expect(eventSpy).to.not.have.been.called;
     });
@@ -716,25 +780,25 @@ const meta: Meta = {
     variant: {
       control: { type: 'select' },
       options: ['default', 'primary', 'secondary'],
-      description: 'Visual style variant'
+      description: 'Visual style variant',
     },
     size: {
       control: { type: 'radio' },
       options: ['sm', 'md', 'lg'],
-      description: 'Component size'
+      description: 'Component size',
     },
     disabled: {
       control: { type: 'boolean' },
-      description: 'Disable component interaction'
-    }
+      description: 'Disable component interaction',
+    },
   },
   parameters: {
     docs: {
       description: {
-        component: 'A flexible component for displaying content with various styles and states.'
-      }
-    }
-  }
+        component: 'A flexible component for displaying content with various styles and states.',
+      },
+    },
+  },
 };
 
 export default meta;
@@ -744,17 +808,13 @@ export const Default: Story = {
   args: {
     variant: 'default',
     size: 'md',
-    disabled: false
+    disabled: false,
   },
   render: (args) => html`
-    <forge-my-component
-      variant=${args.variant}
-      size=${args.size}
-      ?disabled=${args.disabled}
-    >
+    <forge-my-component variant=${args.variant} size=${args.size} ?disabled=${args.disabled}>
       Default Content
     </forge-my-component>
-  `
+  `,
 };
 
 export const AllVariants: Story = {
@@ -768,10 +828,10 @@ export const AllVariants: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'All available component variants'
-      }
-    }
-  }
+        story: 'All available component variants',
+      },
+    },
+  },
 };
 ```
 
@@ -791,7 +851,7 @@ export const AllVariants: Story = {
 render() {
   // Cache complex calculations
   const computedClasses = this._computeClasses();
-  
+
   return html`
     <div class=${computedClasses}>
       ${this.items.map(item => this._renderItem(item))}
