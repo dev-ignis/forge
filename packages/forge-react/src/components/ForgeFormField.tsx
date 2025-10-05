@@ -16,7 +16,12 @@ import { createUnifiedWrapper } from '../utils/createUnifiedWrapper';
 export const ForgeFormField = createUnifiedWrapper<HTMLElement, ForgeFormFieldProps>({
   tagName: 'forge-form-field',
   displayName: 'ForgeFormField',
-  
+
+  propMappings: {
+    errorMessage: 'error-message',
+    helperText: 'helper-text'
+  },
+
   fallbackRenderer: (props, children) => (
     <div
       className={`forge-form-field ${props.error ? 'forge-form-field--error' : ''} ${props.disabled ? 'forge-form-field--disabled' : ''}`}
@@ -24,8 +29,8 @@ export const ForgeFormField = createUnifiedWrapper<HTMLElement, ForgeFormFieldPr
     >
       {props.label && <label className="forge-form-field-label">{props.label}{props.required && <span>*</span>}</label>}
       <div className="forge-form-field-input">{children}</div>
-      {props['error-message'] && <span className="forge-form-field-error">{props['error-message']}</span>}
-      {props['helper-text'] && <span className="forge-form-field-helper">{props['helper-text']}</span>}
+      {props.errorMessage && <span className="forge-form-field-error">{props.errorMessage}</span>}
+      {props.helperText && <span className="forge-form-field-helper">{props.helperText}</span>}
     </div>
   ),
   

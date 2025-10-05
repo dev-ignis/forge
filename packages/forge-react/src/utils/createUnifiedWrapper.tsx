@@ -70,7 +70,7 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
     // During SSR, return a simple functional component that renders the fallback
     const SSRComponent = forwardRef<T, PropsWithChildren<P>>((props, ref: Ref<T>) => {
       const { children, ...restProps } = props;
-      const fallbackElement = options.fallbackRenderer({ ...options.fallbackProps, ...restProps } as P & Record<string, unknown>, children);
+      const fallbackElement = options.fallbackRenderer({ ...options.fallbackProps, ...restProps } as unknown as P & Record<string, unknown>, children);
       
       if (fallbackElement === null) {
         return null;
@@ -309,7 +309,7 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
 
     // UNIFIED MODE: Render semantic HTML that upgrades to web component
     const fallbackElement = options.fallbackRenderer(
-      { ...options.fallbackProps, ...restProps } as P & Record<string, unknown>,
+      { ...options.fallbackProps, ...restProps } as unknown as P & Record<string, unknown>,
       children
     );
 

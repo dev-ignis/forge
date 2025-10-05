@@ -35,6 +35,7 @@ export const ForgeInput = createUnifiedWrapper<HTMLElement, ForgeInputProps>({
       placeholder: props.placeholder,
       disabled: props.disabled,
       required: props.required,
+      id: props.id as string | undefined,
       'data-forge-component': 'forge-input'
     };
 

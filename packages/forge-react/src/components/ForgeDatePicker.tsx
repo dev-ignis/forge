@@ -29,6 +29,7 @@ export const ForgeDatePicker = createUnifiedWrapper<HTMLElement, ForgeDatePicker
       min={props.min}
       max={props.max}
       disabled={props.disabled}
+      id={props.id as string | undefined}
       placeholder={props.placeholder}
       name={props.name as string | undefined}
       required={props.required as boolean | undefined}
