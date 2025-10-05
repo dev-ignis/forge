@@ -1,7 +1,7 @@
 /**
  * @fileoverview Design Token Bridge - Core converter system for importing design tokens
  * from popular design systems (Figma, Tailwind, Material Design, etc.)
- * 
+ *
  * This is a key UVP differentiator for @nexcraft/forge
  */
 
@@ -12,17 +12,17 @@ export interface DesignToken {
   type: TokenType;
   category?: string;
   description?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
-export type TokenType = 
-  | 'color' 
-  | 'spacing' 
-  | 'typography' 
-  | 'border' 
-  | 'shadow' 
-  | 'gradient' 
-  | 'opacity' 
+export type TokenType =
+  | 'color'
+  | 'spacing'
+  | 'typography'
+  | 'border'
+  | 'shadow'
+  | 'gradient'
+  | 'opacity'
   | 'animation';
 
 // Color space conversion utilities
@@ -71,7 +71,7 @@ export interface TokenCollection {
 // Main TokenBridge class
 export class TokenBridge {
   private tokens: Map<string, AnyDesignToken> = new Map();
-  private cache: Map<string, any> = new Map();
+  private cache: Map<string, unknown> = new Map();
 
   constructor() {
     this.clearCache();
@@ -80,27 +80,35 @@ export class TokenBridge {
   /**
    * Import tokens from Figma design tokens JSON
    */
-  static fromFigma(figmaTokens: any): TokenBridge {
+  static fromFigma(figmaTokens: unknown): TokenBridge {
     const bridge = new TokenBridge();
-    
+
     if (!figmaTokens || typeof figmaTokens !== 'object') {
       throw new Error('Invalid Figma tokens format');
     }
 
     // Figma tokens structure: { "token-name": { "value": "...", "type": "..." } }
-    Object.entries(figmaTokens).forEach(([name, tokenData]: [string, any]) => {
-      if (tokenData && typeof tokenData === 'object' && tokenData.value !== undefined) {
+    Object.entries(figmaTokens as Record<string, unknown>).forEach(([name, tokenData]) => {
+      if (
+        tokenData &&
+        typeof tokenData === 'object' &&
+        'value' in tokenData &&
+        (tokenData as { value?: unknown }).value !== undefined
+      ) {
         const token: DesignToken = {
           name: bridge.normalizeName(name),
-          value: bridge.normalizeValue(tokenData.value, tokenData.type || 'color'),
-          type: bridge.mapFigmaType(tokenData.type || 'color'),
+          value: bridge.normalizeValue(
+            (tokenData as { value: unknown }).value,
+            (tokenData as { type?: string }).type || 'color',
+          ),
+          type: bridge.mapFigmaType((tokenData as { type?: string }).type || 'color'),
           category: bridge.extractCategory(name),
-          description: tokenData.description,
+          description: (tokenData as { description?: string }).description,
           metadata: {
             source: 'figma',
             originalName: name,
-            ...tokenData.metadata
-          }
+            ...((tokenData as { metadata?: Record<string, unknown> }).metadata ?? {}),
+          },
         };
         bridge.addToken(token);
       }
@@ -112,38 +120,42 @@ export class TokenBridge {
   /**
    * Import tokens from Tailwind CSS config
    */
-  static fromTailwind(tailwindConfig: any): TokenBridge {
+  static fromTailwind(tailwindConfig: unknown): TokenBridge {
     const bridge = new TokenBridge();
-    
-    if (!tailwindConfig?.theme) {
+
+    if (
+      !tailwindConfig ||
+      typeof tailwindConfig !== 'object' ||
+      !(tailwindConfig as { theme?: unknown }).theme
+    ) {
       throw new Error('Invalid Tailwind config format - missing theme');
     }
 
-    const theme = tailwindConfig.theme;
+    const theme = (tailwindConfig as { theme: Record<string, unknown> }).theme;
 
     // Convert colors
     if (theme.colors) {
-      bridge.processTailwindColors(theme.colors);
+      bridge.processTailwindColors(theme.colors as Record<string, unknown>);
     }
 
     // Convert spacing
     if (theme.spacing) {
-      bridge.processTailwindSpacing(theme.spacing);
+      bridge.processTailwindSpacing(theme.spacing as Record<string, unknown>);
     }
 
     // Convert typography
     if (theme.fontSize) {
-      bridge.processTailwindFontSize(theme.fontSize);
+      bridge.processTailwindFontSize(theme.fontSize as Record<string, unknown>);
     }
 
     // Convert border radius
     if (theme.borderRadius) {
-      bridge.processTailwindBorderRadius(theme.borderRadius);
+      bridge.processTailwindBorderRadius(theme.borderRadius as Record<string, unknown>);
     }
 
     // Convert shadows
     if (theme.boxShadow) {
-      bridge.processTailwindShadows(theme.boxShadow);
+      bridge.processTailwindShadows(theme.boxShadow as Record<string, unknown>);
     }
 
     return bridge;
@@ -152,16 +164,26 @@ export class TokenBridge {
   /**
    * Import tokens from Material Design tokens
    */
-  static fromMaterial(materialTokens: any): TokenBridge {
+  static fromMaterial(materialTokens: unknown): TokenBridge {
     const bridge = new TokenBridge();
-    
+
     // Material Design 3 token structure
-    if (materialTokens.sys) {
-      bridge.processMaterialSystemTokens(materialTokens.sys);
+    if (
+      materialTokens &&
+      typeof materialTokens === 'object' &&
+      (materialTokens as { sys?: unknown }).sys
+    ) {
+      bridge.processMaterialSystemTokens((materialTokens as { sys: Record<string, unknown> }).sys);
     }
-    
-    if (materialTokens.ref) {
-      bridge.processMaterialReferenceTokens(materialTokens.ref);
+
+    if (
+      materialTokens &&
+      typeof materialTokens === 'object' &&
+      (materialTokens as { ref?: unknown }).ref
+    ) {
+      bridge.processMaterialReferenceTokens(
+        (materialTokens as { ref: Record<string, unknown> }).ref,
+      );
     }
 
     return bridge;
@@ -186,14 +208,14 @@ export class TokenBridge {
    * Get tokens by category
    */
   getTokensByCategory(category: string): AnyDesignToken[] {
-    return this.getTokens().filter(token => token.category === category);
+    return this.getTokens().filter((token) => token.category === category);
   }
 
   /**
    * Get tokens by type
    */
   getTokensByType(type: TokenType): AnyDesignToken[] {
-    return this.getTokens().filter(token => token.type === type);
+    return this.getTokens().filter((token) => token.type === type);
   }
 
   /**
@@ -202,19 +224,19 @@ export class TokenBridge {
   toCSSProperties(): string {
     const cacheKey = 'css-properties';
     if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey);
+      return this.cache.get(cacheKey) as string;
     }
 
     const css = [':root {'];
-    
-    this.getTokens().forEach(token => {
+
+    this.getTokens().forEach((token) => {
       const cssName = this.toCSSVariableName(token.name);
       const cssValue = this.toCSSValue(token);
       css.push(`  ${cssName}: ${cssValue};`);
     });
-    
+
     css.push('}');
-    
+
     const result = css.join('\n');
     this.cache.set(cacheKey, result);
     return result;
@@ -223,26 +245,27 @@ export class TokenBridge {
   /**
    * Convert to JavaScript object
    */
-  toJSObject(): Record<string, any> {
+  toJSObject(): Record<string, unknown> {
     const cacheKey = 'js-object';
     if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey);
+      return this.cache.get(cacheKey) as Record<string, unknown>;
     }
 
-    const obj: Record<string, any> = {};
-    
-    this.getTokens().forEach(token => {
+    const obj: Record<string, unknown> = {};
+
+    this.getTokens().forEach((token) => {
       const path = token.name.split('.');
-      let current = obj;
-      
+      let current: Record<string, unknown> = obj;
+
       for (let i = 0; i < path.length - 1; i++) {
         const key = path[i];
-        if (!current[key] || typeof current[key] !== 'object') {
-          current[key] = {};
+        const next = current[key];
+        if (!next || typeof next !== 'object') {
+          current[key] = {} as Record<string, unknown>;
         }
-        current = current[key];
+        current = current[key] as Record<string, unknown>;
       }
-      
+
       const finalKey = path[path.length - 1];
       current[finalKey] = token.value;
     });
@@ -257,12 +280,12 @@ export class TokenBridge {
   toSassVariables(): string {
     const cacheKey = 'sass-variables';
     if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey);
+      return this.cache.get(cacheKey) as string;
     }
 
     const sass: string[] = [];
-    
-    this.getTokens().forEach(token => {
+
+    this.getTokens().forEach((token) => {
       const sassName = this.toSassVariableName(token.name);
       const sassValue = this.toCSSValue(token);
       sass.push(`${sassName}: ${sassValue};`);
@@ -284,8 +307,8 @@ export class TokenBridge {
       metadata: {
         source: 'token-bridge',
         generatedAt: new Date().toISOString(),
-        converter: '@nexcraft/forge/token-bridge'
-      }
+        converter: '@nexcraft/forge/token-bridge',
+      },
     };
   }
 
@@ -298,32 +321,32 @@ export class TokenBridge {
       .replace(/^\.|\.$/, '');
   }
 
-  private normalizeValue(value: any, _type: string): string | number {
+  private normalizeValue(value: unknown, _type: string): string | number {
     if (typeof value === 'string') {
       return value;
     }
     if (typeof value === 'number') {
       return value;
     }
-    if (typeof value === 'object' && value.value !== undefined) {
-      return value.value;
+    if (value && typeof value === 'object' && (value as { value?: unknown }).value !== undefined) {
+      return (value as { value: string | number }).value;
     }
     return String(value);
   }
 
   private mapFigmaType(figmaType: string): TokenType {
     const typeMap: Record<string, TokenType> = {
-      'color': 'color',
-      'dimension': 'spacing',
-      'fontFamilies': 'typography',
-      'fontSizes': 'typography',
-      'fontWeights': 'typography',
-      'lineHeights': 'typography',
-      'borderRadius': 'border',
-      'boxShadow': 'shadow',
-      'opacity': 'opacity'
+      color: 'color',
+      dimension: 'spacing',
+      fontFamilies: 'typography',
+      fontSizes: 'typography',
+      fontWeights: 'typography',
+      lineHeights: 'typography',
+      borderRadius: 'border',
+      boxShadow: 'shadow',
+      opacity: 'opacity',
     };
-    
+
     return typeMap[figmaType] || 'color';
   }
 
@@ -332,7 +355,7 @@ export class TokenBridge {
     return parts[0]?.toLowerCase() || 'general';
   }
 
-  private processTailwindColors(colors: any, prefix: string = ''): void {
+  private processTailwindColors(colors: Record<string, unknown>, prefix: string = ''): void {
     Object.entries(colors).forEach(([key, value]) => {
       if (typeof value === 'string') {
         // Simple color value
@@ -343,49 +366,62 @@ export class TokenBridge {
           category: 'colors',
           metadata: {
             source: 'tailwind',
-            originalKey: key
-          }
+            originalKey: key,
+          },
         };
         this.addToken(token);
       } else if (typeof value === 'object' && value !== null) {
         // Nested color scale (e.g., blue.100, blue.200)
         const categoryName = prefix ? `${prefix}.${key}` : key;
-        this.processTailwindColors(value, categoryName);
+        this.processTailwindColors(value as Record<string, unknown>, categoryName);
       }
     });
   }
 
-  private processTailwindSpacing(spacing: any): void {
+  private processTailwindSpacing(spacing: Record<string, unknown>): void {
     Object.entries(spacing).forEach(([key, value]) => {
       const token: SpacingToken = {
         name: `spacing.${key}`,
-        value: value as string,
+        value: String(value),
         type: 'spacing',
         category: 'spacing',
-        units: this.extractUnits(value as string),
-        pxValue: this.convertToPx(value as string),
+        units: this.extractUnits(String(value)),
+        pxValue: this.convertToPx(String(value)),
         metadata: {
           source: 'tailwind',
-          originalKey: key
-        }
+          originalKey: key,
+        },
       };
       this.addToken(token);
     });
   }
 
-  private processTailwindFontSize(fontSize: any): void {
+  private processTailwindFontSize(fontSize: Record<string, unknown>): void {
     Object.entries(fontSize).forEach(([key, value]) => {
-      let typographyValue: any;
-      
+      let typographyValue: TypographyToken['value'] = { fontSize: '' };
+
       if (typeof value === 'string') {
         typographyValue = { fontSize: value };
       } else if (Array.isArray(value)) {
         typographyValue = {
-          fontSize: value[0],
-          lineHeight: value[1]?.lineHeight || value[1]
+          fontSize: String(value[0]),
+          lineHeight:
+            (value[1] &&
+              typeof value[1] === 'object' &&
+              (value[1] as { lineHeight?: string | number }).lineHeight) ||
+            (value[1] as string | number | undefined),
         };
-      } else if (typeof value === 'object') {
-        typographyValue = value;
+      } else if (typeof value === 'object' && value !== null) {
+        const v = value as Partial<TypographyToken['value']>;
+        typographyValue = {
+          fontSize: String(v.fontSize ?? ''),
+          fontWeight: v.fontWeight,
+          lineHeight: v.lineHeight,
+          fontFamily: v.fontFamily,
+          letterSpacing: v.letterSpacing,
+        };
+      } else {
+        typographyValue = { fontSize: String(value) };
       }
 
       const token: TypographyToken = {
@@ -395,79 +431,79 @@ export class TokenBridge {
         category: 'typography',
         metadata: {
           source: 'tailwind',
-          originalKey: key
-        }
+          originalKey: key,
+        },
       };
       this.addToken(token);
     });
   }
 
-  private processTailwindBorderRadius(borderRadius: any): void {
+  private processTailwindBorderRadius(borderRadius: Record<string, unknown>): void {
     Object.entries(borderRadius).forEach(([key, value]) => {
       const token: DesignToken = {
         name: `border.radius.${key}`,
-        value: value as string,
+        value: String(value),
         type: 'border',
         category: 'border',
         metadata: {
           source: 'tailwind',
-          originalKey: key
-        }
+          originalKey: key,
+        },
       };
       this.addToken(token);
     });
   }
 
-  private processTailwindShadows(shadows: any): void {
+  private processTailwindShadows(shadows: Record<string, unknown>): void {
     Object.entries(shadows).forEach(([key, value]) => {
       const token: DesignToken = {
         name: `shadow.${key}`,
-        value: value as string,
+        value: String(value),
         type: 'shadow',
         category: 'shadow',
         metadata: {
           source: 'tailwind',
-          originalKey: key
-        }
+          originalKey: key,
+        },
       };
       this.addToken(token);
     });
   }
 
-  private processMaterialSystemTokens(sysTokens: any): void {
+  private processMaterialSystemTokens(sysTokens: Record<string, unknown>): void {
     // Material Design system tokens processing
     if (sysTokens.color) {
-      Object.entries(sysTokens.color).forEach(([key, value]) => {
+      Object.entries(sysTokens.color as Record<string, unknown>).forEach(([key, value]) => {
         const token: ColorToken = {
           name: `sys.color.${key}`,
-          value: value as string,
+          value: String(value),
           type: 'color',
           category: 'system.colors',
           metadata: {
             source: 'material',
-            tokenSet: 'sys'
-          }
+            tokenSet: 'sys',
+          },
         };
         this.addToken(token);
       });
     }
   }
 
-  private processMaterialReferenceTokens(refTokens: any): void {
+  private processMaterialReferenceTokens(refTokens: Record<string, unknown>): void {
     // Material Design reference tokens processing
     if (refTokens.palette) {
-      Object.entries(refTokens.palette).forEach(([key, colorScale]) => {
+      Object.entries(refTokens.palette as Record<string, unknown>).forEach(([key, colorScale]) => {
         if (typeof colorScale === 'object') {
-          Object.entries(colorScale as any).forEach(([shade, value]) => {
+          Object.entries(colorScale as Record<string, unknown>).forEach(([shade, value]) => {
             const token: ColorToken = {
               name: `ref.palette.${key}.${shade}`,
-              value: value as string,
+              value: String(value),
               type: 'color',
               category: 'reference.palette',
               metadata: {
                 source: 'material',
-                tokenSet: 'ref'
-              }
+                tokenSet: 'ref',
+              },
             };
             this.addToken(token);
           });
@@ -503,7 +539,7 @@ export class TokenBridge {
 
   private toCSSValue(token: AnyDesignToken): string {
     if (token.type === 'typography' && typeof token.value === 'object') {
-      const typo = token.value as any;
+      const typo = token.value as TypographyToken['value'];
       return typo.fontSize || String(token.value);
     }
     return String(token.value);
@@ -518,11 +554,13 @@ export class TokenBridge {
 export class ColorConverter {
   static hexToRgb(hex: string): { r: number; g: number; b: number } | null {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : null;
+    return result
+      ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        }
+      : null;
   }
 
   static rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: number } {
@@ -542,10 +580,17 @@ export class ColorConverter {
       s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
 
       switch (max) {
-        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-        case g: h = (b - r) / d + 2; break;
-        case b: h = (r - g) / d + 4; break;
-        default: h = 0;
+        case r:
+          h = (g - b) / d + (g < b ? 6 : 0);
+          break;
+        case g:
+          h = (b - r) / d + 2;
+          break;
+        case b:
+          h = (r - g) / d + 4;
+          break;
+        default:
+          h = 0;
       }
       h /= 6;
     }
@@ -553,7 +598,7 @@ export class ColorConverter {
     return {
       h: Math.round(h * 360),
       s: Math.round(s * 100),
-      l: Math.round(l * 100)
+      l: Math.round(l * 100),
     };
   }
 

@@ -1,6 +1,6 @@
 /**
  * @fileoverview Performance Dashboard - Real-time metrics display and monitoring
- * 
+ *
  * Critical for developer experience and completing the performance monitoring story
  */
 
@@ -69,7 +69,7 @@ export class PerformanceDashboard {
 
     observer.observe(document.body, {
       childList: true,
-      subtree: true
+      subtree: true,
     });
 
     // Initial scan
@@ -91,13 +91,13 @@ export class PerformanceDashboard {
   registerComponent(component: BaseElement): void {
     const componentName = component.tagName.toLowerCase();
     this.components.set(componentName + '_' + Date.now(), component);
-    
+
     // Listen for performance events
     component.addEventListener('performance-violation', (e) => {
       const customEvent = e as CustomEvent<PerformanceViolation>;
       this.recordViolation(customEvent.detail);
     });
-    
+
     component.addEventListener('ai-state-change', (e) => {
       const customEvent = e as CustomEvent<{ key: string }>;
       if (customEvent.detail.key.startsWith('performance')) {
@@ -112,7 +112,7 @@ export class PerformanceDashboard {
 
   private startMonitoring(): void {
     this.isMonitoring = true;
-    
+
     // Collect metrics every 100ms for real-time updates
     this.monitoringInterval = setInterval(() => {
       this.collectMetrics();
@@ -121,14 +121,14 @@ export class PerformanceDashboard {
 
   private collectMetrics(): void {
     const currentMetrics: Record<string, AIPerformanceMetrics> = {};
-    
+
     this.components.forEach((component, _key) => {
       const componentName = component.tagName.toLowerCase();
       const metrics = component.aiState.performance;
-      
+
       if (metrics) {
         currentMetrics[componentName] = metrics;
-        
+
         // Record in history
         this.metricsHistory.push({
           timestamp: Date.now(),
@@ -136,7 +136,7 @@ export class PerformanceDashboard {
           renderTime: metrics.renderTime,
           renderCount: metrics.renderCount,
           violations: metrics.violations,
-          mode: metrics.mode
+          mode: metrics.mode,
         });
       }
     });
@@ -147,7 +147,7 @@ export class PerformanceDashboard {
     }
 
     // Notify listeners
-    this.updateListeners.forEach(listener => listener(currentMetrics));
+    this.updateListeners.forEach((listener) => listener(currentMetrics));
   }
 
   private updateMetrics(_component: BaseElement): void {
@@ -158,9 +158,9 @@ export class PerformanceDashboard {
   private recordViolation(violation: PerformanceViolation): void {
     this.violations.push({
       ...violation,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
-    
+
     // Keep last 100 violations
     if (this.violations.length > 100) {
       this.violations = this.violations.slice(-100);
@@ -172,7 +172,7 @@ export class PerformanceDashboard {
    */
   getAllMetrics(): Record<string, AIPerformanceMetrics> {
     const metrics: Record<string, AIPerformanceMetrics> = {};
-    
+
     this.components.forEach((component, _key) => {
       const componentName = component.tagName.toLowerCase();
       const componentMetrics = component.aiState.performance;
@@ -180,7 +180,7 @@ export class PerformanceDashboard {
         metrics[componentName] = componentMetrics;
       }
     });
-    
+
     return metrics;
   }
 
@@ -188,8 +188,9 @@ export class PerformanceDashboard {
    * Get metrics for a specific component type
    */
   getComponentMetrics(componentName: string): AIPerformanceMetrics | null {
-    const component = Array.from(this.components.values())
-      .find(c => c.tagName.toLowerCase() === componentName.toLowerCase());
+    const component = Array.from(this.components.values()).find(
+      (c) => c.tagName.toLowerCase() === componentName.toLowerCase(),
+    );
     return component?.aiState.performance || null;
   }
 
@@ -198,9 +199,7 @@ export class PerformanceDashboard {
    */
   getSlowComponents(threshold: number = 16): string[] {
     return Array.from(this.components.entries())
-      .filter(([, component]) => 
-        (component.aiState.performance?.renderTime || 0) > threshold
-      )
+      .filter(([, component]) => (component.aiState.performance?.renderTime || 0) > threshold)
       .map(([, component]) => component.tagName.toLowerCase());
   }
 
@@ -216,15 +215,15 @@ export class PerformanceDashboard {
    */
   getMetricsHistory(fromTimestamp?: number, componentName?: string): PerformanceMetricsHistory[] {
     let filtered = this.metricsHistory;
-    
+
     if (fromTimestamp) {
-      filtered = filtered.filter(m => m.timestamp >= fromTimestamp);
+      filtered = filtered.filter((m) => m.timestamp >= fromTimestamp);
     }
-    
+
     if (componentName) {
-      filtered = filtered.filter(m => m.component === componentName);
+      filtered = filtered.filter((m) => m.component === componentName);
     }
-    
+
     return filtered;
   }
 
@@ -232,24 +231,27 @@ export class PerformanceDashboard {
    * Get summary of component performance
    */
   getComponentSummaries(): ComponentMetricsSummary[] {
-    const summaries: Map<string, {
-      renderTimes: number[];
-      totalRenders: number;
-      violations: number;
-      currentMode: string;
-    }> = new Map();
+    const summaries: Map<
+      string,
+      {
+        renderTimes: number[];
+        totalRenders: number;
+        violations: number;
+        currentMode: string;
+      }
+    > = new Map();
 
     // Aggregate data from history
-    this.metricsHistory.forEach(entry => {
+    this.metricsHistory.forEach((entry) => {
       if (!summaries.has(entry.component)) {
         summaries.set(entry.component, {
           renderTimes: [],
           totalRenders: 0,
           violations: 0,
-          currentMode: entry.mode
+          currentMode: entry.mode,
         });
       }
-      
+
       const summary = summaries.get(entry.component)!;
       summary.renderTimes.push(entry.renderTime);
       summary.totalRenders = Math.max(summary.totalRenders, entry.renderCount);
@@ -259,9 +261,10 @@ export class PerformanceDashboard {
 
     // Convert to ComponentMetricsSummary array
     return Array.from(summaries.entries()).map(([name, data]) => {
-      const averageRenderTime = data.renderTimes.reduce((a, b) => a + b, 0) / data.renderTimes.length;
+      const averageRenderTime =
+        data.renderTimes.reduce((a, b) => a + b, 0) / data.renderTimes.length;
       const maxRenderTime = Math.max(...data.renderTimes);
-      
+
       let health: ComponentMetricsSummary['health'] = 'excellent';
       if (averageRenderTime > 32) health = 'critical';
       else if (averageRenderTime > 16) health = 'warning';
@@ -274,7 +277,7 @@ export class PerformanceDashboard {
         totalRenders: data.totalRenders,
         violations: data.violations,
         currentMode: data.currentMode,
-        health
+        health,
       };
     });
   }
@@ -284,7 +287,7 @@ export class PerformanceDashboard {
    */
   subscribe(listener: (metrics: Record<string, AIPerformanceMetrics>) => void): () => void {
     this.updateListeners.add(listener);
-    
+
     // Return unsubscribe function
     return () => {
       this.updateListeners.delete(listener);
@@ -311,7 +314,8 @@ export class ForgePerformanceDashboard extends LitElement {
   static styles = css`
     :host {
       display: block;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      font-family:
+        -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
       font-size: 14px;
       background: #f8f9fa;
       border: 1px solid #e9ecef;
@@ -354,8 +358,13 @@ export class ForgePerformanceDashboard extends LitElement {
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+      0%,
+      100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
     }
 
     .metrics-grid {
@@ -372,10 +381,18 @@ export class ForgePerformanceDashboard extends LitElement {
       padding: 16px;
     }
 
-    .metric-card.excellent { border-left: 4px solid #28a745; }
-    .metric-card.good { border-left: 4px solid #17a2b8; }
-    .metric-card.warning { border-left: 4px solid #ffc107; }
-    .metric-card.critical { border-left: 4px solid #dc3545; }
+    .metric-card.excellent {
+      border-left: 4px solid #28a745;
+    }
+    .metric-card.good {
+      border-left: 4px solid #17a2b8;
+    }
+    .metric-card.warning {
+      border-left: 4px solid #ffc107;
+    }
+    .metric-card.critical {
+      border-left: 4px solid #dc3545;
+    }
 
     .metric-card h3 {
       font-size: 16px;
@@ -414,10 +431,22 @@ export class ForgePerformanceDashboard extends LitElement {
       text-transform: uppercase;
     }
 
-    .mode-auto { background: #e3f2fd; color: #1976d2; }
-    .mode-fast { background: #fff3e0; color: #f57c00; }
-    .mode-balanced { background: #f3e5f5; color: #7b1fa2; }
-    .mode-quality { background: #e8f5e8; color: #388e3c; }
+    .mode-auto {
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+    .mode-fast {
+      background: #fff3e0;
+      color: #f57c00;
+    }
+    .mode-balanced {
+      background: #f3e5f5;
+      color: #7b1fa2;
+    }
+    .mode-quality {
+      background: #e8f5e8;
+      color: #388e3c;
+    }
 
     .violations-section {
       background: white;
@@ -484,11 +513,11 @@ export class ForgePerformanceDashboard extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-    
+
     if (this.autoRefresh) {
       this.startAutoRefresh();
     }
-    
+
     // Subscribe to real-time updates
     this.unsubscribe = this.dashboard.subscribe((metrics) => {
       this.metrics = metrics;
@@ -556,54 +585,69 @@ export class ForgePerformanceDashboard extends LitElement {
         </div>
       </div>
 
-      ${hasSummaries ? html`
-        <div class="metrics-grid">
-          ${this.summaries.map(summary => html`
-            <div class="metric-card ${summary.health}">
-              <h3>${summary.name}</h3>
-              <div class="metric-row">
-                <span class="metric-label">Average Render</span>
-                <span class="metric-value">${this.formatTime(summary.averageRenderTime)}</span>
-              </div>
-              <div class="metric-row">
-                <span class="metric-label">Max Render</span>
-                <span class="metric-value">${this.formatTime(summary.maxRenderTime)}</span>
-              </div>
-              <div class="metric-row">
-                <span class="metric-label">Total Renders</span>
-                <span class="metric-value">${summary.totalRenders}</span>
-              </div>
-              <div class="metric-row">
-                <span class="metric-label">Violations</span>
-                <span class="metric-value">${summary.violations}</span>
-              </div>
-              <div class="metric-row">
-                <span class="metric-label">Mode</span>
-                <span class="performance-mode mode-${summary.currentMode}">${summary.currentMode}</span>
-              </div>
+      ${hasSummaries
+        ? html`
+            <div class="metrics-grid">
+              ${this.summaries.map(
+                (summary) => html`
+                  <div class="metric-card ${summary.health}">
+                    <h3>${summary.name}</h3>
+                    <div class="metric-row">
+                      <span class="metric-label">Average Render</span>
+                      <span class="metric-value"
+                        >${this.formatTime(summary.averageRenderTime)}</span
+                      >
+                    </div>
+                    <div class="metric-row">
+                      <span class="metric-label">Max Render</span>
+                      <span class="metric-value">${this.formatTime(summary.maxRenderTime)}</span>
+                    </div>
+                    <div class="metric-row">
+                      <span class="metric-label">Total Renders</span>
+                      <span class="metric-value">${summary.totalRenders}</span>
+                    </div>
+                    <div class="metric-row">
+                      <span class="metric-label">Violations</span>
+                      <span class="metric-value">${summary.violations}</span>
+                    </div>
+                    <div class="metric-row">
+                      <span class="metric-label">Mode</span>
+                      <span class="performance-mode mode-${summary.currentMode}"
+                        >${summary.currentMode}</span
+                      >
+                    </div>
+                  </div>
+                `,
+              )}
             </div>
-          `)}
-        </div>
-      ` : html`
-        <div class="no-data">
-          No Forge components detected. Performance monitoring will start automatically when components are added to the page.
-        </div>
-      `}
-
-      ${this.showViolations && hasViolations ? html`
-        <div class="violations-section">
-          <h3 class="violations-header">Recent Violations</h3>
-          ${this.violations.map(violation => html`
-            <div class="violation-item">
-              <div>
-                <span class="violation-component">${violation.component}</span>
-                <span class="metric-value">${this.formatTime(violation.renderTime)} > ${this.formatTime(violation.budget)}</span>
-              </div>
-              <span class="violation-time">${this.formatTimestamp(violation.timestamp)}</span>
+          `
+        : html`
+            <div class="no-data">
+              No Forge components detected. Performance monitoring will start automatically when
+              components are added to the page.
             </div>
-          `)}
-        </div>
-      ` : ''}
+          `}
+      ${this.showViolations && hasViolations
+        ? html`
+            <div class="violations-section">
+              <h3 class="violations-header">Recent Violations</h3>
+              ${this.violations.map(
+                (violation) => html`
+                  <div class="violation-item">
+                    <div>
+                      <span class="violation-component">${violation.component}</span>
+                      <span class="metric-value"
+                        >${this.formatTime(violation.renderTime)} >
+                        ${this.formatTime(violation.budget)}</span
+                      >
+                    </div>
+                    <span class="violation-time">${this.formatTimestamp(violation.timestamp)}</span>
+                  </div>
+                `,
+              )}
+            </div>
+          `
+        : ''}
     `;
   }
 }
@@ -612,7 +656,7 @@ export class ForgePerformanceDashboard extends LitElement {
 export const performanceDashboard = new PerformanceDashboard();
 
 // Auto-start monitoring in development
-declare const process: any;
+declare const process: { env?: { NODE_ENV?: string } };
 if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development') {
   // Development mode initialization
   void performanceDashboard;
