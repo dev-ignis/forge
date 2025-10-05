@@ -152,6 +152,87 @@
 
 ## 🔧 **Critical Fixes**
 
+### 0. Next.js SSR/Hydration Support (CRITICAL CLIENT BLOCKER)
+
+**Priority**: CRITICAL | **Effort**: Medium | **Impact**: CRITICAL
+
+**Current Situation**:
+- Multiple clients reporting components don't hydrate in Next.js 15 App Router
+- Web components require `HTMLElement` which doesn't exist during SSR
+- React wrappers render fallback HTML but components never upgrade
+- Fallback HTML has no CSS - completely unstyled forms
+- No clear documentation for Next.js 15 + React 19 setup
+
+**Client Impact**:
+- ❌ Forms render as unstyled native HTML inputs
+- ❌ `customElements.get('forge-input')` returns `undefined`
+- ❌ `data-ssr-fallback="true"` stays in DOM (components never hydrate)
+- ❌ Dynamic imports create race conditions with React hydration
+
+**Immediate Actions**:
+
+#### Phase 1: Quick Fixes (Week 1) - HIGH PRIORITY
+- [ ] **Create fallback CSS file** (`packages/forge-react/dist/fallbacks.css`)
+  - Style `.forge-input`, `.forge-button`, `.forge-card`, etc.
+  - Match visual appearance of web components
+  - Import: `import '@nexcraft/forge-react/fallbacks.css'`
+  - **Impact**: Fixes unstyled forms immediately
+
+- [ ] **Fix `createUnifiedWrapper` timing**
+  - Add `customElements.whenDefined()` detection
+  - Re-render when web component registers
+  - Handle SSR → Client hydration properly
+  - **Impact**: Components upgrade after web components load
+
+- [ ] **Document Next.js 15 setup** (`docs/integrations/nextjs-15-app-router.md`)
+  - Script loading strategies (`beforeInteractive`, `public/` folder)
+  - `ClientOnly` wrapper pattern
+  - Troubleshooting guide
+  - **Impact**: Unblocks all Next.js users
+
+#### Phase 2: Framework Integration (Week 2-3) - MEDIUM PRIORITY
+- [ ] **Create `@nexcraft/forge-nextjs` package**
+  - `<ForgeScript />` component with correct loading strategy
+  - `<ClientOnly>` wrapper component
+  - Pre-built bundle for `public/` folder
+  - Setup CLI: `npx @nexcraft/forge setup nextjs`
+  - **Impact**: Zero-config Next.js support
+
+- [ ] **Add static bundle export**
+  - Add to `package.json`: `"./static": "./dist/forge.static.js"`
+  - Optimized UMD bundle for Next.js `public/` folder
+  - CORS-friendly CDN bundle
+  - **Impact**: Multiple loading strategies supported
+
+#### Phase 3: Long-term Improvements (Week 4+) - LOW PRIORITY
+- [ ] **Create framework-specific guides**
+  - Next.js App Router (Pages Router separate)
+  - Remix
+  - SvelteKit
+  - Nuxt 3
+  - **Impact**: Better onboarding for all SSR frameworks
+
+**Files to Create/Update**:
+- `packages/forge-react/src/fallbacks.css` (NEW - critical)
+- `packages/forge-react/src/utils/createUnifiedWrapper.tsx` (UPDATE - fix timing)
+- `docs/integrations/nextjs-15-app-router.md` (NEW - urgent)
+- `packages/forge-nextjs/` (NEW - medium priority)
+- `package.json` (UPDATE - add static bundle export)
+
+**Success Criteria**:
+- [ ] Fallback components have CSS and look styled
+- [ ] Web components hydrate reliably in Next.js 15
+- [ ] Clear documentation for all SSR frameworks
+- [ ] `@nexcraft/forge-nextjs` package published
+- [ ] Zero client support tickets about SSR/hydration
+
+**Related Client Issues**:
+- Gaming Highlight Reel (http://localhost:9001/register) - unstyled forms
+- Multiple reports of "components stay as fallbacks"
+- Confusion about import strategies (CDN vs npm vs dynamic)
+
+---
+
 ### 1. TypeScript Type Safety Improvements
 
 **Priority**: HIGH | **Effort**: Medium | **Impact**: High
@@ -562,6 +643,8 @@ utils/
 
 ### 📈 **Code Quality & Performance**
 
+- [ ] **Next.js SSR support working** (CRITICAL - blocking clients)
+- [ ] **Fallback CSS created and shipped** (URGENT)
 - [ ] **Zero TypeScript warnings**
 - [ ] **Zero Lit performance warnings**
 - [ ] **Clean test output**
