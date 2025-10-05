@@ -1,5 +1,66 @@
 # @nexcraft/forge-react
 
+## 1.0.3
+
+### Patch Changes
+
+- 2f08880: fix(fallback): pass through `id` prop in all form component fallbacks
+
+  **Bug Fix:**
+  - Fixed duplicate ID warning when multiple form components use the same `id` prop
+  - All form input fallback renderers now properly pass through the `id` attribute
+
+  **What Changed:**
+  - `ForgeInput`: Now passes `id` prop to fallback `<input>` element
+  - `ForgeSwitch`: Now passes `id` prop to fallback checkbox input
+  - `ForgeSelect`: Now passes `id` prop to fallback `<select>` element
+  - `ForgeDatePicker`: Now passes `id` prop to fallback date input
+
+  **Impact:**
+  - ✅ Fixes browser warning: "Found N elements with non-unique id"
+  - ✅ Proper label associations with `htmlFor` attribute
+  - ✅ Better accessibility for screen readers
+  - ✅ No breaking changes
+
+  **Before:**
+
+  ```tsx
+  <ForgeInput id="email" />
+  // Fallback: <input /> (id ignored)
+  ```
+
+  **After:**
+
+  ```tsx
+  <ForgeInput id="email" />
+  // Fallback: <input id="email" />
+  ```
+
+- 2f08880: refactor(types): improve TypeScript type safety across React integration
+
+  **Type Safety Improvements:**
+  - ✅ Replaced `any[]` with proper typed arrays (`GridSortConfig[]`, `DataTableRow[]`, `TreeNode[]`)
+  - ✅ Added proper type definitions for data structures (GridSortConfig, DataTableRow, TreeNode)
+  - ✅ Improved utility types (removed 20+ `any` casts)
+  - ✅ Better DOM/React type annotations
+
+  **What Changed:**
+  - `ForgeDataGridProps.onSortChanged`: `any[]` → `GridSortConfig[]`
+  - `ForgeDataTableProps.data`: `Record<string, any>[]` → `DataTableRow[]`
+  - `ForgeDataTableProps.onSelectionChange`: `any[]` → `DataTableRow[]`
+  - `ForgeTreeViewProps.data.children`: `any[]` → `TreeNode[]` (recursive)
+  - `createUnifiedWrapper`: Improved type annotations for refs and props
+
+  **Impact:**
+  - ✅ Better IDE autocomplete and IntelliSense
+  - ✅ Catch type errors at compile time
+  - ✅ Improved developer experience
+  - ✅ No breaking changes (compatible types)
+
+  **Remaining Work:**
+  Some component-specific fallback renderers still use `unknown` for flexibility. These are non-critical and will be addressed incrementally.
+  - @nexcraft/forge@0.9.0
+
 ## 1.0.2
 
 ### Patch Changes
