@@ -38,7 +38,7 @@ export interface UnifiedWrapperOptions<P extends Record<string, any>> {
   propMappings?: Record<string, string>;
   
   /** Semantic HTML fallback renderer */
-  fallbackRenderer: (props: any, children: React.ReactNode) => React.ReactElement | null;
+  fallbackRenderer: (props: P & Record<string, unknown>, children: React.ReactNode) => React.ReactElement | null;
   
   /** Default props for fallback */
   fallbackProps?: Partial<P>;
@@ -70,7 +70,7 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
     // During SSR, return a simple functional component that renders the fallback
     const SSRComponent = forwardRef<T, PropsWithChildren<P>>((props, ref: Ref<T>) => {
       const { children, ...restProps } = props;
-      const fallbackElement = options.fallbackRenderer({ ...options.fallbackProps, ...restProps }, children);
+      const fallbackElement = options.fallbackRenderer({ ...options.fallbackProps, ...restProps } as P & Record<string, unknown>, children);
       
       if (fallbackElement === null) {
         return null;
@@ -131,12 +131,12 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
       return (isHydrated ? elementRef.current : fallbackRef.current) as T;
     }, [isHydrated]);
 
-    const assignForwardedRef = (node: any) => {
+    const assignForwardedRef = (node: T | null) => {
       if (!forwardedRef) return;
       if (typeof forwardedRef === 'function') {
         try { forwardedRef(node); } catch {}
-      } else {
-        try { (forwardedRef as any).current = node; } catch {}
+      } else if (forwardedRef && 'current' in forwardedRef) {
+        try { (forwardedRef as React.MutableRefObject<T | null>).current = node; } catch {}
       }
     };
 
@@ -145,8 +145,16 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
       const fallbackElement = fallbackRef.current as HTMLElement | null;
       if (!fallbackElement?.parentNode) return;
 
-      // Create web component
-      const webComponent = document.createElement(options.tagName) as T & { checked?: boolean };
+      // Create web component with possible form control properties
+      interface WebComponentWithFormProps extends HTMLElement {
+        checked?: boolean;
+        value?: string | number;
+        _forgeLinkedInput?: HTMLInputElement;
+        _forgeLinkedInputListeners?: { wcToInput: (evt: Event) => void; inputToWc: () => void };
+        [key: string]: unknown;
+      }
+
+      const webComponent = document.createElement(options.tagName) as T & WebComponentWithFormProps;
 
       // Transfer attributes we care about from the fallback element
       if (options.preserveAttributes) {
@@ -181,11 +189,11 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
           if (type === 'checkbox' || type === 'radio') {
             const checked = !!input.checked;
             if (checked) webComponent.setAttribute('checked', ''); else webComponent.removeAttribute('checked');
-            (webComponent as any).checked = checked;
+            webComponent.checked = checked;
           } else {
-            const value = (input as any).value ?? '';
+            const value = input.value ?? '';
             if (value !== undefined) {
-              (webComponent as any).value = value;
+              webComponent.value = value;
               if (String(value).length > 0) webComponent.setAttribute('value', String(value));
             }
           }
@@ -201,15 +209,16 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
 
         // Sync from web component -> input and dispatch native events so RHF sees them
         const wcToInput = (evt: Event) => {
+          const customEvent = evt as CustomEvent<{ checked?: boolean; value?: string | number }>;
           if (type === 'checkbox' || type === 'radio') {
-            const checked = (evt as any).detail?.checked ?? (webComponent as any).checked ?? webComponent.hasAttribute('checked');
+            const checked = customEvent.detail?.checked ?? webComponent.checked ?? webComponent.hasAttribute('checked');
             if (input.checked !== !!checked) {
               input.checked = !!checked;
               input.dispatchEvent(new Event('input', { bubbles: true }));
               input.dispatchEvent(new Event('change', { bubbles: true }));
             }
           } else {
-            const value = (evt as any).detail?.value ?? (webComponent as any).value ?? '';
+            const value = customEvent.detail?.value ?? webComponent.value ?? '';
             if (input.value !== String(value ?? '')) {
               input.value = String(value ?? '');
               input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -218,18 +227,18 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
           }
         };
         webComponent.addEventListener('change', wcToInput);
-        webComponent.addEventListener('input', wcToInput as any);
+        webComponent.addEventListener('input', wcToInput);
 
         // Sync from input -> web component (e.g., programmatic changes or label for=)
         const inputToWc = () => {
           if (type === 'checkbox' || type === 'radio') {
             const checked = !!input.checked;
-            try { (webComponent as any).checked = checked; } catch {}
+            try { webComponent.checked = checked; } catch {}
             if (checked) webComponent.setAttribute('checked', ''); else webComponent.removeAttribute('checked');
             webComponent.dispatchEvent(new CustomEvent('change', { detail: { checked }, bubbles: true }));
           } else {
             const value = input.value;
-            try { (webComponent as any).value = value; } catch {}
+            try { webComponent.value = value; } catch {}
             webComponent.setAttribute('value', String(value ?? ''));
             webComponent.dispatchEvent(new CustomEvent('input', { detail: { value }, bubbles: true }));
           }
@@ -237,9 +246,9 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
         input.addEventListener('change', inputToWc);
         input.addEventListener('input', inputToWc);
 
-        // Store listeners for potential cleanup
-        (webComponent as any)._forgeLinkedInput = input;
-        (webComponent as any)._forgeLinkedInputListeners = { wcToInput, inputToWc };
+        // Store listeners for potential cleanup (using index signature from type definition)
+        webComponent._forgeLinkedInput = input;
+        webComponent._forgeLinkedInputListeners = { wcToInput, inputToWc };
 
         // Keep refs pointing at the web component (interactive element)
         (elementRef as React.MutableRefObject<T>).current = webComponent;
@@ -286,11 +295,11 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
       }, [JSON.stringify(nonEventProps), Object.keys(eventHandlers).join(',')]);
 
       return React.createElement(options.tagName, {
-        ref: (node: any) => {
-          (elementRef as React.MutableRefObject<T>).current = node;
+        ref: (node: T | null) => {
+          (elementRef as React.MutableRefObject<T | null>).current = node;
           assignForwardedRef(node);
           if (node) {
-            updateWebComponent(node as T, nonEventProps, eventHandlers, options);
+            updateWebComponent(node, nonEventProps, eventHandlers, options);
           }
         },
         suppressHydrationWarning: true,
@@ -300,7 +309,7 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
 
     // UNIFIED MODE: Render semantic HTML that upgrades to web component
     const fallbackElement = options.fallbackRenderer(
-      { ...options.fallbackProps, ...restProps }, 
+      { ...options.fallbackProps, ...restProps } as P & Record<string, unknown>,
       children
     );
 
@@ -309,20 +318,25 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
       return null;
     }
 
-    const cloneProps: any = {
+    const cloneProps: React.HTMLAttributes<HTMLElement> & {
+      'data-forge-component'?: string;
+      'data-hydration-target'?: boolean;
+      suppressHydrationWarning?: boolean;
+      ref?: React.Ref<HTMLElement>;
+    } = {
       'data-forge-component': options.tagName,
       'data-hydration-target': !isSSR,
       suppressHydrationWarning: true,
       ...(fallbackElement.props || {})
     };
-    
+
     // Only add ref if element supports it
     if (fallbackRef) {
-      cloneProps.ref = (node: any) => {
+      cloneProps.ref = (node: HTMLElement | null) => {
         // Keep internal ref for upgrade/hydration
-        (fallbackRef as any).current = node;
+        (fallbackRef as React.MutableRefObject<HTMLElement | null>).current = node;
         // Also forward to consumer (e.g., RHF register()) so ref remains valid pre/post upgrade
-        assignForwardedRef(node);
+        assignForwardedRef(node as T);
       };
     }
     

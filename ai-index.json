@@ -1,13 +1,18 @@
 {
   "indexVersion": "1.0.0",
   "package": "@nexcraft/forge",
-  "generatedAt": "2025-10-04T03:27:52.451Z",
+  "generatedAt": "2025-10-05T02:18:12.726Z",
   "summary": {
     "totalComponents": 31,
     "categories": {
       "atom": 31
     },
-    "frameworks": ["vanilla", "react", "vue", "angular"],
+    "frameworks": [
+      "vanilla",
+      "react",
+      "vue",
+      "angular"
+    ],
     "hasAiMethods": true,
     "hasA11yInfo": true,
     "hasExamples": true
@@ -454,7 +459,11 @@
   "aiIntegration": {
     "manifestPath": "./ai-manifest.json",
     "functionCalling": "./ai-tools/",
-    "methodsAvailable": ["getPossibleActions", "explainState", "aiState"],
+    "methodsAvailable": [
+      "getPossibleActions",
+      "explainState",
+      "aiState"
+    ],
     "discovery": "Use this index for quick component discovery, then reference the full manifest for detailed information",
     "examples": {
       "getComponentInfo": "const manifest = await import('@nexcraft/forge/ai-manifest.json')",

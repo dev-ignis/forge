@@ -28,8 +28,8 @@ export const ForgeCheckbox = createUnifiedWrapper<HTMLElement, ForgeCheckboxProp
     <input
       type="checkbox"
       className={`forge-checkbox ${props.disabled ? 'forge-checkbox--disabled' : ''}`}
-      id={(props as any).id}
-      ref={(props as any).ref}
+      id={props.id as string | undefined}
+      ref={props.ref as React.Ref<HTMLInputElement> | undefined}
       // Only control checked when explicitly provided; otherwise allow uncontrolled for RHF register()
       {...(typeof props.checked === 'boolean' ? { checked: props.checked } : {})}
       disabled={props.disabled}
@@ -42,16 +42,16 @@ export const ForgeCheckbox = createUnifiedWrapper<HTMLElement, ForgeCheckboxProp
 
         if (isLikelyRHF) {
           // React Hook Form register handler expects the event to read target.name/checked
-          props.onChange(e);
+          (props.onChange as (event: React.ChangeEvent<HTMLInputElement>) => void)(e);
           return;
         }
 
         // Non-RHF: prefer Forge signature when handler declares 2+ params
         if (props.onChange.length >= 2) {
-          props.onChange(e.target.checked, e);
+          (props.onChange as (checked: boolean, event: React.FormEvent<HTMLElement>) => void)(e.target.checked, e);
         } else {
           // Fallback: forward event (common React pattern)
-          props.onChange(e);
+          (props.onChange as (event: React.ChangeEvent<HTMLInputElement>) => void)(e);
         }
       } : undefined}
       onBlur={props.onBlur}

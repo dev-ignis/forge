@@ -30,8 +30,8 @@ export const ForgeDatePicker = createUnifiedWrapper<HTMLElement, ForgeDatePicker
       max={props.max}
       disabled={props.disabled}
       placeholder={props.placeholder}
-      name={props.name}
-      required={props.required}
+      name={props.name as string | undefined}
+      required={props.required as boolean | undefined}
       data-forge-component="forge-date-picker"
     />
   ),
