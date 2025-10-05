@@ -1,11 +1,14 @@
 /**
  * @fileoverview Unified React wrapper that works for both client-only and SSR
- * 
+ *
  * Single component that:
  * - Automatically detects SSR vs client environment
  * - Renders semantic HTML fallback during SSR
  * - Hydrates to web component on client
  * - No separate SSR/client components needed
+ *
+ * Note: Components created with this wrapper use React hooks and must be used in Client Components.
+ * If using Next.js App Router, add 'use client' to the file that imports Forge components.
  */
 
 import React, { 
