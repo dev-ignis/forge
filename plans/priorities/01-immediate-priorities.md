@@ -152,78 +152,215 @@
 
 ## 🔧 **Critical Fixes**
 
-### 0. Next.js SSR/Hydration Support (CRITICAL CLIENT BLOCKER)
+### 0. React Package Architecture Split (CRITICAL CLIENT BLOCKER)
 
-**Priority**: CRITICAL | **Effort**: Medium | **Impact**: CRITICAL
+**Priority**: CRITICAL | **Effort**: Medium-High | **Impact**: CRITICAL
 
 **Current Situation**:
-- Multiple clients reporting components don't hydrate in Next.js 15 App Router
-- Web components require `HTMLElement` which doesn't exist during SSR
-- React wrappers render fallback HTML but components never upgrade
-- Fallback HTML has no CSS - completely unstyled forms
-- No clear documentation for Next.js 15 + React 19 setup
+- `@nexcraft/forge-react` tries to handle both SSR and client-only rendering
+- Complex `createUnifiedWrapper` with SSR detection, fallback renderers, timing issues
+- Clients confused by unstyled fallbacks and hydration failures
+- Maintaining two render paths (SSR fallbacks + web components) is fragile
+- No clear separation between simple (client-only) and complex (SSR) use cases
+
+**Architectural Decision: Split into Two Packages**
+
+Following industry patterns (Lit, Shoelace, Material Web are all client-only):
+
+```
+@nexcraft/forge-react           → Client-only (simple, default)
+@nexcraft/forge-react-ssr       → SSR with fallbacks (complex, opt-in)
+```
+
+**Why Split Packages?**
+- ✅ Default package is simple and predictable (client-only)
+- ✅ SSR complexity is opt-in (only for those who need it)
+- ✅ One render path per package (easier to maintain)
+- ✅ Clear documentation: "Use forge-react unless you need SSR"
+- ✅ Matches how other web component libraries work
 
 **Client Impact**:
-- ❌ Forms render as unstyled native HTML inputs
-- ❌ `customElements.get('forge-input')` returns `undefined`
-- ❌ `data-ssr-fallback="true"` stays in DOM (components never hydrate)
-- ❌ Dynamic imports create race conditions with React hydration
+- ❌ Forms render as unstyled native HTML inputs (current)
+- ❌ `customElements.get('forge-input')` returns `undefined` (current)
+- ❌ `data-ssr-fallback="true"` stays in DOM (current)
+- ❌ Dynamic imports create race conditions (current)
 
-**Immediate Actions**:
+---
 
-#### Phase 1: Quick Fixes (Week 1) - HIGH PRIORITY
+#### Phase 1: Immediate Fix for Current Package (Week 1) - CRITICAL
+
+**Goal**: Fix `@nexcraft/forge-react` SSR issues while we plan the split
+
 - [ ] **Create fallback CSS file** (`packages/forge-react/dist/fallbacks.css`)
   - Style `.forge-input`, `.forge-button`, `.forge-card`, etc.
   - Match visual appearance of web components
   - Import: `import '@nexcraft/forge-react/fallbacks.css'`
-  - **Impact**: Fixes unstyled forms immediately
+  - **Impact**: Fixes unstyled forms immediately (v1.0.4)
 
 - [ ] **Fix `createUnifiedWrapper` timing**
   - Add `customElements.whenDefined()` detection
   - Re-render when web component registers
   - Handle SSR → Client hydration properly
-  - **Impact**: Components upgrade after web components load
+  - **Impact**: Components upgrade after web components load (v1.0.4)
 
-- [ ] **Document Next.js 15 setup** (`docs/integrations/nextjs-15-app-router.md`)
+- [ ] **Document Next.js 15 workarounds** (`docs/integrations/nextjs-15-app-router.md`)
   - Script loading strategies (`beforeInteractive`, `public/` folder)
   - `ClientOnly` wrapper pattern
   - Troubleshooting guide
   - **Impact**: Unblocks all Next.js users
 
-#### Phase 2: Framework Integration (Week 2-3) - MEDIUM PRIORITY
-- [ ] **Create `@nexcraft/forge-nextjs` package**
-  - `<ForgeScript />` component with correct loading strategy
-  - `<ClientOnly>` wrapper component
-  - Pre-built bundle for `public/` folder
+---
+
+#### Phase 2: Create `@nexcraft/forge-react` v2.0.0 (Client-Only) - Week 2-3
+
+**Goal**: Simplify default package to client-only (like Shoelace, Lit, Material Web)
+
+**Architecture**:
+```tsx
+// New @nexcraft/forge-react (v2.0.0) - CLIENT-ONLY
+export function createReactWrapper<T, P>(options) {
+  return forwardRef<T, P>((props, ref) => {
+    const [isDefined, setIsDefined] = useState(
+      customElements.get(options.tagName) !== undefined
+    );
+
+    useEffect(() => {
+      if (!isDefined) {
+        customElements.whenDefined(options.tagName).then(() => setIsDefined(true));
+      }
+    }, []);
+
+    if (!isDefined) return null; // or loading placeholder
+
+    return createElement(options.tagName, { ref, ...props }, children);
+  });
+}
+```
+
+**Changes**:
+- [ ] Remove SSR detection (`typeof window === 'undefined'`)
+- [ ] Remove fallback renderers
+- [ ] Remove `data-ssr-fallback` attributes
+- [ ] Simplify to single render path (web component only)
+- [ ] Add `ClientOnly` and `ForgeProvider` helpers
+- [ ] Update all component wrappers
+- [ ] Update TypeScript types (remove fallback props)
+
+**Files to Update**:
+- `packages/forge-react/src/utils/createReactWrapper.tsx` (NEW - replaces createUnifiedWrapper)
+- `packages/forge-react/src/helpers/ClientOnly.tsx` (NEW)
+- `packages/forge-react/src/helpers/ForgeProvider.tsx` (NEW)
+- `packages/forge-react/src/components/*.tsx` (UPDATE - use new wrapper)
+- `packages/forge-react/README.md` (UPDATE - document client-only approach)
+
+---
+
+#### Phase 3: Create `@nexcraft/forge-react-ssr` Package - Week 3-4
+
+**Goal**: Extract SSR complexity into separate opt-in package
+
+**Architecture**:
+```tsx
+// @nexcraft/forge-react-ssr - SSR with fallbacks
+export function createSSRWrapper<T, P>(options) {
+  // Current createUnifiedWrapper logic
+  // SSR detection, fallback renderers, hydration
+}
+```
+
+**Package Structure**:
+```
+packages/forge-react-ssr/
+├── src/
+│   ├── utils/
+│   │   └── createSSRWrapper.tsx    (SSR-aware wrapper)
+│   ├── components/
+│   │   ├── ForgeInput.tsx          (with fallback renderer)
+│   │   ├── ForgeButton.tsx         (with fallback renderer)
+│   │   └── ...
+│   ├── fallbacks.css               (fallback styles)
+│   └── index.ts
+├── package.json
+└── README.md
+```
+
+**Implementation**:
+- [ ] Create `packages/forge-react-ssr/` package structure
+- [ ] Move current `createUnifiedWrapper` to `createSSRWrapper`
+- [ ] Copy all component wrappers with SSR fallback logic
+- [ ] Include fallback CSS by default
+- [ ] Add comprehensive SSR documentation
+- [ ] Publish as `@nexcraft/forge-react-ssr@1.0.0`
+
+**Files to Create**:
+- `packages/forge-react-ssr/package.json` (NEW)
+- `packages/forge-react-ssr/src/utils/createSSRWrapper.tsx` (NEW - from createUnifiedWrapper)
+- `packages/forge-react-ssr/src/components/*.tsx` (NEW - all components with SSR)
+- `packages/forge-react-ssr/src/fallbacks.css` (NEW)
+- `packages/forge-react-ssr/README.md` (NEW)
+
+---
+
+#### Phase 4: Framework-Specific Packages - Week 4+
+
+**Goal**: Zero-config framework support
+
+- [ ] **Create `@nexcraft/forge-nextjs`**
+  - `<ForgeScript />` component
+  - `<ClientOnly>` wrapper
+  - Static bundle for `public/`
   - Setup CLI: `npx @nexcraft/forge setup nextjs`
-  - **Impact**: Zero-config Next.js support
 
-- [ ] **Add static bundle export**
-  - Add to `package.json`: `"./static": "./dist/forge.static.js"`
-  - Optimized UMD bundle for Next.js `public/` folder
-  - CORS-friendly CDN bundle
-  - **Impact**: Multiple loading strategies supported
+- [ ] **Create `@nexcraft/forge-remix`**
+  - Remix-specific loaders
+  - Server/client boundary helpers
 
-#### Phase 3: Long-term Improvements (Week 4+) - LOW PRIORITY
-- [ ] **Create framework-specific guides**
-  - Next.js App Router (Pages Router separate)
+- [ ] **Create framework guides**
+  - Next.js App Router & Pages Router
   - Remix
   - SvelteKit
   - Nuxt 3
-  - **Impact**: Better onboarding for all SSR frameworks
 
-**Files to Create/Update**:
-- `packages/forge-react/src/fallbacks.css` (NEW - critical)
-- `packages/forge-react/src/utils/createUnifiedWrapper.tsx` (UPDATE - fix timing)
-- `docs/integrations/nextjs-15-app-router.md` (NEW - urgent)
-- `packages/forge-nextjs/` (NEW - medium priority)
-- `package.json` (UPDATE - add static bundle export)
+---
+
+#### Migration Strategy
+
+**v1.0.4 (This Week)**:
+- ✅ Fix current SSR issues (fallback CSS, timing)
+- ✅ Keep existing API
+
+**v2.0.0 (Week 2-3)**:
+- ✅ `@nexcraft/forge-react` becomes client-only (BREAKING)
+- ✅ `@nexcraft/forge-react-ssr` launches for SSR users
+- ✅ Migration guide: "If you use SSR, switch to forge-react-ssr"
+
+**v2.1.0+ (Week 4+)**:
+- ✅ Framework packages (`forge-nextjs`, `forge-remix`)
+- ✅ Improved documentation
+
+**Migration Path for Users**:
+```tsx
+// v1.x (current - SSR built-in)
+import { ForgeInput } from '@nexcraft/forge-react';
+
+// v2.0+ Option A: Client-only (simple, recommended)
+'use client';
+import { ForgeInput } from '@nexcraft/forge-react';
+
+// v2.0+ Option B: SSR (complex, opt-in)
+import { ForgeInput } from '@nexcraft/forge-react-ssr';
+import '@nexcraft/forge-react-ssr/fallbacks.css';
+```
+
+---
 
 **Success Criteria**:
-- [ ] Fallback components have CSS and look styled
-- [ ] Web components hydrate reliably in Next.js 15
-- [ ] Clear documentation for all SSR frameworks
-- [ ] `@nexcraft/forge-nextjs` package published
+- [ ] v1.0.4 ships with fallback CSS and timing fixes
+- [ ] `@nexcraft/forge-react` v2.0.0 is client-only and simple
+- [ ] `@nexcraft/forge-react-ssr` v1.0.0 handles all SSR use cases
+- [ ] Clear documentation for both packages
+- [ ] Migration guide published
+- [ ] Framework packages shipped
 - [ ] Zero client support tickets about SSR/hydration
 
 **Related Client Issues**:
