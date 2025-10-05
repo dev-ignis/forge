@@ -300,7 +300,7 @@ export default function Home() {
                     </div>
 
                     <div className="flex items-center gap-4">
-                      <ForgeSwitch checked={isDarkMode} onCheckedChange={setIsDarkMode} />
+                      <ForgeSwitch checked={isDarkMode} onChange={(checked) => setIsDarkMode(checked)} />
                       <span>Dark Mode</span>
                     </div>
                   </div>
