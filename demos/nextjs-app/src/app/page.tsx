@@ -61,7 +61,7 @@ export default function Home() {
   const [showModal, setShowModal] = useState(false);
   const [toastCount, setToastCount] = useState(0);
   const [activeTab, setActiveTab] = useState('atoms');
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showFormSuccess, setShowFormSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);

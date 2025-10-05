@@ -55,7 +55,9 @@ jobs:
 
       - name: Build main package if no cached artifacts
         if: steps.download-build.outcome == 'failure'
-        run: npm run build
+        run: |
+          npm run build
+          npm run build --workspace=packages/forge-react
 
       - name: Try to download cached Storybook artifacts
         id: download-storybook
