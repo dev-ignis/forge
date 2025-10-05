@@ -116,6 +116,12 @@ export interface ForgeModalProps extends ForgeComponentProps {
   onOpen?: () => void;
 }
 
+// Sort configuration for data grids
+export interface GridSortConfig {
+  field: string;
+  direction: 'asc' | 'desc';
+}
+
 // DataGrid component props - addressing the advanced component from Phase 8
 export interface ForgeDataGridProps extends ForgeComponentProps {
   columns: GridColumn[];
@@ -131,7 +137,7 @@ export interface ForgeDataGridProps extends ForgeComponentProps {
   editable?: boolean;
   onSelectionChanged?: (selectedRows: string[], allSelected: boolean) => void;
   onCellEdit?: (rowId: string, field: string, oldValue: unknown, newValue: unknown) => void;
-  onSortChanged?: (sorts: any[]) => void;
+  onSortChanged?: (sorts: GridSortConfig[]) => void;
   onSearchChanged?: (query: string, results: GridData[]) => void;
 }
 
@@ -296,9 +302,12 @@ export interface ForgeAccordionProps extends Omit<ForgeComponentProps, 'onToggle
   onToggle?: (open: boolean) => void;
 }
 
+// Data table row type
+export type DataTableRow = Record<string, unknown>;
+
 export interface ForgeDataTableProps extends ForgeComponentProps {
-  columns: Array<{ key: string; title: string; sortable?: boolean; width?: string }>;
-  data: Array<Record<string, any>>;
+  columns: Array<{ key: string; title: string; sortable?: boolean; width?: string; render?: (value: unknown, row: DataTableRow) => React.ReactNode }>;
+  data: DataTableRow[];
   sortable?: boolean;
   selectable?: boolean;
   pagination?: boolean;
@@ -307,7 +316,7 @@ export interface ForgeDataTableProps extends ForgeComponentProps {
   totalItems?: number;
   loading?: boolean;
   onSort?: (column: string, direction: 'asc' | 'desc') => void;
-  onSelectionChange?: (selectedRows: any[]) => void;
+  onSelectionChange?: (selectedRows: DataTableRow[]) => void;
   onPageChange?: (page: number) => void;
 }
 
@@ -333,15 +342,18 @@ export interface ForgeNavigationBarProps extends ForgeComponentProps {
   onItemClick?: (itemId: string) => void;
 }
 
+// Tree node type (recursive)
+export interface TreeNode {
+  id: string;
+  label: string;
+  children?: TreeNode[];
+  disabled?: boolean;
+  selected?: boolean;
+  expanded?: boolean;
+}
+
 export interface ForgeTreeViewProps extends Omit<ForgeComponentProps, 'onSelect'> {
-  data: Array<{
-    id: string;
-    label: string;
-    children?: any[];
-    disabled?: boolean;
-    selected?: boolean;
-    expanded?: boolean;
-  }>;
+  data: TreeNode[];
   selectable?: boolean;
   multiSelect?: boolean;
   expandable?: boolean;

@@ -28,8 +28,9 @@ export const ForgeSwitch = createUnifiedWrapper<HTMLElement, ForgeSwitchProps>({
         className={`forge-switch forge-switch--${props.size || 'md'} ${props.disabled ? 'forge-switch--disabled' : ''}`}
         checked={props.checked || false}
         disabled={props.disabled}
-        name={props.name}
-        value={props.value}
+        id={props.id as string | undefined}
+        name={props.name as string | undefined}
+        value={props.value as string | number | readonly string[] | undefined}
         aria-label={props['aria-label']}
         data-forge-component="forge-switch"
       />

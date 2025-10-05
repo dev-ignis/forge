@@ -26,8 +26,9 @@ export const ForgeSelect = createUnifiedWrapper<HTMLElement, ForgeSelectProps>({
       className={`forge-select ${props.disabled ? 'forge-select--disabled' : ''} ${props.multiple ? 'forge-select--multiple' : ''}`}
       disabled={props.disabled}
       multiple={props.multiple}
+      id={props.id as string | undefined}
       name={props.name}
-      required={props.required}
+      required={props.required as boolean | undefined}
       value={props.value}
       data-forge-component="forge-select"
     >

@@ -192,7 +192,7 @@ jobs:
         run: |
           # Update Next.js demo to use latest version
           cd demos/nextjs-app
-          npm update @nexcraft/forge @nexcraft/forge-rhf
+          npm update @nexcraft/forge @nexcraft/forge-rhf --legacy-peer-deps
 
           # Update vanilla demo to use latest version
           cd ../vanilla-app
