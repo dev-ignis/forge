@@ -226,33 +226,36 @@ import { createElement } from 'react';
 
 ---
 
-#### Phase 2: Documentation & Examples (Week 2) - HIGH PRIORITY
+#### Phase 2: Documentation & Examples (Week 2) - ✅ COMPLETED
 
 **Goal**: Clear documentation for Next.js and other SSR frameworks
 
-- [ ] **Document Next.js 15 setup** (`docs/integrations/nextjs-15-app-router.md`)
-  - No `'use client'` needed (package handles it)
-  - Script loading strategies (`beforeInteractive`, `public/` folder)
-  - Troubleshooting guide
+- [x] ✅ **Document Next.js 15 setup** (`docs/integrations/nextjs-15-app-router.md`)
+  - ✅ Complete guide with automatic 'use client' directive usage
+  - ✅ Script loading strategies (CDN, self-hosted, npm import)
+  - ✅ Troubleshooting guide for common issues
+  - ✅ Performance tips and best practices
   - **Impact**: Unblocks all Next.js users
 
-- [ ] **Create example Next.js app**
-  - App Router with Server + Client Components
-  - Demonstrate proper usage patterns
-  - Include form examples
+- [x] ✅ **Update example Next.js app**
+  - ✅ Updated to use v1.0.4+ features
+  - ✅ Added Script with `beforeInteractive` strategy
+  - ✅ Added fallback CSS import
+  - ✅ Updated README with v1.0.4 patterns
   - **Impact**: Reference implementation for users
 
-- [ ] **Add framework guides**
-  - Remix integration
-  - SvelteKit integration
-  - Nuxt 3 integration
-  - **Impact**: Support all SSR frameworks
+- [x] ✅ **Add framework guides**
+  - ✅ Remix integration guide (`docs/integrations/remix.md`)
+  - ✅ SvelteKit integration guide (`docs/integrations/sveltekit.md`)
+  - ⏭️ Nuxt 3 integration (deferred - Vue package not released yet)
+  - **Impact**: Support all major SSR frameworks
 
-**Files to Create**:
-- `docs/integrations/nextjs-15-app-router.md` (NEW)
-- `examples/nextjs-app-router/` (NEW - reference app)
-- `docs/integrations/remix.md` (NEW)
-- `docs/integrations/sveltekit.md` (NEW)
+**Files Created/Updated**:
+- ✅ `docs/integrations/nextjs-15-app-router.md` (CREATED - comprehensive guide)
+- ✅ `demos/nextjs-app/` (UPDATED - v1.0.4 patterns)
+- ✅ `demos/nextjs-app/README.md` (UPDATED - v1.0.4 documentation)
+- ✅ `docs/integrations/remix.md` (CREATED - full Remix guide)
+- ✅ `docs/integrations/sveltekit.md` (CREATED - full SvelteKit guide)
 
 ---
 
