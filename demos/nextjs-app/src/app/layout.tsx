@@ -1,5 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
+import Script from "next/script";
+import "@nexcraft/forge-react/fallbacks.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,6 +23,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          src="https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/forge.js"
+          strategy="beforeInteractive"
+        />
+      </head>
       <body className="antialiased">
         {children}
       </body>

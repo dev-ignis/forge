@@ -1,14 +1,19 @@
-# @nexcraft/forge Next.js Example App
+# Next.js 15 + Forge React Example
 
-This example application demonstrates how to use [@nexcraft/forge](https://www.npmjs.com/package/@nexcraft/forge) components in a Next.js application with full SSR support, React Hook Form integration, and TypeScript compatibility.
+**Demonstration of @nexcraft/forge-react v1.0.4+ with Next.js 15 App Router**
+
+This example application demonstrates how to use [@nexcraft/forge-react](https://www.npmjs.com/package/@nexcraft/forge-react) components in a Next.js 15 application with automatic 'use client' directives, SSR fallback rendering, and React Hook Form integration.
 
 ## 🎯 What This Demonstrates
 
-- **Universal SSR/Client Components** - Single components that work everywhere
-- **React Hook Form Integration** - Seamless `{...register()}` support
-- **TypeScript Compatibility** - Full type safety and intellisense
-- **Progressive Enhancement** - Semantic HTML that upgrades to web components
-- **Production Ready** - Real-world usage patterns and best practices
+✅ **Automatic 'use client' directive** - No manual directives needed (v1.0.4+)
+✅ **SSR fallback rendering** - Components render as semantic HTML during SSR
+✅ **Fallback CSS styling** - Styled components during SSR (no FOUC)
+✅ **Proper hydration** - Components upgrade to web components after load
+✅ **React Hook Form integration** - Form validation with Forge components
+✅ **Server + Client Components** - Mixed rendering strategies
+✅ **TypeScript Compatibility** - Full type safety and intellisense
+✅ **Production Ready** - Real-world usage patterns and best practices
 
 ## 🚀 Quick Start
 

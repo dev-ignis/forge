@@ -152,6 +152,169 @@
 
 ## 🔧 **Critical Fixes**
 
+### 0. React Package 'use client' Directive (CRITICAL CLIENT BLOCKER)
+
+**Priority**: CRITICAL | **Effort**: Low-Medium | **Impact**: CRITICAL
+
+**Current Situation**:
+- `@nexcraft/forge-react` components don't have `'use client'` directives
+- Users must manually add `'use client'` to every file that imports Forge components
+- Causes confusion and SSR/hydration issues in Next.js App Router
+- Components don't hydrate properly because of timing issues
+- Fallback HTML has no CSS - completely unstyled forms
+
+**Architectural Decision: Follow MUI's Pattern**
+
+Add `'use client'` directive to all React wrapper files during build:
+
+```js
+// packages/forge-react/dist/components/ForgeInput.js (after build)
+'use client';
+
+import { createElement } from 'react';
+// ... component code
+```
+
+**Why This Approach?**
+- ✅ **Industry Standard** - Modern UI libraries add directives in build step
+- ✅ **Zero User Friction** - Users don't add `'use client'` themselves
+- ✅ **Works Everywhere** - Server Components, Client Components, Pages Router, App Router
+- ✅ **No Package Split** - One package handles everything
+- ✅ **Proper Bundling** - Next.js optimizes the client bundle correctly
+
+**How It Works:**
+- Build step prepends `'use client'` to all component files
+- Package exports already have the directive
+- Users import normally, Next.js handles the rest
+
+**Client Impact (Current Issues)**:
+- ❌ Forms render as unstyled native HTML inputs
+- ❌ `customElements.get('forge-input')` returns `undefined`
+- ❌ `data-ssr-fallback="true"` stays in DOM (components never hydrate)
+- ❌ Users confused about where to add `'use client'`
+
+---
+
+#### Phase 1: Add 'use client' Directive (Week 1) - CRITICAL
+
+**Goal**: Add `'use client'` to all React component files during build
+
+- [x] ✅ **Create build step to add 'use client' directive**
+  - ✅ Created post-build script `packages/forge-react/scripts/add-use-client.js`
+  - ✅ Prepends `'use client';` to all `.js` files in `packages/forge-react/dist/`
+  - ✅ Directive added at the very top of each file
+  - ✅ Tested successfully - 40 files processed
+  - **Impact**: Components work automatically in Next.js App Router (v1.0.4)
+
+- [x] ✅ **Create fallback CSS file** (`packages/forge-react/src/fallbacks.css`)
+  - ✅ Styled `.forge-input`, `.forge-button`, `.forge-card`, etc.
+  - ✅ Matches visual appearance of web components
+  - ✅ Export added to package.json: `import '@nexcraft/forge-react/fallbacks.css'`
+  - **Impact**: Fixes unstyled forms immediately (v1.0.4)
+
+- [x] ✅ **Fix `createUnifiedWrapper` timing**
+  - ✅ Added `customElements.whenDefined()` detection
+  - ✅ Re-renders when web component registers
+  - ✅ Handles SSR → Client hydration properly
+  - **Impact**: Components upgrade after web components load (v1.0.4)
+
+**Files Created/Updated**:
+- ✅ `packages/forge-react/scripts/add-use-client.js` (CREATED - post-build script)
+- ✅ `packages/forge-react/package.json` (UPDATED - added build script + glob dependency)
+- ✅ `packages/forge-react/src/fallbacks.css` (CREATED - fallback styles with full component coverage)
+- ✅ `packages/forge-react/src/utils/createUnifiedWrapper.tsx` (UPDATED - fixed timing with whenDefined)
+
+---
+
+#### Phase 2: Documentation & Examples (Week 2) - ✅ COMPLETED
+
+**Goal**: Clear documentation for Next.js and other SSR frameworks
+
+- [x] ✅ **Document Next.js 15 setup** (`docs/integrations/nextjs-15-app-router.md`)
+  - ✅ Complete guide with automatic 'use client' directive usage
+  - ✅ Script loading strategies (CDN, self-hosted, npm import)
+  - ✅ Troubleshooting guide for common issues
+  - ✅ Performance tips and best practices
+  - **Impact**: Unblocks all Next.js users
+
+- [x] ✅ **Update example Next.js app**
+  - ✅ Updated to use v1.0.4+ features
+  - ✅ Added Script with `beforeInteractive` strategy
+  - ✅ Added fallback CSS import
+  - ✅ Updated README with v1.0.4 patterns
+  - **Impact**: Reference implementation for users
+
+- [x] ✅ **Add framework guides**
+  - ✅ Remix integration guide (`docs/integrations/remix.md`)
+  - ✅ SvelteKit integration guide (`docs/integrations/sveltekit.md`)
+  - ⏭️ Nuxt 3 integration (deferred - Vue package not released yet)
+  - **Impact**: Support all major SSR frameworks
+
+**Files Created/Updated**:
+- ✅ `docs/integrations/nextjs-15-app-router.md` (CREATED - comprehensive guide)
+- ✅ `demos/nextjs-app/` (UPDATED - v1.0.4 patterns)
+- ✅ `demos/nextjs-app/README.md` (UPDATED - v1.0.4 documentation)
+- ✅ `docs/integrations/remix.md` (CREATED - full Remix guide)
+- ✅ `docs/integrations/sveltekit.md` (CREATED - full SvelteKit guide)
+
+---
+
+#### Phase 3: Framework-Specific Packages (Week 3-4) - CANCELLED
+
+**Decision**: No framework-specific packages needed
+
+**Rationale**:
+- ✅ `'use client'` directive in `@nexcraft/forge-react` handles Next.js automatically
+- ✅ Fallback CSS provides styling during SSR
+- ✅ `customElements.whenDefined()` handles timing issues
+- ✅ Single package works for all React frameworks (Next.js, Remix, Gatsby)
+
+**Removed Tasks**:
+- ~~Create `@nexcraft/forge-nextjs`~~ (Not needed)
+- ~~Create `@nexcraft/forge-remix`~~ (Not needed)
+
+---
+
+#### Migration Strategy
+
+**v1.0.4 (This Week)** - ✅ COMPLETED:
+- ✅ Add `'use client'` directive to all components (40 files processed)
+- ✅ Add fallback CSS (comprehensive styling for all components)
+- ✅ Fix timing issues (customElements.whenDefined() added)
+- ✅ No breaking changes - existing code works better
+
+**v1.1.0+ (Week 2+)**:
+- ⏭️ Framework packages cancelled (not needed)
+- 📝 Documentation improvements (in progress)
+- 📱 Example apps (planned)
+
+**No Breaking Changes Needed!**
+```tsx
+// v1.0.3 (current - users add 'use client')
+'use client';
+import { ForgeInput } from '@nexcraft/forge-react';
+
+// v1.0.4+ (package has 'use client' built-in)
+import { ForgeInput } from '@nexcraft/forge-react'; // Just works!
+```
+
+---
+
+**Success Criteria**:
+- [x] ✅ v1.0.4 ships with `'use client'` directives in all components
+- [x] ✅ Fallback CSS created and shipped
+- [x] ✅ Components work in Next.js App Router without user adding `'use client'`
+- [ ] 📝 Clear documentation for all SSR frameworks (Phase 2)
+- [x] ⏭️ Framework packages published (cancelled - not needed)
+- [ ] 🎯 Zero client support tickets about SSR/hydration (pending client feedback)
+
+**Related Client Issues**:
+- Gaming Highlight Reel (http://localhost:9001/register) - unstyled forms
+- Multiple reports of "components stay as fallbacks"
+- Confusion about import strategies (CDN vs npm vs dynamic)
+
+---
+
 ### 1. TypeScript Type Safety Improvements
 
 **Priority**: HIGH | **Effort**: Medium | **Impact**: High
@@ -562,6 +725,8 @@ utils/
 
 ### 📈 **Code Quality & Performance**
 
+- [ ] **Next.js SSR support working** (CRITICAL - blocking clients)
+- [ ] **Fallback CSS created and shipped** (URGENT)
 - [ ] **Zero TypeScript warnings**
 - [ ] **Zero Lit performance warnings**
 - [ ] **Clean test output**
