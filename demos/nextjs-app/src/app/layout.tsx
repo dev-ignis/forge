@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "@nexcraft/forge-react/fallbacks.css";
 import "./globals.css";
+import { AppLayout } from "@/components/layouts/AppLayout";
 
 export const metadata: Metadata = {
   title: "@nexcraft/forge Showcase - AI-Native Component Library",
@@ -30,7 +31,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        {children}
+        <AppLayout>{children}</AppLayout>
       </body>
     </html>
   );
