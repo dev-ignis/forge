@@ -30,6 +30,7 @@
       "import": "./dist/nexcraft-forge.es.js",
       "require": "./dist/nexcraft-forge.umd.js"
     },
+    "./tokens.css": "./dist/tokens.css",
     "./dist/*": {
       "types": "./dist/*.d.ts",
       "import": "./dist/*",
