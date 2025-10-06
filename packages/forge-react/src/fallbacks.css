@@ -1,0 +1,354 @@
+/**
+ * Fallback CSS for Forge React Components
+ *
+ * These styles are applied to SSR fallback renderers when web components
+ * haven't loaded yet. They provide basic styling that closely matches
+ * the actual web component appearance.
+ *
+ * Usage:
+ *   import '@nexcraft/forge-react/fallbacks.css';
+ */
+
+/* ========================================
+   Input Components
+   ======================================== */
+
+.forge-input {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #111827;
+  background-color: #ffffff;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.forge-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.forge-input:disabled {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.forge-input--sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+.forge-input--lg {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+}
+
+.forge-input--error {
+  border-color: #ef4444;
+}
+
+.forge-input--error:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* ========================================
+   Checkbox Component
+   ======================================== */
+
+.forge-checkbox {
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  accent-color: #3b82f6;
+}
+
+.forge-checkbox:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.forge-checkbox--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ========================================
+   Switch Component
+   ======================================== */
+
+.forge-switch {
+  width: 2.5rem;
+  height: 1.25rem;
+  appearance: none;
+  background-color: #d1d5db;
+  border-radius: 9999px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.forge-switch:checked {
+  background-color: #3b82f6;
+}
+
+.forge-switch::before {
+  content: '';
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background-color: white;
+  top: 0.125rem;
+  left: 0.125rem;
+  transition: transform 0.2s ease-in-out;
+}
+
+.forge-switch:checked::before {
+  transform: translateX(1.25rem);
+}
+
+.forge-switch--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ========================================
+   Select Component
+   ======================================== */
+
+.forge-select {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  padding-right: 2rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #111827;
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  cursor: pointer;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.forge-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.forge-select:disabled {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   Date Picker Component
+   ======================================== */
+
+.forge-date-picker {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #111827;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.forge-date-picker:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.forge-date-picker--disabled {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   Button Component
+   ======================================== */
+
+.forge-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.forge-button:active {
+  transform: scale(0.98);
+}
+
+.forge-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Button Variants */
+.forge-button--primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.forge-button--primary:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.forge-button--secondary {
+  background-color: #6b7280;
+  color: white;
+}
+
+.forge-button--secondary:hover:not(:disabled) {
+  background-color: #4b5563;
+}
+
+.forge-button--outline {
+  background-color: transparent;
+  color: #3b82f6;
+  border: 1px solid #3b82f6;
+}
+
+.forge-button--outline:hover:not(:disabled) {
+  background-color: #eff6ff;
+}
+
+.forge-button--ghost {
+  background-color: transparent;
+  color: #111827;
+}
+
+.forge-button--ghost:hover:not(:disabled) {
+  background-color: #f3f4f6;
+}
+
+/* Button Sizes */
+.forge-button--sm {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+}
+
+.forge-button--lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+}
+
+/* ========================================
+   Card Component
+   ======================================== */
+
+.forge-card {
+  display: block;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background-color: white;
+  overflow: hidden;
+}
+
+.forge-card--shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.forge-card--hover {
+  transition: box-shadow 0.15s ease-in-out;
+}
+
+.forge-card--hover:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* ========================================
+   Badge Component
+   ======================================== */
+
+.forge-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.forge-badge--primary {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.forge-badge--success {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.forge-badge--warning {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.forge-badge--error {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+/* ========================================
+   Loading Spinner Component
+   ======================================== */
+
+.forge-loading-spinner {
+  display: inline-block;
+  border: 2px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+  animation: forge-spinner 0.6s linear infinite;
+}
+
+@keyframes forge-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.forge-loading-spinner--sm {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-width: 1.5px;
+}
+
+.forge-loading-spinner--lg {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-width: 3px;
+}

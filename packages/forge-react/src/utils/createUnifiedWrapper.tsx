@@ -106,20 +106,30 @@ export function createUnifiedWrapper<T extends HTMLElement, P extends Record<str
     // Detect client-side environment
     useEffect(() => {
       setIsClient(true);
-      
+
       // If client-only mode is forced, skip SSR fallback logic
       if (options.clientOnly) {
         return;
       }
-      
+
       // Progressive enhancement: upgrade from semantic HTML to web component
-      const shouldUpgrade = 'customElements' in window && 
+      const shouldUpgrade = 'customElements' in window &&
                            customElements.get(options.tagName) !== undefined;
-      
+
       if (shouldUpgrade) {
         upgradeToWebComponent();
       } else {
-        enhanceFallback();
+        // Wait for web component to be defined
+        if ('customElements' in window) {
+          customElements.whenDefined(options.tagName).then(() => {
+            upgradeToWebComponent();
+          }).catch(() => {
+            // Web component never loaded, enhance fallback
+            enhanceFallback();
+          });
+        } else {
+          enhanceFallback();
+        }
       }
     }, []);
 

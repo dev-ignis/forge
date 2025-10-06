@@ -25,14 +25,16 @@
     "./ssr": {
       "types": "./dist/ssr/index.d.ts",
       "import": "./dist/ssr/index.js"
-    }
+    },
+    "./fallbacks.css": "./src/fallbacks.css"
   },
   "files": [
     "dist/",
+    "src/fallbacks.css",
     "README.md"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json && node scripts/add-use-client.js",
     "dev": "tsc -p tsconfig.build.json --watch",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist"
@@ -56,6 +58,7 @@
   "devDependencies": {
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "glob": "^11.0.3",
     "typescript": "^5.0.0"
   },
   "repository": {
