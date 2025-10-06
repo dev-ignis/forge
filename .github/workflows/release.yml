@@ -59,7 +59,7 @@ jobs:
       - name: Download build artifacts
         id: download-artifacts
         continue-on-error: true
-        uses: dawidd6/action-download-artifact@v6
+        uses: dawidd6/action-download-artifact@v11
         with:
           workflow: ci.yml
           workflow_conclusion: success
