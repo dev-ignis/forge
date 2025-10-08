@@ -14,11 +14,13 @@ import {
   ForgeAccordion,
   ForgeProgress,
   ForgeIcon
-} from '@nexcraft/forge/integrations/react';
+} from '@nexcraft/forge-react';
 
 // AI Tools Integration Demo
-import aiIndex from '@nexcraft/forge/ai-index.json';
-import buttonSpec from '@nexcraft/forge/ai-tools/react/button.json';
+// import aiIndex from '@nexcraft/forge/ai-index.json';
+// import buttonSpec from '@nexcraft/forge/ai-tools/react/button.json';
+const aiIndex = { components: [], version: '1.0.0' };
+const buttonSpec = { component: 'ForgeButton', props: [] };
 
 interface AIComponentState {
   component: string;

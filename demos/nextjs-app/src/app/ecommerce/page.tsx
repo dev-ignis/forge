@@ -11,7 +11,7 @@ import {
   ForgeSelect,
   ForgeModal,
   ForgeAlert,
-} from '@nexcraft/forge/integrations/react';
+} from '@nexcraft/forge-react';
 
 interface Product {
   id: number;

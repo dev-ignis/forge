@@ -9,8 +9,7 @@ import {
   ForgeInput,
   ForgeBadge,
   ForgeIcon,
-  ForgeTextarea,
-} from '@nexcraft/forge/integrations/react';
+} from '@nexcraft/forge-react';
 
 interface Post {
   id: number;
@@ -189,12 +188,12 @@ export default function SocialPage() {
             <div className="flex items-start gap-4">
               <ForgeAvatar initials="ME" size="md" />
               <div className="flex-1">
-                <ForgeTextarea
+                <textarea
                   placeholder="What's on your mind?"
                   value={newPost}
-                  onChange={(e) => setNewPost((e as any).target.value)}
+                  onChange={(e) => setNewPost(e.target.value)}
                   rows={3}
-                  className="w-full mb-3"
+                  className="w-full mb-3 px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
                 <div className="flex justify-end">
                   <ForgeButton

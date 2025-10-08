@@ -3,6 +3,7 @@
 import { HeroSection } from '@/components/sections/HeroSection';
 import { FeaturesSection } from '@/components/sections/FeaturesSection';
 import { QuickStartSection } from '@/components/sections/QuickStartSection';
+import { Footer } from '@/components/layouts/Footer';
 
 export default function HomePage() {
   return (
@@ -10,6 +11,7 @@ export default function HomePage() {
       <HeroSection />
       <FeaturesSection />
       <QuickStartSection />
+      <Footer />
     </div>
   );
 }

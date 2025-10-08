@@ -13,7 +13,7 @@ import {
   ForgeSelect,
   ForgeDatePicker,
   ForgeProgressCircle,
-} from '@nexcraft/forge/integrations/react';
+} from '@nexcraft/forge-react';
 
 export default function DashboardPage() {
   const [timeRange, setTimeRange] = useState('7d');

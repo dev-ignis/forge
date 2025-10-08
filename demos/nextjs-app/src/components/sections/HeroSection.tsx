@@ -1,101 +1,66 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ForgeButton, ForgeBadge } from '@nexcraft/forge/integrations/react';
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 py-20 sm:py-32">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-400/20 rounded-full blur-3xl animate-pulse delay-1000" />
-      </div>
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center"
-        >
+    <section className="relative border-b border-neutral-200">
+      <div className="max-w-7xl mx-auto px-6 py-24 sm:py-32">
+        <div className="text-center max-w-4xl mx-auto">
           {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="inline-block mb-6"
-          >
-            <ForgeBadge variant="info" size="lg">
-              🚀 The First AI-Native Component Library
-            </ForgeBadge>
-          </motion.div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-neutral-100 rounded-full mb-8">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            <span className="text-sm text-neutral-700 font-medium">AI-Native Components</span>
+          </div>
 
           {/* Heading */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6"
-          >
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Build Faster
-            </span>
-            <br />
-            <span className="text-gray-900">with Forge Components</span>
-          </motion.h1>
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-8">
+            Build production apps<br />
+            <span className="text-neutral-600">in minutes, not days</span>
+          </h1>
 
           {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed"
-          >
+          <p className="text-xl text-neutral-600 mb-12 max-w-2xl mx-auto leading-relaxed">
             Production-ready web components with built-in AI metadata, performance monitoring,
-            and seamless framework integration. Ship beautiful UIs in minutes, not days.
-          </motion.p>
+            and seamless framework integration.
+          </p>
 
           {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <Link href="/dashboard">
-              <ForgeButton variant="primary" size="lg">
-                View Dashboard Demo
-              </ForgeButton>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
+            <Link
+              href="/components"
+              className="px-6 py-3 bg-neutral-900 text-white font-medium rounded-md hover:bg-neutral-800 transition-colors"
+            >
+              Explore Components
             </Link>
-            <Link href="/components">
-              <ForgeButton variant="secondary" size="lg">
-                Explore Components
-              </ForgeButton>
+            <Link
+              href="/dashboard"
+              className="px-6 py-3 border border-neutral-300 text-neutral-700 font-medium rounded-md hover:bg-neutral-50 transition-colors"
+            >
+              View Dashboard
             </Link>
-          </motion.div>
+          </div>
 
           {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-            className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
-          >
-            {[
-              { label: 'Components', value: '31+' },
-              { label: 'Frameworks', value: '4' },
-              { label: 'Bundle Size', value: '50KB' },
-              { label: 'TypeScript', value: '100%' },
-            ].map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
-                <div className="text-sm text-gray-600 mt-1">{stat.label}</div>
-              </div>
-            ))}
-          </motion.div>
-        </motion.div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 pt-12 border-t border-neutral-200">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-neutral-900 mb-2">31+</div>
+              <div className="text-sm text-neutral-600">Components</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-neutral-900 mb-2">4</div>
+              <div className="text-sm text-neutral-600">Frameworks</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-neutral-900 mb-2">50KB</div>
+              <div className="text-sm text-neutral-600">Bundle Size</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-neutral-900 mb-2">100%</div>
+              <div className="text-sm text-neutral-600">TypeScript</div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

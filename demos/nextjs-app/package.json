@@ -14,7 +14,6 @@
   "dependencies": {
     "@nexcraft/forge": "^0.9.0",
     "@nexcraft/forge-react": "^1.0.4",
-    "@nexcraft/forge-rhf": "^0.3.0",
     "framer-motion": "^11.0.0",
     "lucide-react": "^0.400.0",
     "next": "15.5.3",

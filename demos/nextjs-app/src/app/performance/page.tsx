@@ -2,7 +2,7 @@
 
 import React from 'react';
 import '@nexcraft/forge';
-import { ForgeCard, ForgeButton, ForgeInput } from '@nexcraft/forge/integrations/react';
+import { ForgeCard, ForgeButton, ForgeInput } from '@nexcraft/forge-react';
 
 type Row = { id: number; name: string; count: number };
 

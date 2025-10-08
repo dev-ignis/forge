@@ -12,7 +12,7 @@ import {
   ForgeAlert,
   ForgeProgress,
   ForgeAvatar,
-} from '@nexcraft/forge/integrations/react';
+} from '@nexcraft/forge-react';
 
 export default function ThemesPage() {
   const [primaryColor, setPrimaryColor] = useState('#3b82f6');

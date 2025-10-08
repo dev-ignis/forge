@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ForgeCard, ForgeBadge, ForgeButton, ForgeInput, ForgeAvatar } from '@nexcraft/forge/integrations/react';
+import { ForgeCard, ForgeBadge, ForgeButton, ForgeInput, ForgeAvatar } from '@nexcraft/forge-react';
 
 interface Task {
   id: number;

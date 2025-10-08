@@ -11,11 +11,10 @@ import {
   ForgeCheckbox,
   ForgeRadioGroup,
   ForgeDatePicker,
-  ForgeTextarea,
   ForgeAvatar,
   ForgeBadge,
   ForgeAlert,
-} from '@nexcraft/forge/integrations/react';
+} from '@nexcraft/forge-react';
 
 export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
@@ -82,9 +81,10 @@ export default function SettingsPage() {
 
               <div>
                 <label className="block text-sm font-medium mb-2">Bio</label>
-                <ForgeTextarea
+                <textarea
                   placeholder="Tell us about yourself..."
                   rows={4}
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
             </div>
