@@ -1,4 +1,9 @@
 :root {
+  /* ============================================
+     FORGE UI DESIGN TOKENS - COMPLETE SET
+     Based on official token reference
+     ============================================ */
+
   /* Colors - Primary Palette */
   --forge-color-primary-50: #e3f2fd;
   --forge-color-primary-100: #bbdefb;
@@ -11,7 +16,25 @@
   --forge-color-primary-800: #1565c0;
   --forge-color-primary-900: #0d47a1;
 
-  /* Colors - Semantic */
+  /* Colors - Neutral Palette */
+  --forge-color-neutral-50: #fafafa;
+  --forge-color-neutral-100: #f5f5f5;
+  --forge-color-neutral-200: #eeeeee;
+  --forge-color-neutral-300: #e0e0e0;
+  --forge-color-neutral-400: #bdbdbd;
+  --forge-color-neutral-500: #9e9e9e;
+  --forge-color-neutral-600: #757575;
+  --forge-color-neutral-700: #616161;
+  --forge-color-neutral-800: #424242;
+  --forge-color-neutral-900: #212121;
+
+  /* Colors - Semantic (with -500 suffix for consistency) */
+  --forge-color-success-500: #4caf50;
+  --forge-color-warning-500: #ff9800;
+  --forge-color-danger-500: #f44336;
+  --forge-color-info-500: #2196f3;
+
+  /* Legacy semantic colors (for backwards compatibility) */
   --forge-color-error: #f44336;
   --forge-color-warning: #ff9800;
   --forge-color-success: #4caf50;
@@ -24,36 +47,83 @@
   --forge-spacing-lg: 24px;
   --forge-spacing-xl: 32px;
   --forge-spacing-2xl: 48px;
+  --forge-spacing-3xl: 64px;
 
-  /* Typography */
-  --forge-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --forge-font-size-xs: 0.75rem;
-  --forge-font-size-sm: 0.875rem;
-  --forge-font-size-base: 1rem;
-  --forge-font-size-lg: 1.125rem;
-  --forge-font-size-xl: 1.25rem;
-  --forge-font-size-2xl: 1.5rem;
+  /* Typography - Font Family */
+  --forge-font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --forge-font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
 
-  /* Borders */
-  --forge-border-radius-sm: 4px;
-  --forge-border-radius-md: 8px;
-  --forge-border-radius-lg: 12px;
+  /* Typography - Font Sizes */
+  --forge-font-size-xs: 0.75rem; /* 12px */
+  --forge-font-size-sm: 0.875rem; /* 14px */
+  --forge-font-size-base: 1rem; /* 16px */
+  --forge-font-size-lg: 1.125rem; /* 18px */
+  --forge-font-size-xl: 1.25rem; /* 20px */
+  --forge-font-size-2xl: 1.5rem; /* 24px */
+  --forge-font-size-3xl: 1.875rem; /* 30px */
+  --forge-font-size-4xl: 2.25rem; /* 36px */
+
+  /* Typography - Font Weights */
+  --forge-font-weight-light: 300;
+  --forge-font-weight-normal: 400;
+  --forge-font-weight-medium: 500;
+  --forge-font-weight-semibold: 600;
+  --forge-font-weight-bold: 700;
+
+  /* Typography - Line Heights */
+  --forge-line-height-tight: 1.2;
+  --forge-line-height-normal: 1.5;
+  --forge-line-height-relaxed: 1.75;
+  --forge-line-height-loose: 2;
+
+  /* Borders - Radius */
+  --forge-border-radius-sm: 2px;
+  --forge-border-radius-md: 4px;
+  --forge-border-radius-lg: 8px;
+  --forge-border-radius-xl: 12px;
   --forge-border-radius-full: 9999px;
 
+  /* Borders - Width */
+  --forge-border-width-thin: 1px;
+  --forge-border-width-medium: 2px;
+  --forge-border-width-thick: 4px;
+
   /* Shadows */
-  --forge-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --forge-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --forge-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1);
   --forge-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   --forge-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
   --forge-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  --forge-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 
   /* Transitions */
   --forge-transition-fast: 150ms ease-in-out;
   --forge-transition-base: 250ms ease-in-out;
   --forge-transition-slow: 350ms ease-in-out;
+  --forge-transition-slower: 500ms ease-in-out;
 
-  /* Z-index */
-  --forge-z-dropdown: 1000;
-  --forge-z-modal: 1050;
-  --forge-z-popover: 1100;
-  --forge-z-tooltip: 1150;
+  /* Z-Index (corrected token names) */
+  --forge-z-index-dropdown: 1000;
+  --forge-z-index-sticky: 1020;
+  --forge-z-index-fixed: 1030;
+  --forge-z-index-modal-backdrop: 1040;
+  --forge-z-index-modal: 1050;
+  --forge-z-index-popover: 1060;
+  --forge-z-index-tooltip: 1070;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --forge-color-neutral-50: #212121;
+    --forge-color-neutral-100: #424242;
+    --forge-color-neutral-200: #616161;
+    --forge-color-neutral-300: #757575;
+    --forge-color-neutral-400: #9e9e9e;
+    --forge-color-neutral-500: #bdbdbd;
+    --forge-color-neutral-600: #e0e0e0;
+    --forge-color-neutral-700: #eeeeee;
+    --forge-color-neutral-800: #f5f5f5;
+    --forge-color-neutral-900: #fafafa;
+  }
 }
