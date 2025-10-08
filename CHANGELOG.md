@@ -1,5 +1,81 @@
 # Changelog
 
+## 0.10.0
+
+### Minor Changes
+
+- e40659d: feat(core): expand design tokens and complete component exports
+
+  **New Features:**
+  - Expanded CSS custom properties (design tokens)
+  - Additional component exports for better tree-shaking
+  - Enhanced token coverage for theming
+
+  **What Changed:**
+  - Added more granular design tokens
+  - Improved token organization
+  - Better TypeScript types for exports
+
+  **Impact:**
+  - ✅ More theming flexibility with additional tokens
+  - ✅ Better tree-shaking with specific component exports
+  - ✅ Enhanced customization capabilities
+  - ✅ No breaking changes - only additions
+
+### Patch Changes
+
+- e40659d: fix(forge-card): add padding to custom header slot
+
+  **Bug Fix:**
+  - Added proper padding to custom header slot in ForgeCard
+  - Ensures consistent spacing when using slotted header content
+
+  **What Changed:**
+  - Custom header slot now has appropriate padding
+  - Matches design system spacing standards
+
+  **Usage:**
+
+  ```html
+  <!-- Header slot now has proper padding -->
+  <forge-card>
+    <div slot="header">Custom Header</div>
+    <p>Card content</p>
+  </forge-card>
+  ```
+
+  **Impact:**
+  - ✅ Better visual consistency for custom headers
+  - ✅ Matches other card sections' padding
+  - ✅ No breaking changes - only adds missing padding
+
+- e40659d: fix(tokens): export CSS design tokens for component styling
+
+  **Bug Fix:**
+  - Added missing `tokens.css` export to package.json
+  - Users can now import CSS custom properties for theming
+
+  **What Changed:**
+
+  ```json
+  // package.json exports
+  "./tokens.css": "./dist/tokens.css"
+  ```
+
+  **Usage:**
+
+  ```js
+  // Before: Not available
+  // After: Can import tokens
+  import '@nexcraft/forge/tokens.css';
+  ```
+
+  **Impact:**
+  - ✅ Design tokens now accessible via package export
+  - ✅ Enables custom theming with CSS variables
+  - ✅ Matches documented token bridge usage
+  - ✅ No breaking changes
+
 ## 0.9.0
 
 ### Minor Changes
