@@ -146,9 +146,9 @@ export default function ComponentsShowcase() {
                 Display status indicators and small labels.
               </p>
               <div className="flex flex-wrap gap-2">
-                <forge-badge variant="primary">Primary</forge-badge>
-                <forge-badge variant="success">Success</forge-badge>
-                <forge-badge variant="warning">Warning</forge-badge>
+                <forge-badge variant="primary" size="md" content="Primary"></forge-badge>
+                <forge-badge variant="success" size="md" content="Success"></forge-badge>
+                <forge-badge variant="warning" size="md" content="Warning"></forge-badge>
               </div>
             </div>
 
