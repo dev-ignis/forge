@@ -137,6 +137,14 @@
 **Priority**: HIGH | **Effort**: Medium | **Impact**: High
 
 **New Tools**:
+- [ ] **Storybook AI Panel Addon** ⭐ **HIGH PRIORITY**
+  - Live component introspection (explainState(), getPossibleActions())
+  - Real-time aiState monitoring
+  - AI metadata visualization
+  - Performance metrics overlay
+  - **Why**: Showcase AI-native differentiator in Storybook
+  - **Current State**: Directory exists (`.storybook/addons/ai-panel/`) with only README
+  - **Impact**: Makes Forge the ONLY component library with AI debugging in Storybook
 - [ ] **Forge DevTools Browser Extension**
   - Component inspection
   - Performance monitoring

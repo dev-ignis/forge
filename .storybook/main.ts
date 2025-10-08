@@ -9,7 +9,8 @@ const config: StorybookConfig = {
     "@chromatic-com/storybook",
     "@storybook/addon-docs",
     "@storybook/addon-a11y",
-    "@storybook/addon-vitest"
+    "@storybook/addon-vitest",
+    "./.storybook/addons/ai-panel/register.tsx"
   ],
   "framework": {
     "name": "@storybook/web-components-vite",
