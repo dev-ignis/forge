@@ -8,67 +8,56 @@ export function MainNav() {
 
   const navItems = [
     { id: 'home', label: 'Home', href: '/' },
-    { id: 'components', label: 'Components', href: '/components' },
-    { id: 'dashboard', label: 'Dashboard', href: '/dashboard' },
-    { id: 'ecommerce', label: 'E-Commerce', href: '/ecommerce' },
-    { id: 'social', label: 'Social', href: '/social' },
-    { id: 'kanban', label: 'Kanban', href: '/kanban' },
-    { id: 'settings', label: 'Settings', href: '/settings' },
-    { id: 'themes', label: 'Themes', href: '/themes' },
-    { id: 'ai', label: 'AI Demo', href: '/ai-demo' },
+    { id: 'get-started', label: 'Get Started', href: '/#get-started' },
   ];
 
   return (
-    <nav className="border-b border-neutral-200 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-neutral-900 rounded flex items-center justify-center">
-              <span className="text-white font-bold text-sm">F</span>
-            </div>
-            <span className="text-lg font-semibold text-neutral-900">
-              Forge
-            </span>
+    <nav className="sticky top-0 z-20 border-b border-neutral-200 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
+        {/* Brand */}
+        <Link href="/" className="flex items-center gap-2 no-underline">
+          <div className="grid h-8 w-8 place-items-center rounded bg-gradient-to-br from-primary-500 to-violet-500 text-white shadow-sm">
+            <span className="text-sm font-bold">F</span>
+          </div>
+          <span className="text-base font-semibold text-neutral-900">Forge</span>
+        </Link>
+
+        {/* Links */}
+        <div className="hidden md:flex items-center gap-1">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                className={`px-3 py-2 text-sm rounded-md transition-colors ${
+                  isActive
+                    ? 'text-neutral-900 bg-neutral-100'
+                    : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50'
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center gap-3">
+          <a
+            href="https://github.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden sm:block text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
+          >
+            GitHub
+          </a>
+          <Link
+            href="/#get-started"
+            className="rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white shadow hover:bg-neutral-800 no-underline"
+          >
+            Get Started
           </Link>
-
-          {/* Navigation */}
-          <div className="hidden md:flex items-center gap-1">
-            {navItems.slice(0, 5).map((item) => {
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.id}
-                  href={item.href}
-                  className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                    isActive
-                      ? 'text-neutral-900 bg-neutral-100'
-                      : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center gap-4">
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:block text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
-            >
-              GitHub
-            </a>
-            <Link
-              href="/components"
-              className="px-4 py-2 bg-neutral-900 text-white text-sm font-medium rounded-md hover:bg-neutral-800 transition-colors"
-            >
-              Get Started
-            </Link>
-          </div>
         </div>
       </div>
     </nav>

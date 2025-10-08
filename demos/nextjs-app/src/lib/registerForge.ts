@@ -36,6 +36,8 @@ export async function registerForge() {
     ['forge-switch', forge.ForgeSwitch],
     ['forge-toast', forge.ForgeToast],
     ['forge-toast-container', forge.ForgeToastContainer],
+    // Optional: performance dashboard (may be undefined if not exported)
+    ['forge-performance-dashboard', (forge as any).ForgePerformanceDashboard],
   ] as const;
 
   components.forEach(([name, component]) => {

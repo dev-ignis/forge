@@ -11,6 +11,10 @@ export const metadata: Metadata = {
   description: "Professional showcase of @nexcraft/forge - The FIRST AI-Native component library with built-in AI metadata, design token bridge, and real-time performance monitoring. Experience all 27 components in action.",
   keywords: ["forge", "ai-native", "web-components", "react", "nextjs", "ui-library", "design-system"],
   authors: [{ name: "Ignis Team" }],
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+  },
   openGraph: {
     title: "@nexcraft/forge Showcase",
     description: "The FIRST AI-Native component library with built-in AI metadata and performance monitoring",
