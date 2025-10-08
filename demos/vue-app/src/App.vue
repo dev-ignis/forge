@@ -53,14 +53,15 @@
             🎨 Toggle Theme
           </forge-button>
 
-          <forge-button 
-            variant="success" 
-            size="lg"
-            @click="showComponentLibrary"
-            class="library-button"
-          >
-            📚 Component Library
-          </forge-button>
+          <div @click="showComponentLibrary" class="library-button-wrapper">
+            <forge-button 
+              variant="success" 
+              size="lg"
+              class="library-button"
+            >
+              📚 Component Library ({{ showLibrary ? 'Hide' : 'Show' }})
+            </forge-button>
+          </div>
         </div>
       </div>
     </section>
@@ -138,7 +139,7 @@
     <!-- Component Library Showcase -->
     <section class="component-library" v-if="showLibrary">
       <div class="container">
-        <h2>📚 Component Library</h2>
+        <h2>📚 Component Library ({{ availableComponents.length }} components)</h2>
         <div class="library-grid">
           <div 
             v-for="component in availableComponents" 
@@ -233,7 +234,7 @@
               <div class="component-row">
                 <forge-modal
                   ref="smartModal"
-                  v-model:open="modalOpen"
+                  :open="modalOpen"
                   title="🤖 AI Component Analysis"
                   @open="onModalOpen"
                   @close="onModalClose"
@@ -287,25 +288,52 @@ const instance = getCurrentInstance()
 const aiIndex = instance?.appContext.config.globalProperties.$aiIndex
 const aiManifest = instance?.appContext.config.globalProperties.$aiManifest
 
-// Fallback data for when AI manifest is not available
+// Fallback data for when AI manifest is not available - includes more components
 const fallbackComponents = [
+  // Atoms
   { tag: 'forge-button', category: 'atom', description: 'button component', props: 31, events: 0, hasAiMethods: true, a11yRole: 'button', keyboardSupport: true, examples: true },
   { tag: 'forge-input', category: 'atom', description: 'input component', props: 38, events: 0, hasAiMethods: true, a11yRole: 'textbox', keyboardSupport: true, examples: true },
-  { tag: 'forge-card', category: 'atom', description: 'card component', props: 31, events: 0, hasAiMethods: true, a11yRole: 'article', keyboardSupport: true, examples: true },
-  { tag: 'forge-alert', category: 'atom', description: 'alert component', props: 25, events: 1, hasAiMethods: true, a11yRole: 'alert', keyboardSupport: true, examples: true },
-  { tag: 'forge-select', category: 'atom', description: 'select component', props: 39, events: 0, hasAiMethods: true, a11yRole: 'combobox', keyboardSupport: true, examples: true },
   { tag: 'forge-checkbox', category: 'atom', description: 'checkbox component', props: 27, events: 0, hasAiMethods: true, a11yRole: 'checkbox', keyboardSupport: true, examples: true },
-  { tag: 'forge-modal', category: 'atom', description: 'modal component', props: 34, events: 2, hasAiMethods: true, a11yRole: 'dialog', keyboardSupport: true, examples: true },
-  { tag: 'forge-progress', category: 'atom', description: 'progress component', props: 20, events: 0, hasAiMethods: true, a11yRole: 'progressbar', keyboardSupport: true, examples: true },
+  { tag: 'forge-select', category: 'atom', description: 'select component', props: 39, events: 0, hasAiMethods: true, a11yRole: 'combobox', keyboardSupport: true, examples: true },
+  { tag: 'forge-alert', category: 'atom', description: 'alert component', props: 25, events: 1, hasAiMethods: true, a11yRole: 'alert', keyboardSupport: true, examples: true },
   { tag: 'forge-badge', category: 'atom', description: 'badge component', props: 25, events: 0, hasAiMethods: true, a11yRole: 'status', keyboardSupport: true, examples: true },
+  { tag: 'forge-progress', category: 'atom', description: 'progress component', props: 20, events: 0, hasAiMethods: true, a11yRole: 'progressbar', keyboardSupport: true, examples: true },
   { tag: 'forge-skeleton', category: 'atom', description: 'skeleton component', props: 20, events: 0, hasAiMethods: true, a11yRole: 'status', keyboardSupport: true, examples: true },
-  { tag: 'forge-data-table', category: 'atom', description: 'data table component', props: 47, events: 2, hasAiMethods: true, a11yRole: 'table', keyboardSupport: true, examples: true },
-  { tag: 'forge-navigation-bar', category: 'atom', description: 'navigation bar component', props: 24, events: 4, hasAiMethods: true, a11yRole: 'navigation', keyboardSupport: true, examples: true }
+  { tag: 'forge-avatar', category: 'atom', description: 'avatar component', props: 29, events: 1, hasAiMethods: true, a11yRole: 'img', keyboardSupport: true, examples: true },
+  { tag: 'forge-icon', category: 'atom', description: 'icon component', props: 25, events: 0, hasAiMethods: true, a11yRole: 'img', keyboardSupport: true, examples: true },
+  { tag: 'forge-switch', category: 'atom', description: 'switch component', props: 28, events: 0, hasAiMethods: true, a11yRole: 'switch', keyboardSupport: true, examples: true },
+  { tag: 'forge-radio-group', category: 'atom', description: 'radio group component', props: 29, events: 0, hasAiMethods: true, a11yRole: 'radiogroup', keyboardSupport: true, examples: true },
+  { tag: 'forge-aspect-ratio', category: 'atom', description: 'aspect ratio component', props: 20, events: 0, hasAiMethods: true, a11yRole: 'none', keyboardSupport: true, examples: true },
+  { tag: 'forge-progress-circle', category: 'atom', description: 'progress circle component', props: 25, events: 0, hasAiMethods: true, a11yRole: 'progressbar', keyboardSupport: true, examples: true },
+  
+  // Molecules
+  { tag: 'forge-card', category: 'molecule', description: 'card component', props: 31, events: 0, hasAiMethods: true, a11yRole: 'article', keyboardSupport: true, examples: true },
+  { tag: 'forge-modal', category: 'molecule', description: 'modal component', props: 34, events: 2, hasAiMethods: true, a11yRole: 'dialog', keyboardSupport: true, examples: true },
+  { tag: 'forge-dropdown', category: 'molecule', description: 'dropdown component', props: 29, events: 0, hasAiMethods: true, a11yRole: 'menu', keyboardSupport: true, examples: true },
+  { tag: 'forge-tooltip', category: 'molecule', description: 'tooltip component', props: 28, events: 1, hasAiMethods: true, a11yRole: 'tooltip', keyboardSupport: true, examples: true },
+  { tag: 'forge-toast', category: 'molecule', description: 'toast component', props: 27, events: 2, hasAiMethods: true, a11yRole: 'status', keyboardSupport: true, examples: true },
+  { tag: 'forge-form-field', category: 'molecule', description: 'form field component', props: 38, events: 0, hasAiMethods: true, a11yRole: 'group', keyboardSupport: true, examples: true },
+  { tag: 'forge-multi-select', category: 'molecule', description: 'multi select component', props: 32, events: 1, hasAiMethods: true, a11yRole: 'listbox', keyboardSupport: true, examples: true },
+  { tag: 'forge-date-picker', category: 'molecule', description: 'date picker component', props: 42, events: 0, hasAiMethods: true, a11yRole: 'combobox', keyboardSupport: true, examples: true },
+  
+  // Organisms
+  { tag: 'forge-data-table', category: 'organism', description: 'data table component', props: 47, events: 2, hasAiMethods: true, a11yRole: 'table', keyboardSupport: true, examples: true },
+  { tag: 'forge-data-grid', category: 'organism', description: 'data grid component', props: 45, events: 8, hasAiMethods: true, a11yRole: 'grid', keyboardSupport: true, examples: true },
+  { tag: 'forge-navigation-bar', category: 'organism', description: 'navigation bar component', props: 24, events: 4, hasAiMethods: true, a11yRole: 'navigation', keyboardSupport: true, examples: true },
+  { tag: 'forge-accordion', category: 'organism', description: 'accordion component', props: 17, events: 1, hasAiMethods: true, a11yRole: 'region', keyboardSupport: true, examples: true },
+  { tag: 'forge-tabs', category: 'organism', description: 'tabs component', props: 24, events: 3, hasAiMethods: true, a11yRole: 'tablist', keyboardSupport: true, examples: true },
+  { tag: 'forge-pagination', category: 'organism', description: 'pagination component', props: 27, events: 3, hasAiMethods: true, a11yRole: 'navigation', keyboardSupport: true, examples: true },
+  { tag: 'forge-tree-view', category: 'organism', description: 'tree view component', props: 27, events: 2, hasAiMethods: true, a11yRole: 'tree', keyboardSupport: true, examples: true },
+  { tag: 'forge-performance-dashboard', category: 'organism', description: 'performance dashboard component', props: 10, events: 0, hasAiMethods: true, a11yRole: 'generic', keyboardSupport: true, examples: true }
 ]
 
 const fallbackSummary = {
   totalComponents: fallbackComponents.length,
-  categories: { atom: fallbackComponents.length },
+  categories: { 
+    atom: fallbackComponents.filter(c => c.category === 'atom').length,
+    molecule: fallbackComponents.filter(c => c.category === 'molecule').length,
+    organism: fallbackComponents.filter(c => c.category === 'organism').length
+  },
   frameworks: ['vanilla', 'react', 'vue', 'angular'],
   hasAiMethods: true,
   hasA11yInfo: true,
@@ -370,9 +398,9 @@ const possibleActions = computed(() => [
 
 const availableComponents = computed(() => {
   if (aiIndex?.components && aiIndex.components.length > 0) {
-    return aiIndex.components.slice(0, 12) // Show first 12 components
+    return aiIndex.components // Show all available components
   }
-  return fallbackComponents.slice(0, 12) // Use fallback data
+  return fallbackComponents // Use fallback data
 })
 
 const formAIState = computed(() => {
@@ -537,6 +565,7 @@ Recommendations:
 }
 
 function onModalClose() {
+  modalOpen.value = false
   consoleOutput.value += '🔒 Modal closed\n'
 }
 
@@ -622,16 +651,32 @@ onMounted(() => {
 .hero {
   text-align: center;
   padding: 4rem 0;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .hero-title {
   font-size: 3.5rem;
   font-weight: 800;
   margin-bottom: 1rem;
-  background: linear-gradient(45deg, #fff, #a78bfa);
+  background: linear-gradient(45deg, #ffffff, #f8fafc, #e2e8f0);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  position: relative;
+  z-index: 1;
 }
 
 .subtitle {
@@ -639,16 +684,25 @@ onMounted(() => {
   font-size: 2rem;
   font-weight: 400;
   margin-top: 0.5rem;
-  opacity: 0.8;
+  color: #f1f5f9;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  position: relative;
+  z-index: 1;
 }
 
 .hero-description {
   font-size: 1.25rem;
   margin-bottom: 2rem;
-  opacity: 0.9;
+  color: #e2e8f0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  line-height: 1.6;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
 }
 
 .demo-controls {
@@ -656,6 +710,8 @@ onMounted(() => {
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
 }
 
 .cta-button, .theme-button, .library-button {
@@ -664,6 +720,33 @@ onMounted(() => {
   border-radius: 0.75rem !important;
   font-weight: 600 !important;
   transition: all 0.3s ease !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.cta-button {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+  color: white !important;
+}
+
+.theme-button {
+  background: linear-gradient(135deg, #6b7280, #4b5563) !important;
+  color: white !important;
+}
+
+.library-button-wrapper {
+  cursor: pointer;
+  display: inline-block;
+  user-select: none;
+}
+
+.library-button {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  color: white !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  pointer-events: none !important;
 }
 
 .ai-showcase, .components-demo, .ai-console, .component-library {
