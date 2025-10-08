@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
     <html>
       <head>
         <Script
-          src="https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/forge.js"
+          src="https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/nexcraft-forge.es.js"
           strategy="beforeInteractive"
         />
       </head>
@@ -107,7 +107,7 @@ export default function RootLayout({ children }) {
     <html>
       <head>
         <Script
-          src="https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/forge.js"
+          src="https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/nexcraft-forge.es.js"
           strategy="beforeInteractive"
         />
       </head>
@@ -124,7 +124,7 @@ export default function RootLayout({ children }) {
 
 ```bash
 # Copy Forge to public folder
-cp node_modules/@nexcraft/forge/dist/forge.js public/forge.js
+cp node_modules/@nexcraft/forge/dist/nexcraft-forge.es.js public/nexcraft-forge.es.js
 ```
 
 ```tsx
@@ -135,7 +135,7 @@ export default function RootLayout({ children }) {
   return (
     <html>
       <head>
-        <Script src="/forge.js" strategy="beforeInteractive" />
+        <Script src="/nexcraft-forge.es.js" strategy="beforeInteractive" />
       </head>
       <body>{children}</body>
     </html>

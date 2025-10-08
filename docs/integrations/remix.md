@@ -20,7 +20,7 @@ export default function App() {
         <Meta />
         <Links />
         <script
-          src="https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/forge.js"
+          src="https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/nexcraft-forge.es.js"
           type="module"
         />
       </head>
@@ -92,7 +92,7 @@ export default function App() {
     <html>
       <head>
         <script
-          src="https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/forge.js"
+          src="https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/nexcraft-forge.es.js"
           type="module"
         />
       </head>
@@ -112,7 +112,7 @@ export default function App() {
 
 ```bash
 # Copy Forge to public folder
-cp node_modules/@nexcraft/forge/dist/forge.js public/forge.js
+cp node_modules/@nexcraft/forge/dist/nexcraft-forge.es.js public/nexcraft-forge.es.js
 ```
 
 ```tsx
@@ -121,7 +121,7 @@ export default function App() {
   return (
     <html>
       <head>
-        <script src="/forge.js" type="module" />
+        <script src="/nexcraft-forge.es.js" type="module" />
       </head>
       <body>
         <Outlet />
@@ -348,7 +348,7 @@ export default function Users() {
 
 2. **Check Script loading** in `app/root.tsx`:
    ```tsx
-   <script src="/forge.js" type="module" />
+   <script src="/nexcraft-forge.es.js" type="module" />
    ```
 
 3. **Verify web components loaded** (browser console):
@@ -386,7 +386,7 @@ export function links() {
   return [
     {
       rel: 'modulepreload',
-      href: 'https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/forge.js'
+      href: 'https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/nexcraft-forge.es.js'
     }
   ];
 }

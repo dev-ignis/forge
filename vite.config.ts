@@ -75,6 +75,18 @@ function forgeBuildPlugin() {
   return {
     name: 'forge-build',
     writeBundle() {
+      // Copy CSS tokens to dist
+      const distDir = resolve(__dirname, 'dist');
+      if (!existsSync(distDir)) {
+        mkdirSync(distDir, { recursive: true });
+      }
+
+      copyFileSync(
+        resolve(__dirname, 'src/tokens/base.css'),
+        resolve(distDir, 'tokens.css')
+      );
+      console.log('✅ Copied design tokens to dist/tokens.css');
+
       console.log('✅ Pure web components build completed successfully!');
       console.log('📦 Framework integrations available as separate packages:');
       console.log('   - @nexcraft/forge-react');

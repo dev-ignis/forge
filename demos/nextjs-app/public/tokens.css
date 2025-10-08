@@ -1,0 +1,59 @@
+:root {
+  /* Colors - Primary Palette */
+  --forge-color-primary-50: #e3f2fd;
+  --forge-color-primary-100: #bbdefb;
+  --forge-color-primary-200: #90caf9;
+  --forge-color-primary-300: #64b5f6;
+  --forge-color-primary-400: #42a5f5;
+  --forge-color-primary-500: #2196f3;
+  --forge-color-primary-600: #1e88e5;
+  --forge-color-primary-700: #1976d2;
+  --forge-color-primary-800: #1565c0;
+  --forge-color-primary-900: #0d47a1;
+
+  /* Colors - Semantic */
+  --forge-color-error: #f44336;
+  --forge-color-warning: #ff9800;
+  --forge-color-success: #4caf50;
+  --forge-color-info: #2196f3;
+
+  /* Spacing (4px base unit) */
+  --forge-spacing-xs: 4px;
+  --forge-spacing-sm: 8px;
+  --forge-spacing-md: 16px;
+  --forge-spacing-lg: 24px;
+  --forge-spacing-xl: 32px;
+  --forge-spacing-2xl: 48px;
+
+  /* Typography */
+  --forge-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --forge-font-size-xs: 0.75rem;
+  --forge-font-size-sm: 0.875rem;
+  --forge-font-size-base: 1rem;
+  --forge-font-size-lg: 1.125rem;
+  --forge-font-size-xl: 1.25rem;
+  --forge-font-size-2xl: 1.5rem;
+
+  /* Borders */
+  --forge-border-radius-sm: 4px;
+  --forge-border-radius-md: 8px;
+  --forge-border-radius-lg: 12px;
+  --forge-border-radius-full: 9999px;
+
+  /* Shadows */
+  --forge-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --forge-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --forge-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --forge-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+
+  /* Transitions */
+  --forge-transition-fast: 150ms ease-in-out;
+  --forge-transition-base: 250ms ease-in-out;
+  --forge-transition-slow: 350ms ease-in-out;
+
+  /* Z-index */
+  --forge-z-dropdown: 1000;
+  --forge-z-modal: 1050;
+  --forge-z-popover: 1100;
+  --forge-z-tooltip: 1150;
+}

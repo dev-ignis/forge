@@ -18,7 +18,7 @@ export type CardSize = 'small' | 'medium' | 'large';
 export class ForgeCard extends BaseElement {
   static override styles = css`
     ${BaseElement.styles}
-    
+
     :host {
       display: block;
       width: 100%;
@@ -34,9 +34,14 @@ export class ForgeCard extends BaseElement {
       transition: all 0.3s ease;
     }
 
+    /* Border */
+    .card--border {
+      border: 1px solid var(--forge-border-color, #e5e7eb);
+    }
+
     /* Variants */
     .card--default {
-      border: 1px solid var(--forge-border-color, #e5e7eb);
+      /* No border by default - use border prop to add one */
     }
 
     .card--outlined {
@@ -45,13 +50,13 @@ export class ForgeCard extends BaseElement {
 
     .card--elevated {
       border: none;
-      box-shadow: 
+      box-shadow:
         0 1px 3px 0 rgba(0, 0, 0, 0.1),
         0 1px 2px 0 rgba(0, 0, 0, 0.06);
     }
 
     .card--elevated:hover {
-      box-shadow: 
+      box-shadow:
         0 10px 15px -3px rgba(0, 0, 0, 0.1),
         0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
@@ -90,19 +95,27 @@ export class ForgeCard extends BaseElement {
     }
 
     .card--elevation-1 {
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      box-shadow:
+        0 1px 3px 0 rgba(0, 0, 0, 0.1),
+        0 1px 2px 0 rgba(0, 0, 0, 0.06);
     }
 
     .card--elevation-2 {
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
 
     .card--elevation-3 {
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
 
     .card--elevation-4 {
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
 
     .card--elevation-5 {
@@ -176,22 +189,16 @@ export class ForgeCard extends BaseElement {
       padding: var(--card-padding, 16px);
     }
 
-    .card__footer {
+    ::slotted([slot='footer']) {
       padding: var(--card-padding, 16px);
       border-top: 1px solid var(--forge-border-light, #f3f4f6);
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      display: block;
     }
 
-    .card__footer--no-border {
-      border-top: none;
-    }
-
-    .card__actions {
+    ::slotted([slot='actions']) {
+      padding: var(--card-padding, 16px);
       display: flex;
       gap: 8px;
-      margin-left: auto;
     }
 
     /* Loading skeleton */
@@ -239,15 +246,17 @@ export class ForgeCard extends BaseElement {
     }
 
     /* Slots */
-    ::slotted([slot="header"]) {
+    ::slotted([slot='header']) {
+      padding: var(--card-padding, 16px);
+      border-bottom: 1px solid var(--forge-border-light, #f3f4f6);
       display: block;
     }
 
-    ::slotted([slot="footer"]) {
+    ::slotted([slot='footer']) {
       display: block;
     }
 
-    ::slotted([slot="actions"]) {
+    ::slotted([slot='actions']) {
       display: flex;
       gap: 8px;
     }
@@ -260,6 +269,7 @@ export class ForgeCard extends BaseElement {
   @property({ type: Boolean }) selected = false;
   @property({ type: Boolean }) disabled = false;
   @property({ type: Boolean }) loading = false;
+  @property({ type: Boolean }) border = false;
   @property({ type: String }) title = '';
   @property({ type: String }) subtitle = '';
   @property({ type: String, attribute: 'media-aspect' }) mediaAspect = '16-9';
@@ -280,19 +290,19 @@ export class ForgeCard extends BaseElement {
       {
         type: 'click',
         description: 'Card click interaction',
-        outcome: 'Triggers card action if clickable'
+        outcome: 'Triggers card action if clickable',
       },
       {
         type: 'hover',
         description: 'Hover effect',
-        outcome: 'Visual feedback on interactive cards'
+        outcome: 'Visual feedback on interactive cards',
       },
       {
         type: 'keyboard',
         description: 'Keyboard navigation',
-        shortcuts: ['Enter', 'Space']
-      }
-    ]
+        shortcuts: ['Enter', 'Space'],
+      },
+    ],
   };
 
   constructor() {
@@ -304,7 +314,7 @@ export class ForgeCard extends BaseElement {
   connectedCallback() {
     super.connectedCallback();
     this.updateSlotStatus();
-    
+
     if (this.clickable) {
       this.setAttribute('role', 'button');
       this.setAttribute('tabindex', '0');
@@ -313,16 +323,16 @@ export class ForgeCard extends BaseElement {
 
   protected firstUpdated(_changedProperties: PropertyValues): void {
     super.firstUpdated(_changedProperties);
-    
+
     // Listen for slot changes
-    this.shadowRoot?.querySelectorAll('slot').forEach(slot => {
+    this.shadowRoot?.querySelectorAll('slot').forEach((slot) => {
       slot.addEventListener('slotchange', () => this.updateSlotStatus());
     });
   }
 
   protected updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
-    
+
     if (changedProperties.has('clickable')) {
       if (this.clickable) {
         this.setAttribute('role', 'button');
@@ -346,11 +356,11 @@ export class ForgeCard extends BaseElement {
 
   private updateSlotStatus(): void {
     const slots = this.shadowRoot?.querySelectorAll('slot') || [];
-    
-    slots.forEach(slot => {
+
+    slots.forEach((slot) => {
       const name = slot.getAttribute('name');
       const hasContent = (slot as HTMLSlotElement).assignedNodes().length > 0;
-      
+
       switch (name) {
         case 'media':
           this.hasMedia = hasContent;
@@ -370,16 +380,16 @@ export class ForgeCard extends BaseElement {
 
   private handleClick(e: Event): void {
     if (this.disabled || !this.clickable) return;
-    
-    this.emit('cardclick', { 
+
+    this.emit('cardclick', {
       originalEvent: e,
-      selected: this.selected 
+      selected: this.selected,
     });
   }
 
   private handleKeydown(e: KeyboardEvent): void {
     if (this.disabled || !this.clickable) return;
-    
+
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       this.handleClick(e);
@@ -390,31 +400,32 @@ export class ForgeCard extends BaseElement {
     if (this.elevation >= 0 && this.elevation <= 5) {
       return `card--elevation-${this.elevation}`;
     }
-    
+
     // Default elevations based on variant
     if (this.variant === 'elevated') {
       return 'card--elevation-2';
     }
-    
+
     return '';
   }
 
   protected render() {
-    const startTime = performance.now();
-    
+    const startTime = globalThis.performance.now();
+
     const classes = {
-      'card': true,
+      card: true,
       [`card--${this.variant}`]: true,
       [`card--${this.size}`]: true,
       'card--clickable': this.clickable,
       'card--selected': this.selected,
       'card--disabled': this.disabled,
       'card--loading': this.loading,
-      [this.getElevationClass()]: this.elevation >= 0 || this.variant === 'elevated'
+      'card--border': this.border,
+      [this.getElevationClass()]: this.elevation >= 0 || this.variant === 'elevated',
     };
 
     const content = html`
-      <article 
+      <article
         class=${classMap(classes)}
         aria-label=${this.ariaLabel || this.title || 'Card'}
         aria-selected=${this.selected}
@@ -422,19 +433,21 @@ export class ForgeCard extends BaseElement {
         aria-busy=${this.loading}
       >
         <slot name="media" class="card__media card__media--${this.mediaAspect}"></slot>
-        
+
         <slot name="header"></slot>
-        ${this.title || this.subtitle ? html`
-          <header class="card__header ${this.noHeaderBorder ? 'card__header--no-border' : ''}">
-            ${this.title ? html`<h3 class="card__title">${this.title}</h3>` : ''}
-            ${this.subtitle ? html`<p class="card__subtitle">${this.subtitle}</p>` : ''}
-          </header>
-        ` : ''}
-        
+        ${this.title || this.subtitle
+          ? html`
+              <header class="card__header ${this.noHeaderBorder ? 'card__header--no-border' : ''}">
+                ${this.title ? html`<h3 class="card__title">${this.title}</h3>` : ''}
+                ${this.subtitle ? html`<p class="card__subtitle">${this.subtitle}</p>` : ''}
+              </header>
+            `
+          : ''}
+
         <div class="card__body">
           <slot></slot>
         </div>
-        
+
         <slot name="footer"></slot>
         <slot name="actions"></slot>
       </article>
@@ -450,7 +463,7 @@ export class ForgeCard extends BaseElement {
         name: 'click',
         description: 'Click the card',
         available: this.clickable && !this.disabled,
-        result: 'Triggers card action'
+        result: 'Triggers card action',
       },
       {
         name: 'select',
@@ -461,24 +474,24 @@ export class ForgeCard extends BaseElement {
             name: 'selected',
             type: 'boolean',
             required: true,
-            description: 'Selection state'
-          }
+            description: 'Selection state',
+          },
         ],
-        result: 'Changes card selection state'
+        result: 'Changes card selection state',
       },
       {
         name: 'expand',
         description: 'Expand card details',
         available: false, // Could be implemented in future
-        result: 'Shows expanded view'
-      }
+        result: 'Shows expanded view',
+      },
     ];
   }
 
   explainState(): AIStateExplanation {
     const states = ['default', 'hover', 'selected', 'disabled', 'loading'];
     let currentState = 'default';
-    
+
     if (this.disabled) currentState = 'disabled';
     else if (this.loading) currentState = 'loading';
     else if (this.selected) currentState = 'selected';
@@ -491,19 +504,19 @@ export class ForgeCard extends BaseElement {
         {
           from: 'default',
           to: 'selected',
-          trigger: 'Click or Enter/Space key'
+          trigger: 'Click or Enter/Space key',
         },
         {
           from: 'selected',
           to: 'default',
-          trigger: 'Click again to deselect'
-        }
+          trigger: 'Click again to deselect',
+        },
       ],
       visualIndicators: [
         this.selected ? 'Blue border with shadow' : 'Default border',
         this.clickable ? 'Hover elevation effect' : 'Static appearance',
-        this.loading ? 'Skeleton animation' : 'Normal content'
-      ]
+        this.loading ? 'Skeleton animation' : 'Normal content',
+      ],
     };
   }
 }

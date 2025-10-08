@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forge Web Components Test</title>
+    <style>
+        body {
+            padding: 40px;
+            font-family: system-ui;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Direct Web Component Test</h1>
+
+    <div class="section">
+        <h2>Buttons</h2>
+        <forge-button variant="primary">Primary</forge-button>
+        <forge-button variant="secondary">Secondary</forge-button>
+        <forge-button variant="success">Success</forge-button>
+    </div>
+
+    <div class="section">
+        <h2>Badges</h2>
+        <forge-badge variant="primary">Primary</forge-badge>
+        <forge-badge variant="success">Success</forge-badge>
+        <forge-badge variant="danger">Danger</forge-badge>
+    </div>
+
+    <div class="section">
+        <h2>Card</h2>
+        <forge-card>
+            <h3>Card Title</h3>
+            <p>Card content</p>
+        </forge-card>
+    </div>
+
+    <script type="module">
+        import { ForgeButton, ForgeBadge, ForgeCard } from './forge.js';
+
+        console.log('ForgeButton:', ForgeButton);
+        console.log('ForgeBadge:', ForgeBadge);
+        console.log('ForgeCard:', ForgeCard);
+
+        // Manually register components
+        if (!customElements.get('forge-button')) {
+            customElements.define('forge-button', ForgeButton);
+        }
+        if (!customElements.get('forge-badge')) {
+            customElements.define('forge-badge', ForgeBadge);
+        }
+        if (!customElements.get('forge-card')) {
+            customElements.define('forge-card', ForgeCard);
+        }
+
+        // Check if components are registered
+        setTimeout(() => {
+            console.log('forge-button defined?', customElements.get('forge-button'));
+            console.log('forge-card defined?', customElements.get('forge-card'));
+            console.log('forge-badge defined?', customElements.get('forge-badge'));
+        }, 2000);
+    </script>
+</body>
+</html>

@@ -23,7 +23,7 @@ export const ForgeCard = createUnifiedWrapper<HTMLElement, ForgeCardProps>({
   
   fallbackRenderer: (props, children) => (
     <div
-      className={`forge-card forge-card--${props.variant || 'default'} forge-card--${props.size || 'medium'}`}
+      className={`forge-card forge-card--${props.variant || 'default'} forge-card--${props.size || 'medium'}${props.border === false ? ' forge-card--no-border' : ''}`}
       data-forge-component="forge-card"
     >
       {children}
@@ -43,6 +43,7 @@ export const ForgeCard = createUnifiedWrapper<HTMLElement, ForgeCardProps>({
     'variant',
     'size',
     'hoverable',
-    'padding'
+    'padding',
+    'border'
   ]
 });

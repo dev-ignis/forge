@@ -11,7 +11,7 @@ npm install @nexcraft/forge
 ```html
 <!-- src/routes/+layout.svelte -->
 <script>
-  import '@nexcraft/forge/dist/forge.js';
+  import '@nexcraft/forge/dist/nexcraft-forge.es.js';
 </script>
 
 <svelte:head>
@@ -63,7 +63,7 @@ npm install @nexcraft/forge
 ```html
 <!-- src/routes/+layout.svelte -->
 <script>
-  import '@nexcraft/forge/dist/forge.js';
+  import '@nexcraft/forge/dist/nexcraft-forge.es.js';
 </script>
 
 <svelte:head>
@@ -88,7 +88,7 @@ npm install @nexcraft/forge
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Load Forge from CDN -->
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/forge.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/nexcraft-forge.es.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/forge.css" />
 
     %sveltekit.head%
@@ -106,7 +106,7 @@ npm install @nexcraft/forge
 
 ```bash
 # Copy Forge to static folder
-cp node_modules/@nexcraft/forge/dist/forge.js static/
+cp node_modules/@nexcraft/forge/dist/nexcraft-forge.es.js static/
 cp node_modules/@nexcraft/forge/dist/forge.css static/
 ```
 
@@ -524,7 +524,7 @@ export default {
   let loaded = false;
 
   onMount(async () => {
-    await import('@nexcraft/forge/dist/forge.js');
+    await import('@nexcraft/forge/dist/nexcraft-forge.es.js');
     loaded = true;
   });
 </script>

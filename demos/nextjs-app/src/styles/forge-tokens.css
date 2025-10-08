@@ -54,14 +54,14 @@
   --forge-font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
 
   /* Typography - Font Sizes */
-  --forge-font-size-xs: 0.75rem; /* 12px */
-  --forge-font-size-sm: 0.875rem; /* 14px */
-  --forge-font-size-base: 1rem; /* 16px */
-  --forge-font-size-lg: 1.125rem; /* 18px */
-  --forge-font-size-xl: 1.25rem; /* 20px */
-  --forge-font-size-2xl: 1.5rem; /* 24px */
-  --forge-font-size-3xl: 1.875rem; /* 30px */
-  --forge-font-size-4xl: 2.25rem; /* 36px */
+  --forge-font-size-xs: 0.75rem;    /* 12px */
+  --forge-font-size-sm: 0.875rem;   /* 14px */
+  --forge-font-size-base: 1rem;     /* 16px */
+  --forge-font-size-lg: 1.125rem;   /* 18px */
+  --forge-font-size-xl: 1.25rem;    /* 20px */
+  --forge-font-size-2xl: 1.5rem;    /* 24px */
+  --forge-font-size-3xl: 1.875rem;  /* 30px */
+  --forge-font-size-4xl: 2.25rem;   /* 36px */
 
   /* Typography - Font Weights */
   --forge-font-weight-light: 300;
