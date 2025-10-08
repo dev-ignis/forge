@@ -1,5 +1,64 @@
 # @nexcraft/forge-react
 
+## 2.0.0
+
+### Patch Changes
+
+- e40659d: fix(docs): correct CDN URL to use nexcraft-forge.es.js instead of forge.js
+
+  **Critical Documentation Fix:**
+  - CDN URL was incorrect: `/dist/forge.js` does not exist in the package
+  - Correct file: `/dist/nexcraft-forge.es.js`
+  - Updated all integration guides (Next.js, Remix, SvelteKit)
+
+  **What Changed:**
+  - ❌ Old: `https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/forge.js`
+  - ✅ New: `https://cdn.jsdelivr.net/npm/@nexcraft/forge@latest/dist/nexcraft-forge.es.js`
+
+  **Files Updated:**
+  - docs/integrations/nextjs-15-app-router.md
+  - docs/integrations/remix.md
+  - docs/integrations/sveltekit.md
+
+  **Impact:**
+  - ✅ CDN links now work correctly
+  - ✅ Self-hosted instructions use correct filename
+  - ✅ Import statements reference actual file
+  - ✅ Fixes "404 Not Found" errors when using CDN
+
+- e40659d: feat(forge-card): add border prop to control card border visibility
+
+  **New Feature:**
+  - Added `border` prop to ForgeCard component
+  - Default: border shown (1px solid #e5e7eb)
+  - Set `border={false}` to remove border
+
+  **Usage:**
+
+  ```tsx
+  // With border (default)
+  <ForgeCard>Content</ForgeCard>
+
+  // Without border
+  <ForgeCard border={false}>Clean borderless card</ForgeCard>
+  ```
+
+  **Implementation:**
+  - Fallback renderer adds 'forge-card--no-border' class when border={false}
+  - CSS: `.forge-card--no-border { border: none; }`
+  - Attribute preserved during hydration to web component
+
+  **Impact:**
+  - ✅ Gives users control without custom CSS
+  - ✅ Matches common UI patterns (cards with/without borders)
+  - ✅ Simple API: `<ForgeCard border={false}>`
+  - ✅ No breaking changes
+
+- Updated dependencies [e40659d]
+- Updated dependencies [e40659d]
+- Updated dependencies [e40659d]
+  - @nexcraft/forge@0.10.0
+
 ## 1.0.4
 
 ### Patch Changes
