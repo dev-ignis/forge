@@ -247,6 +247,8 @@ export class ForgeCard extends BaseElement {
 
     /* Slots */
     ::slotted([slot='header']) {
+      padding: var(--card-padding, 16px);
+      border-bottom: 1px solid var(--forge-border-light, #f3f4f6);
       display: block;
     }
 
