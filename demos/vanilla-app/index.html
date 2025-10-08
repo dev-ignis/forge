@@ -7,19 +7,20 @@
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <header class="app-header">
-      <h1>@nexcraft/forge — Vanilla JS Demo</h1>
-      <div class="toolbar">
-        <button id="theme-light">Light</button>
-        <button id="theme-dark">Dark</button>
-        <button id="theme-auto">Auto</button>
-      </div>
-    </header>
+    <forge-navigation-bar id="top-nav" title="@nexcraft/forge — Vanilla JS Demo" position="sticky" show-theme-toggle></forge-navigation-bar>
 
-    <main class="container">
-      <section>
+    <main id="main" class="container">
+      <div class="sections">
+      <section class="half">
+        <h2>Performance Dashboard</h2>
+        <details open>
+          <summary>Toggle dashboard</summary>
+          <forge-performance-dashboard></forge-performance-dashboard>
+        </details>
+      </section>
+      <section class="half">
         <h2>Buttons</h2>
-        <div class="row gap">
+        <div class="row wrap gap">
           <forge-button variant="primary">Primary</forge-button>
           <forge-button variant="secondary">Secondary</forge-button>
           <forge-button variant="danger">Danger</forge-button>
@@ -28,7 +29,18 @@
         </div>
       </section>
 
-      <section>
+      <section class="half">
+        <h2>Avatars, Badges & Icons</h2>
+        <div class="row gap">
+          <forge-avatar fallback="JD" status="online"></forge-avatar>
+          <forge-avatar fallback="AN" clickable></forge-avatar>
+          <span>Notifications <forge-badge variant="primary" size="sm" position="inline">3</forge-badge></span>
+          <forge-icon name="user"></forge-icon>
+          <forge-icon name="settings"></forge-icon>
+        </div>
+      </section>
+
+      <section class="half">
         <h2>Input + Checkbox</h2>
         <div class="col gap">
           <label class="label">Your name</label>
@@ -40,7 +52,16 @@
         </div>
       </section>
 
-      <section>
+      <section class="half">
+        <h2>Radio Group, Select, Switch</h2>
+        <div class="row gap">
+          <forge-radio-group id="rg-demo" label="Favorite color"></forge-radio-group>
+          <forge-select id="select-demo" placeholder="Select a fruit"></forge-select>
+          <forge-switch id="switch-demo" label="Enable feature" on-label="ON" off-label="OFF"></forge-switch>
+        </div>
+      </section>
+
+      <section class="half">
         <h2>Alerts</h2>
         <div class="col gap">
           <forge-alert severity="success">Success: Operation completed.</forge-alert>
@@ -50,7 +71,7 @@
         </div>
       </section>
 
-      <section>
+      <section class="half">
         <h2>Card + Tooltip</h2>
         <forge-card class="card">
           <div slot="header" class="card-header">
@@ -68,7 +89,7 @@
         </forge-card>
       </section>
 
-      <section>
+      <section class="half">
         <h2>Modal</h2>
         <forge-modal id="demo-modal">
           <div slot="header" class="row space-between">
@@ -84,6 +105,19 @@
             <forge-button id="confirm-modal" variant="primary">Confirm</forge-button>
           </div>
         </forge-modal>
+        <forge-toast-container></forge-toast-container>
+      </section>
+
+      <section class="half">
+        <h2>Date Picker, Dropdown, Form Field, Multi Select</h2>
+        <div class="col gap">
+          <forge-date-picker id="date-picker"></forge-date-picker>
+          <forge-dropdown id="dropdown-demo"></forge-dropdown>
+          <forge-form-field label="Email" description="We’ll never share your email.">
+            <forge-input id="email" type="email" placeholder="you@example.com"></forge-input>
+          </forge-form-field>
+          <forge-multi-select id="multi-select-demo"></forge-multi-select>
+        </div>
       </section>
 
       <section>
@@ -95,7 +129,7 @@
         </div>
       </section>
 
-      <section>
+      <section class="half">
         <h2>Tabs</h2>
         <forge-tabs id="tabs" tabs="tab-1,tab-2,tab-3">
           <div slot="tab-1">Content for tab 1</div>
@@ -104,13 +138,34 @@
         </forge-tabs>
       </section>
 
-      <section>
+      <section class="half">
+        <h2>Accordion</h2>
+        <forge-accordion id="accordion-demo"></forge-accordion>
+      </section>
+
+      <section class="half">
+        <h2>Tree View</h2>
+        <forge-tree-view id="tree-view-demo"></forge-tree-view>
+      </section>
+
+      <section class="full">
+        <h2>Data Table</h2>
+        <forge-data-table id="data-table-demo" show-pagination page-size="5"></forge-data-table>
+      </section>
+
+      <section class="half">
+        <h2>Pagination</h2>
+        <forge-pagination id="pagination-demo" current-page="1" total-pages="10" total-items="100"></forge-pagination>
+      </section>
+
+      <section class="half">
         <h2>AI State Demo</h2>
         <div class="col gap">
           <forge-button id="ai-button" variant="primary">AI Button</forge-button>
           <pre id="ai-state" class="pre"></pre>
         </div>
       </section>
+      </div>
     </main>
 
     <script type="module" src="/main.js"></script>
