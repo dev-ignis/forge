@@ -1,6 +1,6 @@
 {
   "name": "@nexcraft/forge-vue",
-  "version": "2.0.0",
+  "version": "1.0.2",
   "description": "Vue integration for Nexcraft Forge web components",
   "type": "module",
   "sideEffects": false,
