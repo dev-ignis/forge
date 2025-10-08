@@ -1,5 +1,14 @@
 # @nexcraft/forge-vue
 
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies [e40659d]
+- Updated dependencies [e40659d]
+- Updated dependencies [e40659d]
+  - @nexcraft/forge@0.10.0
+
 ## 1.0.1
 
 ### Patch Changes
