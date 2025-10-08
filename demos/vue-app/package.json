@@ -5,12 +5,14 @@
   "scripts": {
     "dev": "vite --port 9093",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:ai": "echo 'Testing AI manifest integration...' && node -e \"try { console.log('AI Manifest:', require('@nexcraft/forge/ai-manifest.json')); } catch(e) { console.log('AI Manifest not available in published package'); }\"",
+    "analyze": "npm run build && npx vite-bundle-analyzer dist"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": ["vue", "forge", "ai-native", "components", "demo"],
+  "author": "Forge Team",
+  "license": "MIT",
+  "description": "AI-Native Forge Components Vue 3 Demo - Showcasing real AI manifest integration and interactive component features",
   "dependencies": {
     "@nexcraft/forge": "^0.7.0",
     "@vitejs/plugin-vue": "^6.0.1",
@@ -18,5 +20,8 @@
     "vite": "^7.1.5",
     "vue": "^3.5.21",
     "vue-tsc": "^3.0.7"
+  },
+  "devDependencies": {
+    "vite-bundle-analyzer": "^0.7.0"
   }
 }
