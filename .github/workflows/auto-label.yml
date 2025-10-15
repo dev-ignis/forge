@@ -1,0 +1,87 @@
+name: Auto Label PRs
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  label:
+    name: Auto Label PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Auto-label based on paths
+        uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+
+      - name: Label by size
+        uses: codelytv/pr-size-labeler@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          xs_label: 'size: xs'
+          xs_max_size: 10
+          s_label: 'size: s'
+          s_max_size: 50
+          m_label: 'size: m'
+          m_max_size: 200
+          l_label: 'size: l'
+          l_max_size: 500
+          xl_label: 'size: xl'
+          fail_if_xl: false
+          message_if_xl: ''
+          files_to_ignore: 'package-lock.json pnpm-lock.yaml yarn.lock'
+
+      - name: Label WIP
+        if: github.event.pull_request.draft == true
+        run: gh pr edit ${{ github.event.pull_request.number }} --add-label "status: wip"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Remove WIP when ready
+        if: github.event.pull_request.draft == false
+        run: gh pr edit ${{ github.event.pull_request.number }} --remove-label "status: wip" || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Label by PR title
+        run: |
+          TITLE="${{ github.event.pull_request.title }}"
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+
+          # Type labels from conventional commit prefixes
+          if [[ "$TITLE" =~ ^feat ]]; then
+            gh pr edit $PR_NUMBER --add-label "feature"
+          elif [[ "$TITLE" =~ ^fix ]]; then
+            gh pr edit $PR_NUMBER --add-label "fix"
+          elif [[ "$TITLE" =~ ^docs ]]; then
+            gh pr edit $PR_NUMBER --add-label "docs"
+          elif [[ "$TITLE" =~ ^refactor ]]; then
+            gh pr edit $PR_NUMBER --add-label "refactor"
+          elif [[ "$TITLE" =~ ^perf ]]; then
+            gh pr edit $PR_NUMBER --add-label "perf"
+          elif [[ "$TITLE" =~ ^test ]]; then
+            gh pr edit $PR_NUMBER --add-label "test"
+          elif [[ "$TITLE" =~ ^chore ]]; then
+            gh pr edit $PR_NUMBER --add-label "chore"
+          elif [[ "$TITLE" =~ ^ci ]]; then
+            gh pr edit $PR_NUMBER --add-label "ci"
+          fi
+
+          # Release labels from conventional commit
+          if [[ "$TITLE" =~ ! ]] || [[ "$TITLE" =~ "BREAKING CHANGE" ]]; then
+            gh pr edit $PR_NUMBER --add-label "release: major"
+          elif [[ "$TITLE" =~ ^feat ]]; then
+            gh pr edit $PR_NUMBER --add-label "release: minor"
+          elif [[ "$TITLE" =~ ^fix ]]; then
+            gh pr edit $PR_NUMBER --add-label "release: patch"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

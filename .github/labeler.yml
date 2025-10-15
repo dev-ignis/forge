@@ -1,0 +1,83 @@
+# Auto-labeler configuration
+# Labels PRs based on changed file paths
+
+# Scope labels
+'scope: core':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/*'
+      - 'package.json'
+      - 'vite.config.ts'
+      - 'tsconfig.json'
+
+'scope: react':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'packages/forge-react/**/*'
+
+'scope: vue':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'packages/forge-vue/**/*'
+
+'scope: angular':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'packages/forge-angular/**/*'
+
+'scope: rhf':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'packages/forge-rhf/**/*'
+
+'scope: tokens':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'packages/forge-tokens/**/*'
+      - 'src/styles/tokens/**/*'
+      - '**/tokens.css'
+
+'scope: docs':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'docs/**/*'
+      - '**/*.md'
+      - 'README.md'
+
+'scope: demos':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'demos/**/*'
+
+'scope: storybook':
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.storybook/**/*'
+      - '**/*.stories.ts'
+
+# Type labels
+'ci':
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/**/*'
+
+'test':
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.test.ts'
+      - '**/*.spec.ts'
+      - 'vitest.config.ts'
+
+'docs':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'docs/**/*'
+      - '**/*.md'
+
+# Special labels
+'deps':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'package.json'
+      - 'package-lock.json'
+      - '**/package.json'
