@@ -68,12 +68,12 @@ export class ForgeTreeView extends BaseElement {
         background: var(--forge-hover-bg, rgba(0, 0, 0, 0.04));
       }
 
-      .tree-node-content.selected {
+      .tree-node--selected > .tree-node-content {
         background: var(--forge-primary-bg-light, rgba(25, 118, 210, 0.08));
         color: var(--forge-primary-color, #1976d2);
       }
 
-      .tree-node-content.disabled {
+      .tree-node--disabled > .tree-node-content {
         opacity: 0.5;
         cursor: not-allowed;
       }
@@ -824,76 +824,6 @@ export class ForgeTreeView extends BaseElement {
 
           <span class="node-label">${node.label}</span>
         </div>
-      </div>
-    `;
-  }
-
-  private renderNode(node: TreeNode, level: number): any {
-    const hasChildren = node.children && node.children.length > 0;
-    const isExpanded = this.expandedNodes.has(node.id);
-    const isSelected = this.selectedNodes.has(node.id);
-    
-    const nodeClasses = {
-      'tree-node': true,
-      'expanded': isExpanded,
-      'has-children': hasChildren || false
-    };
-    
-    const contentClasses = {
-      'tree-node-content': true,
-      'selected': isSelected,
-      'disabled': node.disabled || false
-    };
-
-    return html`
-      <div class=${classMap(nodeClasses)}>
-        <div 
-          class=${classMap(contentClasses)}
-          tabindex=${this.focusedNodeId === node.id || (this.focusedNodeId === null && this.isFirstVisibleNode(node)) ? "0" : "-1"}
-          role="treeitem"
-          aria-level=${level + 1}
-          aria-selected=${isSelected}
-          aria-expanded=${hasChildren ? isExpanded : 'false'}
-          data-node-id=${node.id}
-          @click=${() => this.selectNodeInternal(node)}
-          @focus=${() => { this.focusedNodeId = node.id; }}
-        >
-          <span 
-            class="tree-node-toggle ${hasChildren ? 'expandable' : ''}"
-            @click=${(e: Event) => {
-              e.stopPropagation();
-              this.toggleExpanded(node);
-            }}
-          >
-            ${hasChildren ? html`
-              <forge-icon name="chevron-right" size="xs"></forge-icon>
-            ` : ''}
-          </span>
-          
-          ${this.showCheckboxes ? html`
-            <forge-checkbox
-              .checked=${isSelected}
-              ?disabled=${node.disabled}
-              @change=${(e: CustomEvent) => {
-                e.stopPropagation();
-                this.selectNodeInternal(node);
-              }}
-            ></forge-checkbox>
-          ` : ''}
-          
-          <span class="tree-node-label">
-            ${node.icon ? html`
-              <forge-icon name=${node.icon} size="sm"></forge-icon>
-            ` : ''}
-            ${node.label}
-          </span>
-        </div>
-        
-        ${hasChildren ? html`
-          <div class="tree-node-children" role="group">
-            ${node.children!.map((child: TreeNode) => this.renderNode(child, level + 1))}
-          </div>
-        ` : ''}
       </div>
     `;
   }

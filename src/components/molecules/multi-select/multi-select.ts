@@ -562,10 +562,14 @@ export class ForgeMultiSelect extends BaseElement {
     }));
   }
 
+  private escapeRegExp(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
   private highlightMatch(text: string): any {
     if (!this.searchQuery) return text;
     
-    const regex = new RegExp(`(${this.searchQuery})`, 'gi');
+    const regex = new RegExp(`(${this.escapeRegExp(this.searchQuery)})`, 'gi');
     const parts = text.split(regex);
     
     return html`${parts.map((part, i) => 

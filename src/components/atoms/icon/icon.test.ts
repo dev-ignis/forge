@@ -223,6 +223,31 @@ describe('ForgeIcon', () => {
     });
   });
 
+  describe('Security', () => {
+    it('should strip script tags and event-handler attributes from fetched SVG', async () => {
+      const maliciousSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <script>window.xssFired = true;</script>
+        <circle cx="12" cy="12" r="10" onclick="window.xssFired = true"></circle>
+      </svg>`;
+
+      const fetchStub = spyOn(window, 'fetch');
+      fetchStub.mockImplementation(() =>
+        Promise.resolve(new Response(maliciousSvg, { status: 200 }))
+      );
+
+      const el = await fixture<ForgeIcon>(html`<forge-icon></forge-icon>`);
+      await (el as any).loadFromUrl('/malicious.svg');
+      await el.updateComplete;
+
+      const svg = el.shadowRoot?.querySelector('svg');
+      expect(svg).to.exist;
+      expect(svg?.querySelector('script')).to.not.exist;
+      expect(svg?.querySelector('circle')?.hasAttribute('onclick')).to.be.false;
+      expect(svg?.innerHTML).to.not.include('<script');
+      expect(svg?.innerHTML).to.not.include('onclick');
+    });
+  });
+
   describe('Error Handling', () => {
     it('should show error icon for missing icon', async () => {
       const consoleWarn = spyOn(console, 'warn');

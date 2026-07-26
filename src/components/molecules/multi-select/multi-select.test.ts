@@ -211,6 +211,49 @@ describe('ForgeMultiSelect', () => {
     expect(mark!.textContent).to.equal('App');
   });
 
+  it('should not throw and should filter/highlight correctly when search contains regex metacharacters', async () => {
+    const specialOptions: MultiSelectOption[] = [
+      { value: 'a', label: 'Apple (Fresh)' },
+      { value: 'b', label: 'Banana [Ripe]' },
+      { value: 'c', label: 'Cherry' }
+    ];
+
+    const el = await fixture<ForgeMultiSelect>(html`
+      <forge-multi-select .options=${specialOptions}></forge-multi-select>
+    `);
+
+    // Open dropdown
+    const trigger = el.shadowRoot!.querySelector('.multi-select__trigger') as HTMLElement;
+    trigger.click();
+    await elementUpdated(el);
+
+    const searchInput = el.shadowRoot!.querySelector('forge-input') as any;
+
+    // Search for a literal "(" - should not throw and should match "Apple (Fresh)"
+    searchInput.dispatchEvent(new CustomEvent('input', {
+      detail: { value: '(' }
+    }));
+    await elementUpdated(el);
+
+    let visibleOptions = el.shadowRoot!.querySelectorAll('.multi-select__option');
+    expect(visibleOptions.length).to.equal(1);
+    let mark = el.shadowRoot!.querySelector('mark');
+    expect(mark).to.exist;
+    expect(mark!.textContent).to.equal('(');
+
+    // Search for a literal "[" - should not throw and should match "Banana [Ripe]"
+    searchInput.dispatchEvent(new CustomEvent('input', {
+      detail: { value: '[' }
+    }));
+    await elementUpdated(el);
+
+    visibleOptions = el.shadowRoot!.querySelectorAll('.multi-select__option');
+    expect(visibleOptions.length).to.equal(1);
+    mark = el.shadowRoot!.querySelector('mark');
+    expect(mark).to.exist;
+    expect(mark!.textContent).to.equal('[');
+  });
+
   it('should select all options', async () => {
     const el = await fixture<ForgeMultiSelect>(html`
       <forge-multi-select .options=${mockOptions}></forge-multi-select>

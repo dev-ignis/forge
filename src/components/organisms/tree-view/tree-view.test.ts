@@ -233,6 +233,25 @@ describe('ForgeTreeView', () => {
       expect(el['selectedNodes'].size).to.equal(2);
     });
 
+    it('should apply a selected class that exists in the component styles', async () => {
+      const el = await fixture<ForgeTreeView>(html`
+        <forge-tree-view .nodes=${mockNodes}></forge-tree-view>
+      `);
+
+      await el.updateComplete;
+
+      (el as any).selectNode('file1');
+      await el.updateComplete;
+
+      const file1Node = el.shadowRoot?.querySelector('[data-node-id="file1"]') as HTMLElement;
+      expect(file1Node).to.exist;
+      expect(file1Node.classList.contains('tree-node--selected')).to.be.true;
+
+      // Guard against the class drifting out of sync with the stylesheet again
+      const stylesText = (ForgeTreeView.styles as any).cssText as string;
+      expect(stylesText).to.include('.tree-node--selected');
+    });
+
     it('should not select disabled nodes', async () => {
       const el = await fixture<ForgeTreeView>(html`
         <forge-tree-view .nodes=${mockNodes}></forge-tree-view>

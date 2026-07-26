@@ -244,6 +244,29 @@ document.getElementById('submit-btn').addEventListener('click', () => {
       filter: brightness(0.9);
     }
 
+    .button--ghost {
+      background-color: transparent;
+      color: var(--forge-color-primary-500);
+    }
+
+    .button--ghost:hover:not(:disabled) {
+      background-color: var(--forge-color-primary-50);
+    }
+
+    .button--link {
+      background-color: transparent;
+      color: var(--forge-color-primary-500);
+      width: auto;
+      height: auto;
+      padding: 0;
+      border-radius: 0;
+      text-decoration: none;
+    }
+
+    .button--link:hover:not(:disabled) {
+      text-decoration: underline;
+    }
+
     /* Sizes */
     .button--sm {
       height: var(--button-height-sm);

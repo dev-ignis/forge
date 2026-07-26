@@ -15,6 +15,68 @@ interface IconData {
   viewBox?: string;
 }
 
+/**
+ * Removes event-handler attributes (on*) and javascript: URIs from an
+ * SVG element in place. This is a minimal defense-in-depth guard against
+ * hostile SVG payloads — it is NOT a full sanitizer.
+ *
+ * @see plans/analysis-2026-07 — full sanitization (e.g. DOMPurify) is a
+ * tracked roadmap item; this guard only covers the attack vectors that are
+ * cheap to neutralize without adding a dependency.
+ */
+function stripDangerousAttributes(element: Element): void {
+  Array.from(element.attributes).forEach((attr) => {
+    const attrName = attr.name.toLowerCase();
+    if (attrName.startsWith('on')) {
+      element.removeAttribute(attr.name);
+    } else if (
+      (attrName === 'href' || attrName === 'xlink:href') &&
+      /^\s*javascript:/i.test(attr.value)
+    ) {
+      element.removeAttribute(attr.name);
+    }
+  });
+}
+
+/**
+ * Recursively strips <script>/<foreignObject> elements and dangerous
+ * attributes from a parsed SVG subtree, in place. See stripDangerousAttributes
+ * for scope/limitations.
+ */
+function sanitizeSvgElement(root: Element): void {
+  stripDangerousAttributes(root);
+
+  Array.from(root.children).forEach((child) => {
+    const tagName = child.tagName.toLowerCase();
+    if (tagName === 'script' || tagName === 'foreignobject') {
+      child.remove();
+      return;
+    }
+    sanitizeSvgElement(child);
+  });
+}
+
+/**
+ * Sanitizes a raw SVG markup fragment (e.g. from a fetched icon-set JSON
+ * file) by parsing it and running it through sanitizeSvgElement. Returns
+ * an empty string if the fragment fails to parse as XML.
+ */
+function sanitizeSvgFragment(fragment: string): string {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(
+    `<svg xmlns="http://www.w3.org/2000/svg">${fragment}</svg>`,
+    'image/svg+xml'
+  );
+  const root = doc.querySelector('svg');
+
+  if (!root || doc.querySelector('parsererror')) {
+    return '';
+  }
+
+  sanitizeSvgElement(root);
+  return root.innerHTML;
+}
+
 @customElement('forge-icon')
 export class ForgeIcon extends BaseElement {
   static override styles = css`
@@ -170,7 +232,17 @@ export class ForgeIcon extends BaseElement {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      this.registerIcons(data);
+      // Icon sets are fetched from remote/user-supplied URLs, so sanitize
+      // the raw SVG strings before they enter the registry.
+      const sanitized: Record<string, string | IconData> = {};
+      Object.entries(data as Record<string, string | IconData>).forEach(([name, value]) => {
+        if (typeof value === 'string') {
+          sanitized[name] = sanitizeSvgFragment(value);
+        } else {
+          sanitized[name] = { ...value, svg: sanitizeSvgFragment(value.svg) };
+        }
+      });
+      this.registerIcons(sanitized);
     } catch (error) {
       console.error('Failed to load icon set:', error);
       throw error;
@@ -309,6 +381,8 @@ export class ForgeIcon extends BaseElement {
       const errorMessage = parserError ? parserError.textContent : 'No <svg> element found';
       throwInvalidSVGError('ForgeIcon', errorMessage || undefined);
     }
+
+    sanitizeSvgElement(svg);
 
     const viewBox = svg.getAttribute('viewBox') || undefined;
     const svgContent = svg.innerHTML;

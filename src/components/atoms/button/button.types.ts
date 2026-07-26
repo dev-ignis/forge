@@ -22,7 +22,7 @@ export type ButtonType = 'button' | 'submit' | 'reset';
 /**
  * Performance mode options
  */
-export type PerformanceMode = 'auto' | 'fast' | 'normal';
+export type PerformanceMode = 'auto' | 'fast' | 'balanced' | 'quality';
 
 /**
  * Button component properties interface
