@@ -4,12 +4,18 @@
   "type": "module",
   "private": false,
   "description": "MCP server exposing Figma pull/apply tools for Forge tokens.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dev-ignis/forge.git"
+  },
   "bin": {
     "forge-mcp-figma": "bin/server.mjs"
   },
   "files": [
     "bin",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "engines": {
     "node": ">=20"
