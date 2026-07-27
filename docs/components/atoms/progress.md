@@ -464,4 +464,4 @@ const actions = progress.getPossibleActions();
 
 - **[ForgeProgressCircle](./progress-circle.md)** - Circular progress variant
 - **[ForgeSkeleton](./skeleton.md)** - Loading state placeholders
-- **[ForgeSpinner](./spinner.md)** - Indeterminate loading indicators
+- **ForgeSpinner** - Indeterminate loading indicators

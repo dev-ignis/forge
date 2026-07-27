@@ -417,15 +417,15 @@ Foundation components with comprehensive test coverage:
 
 | Component | Test Coverage | Key Features | Documentation |
 |-----------|--------------|--------------|---------------|
-| **Button** | 92.38% | 5 variants, ripple effect, loading states | [📚 Docs](./docs/components/button.md) |
-| **Input** | 84.56% | 7 types, validation, clearable | [📚 Docs](./docs/components/input.md) |
-| **Icon** | 78.38% | Registry system, lazy loading | [📚 Docs](./docs/components/icon.md) |
-| **Alert** | 97.02% | Auto-dismiss, animations | [📚 Docs](./docs/components/alert.md) |
-| **Checkbox** | 98.50% | Indeterminate state | [📚 Docs](./docs/components/checkbox.md) |
-| **Badge** | 100% | Count/dot modes, positions | [📚 Docs](./docs/components/badge.md) |
-| **Switch** | 98.50% | Loading state, custom labels | [📚 Docs](./docs/components/switch.md) |
-| **RadioGroup** | 93.79% | Group management, keyboard nav | [📚 Docs](./docs/components/radio-group.md) |
-| **Select** | 84.69% | Search/filter, groups | [📚 Docs](./docs/components/select.md) |
+| **Button** | 92.38% | 5 variants, ripple effect, loading states | [📚 Docs](./docs/components/atoms/button.md) |
+| **Input** | 84.56% | 7 types, validation, clearable | [📚 Docs](./docs/components/atoms/input.md) |
+| **Icon** | 78.38% | Registry system, lazy loading | [📚 Docs](./docs/components/atoms/icon.md) |
+| **Alert** | 97.02% | Auto-dismiss, animations | [📚 Docs](./docs/components/atoms/alert.md) |
+| **Checkbox** | 98.50% | Indeterminate state | [📚 Docs](./docs/components/atoms/checkbox.md) |
+| **Badge** | 100% | Count/dot modes, positions | [📚 Docs](./docs/components/atoms/badge.md) |
+| **Switch** | 98.50% | Loading state, custom labels | [📚 Docs](./docs/components/atoms/switch.md) |
+| **RadioGroup** | 93.79% | Group management, keyboard nav | [📚 Docs](./docs/components/atoms/radio-group.md) |
+| **Select** | 84.69% | Search/filter, groups | [📚 Docs](./docs/components/atoms/select.md) |
 | **🆕 Progress** | 100% | Linear & circular variants, indeterminate states | [📚 Docs](./docs/components/atoms/progress.md) |
 | **🆕 Skeleton** | 100% | Shimmer animations, shape variants, accessibility | [📚 Docs](./docs/components/atoms/skeleton.md) |
 | **🆕 AspectRatio** | 100% | Responsive containers, preset ratios, constraints | [📚 Docs](./docs/components/atoms/aspect-ratio.md) |

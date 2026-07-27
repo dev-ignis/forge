@@ -834,11 +834,11 @@ class PerformanceFirstComponent extends BaseElement {
 
 ## 🔗 Additional Resources
 
-- **[Performance Dashboard API Reference](./performance-dashboard-api.md)** - Complete API documentation
-- **[Performance Monitoring Guide](./performance-monitoring.md)** - Comprehensive monitoring setup
-- **[Component Performance Guide](./component-performance.md)** - Optimization techniques
-- **[Performance Testing Guide](./performance-testing.md)** - Testing strategies
-- **[Examples Repository](../examples/)** - Complete working examples
+- **[Performance Dashboard API Reference](../performance-dashboard-api.md)** - Complete API documentation
+- **[Performance Monitoring Guide](../performance-monitoring.md)** - Comprehensive monitoring setup
+- **Component Performance Guide** - Optimization techniques
+- **Performance Testing Guide** - Testing strategies
+- **Examples Repository** - Complete working examples
 
 ---
 

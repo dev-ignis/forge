@@ -316,6 +316,6 @@ html`
 ## Related Components
 
 - [Data Table](./data-table.md) - Commonly used together for data display
-- [Button](../button.md) - Used internally for navigation buttons
-- [Select](../select.md) - Used for page size selection
-- [Input](../input.md) - Used for jump to page functionality
+- [Button](../atoms/button.md) - Used internally for navigation buttons
+- [Select](../atoms/select.md) - Used for page size selection
+- [Input](../atoms/input.md) - Used for jump to page functionality

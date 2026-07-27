@@ -641,7 +641,7 @@ const preGeneratedCSS = fs.readFileSync('dist/tokens.css', 'utf8');
    - [Token Bridge Reference](./token-bridge.md)
 
 2. **Common Patterns**
-   - See [examples directory](../../examples/) for migration examples
+   - See examples directory for migration examples
    - Check test files for usage patterns
 
 3. **Community Support**

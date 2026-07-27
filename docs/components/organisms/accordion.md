@@ -449,5 +449,5 @@ html`
 
 - [Tabs](./tabs.md) - Alternative for organizing content
 - [Dropdown](../molecules/dropdown.md) - Similar collapsible behavior
-- [Button](../button.md) - Used internally for panel headers
-- [Icon](../icon.md) - Used for expand/collapse indicators
+- [Button](../atoms/button.md) - Used internally for panel headers
+- [Icon](../atoms/icon.md) - Used for expand/collapse indicators

@@ -4,7 +4,7 @@
 - Package: @nexcraft/forge
 - Description: AI-native web component library with React/Vue/Angular integrations
 - Repository: https://github.com/dev-ignis/forge
-- Documentation: ./docs/ai-methods.md
+- Documentation: ./docs/ai/metadata-reference.md
 
 ## Import Preferences
 
@@ -234,7 +234,7 @@ const aiState = button.aiState
 ## Documentation Links
 - **AI Index**: ./ai-index.json (quick component discovery)
 - **AI Manifest**: ./ai-manifest.json (detailed specifications)
-- AI Methods Guide: ./docs/ai-methods.md
+- AI Methods Guide: ./docs/ai/metadata-reference.md
 - Import Guide: ./docs/guides/AI_IMPORT_GUIDE.md
 
 ## Avoid These Patterns
