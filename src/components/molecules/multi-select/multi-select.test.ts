@@ -2,6 +2,7 @@ import { expect, fixture, html, elementUpdated, waitUntil } from '@open-wc/testi
 import './multi-select'; // Register the element
 import { ForgeMultiSelect } from './multi-select';
 import type { MultiSelectOption } from './multi-select';
+import { spyOn } from '../../../test/test-helpers';
 
 describe('ForgeMultiSelect', () => {
   const mockOptions: MultiSelectOption[] = [
@@ -532,5 +533,44 @@ describe('ForgeMultiSelect', () => {
     await elementUpdated(el);
 
     expect(el.isOpen).to.be.false;
+  });
+
+  it('should not schedule an update after an update completed when options are set', async () => {
+    const el = await fixture<ForgeMultiSelect>(html`<forge-multi-select></forge-multi-select>`);
+    const warnSpy = spyOn(console, 'warn');
+
+    el.options = mockOptions;
+    await el.updateComplete;
+
+    const scheduledUpdateWarning = warnSpy.mock.calls.some(call =>
+      call.some(arg => typeof arg === 'string' && arg.includes('scheduled an update'))
+    );
+    expect(scheduledUpdateWarning).to.be.false;
+
+    warnSpy.mockRestore();
+  });
+
+  it('should not schedule an update after an update completed when searching', async () => {
+    const el = await fixture<ForgeMultiSelect>(html`
+      <forge-multi-select .options=${mockOptions}></forge-multi-select>
+    `);
+    const warnSpy = spyOn(console, 'warn');
+
+    const trigger = el.shadowRoot!.querySelector('.multi-select__trigger') as HTMLElement;
+    trigger.click();
+    await elementUpdated(el);
+
+    const searchInput = el.shadowRoot!.querySelector('forge-input') as any;
+    searchInput.dispatchEvent(new CustomEvent('input', {
+      detail: { value: 'app' }
+    }));
+    await el.updateComplete;
+
+    const scheduledUpdateWarning = warnSpy.mock.calls.some(call =>
+      call.some(arg => typeof arg === 'string' && arg.includes('scheduled an update'))
+    );
+    expect(scheduledUpdateWarning).to.be.false;
+
+    warnSpy.mockRestore();
   });
 });

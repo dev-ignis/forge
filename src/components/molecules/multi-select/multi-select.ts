@@ -299,16 +299,19 @@ export class ForgeMultiSelect extends BaseElement {
 
   protected firstUpdated(_changedProperties: PropertyValues): void {
     super.firstUpdated(_changedProperties);
-    this.filteredOptions = this.options;
     this.initializeLiveRegion();
+  }
+
+  protected willUpdate(changedProperties: PropertyValues): void {
+    super.willUpdate(changedProperties);
+
+    if (changedProperties.has('options') || changedProperties.has('searchQuery')) {
+      this.filterOptions();
+    }
   }
 
   protected updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
-    
-    if (changedProperties.has('options') || changedProperties.has('searchQuery')) {
-      this.filterOptions();
-    }
 
     if (changedProperties.has('value')) {
       this.updateComponentState('selectedCount', this.value.length);
