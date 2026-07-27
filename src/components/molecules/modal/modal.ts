@@ -251,7 +251,7 @@ export class ForgeModal extends BaseElement {
   @property({ type: String, attribute: 'aria-label' }) override ariaLabel: string | null = null;
 
   @state() private hasFooter = false;
-  @state() private focusedElementBeforeOpen: HTMLElement | null = null;
+  private focusedElementBeforeOpen: HTMLElement | null = null;
 
   @query('.modal') private modalElement!: HTMLElement;
   @query('.modal__body') private bodyElement!: HTMLElement;

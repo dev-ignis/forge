@@ -13,7 +13,7 @@ export default defineConfig({
       external: [
         'react',
         'react-hook-form',
-        '@nexcraft/forge/integrations/react'
+        '@nexcraft/forge-react'
       ],
       output: {
         globals: {

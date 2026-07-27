@@ -362,6 +362,6 @@ get authenticatedNavItems() {
 ## Related Components
 
 - [Dropdown](../molecules/dropdown.md) - Used internally for navigation dropdowns
-- [Button](../button.md) - Used for navigation items and mobile toggle
-- [Icon](../icon.md) - Used for navigation item icons
-- [Input](../input.md) - Used for search functionality
+- [Button](../atoms/button.md) - Used for navigation items and mobile toggle
+- [Icon](../atoms/icon.md) - Used for navigation item icons
+- [Input](../atoms/input.md) - Used for search functionality

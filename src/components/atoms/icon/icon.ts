@@ -1,4 +1,4 @@
-import { html, css } from 'lit';
+import { html, css, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { BaseElement } from '../../../core/BaseElement';
@@ -13,6 +13,68 @@ export type IconSize = ComponentSize | 'xs' | 'xl';
 interface IconData {
   svg: string;
   viewBox?: string;
+}
+
+/**
+ * Removes event-handler attributes (on*) and javascript: URIs from an
+ * SVG element in place. This is a minimal defense-in-depth guard against
+ * hostile SVG payloads — it is NOT a full sanitizer.
+ *
+ * @see plans/analysis-2026-07 — full sanitization (e.g. DOMPurify) is a
+ * tracked roadmap item; this guard only covers the attack vectors that are
+ * cheap to neutralize without adding a dependency.
+ */
+function stripDangerousAttributes(element: Element): void {
+  Array.from(element.attributes).forEach((attr) => {
+    const attrName = attr.name.toLowerCase();
+    if (attrName.startsWith('on')) {
+      element.removeAttribute(attr.name);
+    } else if (
+      (attrName === 'href' || attrName === 'xlink:href') &&
+      /^\s*javascript:/i.test(attr.value)
+    ) {
+      element.removeAttribute(attr.name);
+    }
+  });
+}
+
+/**
+ * Recursively strips <script>/<foreignObject> elements and dangerous
+ * attributes from a parsed SVG subtree, in place. See stripDangerousAttributes
+ * for scope/limitations.
+ */
+function sanitizeSvgElement(root: Element): void {
+  stripDangerousAttributes(root);
+
+  Array.from(root.children).forEach((child) => {
+    const tagName = child.tagName.toLowerCase();
+    if (tagName === 'script' || tagName === 'foreignobject') {
+      child.remove();
+      return;
+    }
+    sanitizeSvgElement(child);
+  });
+}
+
+/**
+ * Sanitizes a raw SVG markup fragment (e.g. from a fetched icon-set JSON
+ * file) by parsing it and running it through sanitizeSvgElement. Returns
+ * an empty string if the fragment fails to parse as XML.
+ */
+function sanitizeSvgFragment(fragment: string): string {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(
+    `<svg xmlns="http://www.w3.org/2000/svg">${fragment}</svg>`,
+    'image/svg+xml'
+  );
+  const root = doc.querySelector('svg');
+
+  if (!root || doc.querySelector('parsererror')) {
+    return '';
+  }
+
+  sanitizeSvgElement(root);
+  return root.innerHTML;
 }
 
 @customElement('forge-icon')
@@ -149,8 +211,12 @@ export class ForgeIcon extends BaseElement {
   @state() private iconData?: IconData;
   @state() private loading = false;
   @state() private error = false;
-  @state() protected renderTime = 0;
-  @state() protected renderCount = 0;
+  // Plain (non-reactive) fields, matching BaseElement's renderTime/renderCount:
+  // these are written synchronously from firstUpdated()/updated(), and making
+  // them @state() would schedule a second update after the first completes
+  // (Lit's "scheduled an update after an update completed" warning).
+  protected renderTime = 0;
+  protected renderCount = 0;
 
   static registerIcon(name: string, svg: string, viewBox?: string): void {
     this.iconRegistry.set(name, { svg, viewBox });
@@ -170,7 +236,17 @@ export class ForgeIcon extends BaseElement {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      this.registerIcons(data);
+      // Icon sets are fetched from remote/user-supplied URLs, so sanitize
+      // the raw SVG strings before they enter the registry.
+      const sanitized: Record<string, string | IconData> = {};
+      Object.entries(data as Record<string, string | IconData>).forEach(([name, value]) => {
+        if (typeof value === 'string') {
+          sanitized[name] = sanitizeSvgFragment(value);
+        } else {
+          sanitized[name] = { ...value, svg: sanitizeSvgFragment(value.svg) };
+        }
+      });
+      this.registerIcons(sanitized);
     } catch (error) {
       console.error('Failed to load icon set:', error);
       throw error;
@@ -182,47 +258,37 @@ export class ForgeIcon extends BaseElement {
     this.updateAria();
   }
 
-  protected override firstUpdated(): void {
-    const startTime = performance.now();
+  protected override willUpdate(changedProperties: PropertyValues): void {
+    super.willUpdate(changedProperties);
 
-    // Load icon on first update when properties are ready
-    if (this.name && ForgeIcon.iconRegistry.has(this.name)) {
-      this.iconData = ForgeIcon.iconRegistry.get(this.name)!;
-      this.error = false;
-      this.trackRenderPerformance(startTime);
-      return; // Don't call loadIcon if we found it in registry
-    }
-
-    if (this.name || this.src) {
-      this.loadIcon();
-    } else {
-      // No icon to load, but still track performance
-      this.trackRenderPerformance(startTime);
-    }
-  }
-
-  override updated(changedProperties: Map<string, unknown>): void {
-    super.updated(changedProperties);
-
-    // Reload icon if name/src changed (but skip if this is the first update from undefined)
+    // Compute icon data synchronously in willUpdate (before render) rather
+    // than in firstUpdated()/updated(): setting the reactive `iconData`/
+    // `error` state from those post-render hooks would schedule a second
+    // update right after the first completes (Lit's "scheduled an update
+    // after an update completed" warning). See select.ts for the same
+    // pattern.
+    const isFirstUpdate = !this.hasUpdated;
     const nameChanged = changedProperties.has('name');
     const srcChanged = changedProperties.has('src');
-    const isFirstUpdate =
-      (changedProperties.has('name') && changedProperties.get('name') === undefined) ||
-      (changedProperties.has('src') && changedProperties.get('src') === undefined);
 
-    // Skip if this is handled by firstUpdated
-    if (!isFirstUpdate && (nameChanged || srcChanged)) {
-      // Check registry synchronously first to avoid unnecessary async operations
+    if (isFirstUpdate || nameChanged || srcChanged) {
+      const startTime = performance.now();
+
       if (this.name && ForgeIcon.iconRegistry.has(this.name)) {
-        const startTime = performance.now();
         this.iconData = ForgeIcon.iconRegistry.get(this.name)!;
         this.error = false;
         this.trackRenderPerformance(startTime);
       } else if (this.name || this.src) {
         this.loadIcon();
+      } else if (isFirstUpdate) {
+        // No icon to load, but still track performance
+        this.trackRenderPerformance(startTime);
       }
     }
+  }
+
+  override updated(changedProperties: PropertyValues): void {
+    super.updated(changedProperties);
 
     if (
       changedProperties.has('label') ||
@@ -309,6 +375,8 @@ export class ForgeIcon extends BaseElement {
       const errorMessage = parserError ? parserError.textContent : 'No <svg> element found';
       throwInvalidSVGError('ForgeIcon', errorMessage || undefined);
     }
+
+    sanitizeSvgElement(svg);
 
     const viewBox = svg.getAttribute('viewBox') || undefined;
     const svgContent = svg.innerHTML;

@@ -4,13 +4,19 @@
   "type": "module",
   "private": false,
   "description": "Forge Tokens CLI to pull tokens from Figma and generate CSS/themes.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dev-ignis/forge.git"
+  },
   "bin": {
     "forge-tokens": "bin/forge-tokens.mjs"
   },
   "files": [
     "bin",
     "lib",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "exports": {
     ".": "./lib/figma.mjs"

@@ -1,5 +1,5 @@
 import { fixture, html, expect } from '@open-wc/testing';
-import { createSpy } from '../../../test/test-helpers';
+import { createSpy, spyOn } from '../../../test/test-helpers';
 import './select';
 import type { ForgeSelect, SelectOption } from './select';
 
@@ -98,6 +98,21 @@ describe('ForgeSelect', () => {
       expect(description?.textContent?.trim()).to.equal('Choose your preferred size');
     });
 
+    it('should render matching ids for aria-labelledby/aria-describedby references', async () => {
+      element.label = 'Select Size';
+      element.description = 'Choose your preferred size';
+      await element.updateComplete;
+
+      const trigger = element.shadowRoot!.querySelector('.select-trigger') as HTMLButtonElement;
+      const label = element.shadowRoot!.querySelector('#label');
+      const description = element.shadowRoot!.querySelector('#description');
+
+      expect(label).to.exist;
+      expect(description).to.exist;
+      expect(trigger.getAttribute('aria-labelledby')).to.equal('label');
+      expect(trigger.getAttribute('aria-describedby')).to.equal('description');
+    });
+
     it('should show required indicator', async () => {
       element.label = 'Select Size';
       element.required = true;
@@ -106,6 +121,22 @@ describe('ForgeSelect', () => {
       const indicator = element.shadowRoot!.querySelector('.required-indicator');
       expect(indicator).to.exist;
       expect(indicator?.textContent).to.equal('*');
+    });
+  });
+
+  describe('Update Lifecycle', () => {
+    it('should not schedule an update after an update completed when options change', async () => {
+      const warnSpy = spyOn(console, 'warn');
+
+      element.options = defaultOptions;
+      await element.updateComplete;
+
+      const scheduledUpdateWarning = warnSpy.mock.calls.some(call =>
+        call.some(arg => typeof arg === 'string' && arg.includes('scheduled an update'))
+      );
+      expect(scheduledUpdateWarning).to.be.false;
+
+      warnSpy.mockRestore();
     });
   });
 

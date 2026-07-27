@@ -373,9 +373,18 @@ export class ForgeSelect extends BaseElement {
     document.removeEventListener('click', this.handleDocumentClick);
   }
 
+  override willUpdate(changedProperties: PropertyValues): void {
+    super.willUpdate(changedProperties);
+
+    if (changedProperties.has('options')) {
+      this.filteredOptions = this.options;
+      this.searchQuery = '';
+    }
+  }
+
   override updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
-    
+
     if (changedProperties.has('open')) {
       this.setAttribute('aria-expanded', String(this.open));
       if (this.open && this.searchable) {
@@ -389,11 +398,6 @@ export class ForgeSelect extends BaseElement {
       } else {
         this.removeAttribute('aria-disabled');
       }
-    }
-
-    if (changedProperties.has('options')) {
-      this.filteredOptions = this.options;
-      this.searchQuery = '';
     }
 
     if (changedProperties.has('error') || changedProperties.has('errorMessage')) {
@@ -691,13 +695,13 @@ export class ForgeSelect extends BaseElement {
     const content = html`
       <div class="select-wrapper">
         ${this.label ? html`
-          <label class="select-label" part="label">
+          <label id="label" class="select-label" part="label">
             ${this.label}
             ${this.required ? html`<span class="required-indicator">*</span>` : ''}
           </label>
         ` : ''}
         ${this.description ? html`
-          <span class="select-description" part="description">
+          <span id="description" class="select-description" part="description">
             ${this.description}
           </span>
         ` : ''}

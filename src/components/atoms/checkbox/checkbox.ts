@@ -1,5 +1,5 @@
 import { LitElement, html, css, PropertyValues } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { customElement, property, query } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { BaseElement } from '../../../core/BaseElement';
 import '../icon/icon';
@@ -227,9 +227,6 @@ export class ForgeCheckbox extends BaseElement {
   @property({ type: Boolean, attribute: 'show-metrics' }) showMetrics = false;
 
   @query('.checkbox-input') private input!: HTMLInputElement;
-  
-  @state() protected renderTime = 0;
-  @state() protected renderCount = 0;
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -241,14 +238,19 @@ export class ForgeCheckbox extends BaseElement {
     this.updateAria();
   }
 
+  override willUpdate(changedProperties: PropertyValues): void {
+    super.willUpdate(changedProperties);
+
+    if ((changedProperties.has('checked') || changedProperties.has('indeterminate')) && this.indeterminate) {
+      this.checked = false;
+    }
+  }
+
   override updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
-    
+
     if (changedProperties.has('checked') || changedProperties.has('indeterminate')) {
       this.setAttribute('aria-checked', this.getAriaChecked());
-      if (this.indeterminate) {
-        this.checked = false;
-      }
     }
 
     if (changedProperties.has('disabled')) {

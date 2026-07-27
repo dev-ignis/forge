@@ -257,8 +257,6 @@ export class ForgeBadge extends BaseElement {
   @property({ type: Boolean, attribute: 'dev-mode' }) devMode = false;
   @property({ type: Boolean, attribute: 'show-metrics' }) showMetrics = false;
 
-  @state() protected renderTime = 0;
-  @state() protected renderCount = 0;
   @state() private previousCount = 0;
 
   override connectedCallback(): void {
@@ -268,11 +266,18 @@ export class ForgeBadge extends BaseElement {
     this.updateAria();
   }
 
-  override updated(changedProperties: PropertyValues): void {
-    super.updated(changedProperties);
-    
+  override willUpdate(changedProperties: PropertyValues): void {
+    super.willUpdate(changedProperties);
+
     if (changedProperties.has('count')) {
       this.previousCount = changedProperties.get('count') ?? 0;
+    }
+  }
+
+  override updated(changedProperties: PropertyValues): void {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('count')) {
       this.updateAriaLabel();
       this.animateCountChange();
     }

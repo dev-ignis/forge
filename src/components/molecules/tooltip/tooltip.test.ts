@@ -276,11 +276,26 @@ describe('ForgeTooltip', () => {
       element.htmlContent = true;
       element.content = '<strong>Bold text</strong>';
       await element.updateComplete;
-      
+
       const shadowRoot = element.shadowRoot!;
       const htmlContainer = shadowRoot.querySelector('.tooltip__html');
       expect(htmlContainer).toBeDefined();
       expect(htmlContainer?.innerHTML).toBe('<strong>Bold text</strong>');
+    });
+
+    it('should sanitize script tags and event-handler attributes from HTML content', async () => {
+      element.htmlContent = true;
+      element.content = '<div onclick="window.xssFired = true">Hi<script>window.xssFired = true;</script></div>';
+      await element.updateComplete;
+
+      const shadowRoot = element.shadowRoot!;
+      const htmlContainer = shadowRoot.querySelector('.tooltip__html');
+      expect(htmlContainer).toBeDefined();
+      expect(htmlContainer?.querySelector('script')).toBeNull();
+      expect(htmlContainer?.querySelector('div')?.hasAttribute('onclick')).toBe(false);
+      expect(htmlContainer?.innerHTML).not.toContain('<script');
+      expect(htmlContainer?.innerHTML).not.toContain('onclick');
+      expect(htmlContainer?.textContent?.trim()).toBe('Hi');
     });
   });
 

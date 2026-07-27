@@ -567,6 +567,6 @@ This component is fully compliant with:
 ## Related Components
 
 - [Pagination](./pagination.md) - Often used together for data navigation
-- [Checkbox](../checkbox.md) - Used for row selection
-- [Button](../button.md) - Used for action buttons
-- [Icon](../icon.md) - Used for sort indicators and actions
+- [Checkbox](../atoms/checkbox.md) - Used for row selection
+- [Button](../atoms/button.md) - Used for action buttons
+- [Icon](../atoms/icon.md) - Used for sort indicators and actions

@@ -377,10 +377,6 @@ export class ForgeFormField extends BaseElement {
 
   private getAriaDescribedBy(): string {
     const ids = [];
-    // Always include these IDs if elements exist, for test consistency
-    ids.push(`error-accessible`);
-    ids.push(`warning-accessible`);
-    ids.push(`success-accessible`);
     if (this.errorMessage) ids.push(`error-${this.name}`);
     if (this.warningMessage) ids.push(`warning-${this.name}`);
     if (this.successMessage) ids.push(`success-${this.name}`);

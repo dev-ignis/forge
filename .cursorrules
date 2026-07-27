@@ -4,17 +4,17 @@
 - Package: @nexcraft/forge
 - Description: AI-native web component library with React/Vue/Angular integrations
 - Repository: https://github.com/dev-ignis/forge
-- Documentation: ./docs/ai-methods.md
+- Documentation: ./docs/ai/metadata-reference.md
 
 ## Import Preferences
 
 ### React Projects (Recommended)
 ```javascript
 // Prefer React integrations for better TypeScript support and SSR
-import { ForgeButton, ForgeInput, ForgeCard } from '@nexcraft/forge/integrations/react'
+import { ForgeButton, ForgeInput, ForgeCard } from '@nexcraft/forge-react'
 
 // For forms with validation
-import { RHFForgeInput, RHFForgeSelect } from '@nexcraft/forge/integrations/rhf'
+import { RHFForgeInput, RHFForgeSelect } from '@nexcraft/forge-rhf'
 ```
 
 ### Tree-shaking / Bundle Optimization
@@ -105,7 +105,7 @@ forge-button {
 
 ### React + TypeScript
 ```typescript
-import { ForgeButton } from '@nexcraft/forge/integrations/react'
+import { ForgeButton } from '@nexcraft/forge-react'
 
 interface Props {
   onSubmit: () => void
@@ -128,7 +128,7 @@ function SubmitButton({ onSubmit, loading }: Props) {
 ### React Hook Form
 ```javascript
 import { useForm } from 'react-hook-form'
-import { RHFForgeInput, RHFForgeSelect } from '@nexcraft/forge/integrations/rhf'
+import { RHFForgeInput, RHFForgeSelect } from '@nexcraft/forge-rhf'
 
 function UserForm() {
   const { control, handleSubmit } = useForm()
@@ -155,7 +155,7 @@ function UserForm() {
 ### Next.js SSR
 ```javascript
 // Components work with SSR out of the box
-import { ForgeCard, ForgeButton } from '@nexcraft/forge/integrations/react'
+import { ForgeCard, ForgeButton } from '@nexcraft/forge-react'
 
 export default function Page() {
   return (
@@ -211,10 +211,6 @@ console.log(`Available: ${aiIndex.summary.totalComponents} components`)
 // Detailed component specifications
 import aiManifest from '@nexcraft/forge/ai-manifest.json'
 console.log(aiManifest.components[0]) // Full component details
-
-// Framework-specific schemas
-import buttonSpec from '@nexcraft/forge/ai-tools/react/button.json'
-import vanillaSpec from '@nexcraft/forge/ai-tools/vanilla/button.json'
 ```
 
 ### AI Method Usage
@@ -238,9 +234,7 @@ const aiState = button.aiState
 ## Documentation Links
 - **AI Index**: ./ai-index.json (quick component discovery)
 - **AI Manifest**: ./ai-manifest.json (detailed specifications)
-- **AI Tools**: ./ai-tools/ (framework-specific schemas)
-- AI Methods Guide: ./docs/ai-methods.md
-- Common Patterns: ./docs/patterns/AI_COMMON_PATTERNS.md
+- AI Methods Guide: ./docs/ai/metadata-reference.md
 - Import Guide: ./docs/guides/AI_IMPORT_GUIDE.md
 
 ## Avoid These Patterns

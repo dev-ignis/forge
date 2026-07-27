@@ -1,4 +1,5 @@
 import { expect, fixture, html, elementUpdated } from '@open-wc/testing';
+import { spyOn } from '../../../test/test-helpers';
 import './modal'; // Register the element
 import { ForgeModal } from './modal';
 
@@ -26,6 +27,26 @@ describe('ForgeModal', () => {
     el.close();
     await elementUpdated(el);
     expect(el.open).to.be.false;
+  });
+
+  it('should not schedule an update after an update completed when opened and closed', async () => {
+    const el = await fixture<ForgeModal>(html` <forge-modal>Content</forge-modal> `);
+    // Lit dedupes identical dev-mode warnings process-wide; reset so an
+    // earlier test's trigger of the same warning can't mask a regression.
+    (globalThis as { litIssuedWarnings?: Set<string> }).litIssuedWarnings?.clear();
+    const warnSpy = spyOn(console, 'warn');
+
+    el.show();
+    await el.updateComplete;
+    el.close();
+    await el.updateComplete;
+
+    const scheduledUpdateWarning = warnSpy.mock.calls.some(call =>
+      call.some(arg => typeof arg === 'string' && arg.includes('scheduled an update'))
+    );
+    expect(scheduledUpdateWarning).to.be.false;
+
+    warnSpy.mockRestore();
   });
 
   it('should render different sizes', async () => {

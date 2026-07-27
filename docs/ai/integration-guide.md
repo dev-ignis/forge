@@ -1059,5 +1059,5 @@ AI agents can discover these methods through:
 ## Related Documentation
 
 - [AI Metadata Reference](./metadata-reference.md)
-- [Component API Reference](../api-reference.md)
-- [Performance Monitoring Guide](../performance-monitoring-guide.md)
+- Component API Reference
+- [Performance Monitoring Guide](../performance-monitoring.md)

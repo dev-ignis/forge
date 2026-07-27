@@ -502,4 +502,4 @@ updates:
 
 ---
 
-**Questions?** Check our [troubleshooting guide](../troubleshooting.md) or [open an issue](https://github.com/dev-ignis/forge/issues)! 📦
+**Questions?** Check our troubleshooting guide or [open an issue](https://github.com/dev-ignis/forge/issues)! 📦

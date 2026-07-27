@@ -1,9 +1,9 @@
 # @nexcraft/forge
 
 [![npm version](https://img.shields.io/npm/v/@nexcraft/forge.svg)](https://www.npmjs.com/package/@nexcraft/forge)
-[![Bundle Size](https://img.shields.io/badge/bundle%20size-<10KB-brightgreen.svg)](https://bundlephobia.com/package/@nexcraft/forge)
-[![Test Coverage](https://img.shields.io/badge/coverage-86.4%25-brightgreen.svg)](./coverage)
-[![WCAG 2.1 AA](https://img.shields.io/badge/WCAG%202.1-AA-blue.svg)](https://www.w3.org/WAI/WCAG21/quickref/)
+[![Bundle Size](https://img.shields.io/badge/bundle%20size-91KB%20gzip-yellow.svg)](https://bundlephobia.com/package/@nexcraft/forge)
+[![Test Coverage](https://img.shields.io/badge/coverage-85.5%25-brightgreen.svg)](#-testing)
+[![Accessibility](https://img.shields.io/badge/a11y-organisms%20tested-blue.svg)](https://www.w3.org/WAI/WCAG21/quickref/)
 [![AI-Native](https://img.shields.io/badge/AI-Native-purple.svg)](./docs/ai/metadata-reference.md)
 [![Performance Monitored](https://img.shields.io/badge/Performance-Monitored-orange.svg)](./docs/performance-monitoring.md)
 [![Figma Tokens](https://img.shields.io/badge/Figma%20Tokens-CLI%2FMCP-blue.svg)](./docs/guides/figma-to-forge.md)
@@ -15,7 +15,7 @@
 
 ## 🤖 **FOR AI ASSISTANTS & LLMs**
 
-**AI Context**: @nexcraft/forge is an AI-native web component library with 26+ components and React/Vue/Angular integrations.
+**AI Context**: @nexcraft/forge is an AI-native web component library with 30 components (14 atoms, 9 molecules, 7 organisms) and React/Vue/Angular integrations.
 
 **Quick AI Reference**:
 - 📦 **React**: `import { ForgeButton, ForgeInput } from '@nexcraft/forge-react'`
@@ -220,7 +220,7 @@ console.log(btn.getPossibleActions()); // AI-ready!
 ### Development Setup
 ```bash
 # Clone and setup
-git clone https://github.com/nexcraft/forge.git
+git clone https://github.com/dev-ignis/forge.git
 cd forge
 npm install
 
@@ -254,18 +254,18 @@ npm install @nexcraft/forge-rhf               # + React Hook Form
 
 ## 📋 Component Index
 
-Quick reference to all 26 components with HTML tag names:
+Quick reference to all 30 components with HTML tag names:
 
-### Organisms (6 components)
-`<forge-tabs>` • `<forge-pagination>` • `<forge-navigation-bar>` • `<forge-data-table>` • `<forge-accordion>` • `<forge-tree-view>`
+### Organisms (7 components)
+`<forge-tabs>` • `<forge-pagination>` • `<forge-navigation-bar>` • `<forge-data-table>` • `<forge-data-grid>` • `<forge-accordion>` • `<forge-tree-view>`
 
-### Molecules (8 components) 
-`<forge-tooltip>` • `<forge-date-picker>` • `<forge-dropdown>` • `<forge-form-field>` • `<forge-modal>` • `<forge-multi-select>` • `<forge-card>` • `<forge-toast>`
+### Molecules (9 components)
+`<forge-tooltip>` • `<forge-date-picker>` • `<forge-dropdown>` • `<forge-form-field>` • `<forge-modal>` • `<forge-multi-select>` • `<forge-card>` • `<forge-toast>` • `<forge-toast-container>`
 
-### Atoms (12 components)
-`<forge-button>` • `<forge-input>` • `<forge-icon>` • `<forge-alert>` • `<forge-checkbox>` • `<forge-badge>` • `<forge-switch>` • `<forge-radio-group>` • `<forge-select>` • `<forge-progress>` • `<forge-skeleton>` • `<forge-aspect-ratio>`
+### Atoms (14 components)
+`<forge-button>` • `<forge-input>` • `<forge-icon>` • `<forge-alert>` • `<forge-checkbox>` • `<forge-badge>` • `<forge-switch>` • `<forge-radio-group>` • `<forge-select>` • `<forge-progress>` • `<forge-progress-circle>` • `<forge-skeleton>` • `<forge-aspect-ratio>` • `<forge-avatar>`
 
-**Plus supporting components**: `<forge-progress-circle>` • `<forge-toast-container>` • `<forge-performance-dashboard>`
+**Plus supporting dev tools**: `<forge-performance-dashboard>`
 
 💡 **Can't find what you're looking for?** Try searching for keywords like "progress", "toast", "skeleton" in the [Component Showcase](#-components-showcase) section below.
 
@@ -357,7 +357,7 @@ const slowComponents = performanceDashboard.getSlowComponents(16);
 | **⚡ Performance Dashboard** | Real-time visual monitoring + auto-degradation | Self-optimizing components with performance insights |
 | **🌐 Framework Independence** | True Web Components | Use with React, Vue, Angular, or vanilla JS |
 | **🛡️ Style Isolation** | Shadow DOM guaranteed | Complete style encapsulation, zero CSS conflicts |
-| **📦 Optimized Bundle** | <10KB per component | Lightweight, tree-shakeable, production-ready |
+| **📦 Bundle Size** | ~91KB gzip (467KB raw) full bundle | Selective imports currently still pull the full bundle; true per-component tree-shaking is on the roadmap |
 | **🔮 Future Proof** | Built on web standards | Will work in browsers for decades to come |
 
 ### 🚀 **Zero-Config Magic**
@@ -417,25 +417,26 @@ Foundation components with comprehensive test coverage:
 
 | Component | Test Coverage | Key Features | Documentation |
 |-----------|--------------|--------------|---------------|
-| **Button** | 92.38% | 5 variants, ripple effect, loading states | [📚 Docs](./docs/components/button.md) |
-| **Input** | 84.56% | 7 types, validation, clearable | [📚 Docs](./docs/components/input.md) |
-| **Icon** | 78.38% | Registry system, lazy loading | [📚 Docs](./docs/components/icon.md) |
-| **Alert** | 97.02% | Auto-dismiss, animations | [📚 Docs](./docs/components/alert.md) |
-| **Checkbox** | 98.50% | Indeterminate state | [📚 Docs](./docs/components/checkbox.md) |
-| **Badge** | 100% | Count/dot modes, positions | [📚 Docs](./docs/components/badge.md) |
-| **Switch** | 98.50% | Loading state, custom labels | [📚 Docs](./docs/components/switch.md) |
-| **RadioGroup** | 93.79% | Group management, keyboard nav | [📚 Docs](./docs/components/radio-group.md) |
-| **Select** | 84.69% | Search/filter, groups | [📚 Docs](./docs/components/select.md) |
+| **Button** | 92.38% | 5 variants, ripple effect, loading states | [📚 Docs](./docs/components/atoms/button.md) |
+| **Input** | 84.56% | 7 types, validation, clearable | [📚 Docs](./docs/components/atoms/input.md) |
+| **Icon** | 78.38% | Registry system, lazy loading | [📚 Docs](./docs/components/atoms/icon.md) |
+| **Alert** | 97.02% | Auto-dismiss, animations | [📚 Docs](./docs/components/atoms/alert.md) |
+| **Checkbox** | 98.50% | Indeterminate state | [📚 Docs](./docs/components/atoms/checkbox.md) |
+| **Badge** | 100% | Count/dot modes, positions | [📚 Docs](./docs/components/atoms/badge.md) |
+| **Switch** | 98.50% | Loading state, custom labels | [📚 Docs](./docs/components/atoms/switch.md) |
+| **RadioGroup** | 93.79% | Group management, keyboard nav | [📚 Docs](./docs/components/atoms/radio-group.md) |
+| **Select** | 84.69% | Search/filter, groups | [📚 Docs](./docs/components/atoms/select.md) |
 | **🆕 Progress** | 100% | Linear & circular variants, indeterminate states | [📚 Docs](./docs/components/atoms/progress.md) |
 | **🆕 Skeleton** | 100% | Shimmer animations, shape variants, accessibility | [📚 Docs](./docs/components/atoms/skeleton.md) |
 | **🆕 AspectRatio** | 100% | Responsive containers, preset ratios, constraints | [📚 Docs](./docs/components/atoms/aspect-ratio.md) |
+| **🆕 Avatar** | 98.90% | Image/initials fallback, status indicators, shape variants | [📚 Docs](./docs/components/atoms/avatar.md) |
 
 ### 📊 **Component Stats**
-- **Total Components**: 27 production-ready (12 atoms + 8 molecules + 7 organisms)
-- **Overall Test Coverage**: 87.2% 
+- **Total Components**: 30 production-ready (14 atoms + 9 molecules + 7 organisms)
+- **Overall Test Coverage**: 85.5%
 - **Total Tests**: 1140+ passing (99% pass rate)
 - **Performance**: All components <2ms render
-- **Accessibility**: 100% WCAG 2.1 AA compliant
+- **Accessibility**: Automated axe-core a11y tests cover the organism components; full-catalog coverage is on the roadmap
 - **AI Coverage**: 100% metadata implementation
 - **ADR Compliance**: 100% compliant with all 16 ADRs
 - **🎯 Phase 7 Complete**: Essential modern UI components for any application!
@@ -447,23 +448,21 @@ See our **[Implementation Roadmap](./plans/implementation-roadmap.md)** for the 
 
 ```bash
 # Unit tests
+npm run test:unit
+
+# Accessibility tests (axe-core, organism components)
+npm run test:a11y
+
+# Full suite (unit + accessibility)
 npm run test
 
-# E2E tests
-npm run test:e2e
-
-# Visual regression
-npm run test:visual
-
-# All tests
-npm run test:all
+# Coverage report
+npm run test:coverage
 ```
 
-Our comprehensive testing strategy includes:
-- ✅ Unit tests (90%+ coverage)
-- ✅ Visual regression (Chromatic)
-- ✅ Cross-framework E2E tests
-- ✅ Accessibility audits
+Our testing strategy includes:
+- ✅ Unit tests (85.5% coverage)
+- ✅ Accessibility audits (axe-core; organism components today, full-catalog coverage on the roadmap)
 - ✅ Performance benchmarks
 
 ## 🤝 Contributing
@@ -482,7 +481,7 @@ npm run lint
 npm run type-check
 
 # Run all tests
-npm run test:all
+npm run test
 ```
 
 ## 📊 Performance & Quality Metrics
@@ -496,28 +495,28 @@ npm run test:all
 | **AI Metadata Coverage** | 100% | **100%** | ✅ MAINTAINED |
 | **Performance Monitoring** | Built-in | **Fully Implemented** | ✅ MAINTAINED |
 | **Total Tests** | 1000+ | **1140+ passing** | 🆙 **IMPROVED** |
-| **Component Count** | 26 → 27 | **27 components** | 📈 **EXPANDED** |
+| **Component Count** | 26 → 27 | **30 components** | 📈 **EXPANDED** |
 
 ### 🏆 **Phase 7 Complete - Essential Components Foundation!**
 | Metric | Target | Current | Status |
 |--------|--------|---------|--------|
-| **Atom Components** | 12 essential | **12/12** | ✅ COMPLETED |
-| **Molecule Components** | 8 advanced | **8/8** | ✅ COMPLETED |
+| **Atom Components** | 12 essential | **14/14** | ✅ COMPLETED |
+| **Molecule Components** | 8 advanced | **9/9** | ✅ COMPLETED |
 | **Organism Components** | 6 planned | **7/7** | 🆙 **EXCEEDED** |
-| **Test Coverage** | >85% | **87.2%** | ✅ ACHIEVED |
-| **Bundle Size (per component)** | <10KB | **<10KB** | ✅ ACHIEVED |
+| **Test Coverage** | >85% | **85.5%** | ✅ ACHIEVED |
+| **Bundle Size (full bundle, gzip)** | Small per-component (original target) | **~91KB** | 🚧 ROADMAP (tree-shaking, Phase 3) |
 | **Component Render** | <2ms | **<1ms** | ✅ EXCEEDED |
-| **Accessibility** | WCAG 2.1 AA | **100% Compliant** | ✅ ACHIEVED |
+| **Accessibility** | WCAG 2.1 AA | **Organisms tested; full catalog on roadmap** | 🚧 IN PROGRESS |
 | **ADR Compliance** | Full | **100% Compliant** | ✅ ACHIEVED |
 
 ### 🚀 **Why This Matters**
 - **🏗️ Enterprise Data Grid**: ForgeDataGrid handles 10,000+ rows with virtual scrolling
 - **⚡ Advanced Features**: Inline editing, multi-column sorting, export, filtering
-- **87.2% Test Coverage**: Your components won't break in production  
+- **85.5% Test Coverage**: Your components won't break in production  
 - **<1ms Render Time**: Faster than the human eye can perceive
 - **100% AI Coverage**: Every component can talk to ChatGPT, Claude, Copilot
 - **1140+ Tests**: More comprehensive testing than enterprise libraries
-- **27 Production Components**: 12 atoms, 8 molecules, 7 organisms - enterprise-ready toolkit
+- **30 Production Components**: 14 atoms, 9 molecules, 7 organisms - enterprise-ready toolkit
 - **🏆 Phase 8 Started**: Advanced data management components for complex applications
 
 ## 📄 License
@@ -527,8 +526,8 @@ MIT © Nexcraft Team
 ## 🔗 Links
 
 - **[NPM Package](https://www.npmjs.com/package/@nexcraft/forge)** - Published package
-- **[GitHub](https://github.com/nexcraft/forge)** - Source code  
-- **[Storybook](https://nexcraft.github.io/forge)** - Live component playground (Coming Soon)
+- **[GitHub](https://github.com/dev-ignis/forge)** - Source code  
+- **Storybook** - Run locally via `npm run storybook` (hosted deployment is currently down)
 - **[Documentation](./plans/)** - Complete planning documentation
 
 ## 💡 Philosophy & Vision

@@ -242,9 +242,9 @@ describe('ForgeFormField', () => {
   describe('ARIA Attributes and Accessibility', () => {
     beforeEach(async () => {
       element = await fixture<ForgeFormField>(html`
-        <forge-form-field 
+        <forge-form-field
           label="Accessible Field"
-          name="accessible"
+          name="contact-email"
           .helpText=${"Help text"}
           .errorMessage=${"Error message"}
           validation-state="error"
@@ -254,24 +254,35 @@ describe('ForgeFormField', () => {
 
     it('should set aria-labelledby on input', () => {
       const input = element.shadowRoot?.querySelector('forge-input');
-      expect(input?.getAttribute('aria-labelledby')).to.equal('label-accessible');
+      expect(input?.getAttribute('aria-labelledby')).to.equal('label-contact-email');
     });
 
     it('should set aria-describedby with error message', () => {
       const input = element.shadowRoot?.querySelector('forge-input');
-      expect(input?.getAttribute('aria-describedby')).to.include('error-accessible');
+      expect(input?.getAttribute('aria-describedby')).to.include('error-contact-email');
+    });
+
+    it('should reference an id that actually exists in the rendered DOM', () => {
+      const input = element.shadowRoot?.querySelector('forge-input');
+      const describedBy = input?.getAttribute('aria-describedby') ?? '';
+      const ids = describedBy.split(' ').filter(Boolean);
+      expect(ids.length).to.be.greaterThan(0);
+      for (const id of ids) {
+        const referenced = element.shadowRoot?.getElementById(id);
+        expect(referenced, `expected #${id} to exist in shadow DOM`).to.exist;
+      }
     });
 
     it('should update aria-describedby with multiple messages', async () => {
       element.warningMessage = 'Warning';
       element.successMessage = 'Success';
       await elementUpdated(element);
-      
+
       const input = element.shadowRoot?.querySelector('forge-input');
       const describedBy = input?.getAttribute('aria-describedby');
-      expect(describedBy).to.include('error-accessible');
-      expect(describedBy).to.include('warning-accessible');
-      expect(describedBy).to.include('success-accessible');
+      expect(describedBy).to.include('error-contact-email');
+      expect(describedBy).to.include('warning-contact-email');
+      expect(describedBy).to.include('success-contact-email');
     });
 
     it('should have role="alert" on error message', async () => {

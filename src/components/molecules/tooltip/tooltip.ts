@@ -4,9 +4,67 @@ import { classMap } from 'lit/directives/class-map.js';
 import { BaseElement } from '../../../core/BaseElement';
 import type { AIMetadata, AIAction, AIStateExplanation } from '../../../core/ai-metadata.types';
 
+/* global DOMParser */
+
 export type TooltipPosition = 'top' | 'right' | 'bottom' | 'left' | 'auto';
 export type TooltipTrigger = 'hover' | 'click' | 'focus' | 'manual';
 export type TooltipVariant = 'default' | 'dark' | 'light' | 'error' | 'warning' | 'success';
+
+const DANGEROUS_HTML_TAGS = new Set(['script', 'iframe', 'object', 'embed', 'foreignobject']);
+
+/**
+ * Removes event-handler attributes (on*) and javascript: href/src values
+ * from an element in place. Mirrors the guard in icon.ts's SVG sanitizer.
+ */
+function stripDangerousAttributes(element: Element): void {
+  Array.from(element.attributes).forEach((attr) => {
+    const attrName = attr.name.toLowerCase();
+    if (attrName.startsWith('on')) {
+      element.removeAttribute(attr.name);
+    } else if (
+      (attrName === 'href' || attrName === 'src') &&
+      /^\s*javascript:/i.test(attr.value)
+    ) {
+      element.removeAttribute(attr.name);
+    }
+  });
+}
+
+/**
+ * Recursively strips script/iframe/object/embed/foreignObject elements and
+ * dangerous attributes from a parsed HTML subtree, in place. See
+ * stripDangerousAttributes for scope/limitations.
+ */
+function sanitizeHtmlElement(root: Element): void {
+  stripDangerousAttributes(root);
+
+  Array.from(root.children).forEach((child) => {
+    const tagName = child.tagName.toLowerCase();
+    if (DANGEROUS_HTML_TAGS.has(tagName)) {
+      child.remove();
+      return;
+    }
+    sanitizeHtmlElement(child);
+  });
+}
+
+/**
+ * Sanitizes a raw HTML markup fragment (e.g. tooltip `content` in
+ * htmlContent mode) by parsing it and running it through
+ * sanitizeHtmlElement. This is a minimal defense-in-depth guard against
+ * hostile markup — it is NOT a full sanitizer.
+ *
+ * @see plans/analysis-2026-07 — full sanitization (e.g. DOMPurify) is a
+ * tracked roadmap item; this guard only covers the attack vectors that are
+ * cheap to neutralize without adding a dependency. See icon.ts's
+ * sanitizeSvgFragment for the sibling SVG implementation.
+ */
+function sanitizeHtmlFragment(fragment: string): string {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(fragment, 'text/html');
+  sanitizeHtmlElement(doc.body);
+  return doc.body.innerHTML;
+}
 
 /**
  * @slot - Default slot for tooltip content
@@ -270,28 +328,32 @@ export class ForgeTooltip extends BaseElement {
 
   protected firstUpdated(_changedProperties: PropertyValues): void {
     super.firstUpdated(_changedProperties);
-    // Set initial actualPosition first
-    this.actualPosition = this.position;
+    // willUpdate() already derived actualPosition from position before this
+    // first render; re-run now that the DOM exists so 'auto' can measure it.
     this.updatePosition();
+  }
+
+  protected override willUpdate(changedProperties: PropertyValues): void {
+    super.willUpdate(changedProperties);
+
+    // Derived-state computation lives here (before render) rather than in
+    // updated() to avoid scheduling a second update cycle after this one
+    // completes (see https://lit.dev/msg/change-in-update).
+    if (changedProperties.has('disabled') && this.disabled && this.isVisible) {
+      this.isVisible = false;
+    }
+
+    if (changedProperties.has('position')) {
+      this.updatePosition();
+    }
+
+    if (changedProperties.has('isVisible') && this.isVisible) {
+      this.updatePosition();
+    }
   }
 
   protected updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
-
-    if (changedProperties.has('disabled')) {
-      if (this.disabled && this.isVisible) {
-        this.isVisible = false;
-        // Force re-render after visibility change
-        this.requestUpdate();
-      }
-    }
-
-    if (changedProperties.has('position')) {
-      this.actualPosition = this.position;
-      this.updatePosition();
-      // Force re-render to apply new position classes
-      this.requestUpdate();
-    }
 
     if (changedProperties.has('isVisible')) {
       this.updateComponentState('visible', this.isVisible);
@@ -303,10 +365,6 @@ export class ForgeTooltip extends BaseElement {
           composed: true
         }));
       }, 0);
-      
-      if (this.isVisible) {
-        this.updatePosition();
-      }
     }
 
     if (changedProperties.has('trigger')) {
@@ -513,8 +571,8 @@ export class ForgeTooltip extends BaseElement {
           aria-hidden=${!this.isVisible}
         >
           ${this.showArrow ? html`<div class="tooltip__arrow"></div>` : ''}
-          ${this.htmlContent 
-            ? html`<div class="tooltip__html" .innerHTML=${this.content}></div>`
+          ${this.htmlContent
+            ? html`<div class="tooltip__html" .innerHTML=${sanitizeHtmlFragment(this.content)}></div>`
             : this.content
           }
         </div>

@@ -299,16 +299,19 @@ export class ForgeMultiSelect extends BaseElement {
 
   protected firstUpdated(_changedProperties: PropertyValues): void {
     super.firstUpdated(_changedProperties);
-    this.filteredOptions = this.options;
     this.initializeLiveRegion();
+  }
+
+  protected willUpdate(changedProperties: PropertyValues): void {
+    super.willUpdate(changedProperties);
+
+    if (changedProperties.has('options') || changedProperties.has('searchQuery')) {
+      this.filterOptions();
+    }
   }
 
   protected updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
-    
-    if (changedProperties.has('options') || changedProperties.has('searchQuery')) {
-      this.filterOptions();
-    }
 
     if (changedProperties.has('value')) {
       this.updateComponentState('selectedCount', this.value.length);
@@ -562,10 +565,14 @@ export class ForgeMultiSelect extends BaseElement {
     }));
   }
 
+  private escapeRegExp(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
   private highlightMatch(text: string): any {
     if (!this.searchQuery) return text;
     
-    const regex = new RegExp(`(${this.searchQuery})`, 'gi');
+    const regex = new RegExp(`(${this.escapeRegExp(this.searchQuery)})`, 'gi');
     const parts = text.split(regex);
     
     return html`${parts.map((part, i) => 

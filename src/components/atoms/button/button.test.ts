@@ -482,10 +482,35 @@ describe('ForgeButton', () => {
       const el = await fixture<ForgeButton>(html`
         <forge-button disabled>Disabled</forge-button>
       `);
-      
+
       const button = el.shadowRoot?.querySelector('button');
       expect(button?.hasAttribute('disabled')).to.be.true;
       expect(button?.getAttribute('aria-disabled')).to.equal('true');
+    });
+
+    it('should apply and style the ghost variant class', async () => {
+      const el = await fixture<ForgeButton>(html`
+        <forge-button variant="ghost">Ghost</forge-button>
+      `);
+
+      const button = el.shadowRoot?.querySelector('.button');
+      expect(button?.classList.contains('button--ghost')).to.be.true;
+
+      const styles = getComputedStyle(button as Element);
+      expect(styles.backgroundColor).to.equal('transparent');
+    });
+
+    it('should apply and style the link variant class', async () => {
+      const el = await fixture<ForgeButton>(html`
+        <forge-button variant="link">Link</forge-button>
+      `);
+
+      const button = el.shadowRoot?.querySelector('.button');
+      expect(button?.classList.contains('button--link')).to.be.true;
+
+      const styles = getComputedStyle(button as Element);
+      expect(styles.backgroundColor).to.equal('transparent');
+      expect(styles.padding).to.equal('0px');
     });
   });
 });

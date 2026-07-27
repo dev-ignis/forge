@@ -518,6 +518,6 @@ html`
 
 - [Accordion](./accordion.md) - Similar expandable behavior
 - [Navigation Bar](./navigation-bar.md) - For main navigation
-- [Checkbox](../checkbox.md) - Used for node selection
-- [Icon](../icon.md) - Used for node and state icons
-- [Input](../input.md) - Used for search functionality
+- [Checkbox](../atoms/checkbox.md) - Used for node selection
+- [Icon](../atoms/icon.md) - Used for node and state icons
+- [Input](../atoms/input.md) - Used for search functionality

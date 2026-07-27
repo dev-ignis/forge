@@ -674,5 +674,5 @@ export const AIMetadataUtils = {
 ## Related Documentation
 
 - [AI Integration Guide](./integration-guide.md)
-- [Component API Reference](../api-reference.md)
-- [Performance Monitoring Guide](../performance-monitoring-guide.md)
+- Component API Reference
+- [Performance Monitoring Guide](../performance-monitoring.md)

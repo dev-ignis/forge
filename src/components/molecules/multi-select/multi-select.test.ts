@@ -2,6 +2,7 @@ import { expect, fixture, html, elementUpdated, waitUntil } from '@open-wc/testi
 import './multi-select'; // Register the element
 import { ForgeMultiSelect } from './multi-select';
 import type { MultiSelectOption } from './multi-select';
+import { spyOn } from '../../../test/test-helpers';
 
 describe('ForgeMultiSelect', () => {
   const mockOptions: MultiSelectOption[] = [
@@ -209,6 +210,49 @@ describe('ForgeMultiSelect', () => {
     const mark = el.shadowRoot!.querySelector('mark');
     expect(mark).to.exist;
     expect(mark!.textContent).to.equal('App');
+  });
+
+  it('should not throw and should filter/highlight correctly when search contains regex metacharacters', async () => {
+    const specialOptions: MultiSelectOption[] = [
+      { value: 'a', label: 'Apple (Fresh)' },
+      { value: 'b', label: 'Banana [Ripe]' },
+      { value: 'c', label: 'Cherry' }
+    ];
+
+    const el = await fixture<ForgeMultiSelect>(html`
+      <forge-multi-select .options=${specialOptions}></forge-multi-select>
+    `);
+
+    // Open dropdown
+    const trigger = el.shadowRoot!.querySelector('.multi-select__trigger') as HTMLElement;
+    trigger.click();
+    await elementUpdated(el);
+
+    const searchInput = el.shadowRoot!.querySelector('forge-input') as any;
+
+    // Search for a literal "(" - should not throw and should match "Apple (Fresh)"
+    searchInput.dispatchEvent(new CustomEvent('input', {
+      detail: { value: '(' }
+    }));
+    await elementUpdated(el);
+
+    let visibleOptions = el.shadowRoot!.querySelectorAll('.multi-select__option');
+    expect(visibleOptions.length).to.equal(1);
+    let mark = el.shadowRoot!.querySelector('mark');
+    expect(mark).to.exist;
+    expect(mark!.textContent).to.equal('(');
+
+    // Search for a literal "[" - should not throw and should match "Banana [Ripe]"
+    searchInput.dispatchEvent(new CustomEvent('input', {
+      detail: { value: '[' }
+    }));
+    await elementUpdated(el);
+
+    visibleOptions = el.shadowRoot!.querySelectorAll('.multi-select__option');
+    expect(visibleOptions.length).to.equal(1);
+    mark = el.shadowRoot!.querySelector('mark');
+    expect(mark).to.exist;
+    expect(mark!.textContent).to.equal('[');
   });
 
   it('should select all options', async () => {
@@ -489,5 +533,44 @@ describe('ForgeMultiSelect', () => {
     await elementUpdated(el);
 
     expect(el.isOpen).to.be.false;
+  });
+
+  it('should not schedule an update after an update completed when options are set', async () => {
+    const el = await fixture<ForgeMultiSelect>(html`<forge-multi-select></forge-multi-select>`);
+    const warnSpy = spyOn(console, 'warn');
+
+    el.options = mockOptions;
+    await el.updateComplete;
+
+    const scheduledUpdateWarning = warnSpy.mock.calls.some(call =>
+      call.some(arg => typeof arg === 'string' && arg.includes('scheduled an update'))
+    );
+    expect(scheduledUpdateWarning).to.be.false;
+
+    warnSpy.mockRestore();
+  });
+
+  it('should not schedule an update after an update completed when searching', async () => {
+    const el = await fixture<ForgeMultiSelect>(html`
+      <forge-multi-select .options=${mockOptions}></forge-multi-select>
+    `);
+    const warnSpy = spyOn(console, 'warn');
+
+    const trigger = el.shadowRoot!.querySelector('.multi-select__trigger') as HTMLElement;
+    trigger.click();
+    await elementUpdated(el);
+
+    const searchInput = el.shadowRoot!.querySelector('forge-input') as any;
+    searchInput.dispatchEvent(new CustomEvent('input', {
+      detail: { value: 'app' }
+    }));
+    await el.updateComplete;
+
+    const scheduledUpdateWarning = warnSpy.mock.calls.some(call =>
+      call.some(arg => typeof arg === 'string' && arg.includes('scheduled an update'))
+    );
+    expect(scheduledUpdateWarning).to.be.false;
+
+    warnSpy.mockRestore();
   });
 });

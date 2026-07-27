@@ -717,5 +717,35 @@ describe('ForgeDropdown', () => {
       
       expect(updateStateSpy).toHaveBeenCalledWith('open', false);
     });
+
+    it('should not schedule an update after an update completed when reopened with a stale focus index', async () => {
+      element.items = mockItems;
+      element.isOpen = true;
+      await element.updateComplete;
+
+      // Move focus (e.g. via keyboard nav), then close and reopen without an
+      // intervening reset: reopening resets focusedIndex back to -1, which
+      // previously happened inside updated() and triggered a second update.
+      (element as any).focusedIndex = 1;
+      await element.updateComplete;
+
+      element.isOpen = false;
+      await element.updateComplete;
+
+      // Lit dedupes identical dev-mode warnings process-wide; reset so an
+      // earlier test's trigger of the same warning can't mask a regression.
+      (globalThis as { litIssuedWarnings?: Set<string> }).litIssuedWarnings?.clear();
+      const warnSpy = vi.spyOn(console, 'warn');
+
+      element.isOpen = true;
+      await element.updateComplete;
+
+      const scheduledUpdateWarning = warnSpy.mock.calls.some(call =>
+        call.some(arg => typeof arg === 'string' && arg.includes('scheduled an update'))
+      );
+      expect(scheduledUpdateWarning).toBe(false);
+
+      warnSpy.mockRestore();
+    });
   });
 });
