@@ -100,16 +100,16 @@ interface GridColumn {
   align?: 'left' | 'center' | 'right'; // Text alignment
   sortable?: boolean;            // Enable sorting
   filterable?: boolean;          // Enable filtering
-  resizable?: boolean;           // Enable column resizing
-  pinned?: 'left' | 'right' | false; // Pin column position
   type?: 'text' | 'number' | 'date' | 'boolean' | 'currency' | 'percentage'; // Data type
   format?: (value: unknown) => string; // Custom formatter function
   renderer?: (value: unknown, row: GridData) => TemplateResult; // Custom cell renderer
-  editor?: GridEditor;           // Custom editor configuration
+  editor?: GridEditor;           // Enables inline editing for the column (generic text input)
   validation?: ValidationRule[]; // Validation rules for editing
-  aggregate?: 'sum' | 'avg' | 'count' | 'min' | 'max'; // Footer aggregation
 }
 ```
+
+> Column resizing, pinning, and footer aggregation are not part of this interface — see
+> [Roadmap](#roadmap).
 
 ## Events
 
@@ -206,11 +206,7 @@ const editableColumns: GridColumn[] = [
     title: 'Name',
     field: 'name',
     editable: true,
-    editor: {
-      type: 'text',
-      required: true,
-      placeholder: 'Enter name...'
-    },
+    editor: {}, // presence enables inline editing (generic text input); typed editors are planned, see Roadmap
     validation: [
       { type: 'required', message: 'Name is required' },
       { type: 'minLength', value: 2, message: 'Name must be at least 2 characters' }
@@ -385,8 +381,7 @@ class AdvancedGrid extends LitElement {
       field: 'salary',
       sortable: true,
       type: 'currency',
-      align: 'right',
-      aggregate: 'avg'
+      align: 'right'
     },
     {
       id: 'status',
@@ -445,6 +440,19 @@ class AdvancedGrid extends LitElement {
 - Firefox 88+
 - Safari 14+
 - Edge 90+
+
+## Roadmap
+
+The following features are **not implemented** in the current version and have been removed from
+`GridColumn`/`GridEditor` and this doc's public surface. They are planned, not available today:
+
+- **Column resizing** — no drag-to-resize behavior.
+- **Column reordering** — no drag-and-drop column reordering.
+- **Pinned columns** — sticky/fixed left or right columns.
+- **Aggregate/footer rows** — computed column aggregates (`sum`/`avg`/`count`/`min`/`max`).
+- **Typed/rich cell editors** — editing is currently a single generic text input regardless of
+  column data type; per-column editor `type` (`number`/`date`/`select`/`checkbox`/`custom`),
+  `options`, and `customRenderer` are not wired up.
 
 ## Related Components
 

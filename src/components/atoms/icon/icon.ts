@@ -1,4 +1,4 @@
-import { html, css } from 'lit';
+import { html, css, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { BaseElement } from '../../../core/BaseElement';
@@ -211,8 +211,12 @@ export class ForgeIcon extends BaseElement {
   @state() private iconData?: IconData;
   @state() private loading = false;
   @state() private error = false;
-  @state() protected renderTime = 0;
-  @state() protected renderCount = 0;
+  // Plain (non-reactive) fields, matching BaseElement's renderTime/renderCount:
+  // these are written synchronously from firstUpdated()/updated(), and making
+  // them @state() would schedule a second update after the first completes
+  // (Lit's "scheduled an update after an update completed" warning).
+  protected renderTime = 0;
+  protected renderCount = 0;
 
   static registerIcon(name: string, svg: string, viewBox?: string): void {
     this.iconRegistry.set(name, { svg, viewBox });
@@ -254,47 +258,37 @@ export class ForgeIcon extends BaseElement {
     this.updateAria();
   }
 
-  protected override firstUpdated(): void {
-    const startTime = performance.now();
+  protected override willUpdate(changedProperties: PropertyValues): void {
+    super.willUpdate(changedProperties);
 
-    // Load icon on first update when properties are ready
-    if (this.name && ForgeIcon.iconRegistry.has(this.name)) {
-      this.iconData = ForgeIcon.iconRegistry.get(this.name)!;
-      this.error = false;
-      this.trackRenderPerformance(startTime);
-      return; // Don't call loadIcon if we found it in registry
-    }
-
-    if (this.name || this.src) {
-      this.loadIcon();
-    } else {
-      // No icon to load, but still track performance
-      this.trackRenderPerformance(startTime);
-    }
-  }
-
-  override updated(changedProperties: Map<string, unknown>): void {
-    super.updated(changedProperties);
-
-    // Reload icon if name/src changed (but skip if this is the first update from undefined)
+    // Compute icon data synchronously in willUpdate (before render) rather
+    // than in firstUpdated()/updated(): setting the reactive `iconData`/
+    // `error` state from those post-render hooks would schedule a second
+    // update right after the first completes (Lit's "scheduled an update
+    // after an update completed" warning). See select.ts for the same
+    // pattern.
+    const isFirstUpdate = !this.hasUpdated;
     const nameChanged = changedProperties.has('name');
     const srcChanged = changedProperties.has('src');
-    const isFirstUpdate =
-      (changedProperties.has('name') && changedProperties.get('name') === undefined) ||
-      (changedProperties.has('src') && changedProperties.get('src') === undefined);
 
-    // Skip if this is handled by firstUpdated
-    if (!isFirstUpdate && (nameChanged || srcChanged)) {
-      // Check registry synchronously first to avoid unnecessary async operations
+    if (isFirstUpdate || nameChanged || srcChanged) {
+      const startTime = performance.now();
+
       if (this.name && ForgeIcon.iconRegistry.has(this.name)) {
-        const startTime = performance.now();
         this.iconData = ForgeIcon.iconRegistry.get(this.name)!;
         this.error = false;
         this.trackRenderPerformance(startTime);
       } else if (this.name || this.src) {
         this.loadIcon();
+      } else if (isFirstUpdate) {
+        // No icon to load, but still track performance
+        this.trackRenderPerformance(startTime);
       }
     }
+  }
+
+  override updated(changedProperties: PropertyValues): void {
+    super.updated(changedProperties);
 
     if (
       changedProperties.has('label') ||

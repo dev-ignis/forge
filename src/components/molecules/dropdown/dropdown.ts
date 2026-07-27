@@ -368,6 +368,15 @@ export class ForgeDropdown extends BaseElement {
     this.removeEventListener('keydown', this.handleKeydown);
   }
 
+  protected willUpdate(changedProperties: PropertyValues): void {
+    super.willUpdate(changedProperties);
+
+    if (changedProperties.has('isOpen') && this.isOpen) {
+      this.updatePosition();
+      this.focusedIndex = -1;
+    }
+  }
+
   protected updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
 
@@ -375,11 +384,6 @@ export class ForgeDropdown extends BaseElement {
       this.setAttribute('aria-expanded', String(this.isOpen));
       this.updateComponentState('open', this.isOpen);
       this.emit('dropdownvisibilitychange', { open: this.isOpen });
-
-      if (this.isOpen) {
-        this.updatePosition();
-        this.focusedIndex = -1;
-      }
     }
 
     if (changedProperties.has('items')) {

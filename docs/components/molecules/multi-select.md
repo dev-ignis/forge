@@ -391,8 +391,8 @@ The Multi-Select component follows WCAG 2.1 AA guidelines:
 
 ## Related Components
 
-- [ForgeSelect](./select.md) - Single selection dropdown
-- [ForgeCheckbox](./checkbox.md) - Individual checkbox component
+- [ForgeSelect](../atoms/select.md) - Single selection dropdown
+- [ForgeCheckbox](../atoms/checkbox.md) - Individual checkbox component
 - [ForgeFormField](./form-field.md) - Form field wrapper with validation
 
 ## Migration Guide

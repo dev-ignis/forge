@@ -1,0 +1,23 @@
+name: Check Markdown Links
+
+on:
+  pull_request:
+    paths:
+      - '**/*.md'
+
+permissions:
+  contents: read
+
+jobs:
+  lychee:
+    name: Lychee Link Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Link Checker
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --offline --no-progress ./docs README.md
+          fail: true

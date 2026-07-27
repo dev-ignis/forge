@@ -367,4 +367,4 @@ npm install @nexcraft/forge@canary
 
 ---
 
-**Need Help?** Check our [troubleshooting guide](../troubleshooting.md) or open a [GitHub Discussion](https://github.com/dev-ignis/forge/discussions). 🚀
+**Need Help?** Check our troubleshooting guide or open a [GitHub Discussion](https://github.com/dev-ignis/forge/discussions). 🚀

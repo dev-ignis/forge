@@ -993,7 +993,7 @@ const bridge2 = TokenBridge.fromFigma(tokens); // Duplicate work
 
 ## Additional Resources
 
-- **[Migration Guide](./migration-guide.md)** - Step-by-step migration from other systems
+- **[Migration Guide](./token-migration-guide.md)** - Step-by-step migration from other systems
 - **[Theming Overview](../guides/theming-overview.md)** - Core theming concepts and strategies
 - **[Figma Token Integration](../guides/figma-to-forge.md)** - Pull tokens from Figma via CLI/MCP
 

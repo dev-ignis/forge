@@ -318,7 +318,7 @@ console.log(avatar.aiState);
 
 ## Related Components
 
-- [`forge-button`](../button.md) - For interactive elements
-- [`forge-badge`](../badge.md) - For notification indicators
-- [`forge-icon`](../icon.md) - For icon-based avatars
-- [`forge-navigation-bar`](../../organisms/navigation-bar.md) - Contains user avatars
+- [`forge-button`](./button.md) - For interactive elements
+- [`forge-badge`](./badge.md) - For notification indicators
+- [`forge-icon`](./icon.md) - For icon-based avatars
+- [`forge-navigation-bar`](../organisms/navigation-bar.md) - Contains user avatars

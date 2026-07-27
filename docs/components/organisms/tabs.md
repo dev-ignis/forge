@@ -237,4 +237,4 @@ private handleTabChange(e: CustomEvent) {
 
 - [Navigation Bar](./navigation-bar.md) - For main site navigation
 - [Accordion](./accordion.md) - Alternative collapsible content
-- [Button](../button.md) - Used internally for tab buttons
+- [Button](../atoms/button.md) - Used internally for tab buttons

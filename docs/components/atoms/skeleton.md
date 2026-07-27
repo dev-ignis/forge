@@ -602,5 +602,5 @@ function loadContent() {
 ## Related Components
 
 - **[ForgeProgress](./progress.md)** - Progress indicators for determinate loading
-- **[ForgeSpinner](./spinner.md)** - Simple loading spinners
+- **ForgeSpinner** - Simple loading spinners
 - **[ForgeCard](../molecules/card.md)** - Cards with skeleton loading states

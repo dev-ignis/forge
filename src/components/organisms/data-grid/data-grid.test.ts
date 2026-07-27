@@ -587,7 +587,7 @@ describe('ForgeDataGrid - Complex Scenarios', () => {
   }));
 
   const complexColumns: GridColumn[] = [
-    { id: 'name', title: 'Name', field: 'name', sortable: true, resizable: true, pinned: 'left' },
+    { id: 'name', title: 'Name', field: 'name', sortable: true },
     { id: 'age', title: 'Age', field: 'age', sortable: true, type: 'number', width: '80px' },
     { id: 'email', title: 'Email', field: 'email', sortable: true, width: '200px' },
     { id: 'department', title: 'Department', field: 'department', filterable: true },

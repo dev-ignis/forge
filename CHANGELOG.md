@@ -101,36 +101,6 @@
   import { ForgeAvatar } from '@nexcraft/forge/avatar';
   ```
 
-### Patch Changes
-
-- 7a38d60: Refactor test suite to prevent resource contention and timeouts
-  - Split tests into fast unit tests (1147 tests) and slow accessibility tests (35 tests)
-  - Add `test:unit` and `test:a11y` npm scripts for separate execution
-  - Update `test:coverage` to run both suites sequentially
-  - Accessibility tests now run in single-fork mode to prevent timeouts
-  - Coverage maintained at 87% (above 70% threshold)
-  - All 1182 tests now pass reliably in CI without timeouts
-
-  **Benefits:**
-  - Faster test execution (unit ~13s, a11y ~3s vs previous 30s+ with timeouts)
-  - No more flaky accessibility test failures due to resource contention
-  - Better test organization for future maintenance
-
-## 0.8.0
-
-### Minor Changes
-
-- 6515991: Phase 15.4: Complete React package extraction and framework separation
-  - Extract React integration to separate @nexcraft/forge-react package
-  - Remove all framework integrations from core @nexcraft/forge package
-  - Update @nexcraft/forge-rhf to use new React package
-  - Achieve pure web components core architecture
-  - Set up linked package releases for coordinated versioning
-
-## 0.9.0
-
-### Minor Changes
-
 - **Phase 15 Complete: Framework Integration Package Split**
 
   **BREAKING CHANGES**: All framework integrations moved to separate packages
@@ -193,9 +163,31 @@
   - Framework packages use coordinated beta releases
   - Automated version bumping based on changeset files
 
+### Patch Changes
+
+- 7a38d60: Refactor test suite to prevent resource contention and timeouts
+  - Split tests into fast unit tests (1147 tests) and slow accessibility tests (35 tests)
+  - Add `test:unit` and `test:a11y` npm scripts for separate execution
+  - Update `test:coverage` to run both suites sequentially
+  - Accessibility tests now run in single-fork mode to prevent timeouts
+  - Coverage maintained at 87% (above 70% threshold)
+  - All 1182 tests now pass reliably in CI without timeouts
+
+  **Benefits:**
+  - Faster test execution (unit ~13s, a11y ~3s vs previous 30s+ with timeouts)
+  - No more flaky accessibility test failures due to resource contention
+  - Better test organization for future maintenance
+
 ## 0.8.0
 
 ### Minor Changes
+
+- 6515991: Phase 15.4: Complete React package extraction and framework separation
+  - Extract React integration to separate @nexcraft/forge-react package
+  - Remove all framework integrations from core @nexcraft/forge package
+  - Update @nexcraft/forge-rhf to use new React package
+  - Achieve pure web components core architecture
+  - Set up linked package releases for coordinated versioning
 
 - **Enhanced AI Discoverability and Documentation System**
   - Comprehensive AI metadata system for component discovery
@@ -317,13 +309,3 @@
   - Comprehensive design system tokens
   - Base architecture with BaseElement and shared utilities
   - Full testing infrastructure and CI/CD integration
-
----
-
-## Component Inventory
-
-**Total: 23+ Production-Ready Components**
-
-- **Atoms (9)**: Alert, Badge, Button, Checkbox, Icon, Input, Radio Group, Select, Switch
-- **Molecules (8)**: Card, DatePicker, Dropdown, FormField, Modal, MultiSelect, Tooltip
-- **Organisms (6)**: Accordion, DataTable, NavigationBar, Pagination, Tabs, TreeView

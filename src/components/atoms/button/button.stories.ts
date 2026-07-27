@@ -67,7 +67,7 @@ const meta: Meta<ForgeButton> = {
     },
     performanceMode: {
       control: { type: 'select' },
-      options: ['auto', 'fast', 'normal'],
+      options: ['auto', 'fast', 'balanced', 'quality'],
       description: 'Performance mode setting',
       defaultValue: 'auto',
     },

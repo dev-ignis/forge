@@ -205,6 +205,6 @@ document.adoptedStyleSheets = [styleSheet];
 ## Additional Resources
 
 - **[Token Bridge Reference](../theming/token-bridge.md)** - Complete guide and API reference
-- **[Migration Guide](../theming/migration-guide.md)** - Migrate from existing theming systems
+- **[Migration Guide](../theming/token-migration-guide.md)** - Migrate from existing theming systems
 - **[Figma Integration](./figma-to-forge.md)** - Pull tokens from Figma via CLI/MCP
 - **[AI Styling Guide](./AI_STYLING_GUIDE.md)** - Complete styling reference for AI assistants

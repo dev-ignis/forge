@@ -62,6 +62,8 @@ _(originally mislabeled 2.0.0 due to a version-bump correction in PR #69)_
 
 ## 1.0.0
 
+_(a duplicate dependency-bump section for this release was previously mislabeled 2.0.0; merged here)_
+
 ### Patch Changes
 
 - d04ae04: fix: support React 19 in peer dependencies
@@ -72,6 +74,8 @@ _(originally mislabeled 2.0.0 due to a version-bump correction in PR #69)_
 - Updated dependencies [7a38d60]
   - @nexcraft/forge@0.9.0
   - @nexcraft/forge-react@1.0.0
+- Updated dependencies
+  - @nexcraft/forge@0.8.0
 
 ## 0.4.0
 
@@ -96,15 +100,6 @@ _(originally mislabeled 2.0.0 due to a version-bump correction in PR #69)_
   - @nexcraft/forge-react@0.3.0
   - @nexcraft/forge@0.8.0
 
-## 1.0.0
-
-_(a duplicate dependency-bump section for this release was previously mislabeled 2.0.0; merged here)_
-
-### Patch Changes
-
-- Updated dependencies
-  - @nexcraft/forge@0.8.0
-
 ## 0.3.0
 
 ### Minor Changes
@@ -121,6 +116,12 @@ _(a duplicate dependency-bump section for this release was previously mislabeled
   - @nexcraft/forge@0.7.0
 
 ## 0.2.0
+
+### Minor Changes
+
+- Add React Hook Form adapters package
+
+  Initial release of @nexcraft/forge-rhf package containing React Hook Form adapters extracted from the main package for better modularity.
 
 ### Patch Changes
 
@@ -160,11 +161,3 @@ _(a duplicate dependency-bump section for this release was previously mislabeled
 
 - Updated dependencies [581a548]
   - @nexcraft/forge@0.7.0
-
-## 0.2.0
-
-### Minor Changes
-
-- Add React Hook Form adapters package
-
-  Initial release of @nexcraft/forge-rhf package containing React Hook Form adapters extracted from the main package for better modularity.
