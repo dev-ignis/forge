@@ -1,6 +1,8 @@
 # Recommended Roadmap (2026-07)
 
 > Part of the [July 2026 deep analysis](./README.md). This replaces `plans/implementation-roadmap.md` as the actionable plan; see [07-roadmap-assessment](./07-roadmap-assessment.md) for what happened to the old roadmap. Items cite the analysis doc that substantiates them.
+>
+> **Live tracking: Jira project [FORGE](https://semperhic.atlassian.net/jira/software/projects/FORGE/boards/199)** (5 phase epics, FORGE-1…35, created 2026-07 from this roadmap). The board is the working tracker; this document is the rationale.
 
 ## Phase 0 — Do regardless of path (½ day) 🔴
 
