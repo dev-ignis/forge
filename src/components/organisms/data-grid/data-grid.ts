@@ -21,15 +21,12 @@ export interface GridColumn {
   maxWidth?: number;
   sortable?: boolean;
   filterable?: boolean;
-  resizable?: boolean;
-  pinned?: 'left' | 'right' | false;
   type?: 'text' | 'number' | 'date' | 'boolean' | 'currency' | 'percentage';
   align?: 'left' | 'center' | 'right';
   format?: (value: unknown) => string;
   renderer?: (value: unknown, row: GridData) => TemplateResult;
   editor?: GridEditor;
   validation?: ValidationRule[];
-  aggregate?: 'sum' | 'avg' | 'count' | 'min' | 'max';
 }
 
 export interface GridData {
@@ -44,10 +41,7 @@ export interface GridSelection {
 }
 
 export interface GridEditor {
-  type: 'text' | 'number' | 'date' | 'select' | 'checkbox' | 'custom';
-  options?: unknown[];
   validation?: ValidationRule[];
-  customRenderer?: (value: unknown, onChange: (value: unknown) => void) => TemplateResult;
 }
 
 export interface ValidationRule {
@@ -154,8 +148,6 @@ class VirtualScroller {
  * @fires selection-change - When row selection changes
  * @fires cell-edit - When cell editing occurs
  * @fires row-expand - When row expansion state changes
- * @fires column-resize - When column is resized
- * @fires column-reorder - When columns are reordered
  * @fires export-request - When data export is requested
  */
 @customElement('forge-data-grid')
@@ -272,21 +264,6 @@ export class ForgeDataGrid extends BaseElement {
 
     .header-cell.sorted .sort-indicator {
       opacity: 1;
-    }
-
-    .resize-handle {
-      position: absolute;
-      right: -2px;
-      top: 0;
-      width: 4px;
-      height: 100%;
-      cursor: col-resize;
-      background: transparent;
-      transition: background-color 0.2s ease;
-    }
-
-    .resize-handle:hover {
-      background: var(--grid-focus-ring);
     }
 
     .grid-body {
@@ -852,9 +829,6 @@ export class ForgeDataGrid extends BaseElement {
                 aria-hidden="true"
               ></forge-icon>
             ` : ''}
-            ${column.resizable ? html`
-              <div class="resize-handle" @mousedown="${(e: MouseEvent) => this.startColumnResize(e, column)}"></div>
-            ` : ''}
           </div>
         `)}
       </div>
@@ -1071,12 +1045,6 @@ export class ForgeDataGrid extends BaseElement {
       : this.filteredData;
 
     this.emit('export-request', { data: selectedData, format: 'csv' });
-  }
-
-  private startColumnResize(event: MouseEvent, column: GridColumn): void {
-    event.preventDefault();
-    // Column resize implementation would go here
-    // This is a placeholder for the resize functionality
   }
 
   override render(): TemplateResult {
