@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/@nexcraft/forge.svg)](https://www.npmjs.com/package/@nexcraft/forge)
 [![Bundle Size](https://img.shields.io/badge/bundle%20size-91KB%20gzip-yellow.svg)](https://bundlephobia.com/package/@nexcraft/forge)
-[![Test Coverage](https://img.shields.io/badge/coverage-85.5%25-brightgreen.svg)](./coverage)
+[![Test Coverage](https://img.shields.io/badge/coverage-85.5%25-brightgreen.svg)](#-testing)
 [![Accessibility](https://img.shields.io/badge/a11y-organisms%20tested-blue.svg)](https://www.w3.org/WAI/WCAG21/quickref/)
 [![AI-Native](https://img.shields.io/badge/AI-Native-purple.svg)](./docs/ai/metadata-reference.md)
 [![Performance Monitored](https://img.shields.io/badge/Performance-Monitored-orange.svg)](./docs/performance-monitoring.md)
