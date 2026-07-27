@@ -3,6 +3,7 @@ updates:
   # npm (workspace root)
   - package-ecosystem: "npm"
     directory: "/"
+    target-branch: "develop"
     schedule:
       interval: "weekly"
       day: "monday"
@@ -29,11 +30,12 @@ updates:
     commit-message:
       prefix: "deps"
       include: "scope"
-    labels: ["deps", "security"]
+    labels: ["deps"]
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
+    target-branch: "develop"
     schedule:
       interval: "weekly"
       day: "monday"
@@ -42,5 +44,5 @@ updates:
     groups:
       actions-weekly:
         patterns: ["*"]
-    labels: ["deps", "security"]
+    labels: ["deps"]
 
